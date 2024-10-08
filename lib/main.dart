@@ -1,3 +1,4 @@
+import 'package:academe_x/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:academe_x/features/launch/presentation/screens/launch_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'features/auth/presentation/screens/EduInfoScreen.dart';
+import 'features/auth/presentation/screens/congratulations_screen.dart';
+import 'features/auth/presentation/screens/create_account_loading_screen.dart';
+import 'features/auth/presentation/screens/create_new_password.dart';
+import 'features/auth/presentation/screens/forgot_password.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/robot_intro.dart';
+import 'features/auth/presentation/screens/verification_code.dart';
 
 void main() {
   runApp(const Main());
@@ -58,8 +65,13 @@ class Main extends StatelessWidget {
             '/lunch': (context) => const LunchScreen(),
             '/login': (context) => const LoginScreen(),
             '/robot_intro': (context) => const RobotIntroScreen(),
-            // '/verification_code': (context) =>  VerificationCode(),
-            // '/forgot_Password': (context) =>  const ForgotPassword(),
+            '/sign_up': (context) =>  SignUpScreen(),
+            '/edu_info': (context) =>  EduInfoScreen(),
+            '/account_creation': (context) =>  const AccountCreationScreen(),
+            '/account_creation_success': (context) =>  const AccountCreationSuccessScreen(),
+            '/verification_code': (context) =>  VerificationCode(),
+            '/forgot_Password': (context) =>  const ForgotPassword(),
+            '/create_new_password': (context) =>   CreateNewPassword(),
           },
         );
       },

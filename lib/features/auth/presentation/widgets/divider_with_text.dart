@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../core/widgets/app_text.dart';
+
+class DividerWithText extends StatelessWidget {
+  final String text;
+
+  const DividerWithText({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+         Expanded(
+          child: Divider(
+            color: Colors.grey[400],
+            thickness: 1.0,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: AppText(
+            text: text,
+            fontSize: 14.sp,
+            fontWeight: FontWeight.normal,
+            color: Colors.black,
+          ),
+        ),
+         Expanded(
+          child: Divider(
+            color: Colors.grey[400],
+            thickness: 1.0,
+          ),
+        ),
+      ],
+    );
+  }
+}

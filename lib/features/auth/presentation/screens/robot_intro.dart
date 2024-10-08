@@ -94,6 +94,8 @@ class RobotIntroScreen extends StatelessWidget {
               color: Colors.blueAccent,
               // text: ,
               onPressed: () {
+                Navigator.pushNamed(context, '/sign_up');
+
                 // Add your navigation logic here for the next step
               }, widget: AppText(text: 'البدء', fontSize: 16.sp,color: Colors.white,),
             ),
