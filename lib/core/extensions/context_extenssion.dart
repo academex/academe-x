@@ -1,6 +1,7 @@
 // ignore_for_file: camel_case_extensions, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 extension contextExtenssion on BuildContext {
   void showSnackBar({required String message, bool error = false}) {
@@ -17,6 +18,8 @@ extension contextExtenssion on BuildContext {
     );
   }
 
-  // AppLocalizations get localizations => AppLocalizations.of(this)!;
+  // AppLocalizations
+
+  AppLocalizations get localizations => AppLocalizations.of(this)!;
 
 }

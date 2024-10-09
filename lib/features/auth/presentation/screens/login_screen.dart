@@ -1,19 +1,20 @@
 import 'package:academe_x/core/const/app_robot.dart';
+import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/features/auth/presentation/widgets/divider_with_text.dart';
 import 'package:academe_x/features/auth/presentation/widgets/google_sign_in_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 // import '../cubit/auth_cubit.dart';
+import '../../../../core/widgets/app_custom_appBar_widget.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_button.dart';
-// import '../widgets/google_sign_in_button.dart';
-// import '../widgets/clickable_text.dart'; // Import clickable text
-// import '../extensions/sized_box_extension.dart'; // Import the extension for SizedBox
-// import '../widgets/app_text.dart'; // Import AppText widget
+
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -26,35 +27,38 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
         resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
+      appBar: AppCustomAppBar(
+        leading: const SizedBox(), // No leading widget
+      ),
       body: Padding(
-        padding: EdgeInsets.only(left: 24.w,right:  24.w,top: 80.h),
+        padding: EdgeInsets.only(left: 24.w,right:  24.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppText(
-              text: 'تسجيل الدخول',
+              text: context.localizations.loginTitle,
               fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
             8.ph(),
             AppText(
-              text: 'أدخل بياناتك للدخول إلى عالم المعرفة والتعليم',
+              text: context.localizations.loginSubTitle,
               fontSize: 14.sp,
               color: Colors.grey,
               textAlign: TextAlign.center,
             ),
             23.ph(),
             CustomTextField(
-              label: 'البريد الإلكتروني',
-              hintText: 'أدخل عنوان البريد الإلكتروني',
+              label:context.localizations.emailLabel,
+              hintText: context.localizations.emailHint,
               controller: emailController,
             ),
             16.ph(),
             CustomTextField(
-              label: 'كلمة المرور',
+              label:context.localizations.passwordLabel,
 
-              hintText: 'أدخل كلمة المرور',
+              hintText: context.localizations.passwordHint,
               controller: passwordController,
               isPassword: true,
               togglePasswordVisibility: () {
@@ -87,23 +91,21 @@ class LoginScreen extends StatelessWidget {
                   // });
                 },
                 child: AppText(
-                  text: 'تذكرني',
+                  text: context.localizations.rememberMe,
                   fontSize: 14.sp,
                   color: Color(0xff232323),
                 ),
               ),
-              const Spacer(), // To align the "هل نسيت كلمة المرور؟" to the right
+              const Spacer(),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/forgot_Password');
+                  Navigator.pushNamed(context, '/forgot_password');
                 },
                 child: AppText(
-                  text: 'هل نسيت كلمة المرور؟',
+                  text:context.localizations.forgotPassword,
                   fontSize: 14.sp,
                   isUnderline: true,
-                  color: Color(0xff232323), // Customize color for "Forgot password"
-                  // decoration: TextDecoration.underline, // Optional underline
-
+                  color: const Color(0xff232323),
                 ),
               ),
             ],
@@ -111,13 +113,11 @@ class LoginScreen extends StatelessWidget {
             24.ph(),
             CustomButton(
               color: Colors.blueAccent,
-              widget: Text(
-                'تسجيل الدخول',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              widget: AppText(
+                text: context.localizations.loginButton,
+                fontSize: 16.sp,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
               onPressed: () {
                 final email = emailController.text;
@@ -153,7 +153,7 @@ class LoginScreen extends StatelessWidget {
             //   },
             // ),
             20.ph(),
-            DividerWithText(text: 'أو تسجيل الدخول باستخدام'),
+            DividerWithText(text: context.localizations.orLoginWith),
             20.ph(),
 
             // Google Sign-In Button
@@ -170,7 +170,7 @@ class LoginScreen extends StatelessWidget {
                   10.pw(),
                   AppText(
                     text:
-                    'حساب جوجل',
+                    context.localizations.googleAccount,
                     fontSize: 16.sp,
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -188,13 +188,13 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AppText(
-                  text: 'ليس لدي حساب؟',
+                  text: context.localizations.noAccount,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
                 AppText(
-                  text: 'إنشاء حساب',
+                  text: context.localizations.createAccount,
                   fontSize: 14.sp,
                   color: Colors.blueAccent,
                   fontWeight: FontWeight.bold,

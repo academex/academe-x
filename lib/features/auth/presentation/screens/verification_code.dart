@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_button_widget.dart';
+import 'package:academe_x/core/widgets/app_custom_appBar_widget.dart';
 import 'package:academe_x/core/widgets/app_text_field.dart';
 import 'package:academe_x/features/auth/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +12,8 @@ import 'package:pinput/pinput.dart';
 
 import '../../../../core/widgets/app_text.dart';
 
-class VerificationCode extends StatelessWidget {
-  VerificationCode({super.key});
+class VerificationCodeScreen extends StatelessWidget {
+  VerificationCodeScreen({super.key});
   // FocusNode
 
   @override
@@ -33,18 +35,19 @@ class VerificationCode extends StatelessWidget {
     );
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
+        appBar:AppCustomAppBar(
+          leading: const BackButton(color: Colors.black),
           elevation: 0,
           backgroundColor: Colors.transparent,
-          leading: const BackButton(color: Colors.black),
         ),
+
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.h,vertical: 30.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                text: 'التحقق',
+                text: context.localizations.verificationTitle,
                 fontSize: 24.sp,
 
                 // color: Col,
@@ -52,7 +55,7 @@ class VerificationCode extends StatelessWidget {
               ),
               8.ph(),
               AppText(
-                text: 'أدخل رمز التحقق المرسل إلى البريد الالكتروني التالي :',
+                text:context.localizations.verificationSubTitle,
                 fontSize: 14.sp,
                 color: Color(0xff94A3B8),
               ),
@@ -103,7 +106,7 @@ class VerificationCode extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AppText(
-                    text: 'أرسل رمزًا جديدًا',
+                    text: context.localizations.resendCode,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     isUnderline: true,
@@ -111,7 +114,7 @@ class VerificationCode extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              CustomButton(widget: AppText(text: 'تأكيد', fontSize: 14.sp,color: Colors.white,fontWeight: FontWeight.bold,), onPressed: (){
+              CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 14.sp,color: Colors.white,fontWeight: FontWeight.bold,), onPressed: (){
                 Navigator.pushNamed(context, '/create_new_password');
 
               }, color: const Color(0xff0077FF)),

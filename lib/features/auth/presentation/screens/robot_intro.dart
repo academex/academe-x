@@ -1,4 +1,6 @@
+import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
+import 'package:academe_x/core/widgets/app_custom_appBar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,10 +14,10 @@ class RobotIntroScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
+      appBar: AppCustomAppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        leading: const BackButton(color: Colors.black),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -74,7 +76,7 @@ class RobotIntroScreen extends StatelessWidget {
         30.ph(), // Vertical spacing
             // Using AppText for the title
             AppText(
-              text: 'مرحباً، أنا الروبوت الذكي',
+              text: context.localizations.robotIntroTitle,
               fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -83,7 +85,7 @@ class RobotIntroScreen extends StatelessWidget {
            20.ph(), // Vertical spacing
             // Using AppText for the description
             AppText(
-              text: 'سأساعدك في انشاء حسابك وتجهيز بياناتك\nمع خيارت ومستويات رائعة',
+              text:context.localizations.robotIntroSubTitle,
               fontSize: 16.sp,
               color: Colors.grey,
               textAlign: TextAlign.center,
@@ -97,7 +99,7 @@ class RobotIntroScreen extends StatelessWidget {
                 Navigator.pushNamed(context, '/sign_up');
 
                 // Add your navigation logic here for the next step
-              }, widget: AppText(text: 'البدء', fontSize: 16.sp,color: Colors.white,),
+              }, widget: AppText(text: context.localizations.startButton, fontSize: 16.sp,color: Colors.white,),
             ),
           ],
         ),

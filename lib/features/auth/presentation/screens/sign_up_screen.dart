@@ -1,3 +1,4 @@
+import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/features/auth/presentation/widgets/robot_with_speech_bubble.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 24.w),
         child: Column(
@@ -33,14 +35,14 @@ class SignUpScreen extends StatelessWidget {
 
             },
               progressValue: 0.5,),            19.ph(),
-            const RobotWithSpeechBubble(svgString: mySignInRobotSVG, speechText: 'البيانات الشخصية'),
+             RobotWithSpeechBubble(svgString: mySignInRobotSVG, speechText: context.localizations.personalData),
 
             // _buildRobotWithSpeechBubble(),
             20.ph(),
-            _buildGoogleSignInButton(),
+            _buildGoogleSignInButton(context),
             30.ph(),
-            _buildDividerWithText('أو إنشاء حسابي'),
-            _buildFormFields(),
+            _buildDividerWithText(context.localizations.orCreateAccount),
+            _buildFormFields(context),
             30.ph(),
             _buildSubmitButton(context),
             20.ph(),
@@ -63,7 +65,7 @@ class SignUpScreen extends StatelessWidget {
   // }
 
   // Extracted Google Sign-In Button
-  Widget _buildGoogleSignInButton() {
+  Widget _buildGoogleSignInButton(BuildContext context) {
     return CustomButton(
       color: const Color(0xffF9F9F9),
       widget: Row(
@@ -75,7 +77,7 @@ class SignUpScreen extends StatelessWidget {
           ),
           10.pw(),
           AppText(
-            text: 'الاستمرار بواسطة حساب جوجل',
+            text:context.localizations.createAccountTitle,
             fontSize: 16.sp,
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -120,31 +122,31 @@ class SignUpScreen extends StatelessWidget {
   }
 
   // Extracted Form Fields
-  Widget _buildFormFields() {
+  Widget _buildFormFields(BuildContext context) {
     return Column(
       children: [
         CustomTextField(
-          hintText: 'أدخل اسمك هنا',
-          label: 'الاسم',
+          hintText: context.localizations.nameHint,
+          label:context.localizations.nameLabel,
           controller: nameController,
         ),
         16.ph(),
         CustomTextField(
-          hintText: 'أدخل عنوان البريد الإلكتروني',
-          label: 'البريد الإلكتروني',
+          hintText: context.localizations.nameHint,
+          label:context.localizations.emailLabel,
           controller: emailController,
         ),
         16.ph(),
         CustomTextField(
-          hintText: 'أدخل كلمة المرور',
-          label: 'كلمة المرور',
+          hintText: context.localizations.passwordHint,
+          label: context.localizations.passwordLabel,
           controller: passwordController,
           isPassword: true,
         ),
         16.ph(),
         CustomTextField(
-          hintText: 'تأكيد كلمة المرور',
-          label: 'تأكيد كلمة المرور',
+          hintText: context.localizations.confirmPasswordLabel,
+          label: context.localizations.confirmPasswordLabel,
           controller: confirmPasswordController,
           isPassword: true,
         ),
@@ -159,7 +161,7 @@ class SignUpScreen extends StatelessWidget {
         // Handle submit logic here
       },
       widget: AppText(
-        text: 'تحديد الكلية',
+        text: context.localizations.collegeLabel,
         fontSize: 14.sp,
         color: Colors.white,
         fontWeight: FontWeight.bold,
@@ -179,7 +181,7 @@ class SignUpScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         AppText(
-          text: 'لدي حساب بالفعل ؟',
+          text: context.localizations.already_have_account,
           fontSize: 14.sp,
           color: Colors.black,
         ),
@@ -188,7 +190,7 @@ class SignUpScreen extends StatelessWidget {
             Navigator.pushNamed(context, '/login');
           },
           child: AppText(
-            text: ' تسجيل الدخول',
+            text: context.localizations.loginTitle,
             fontSize: 14.sp,
             color: Colors.blue,
           ),

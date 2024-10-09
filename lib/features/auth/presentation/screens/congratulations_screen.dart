@@ -1,3 +1,5 @@
+import 'package:academe_x/core/extensions/context_extenssion.dart';
+import 'package:academe_x/core/widgets/app_custom_appBar_widget.dart';
 import 'package:academe_x/features/auth/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,23 +16,17 @@ class AccountCreationSuccessScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF2200F3), // Background color same as previous screen
-      appBar: AppBar(
+      appBar: AppCustomAppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: const SizedBox(),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pop(context); // Close button action
-            },
-            icon: const Icon(
-              Icons.close,
-              color: Colors.white,
-            ),
-          )
-        ],
+        showCloseButton: true, // Add close button
+        onCloseButtonPressed: () {
+          // Custom action or Navigator.pop(context)
+        },
       ),
-      body: Padding(
+
+        body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,14 +42,14 @@ class AccountCreationSuccessScreen extends StatelessWidget {
             20.ph(),
             // Success Message
             AppText(
-              text: 'تم تجهيز حسابك!',
-              fontSize: 26.sp,
+              text: context.localizations.accountCreationSuccessTitle,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
             13.ph(),
             AppText(
-              text: 'تم إعداد حسابك بنجاح',
+              text: context.localizations.accountCreationLoadingSubTitle,
               fontSize: 16.sp,
               color: Colors.white,
               textAlign: TextAlign.center,
@@ -69,13 +65,13 @@ class AccountCreationSuccessScreen extends StatelessWidget {
                 ),
                 children: [
 
-                  TextSpan(text: 'إعادة توجيه للرئيسية في ',style: TextStyle(
+                  TextSpan(text: context.localizations.redirectIn,style: TextStyle(
                     fontSize: 14.sp,
                     fontFamily: GoogleFonts.cairo().fontFamily,
                   )),
-                  const TextSpan(
-                    text: '4 ثوانٍ', // The green part
-                    style: TextStyle(
+                   TextSpan(
+                    text: '4 ${context.localizations.seconds}', // The green part
+                    style: const TextStyle(
                       color: Color(0xFF5DCA14), // Green color
                       fontWeight: FontWeight.bold,
                     ),
@@ -85,7 +81,7 @@ class AccountCreationSuccessScreen extends StatelessWidget {
             ),
             16.ph(),
             CustomButton(
-                widget: AppText(text: 'الانتقال الرئيسية', fontSize: 16.sp,color: Colors.white,),
+                widget: AppText(text: context.localizations.goToMainPage, fontSize: 16.sp,color: Colors.white,),
                 onPressed:(){}, color:const Color(0xff2200F3),
               wihtBorder: true,
 

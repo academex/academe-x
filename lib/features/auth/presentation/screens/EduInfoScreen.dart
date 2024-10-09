@@ -1,3 +1,4 @@
+import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/features/auth/presentation/widgets/progress_bar_with_close_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,22 +61,22 @@ class _EduInfoScreenState extends State<EduInfoScreen> {
             },
             progressValue: 1,),
             19.ph(),
-            const RobotWithSpeechBubble(svgString: myEduInfoRobotSVG, speechText: 'مستوى تعليمي'),
+             RobotWithSpeechBubble(svgString: myEduInfoRobotSVG, speechText: context.localizations.educationalLevel,),
             20.ph(),
-            _buildSelectionGrid("الكلية", colleges, selectedCollege, (value) {
+            _buildSelectionGrid(context.localizations.collegeLabel, colleges, selectedCollege, (value) {
               setState(() {
                 print('object');
                 selectedCollege = value;
               });
             }),
             20.ph(),
-            _buildSelectionGrid("سنة الدراسة الحالية", studyYears, selectedYear, (value) {
+            _buildSelectionGrid(context.localizations.currentYearLabel, studyYears, selectedYear, (value) {
               setState(() {
                 selectedYear = value;
               });
             }),
             20.ph(),
-            _buildSelectionGrid("الفصل الدراسي", terms, selectedTerm, (value) {
+            _buildSelectionGrid(context.localizations.semesterLabel, terms, selectedTerm, (value) {
               setState(() {
                 selectedTerm = value;
               });
@@ -88,7 +89,7 @@ class _EduInfoScreenState extends State<EduInfoScreen> {
                 // Add logic to create account
               },
               widget: AppText(
-                text: 'إنشاء حسابي',
+                text:context.localizations.createAccountButton,
                 fontSize: 14.sp,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -217,7 +218,7 @@ class _EduInfoScreenState extends State<EduInfoScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         AppText(
-          text: 'لدي حساب بالفعل ؟',
+          text: context.localizations.already_have_account,
           fontSize: 14.sp,
           color: Colors.black,
         ),
@@ -226,7 +227,7 @@ class _EduInfoScreenState extends State<EduInfoScreen> {
             Navigator.pushNamed(context, '/login');
           },
           child: AppText(
-            text: ' تسجيل الدخول',
+            text: context.localizations.loginTitle,
             fontSize: 14.sp,
             color: Colors.blue,
           ),

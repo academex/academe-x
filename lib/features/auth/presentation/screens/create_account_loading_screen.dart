@@ -1,9 +1,11 @@
+import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/const/app_robot.dart';
+import '../../../../core/widgets/app_custom_appBar_widget.dart';
 
 class AccountCreationScreen extends StatefulWidget {
   const AccountCreationScreen({Key? key}) : super(key: key);
@@ -38,17 +40,14 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF2200F3),
-      appBar: AppBar(
+      appBar: AppCustomAppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: const SizedBox(),
-        actions: [
-          IconButton(onPressed:() {
-            
-            
-          },
-          icon: Icon(Icons.close,color: Colors.white,),)
-        ],
+        showCloseButton: true, // Add close button
+        onCloseButtonPressed: () {
+          // Custom action or Navigator.pop(context)
+        },
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
@@ -63,7 +62,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
           20.ph(),
           AppText(
             text:
-            'جارٍ انشاء حسابك',
+            context.localizations.accountCreationLoadingTitle,
             fontSize: 26.sp,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -71,7 +70,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
           13.ph(),
           AppText(
             text:
-            'يتم الان تجهيز حسابك والمكتبة الخاصة بك حسب مستواك',
+            context.localizations.accountCreationLoadingSubTitle,
             fontSize: 16.sp,
             // fontWeight: FontWeight.n,
             color: Colors.white,
@@ -98,7 +97,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
                     scale: Tween(begin: 0.7, end: 1.2).animate(
                       CurvedAnimation(
                         parent: _controller,
-                        curve: Interval(0.2, 0.7, curve: Curves.easeInOut),
+                        curve: const Interval(0.2, 0.7, curve: Curves.easeInOut),
                       ),
                     ),
                     child: _buildDot(),
@@ -130,7 +129,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
           Spacer(),
           AppText(
             text:
-            'سيستغرق تجهيز حسابك بعض الثواني',
+            context.localizations.accountPreparationMessage,
             fontSize: 12.sp,
             color: Colors.white,
           )

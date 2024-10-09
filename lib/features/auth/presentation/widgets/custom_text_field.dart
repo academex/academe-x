@@ -24,7 +24,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 94.h, // Adjust as needed
+      height: 100.h, // Adjust as needed
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,7 +38,7 @@ class CustomTextField extends StatelessWidget {
           TextField(
             controller: controller,
             obscureText: isPassword && !isPasswordVisible,
-            textAlign: TextAlign.right,
+            // textAlign: TextAlign.right,
             decoration: InputDecoration(
               hintText: hintText,
               border: OutlineInputBorder(
