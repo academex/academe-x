@@ -35,6 +35,7 @@ class Main extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
 
+
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             // fontFamily: GoogleFonts.cairo().fontFamily, // Change to your preferred font
