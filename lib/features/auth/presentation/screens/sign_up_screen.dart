@@ -158,18 +158,14 @@ class SignUpScreen extends StatelessWidget {
   Widget _buildSubmitButton(BuildContext context) {
     return CustomButton(
       onPressed: () {
-        // Handle submit logic here
+        Navigator.pushNamed(context, '/edu_info');
       },
       widget: AppText(
         text: context.localizations.collegeLabel,
         fontSize: 14.sp,
         color: Colors.white,
         fontWeight: FontWeight.bold,
-        onPressed: () {
-          Navigator.pushNamed(context, '/edu_info');
 
-
-        },
       ),
       color: Colors.blueAccent,
     );

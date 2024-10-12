@@ -36,7 +36,7 @@ class Main extends StatelessWidget {
 
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            // fontFamily: GoogleFonts.cairo().fontFamily, // Change to your preferred font
+            fontFamily: 'Cairo',
             primarySwatch: Colors.blue,
             colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(surface: Colors.white,
             ),

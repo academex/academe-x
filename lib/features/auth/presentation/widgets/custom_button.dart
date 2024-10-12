@@ -22,7 +22,7 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        side: wihtBorder? BorderSide(
+        side: wihtBorder? const BorderSide(
           color: Colors.white
         ) : BorderSide.none,
         padding: EdgeInsets.symmetric(vertical: 12.h), backgroundColor: color,
