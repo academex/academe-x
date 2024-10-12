@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:academe_x/core/widgets/app_text.dart'; // Assuming you have this custom text widget
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/const/app_robot.dart'; // Robot SVG import
 
 class AccountCreationSuccessScreen extends StatelessWidget {
@@ -67,7 +67,7 @@ class AccountCreationSuccessScreen extends StatelessWidget {
 
                   TextSpan(text: context.localizations.redirectIn,style: TextStyle(
                     fontSize: 14.sp,
-                    fontFamily: GoogleFonts.cairo().fontFamily,
+                    // fontFamily: GoogleFonts.cairo().fontFamily,
                   )),
                    TextSpan(
                     text: '4 ${context.localizations.seconds}', // The green part

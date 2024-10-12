@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/custom_text_field.dart';
 
@@ -55,7 +55,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                 text:  context.localizations.passwordRequirement1,
                 style: TextStyle(
                   fontSize: 12.sp,
-                  fontFamily: GoogleFonts.cairo().fontFamily,
+                  // fontFamily: GoogleFonts.cairo().fontFamily,
                   color: Colors.black87, // Default color for regular text
                 ),
                 children: <TextSpan>[
