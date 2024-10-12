@@ -38,7 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   flutter_screenutil: ^5.9.3
-  google_fonts: ^6.2.1
+#  google_fonts: ^6.2.1
   dartz: ^0.10.1
   flutter_bloc: ^8.1.6
   equatable: ^2.0.5
@@ -74,8 +74,8 @@ flutter:
   generate: true
 
 
-  assets:
-    - assets/l10n
+#  assets:
+##    - assets/l10n
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
