@@ -102,4 +102,5 @@ The app supports localization for both **English** and **Arabic**. Update the .a
 ## Contact
 For questions, issues, or feedback, feel free to reach out:
 - **Maintainers:** Baraa M Mubarak, Hussen Ghabayen
-- **Email:** ghabayenhussej@gamil.com
+- **Email:** Baraa: praa.m.2002@gamil.com
+- **Email:** Hussen: ghabayenhussej@gamil.com
