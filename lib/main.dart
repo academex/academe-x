@@ -24,7 +24,7 @@ class Main extends StatelessWidget {
       builder: (_ , child) {
         return MaterialApp(
           title: 'AcademeX',
-          locale: const Locale('en'), // Set the locale to Arabic
+          locale: const Locale('ar'), // Set the locale to Arabic
           supportedLocales:  AppLocalizations.supportedLocales,
           localizationsDelegates: const [
             AppLocalizations.delegate,

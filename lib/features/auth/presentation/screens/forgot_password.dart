@@ -1,11 +1,11 @@
 import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_custom_appBar_widget.dart';
+import 'package:academe_x/features/auth/presentation/widgets/custom_button.dart';
 import 'package:academe_x/features/auth/presentation/widgets/reset_password_type_way_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/widgets/app_button_widget.dart';
 import '../../../../core/widgets/app_text.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -56,17 +56,22 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ),
                 50.ph(),
                 Center(
-                  child: AppButton(
-                    width: 327.w,
-                    height: 56.h,
-                    color: const Color(0xFF0077FF),
-                    fontSize: 16.sp,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/verification_code');
-                    },
-                    fontWeight: FontWeight.w600,
-                    text:context.localizations.confirmationButton,
-                  ),
+                  child: CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 16.sp,fontWeight: FontWeight.w600,), onPressed: (){
+                        Navigator.pushNamed(context, '/verification_code');
+
+                  }, color: Color(0xFF0077FF))
+
+                  // AppButton(
+                  //   width: 327.w,
+                  //   height: 56.h,
+                  //   color: const Color(0xFF0077FF),
+                  //   fontSize: 16.sp,
+                  //   onPressed: () {
+                  //     Navigator.pushNamed(context, '/verification_code');
+                  //   },
+                  //   fontWeight: FontWeight.w600,
+                  //   text:,
+                  // ),
                 ),
                 20.ph(),
               ],

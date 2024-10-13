@@ -120,8 +120,9 @@ class LoginScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
               onPressed: () {
-                final email = emailController.text;
-                final password = passwordController.text;
+                // final email = emailController.text;
+                // final password = passwordController.text;
+                Navigator.pushNamed(context, '/community_screen');
                 // context.read<AuthCubit>().login(email, password);
               },
             ),
@@ -160,7 +161,7 @@ class LoginScreen extends StatelessWidget {
             // GoogleSignInButton(onPressed: (){}),
 
             CustomButton(
-              color: Color(0xffF9F9F9),
+              color: const Color(0xffF9F9F9),
               widget: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -178,8 +179,11 @@ class LoginScreen extends StatelessWidget {
                 ],
               ),
               onPressed: () {
-                final email = emailController.text;
-                final password = passwordController.text;
+                // final email = emailController.text;
+                // final password = passwordController.text;
+
+
+
                 // context.read<AuthCubit>().login(email, password);
               },
             ),
