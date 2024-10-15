@@ -1,3 +1,5 @@
+import 'package:academe_x/features/launch/presentation/screens/on_boarding.dart';
+import 'package:academe_x/features/launch/presentation/screens/privacy_policy.dart';
 import 'package:flutter/material.dart';
 // Import your screen files here
 import '../features/auth/presentation/screens/EduInfoScreen.dart';
@@ -16,6 +18,8 @@ class AppRouter {
     switch (settings.name) {
       case '/lunch':
         return MaterialPageRoute(builder: (_) => const LunchScreen());
+      case '/on_boarding':
+        return MaterialPageRoute(builder: (_) => const OnBoarding());
       case '/login':
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case '/robot_intro':
@@ -34,6 +38,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
       case '/create_new_password':
         return MaterialPageRoute(builder: (_) =>  CreateNewPasswordScreen());
+      case '/privacy_policy_page':
+        return MaterialPageRoute(builder: (_) =>  const PrivacyPolicyPage());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

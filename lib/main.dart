@@ -1,5 +1,7 @@
 import 'package:academe_x/navigation/app_router.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:google_fonts/google_fonts.dart';
@@ -38,10 +40,11 @@ class Main extends StatelessWidget {
           theme: ThemeData(
             fontFamily: 'Cairo',
             primarySwatch: Colors.blue,
-            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(surface: Colors.white,
+            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(
+              surface: Colors.white,
             ),
           ),
-          initialRoute: '/login',
+          initialRoute: '/on_boarding',
           onGenerateRoute: AppRouter.generateRoute,
         );
       },
