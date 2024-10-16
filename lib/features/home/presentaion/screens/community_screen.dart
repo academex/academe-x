@@ -3,6 +3,8 @@ import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../widgets/action_button.dart';
+
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
 
@@ -55,7 +57,7 @@ class CommunityScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             automaticallyImplyLeading: true,
-            expandedHeight: 217.h,
+            expandedHeight: 284.h,
             pinned: true,
             leading: 0.pw(),
             flexibleSpace:LayoutBuilder(
@@ -80,6 +82,7 @@ class CommunityScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: ListView.separated(
                   shrinkWrap: true,
+
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
@@ -118,103 +121,50 @@ class CommunityScreen extends StatelessWidget {
                         _buildPostImage(
                             'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37'),
                         10.ph(),
-                        _buildDotsIndicator(),
-                        20.ph(),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 74.w,
-                              height: 42.h,
-                              child: IconButton(
-                                // focusColor: Colors.red.shade300,
-                                // highlightColor: Colors.red.shade300,
-                                icon: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/favourite.png',
-                                      height: 17.h,
-                                      width: 19.w,
-                                    ),
-                                    4.pw(),
-                                    AppText(
-                                      text: '223',
-                                      fontSize: 14.sp,
-                                      color: Color(0xff707281),
-                                    )
-                                  ],
-                                ),
-                                padding: EdgeInsets.zero,
+                        // _buildDotsIndicator(),
+                        // 20.ph(),
+                        SizedBox(
+                          width: 326.w,
+                          height: 42.h,
+                          child: Row(
+                            children: [
+                              ActionButton(iconPath:  'assets/icons/favourite.png',count: '450',),
+                              10.pw(),
+                              ActionButton(iconPath:  'assets/icons/share.png',count: '21',),
+                              10.pw(),
+                              ActionButton(iconPath:  'assets/icons/share.png',count: '15',),
 
-                                onPressed: () {},
-                              ),
-                            ),
-                            SizedBox(
-                              width: 74.w,
-                              height: 42.h,
-                              child: IconButton(
-                                icon: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/comment.png',
-                                      height: 17.h,
-                                      width: 19.w,
-                                    ),
-                                    4.pw(),
-                                    AppText(
-                                      text: '21',
-                                      fontSize: 14.sp,
-                                      color: const Color(0xff707281),
-                                    )
-                                  ],
+
+                              const Spacer(),
+                              IconButton(
+                                icon: Image.asset(
+                                  'assets/icons/Bookmark.png',
+                                  height: 17.h,
+                                  width: 19.w,
                                 ),
                                 padding: EdgeInsets.zero,
                                 onPressed: () {},
                               ),
-                            ),
-                            SizedBox(
-                              width: 74.w,
-                              height: 42.h,
-                              child: IconButton(
-                                icon: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/share.png',
-                                      height: 17.h,
-                                      width: 19.w,
-                                    ),
-                                    4.pw(),
-                                    AppText(
-                                      text: '15',
-                                      fontSize: 14.sp,
-                                      color: Color(0xff707281),
-                                    )
-                                  ],
-                                ),
-                                padding: EdgeInsets.zero,
-                                onPressed: () {},
-                              ),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              icon: Image.asset(
-                                'assets/icons/Bookmark.png',
-                                height: 17.h,
-                                width: 19.w,
-                              ),
-                              padding: EdgeInsets.zero,
-                              onPressed: () {},
-                            )
-                          ],
+// 20.ph()
+                            ],
+                          )  ,
                         )
                       ],
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return Divider(
-                      color: Colors.grey.shade300,
+                    return Column(
+                      children: [
+                        16.ph(),
+                    Divider(
+                    color: Colors.grey.shade300,
                       endIndent: 24.w,
                       indent: 25.w,
+                    ),
+                        16.ph()
+                      ],
                     );
+
                   },
                   itemCount: 5,
                   physics: BouncingScrollPhysics(),
@@ -229,10 +179,10 @@ class CommunityScreen extends StatelessWidget {
 
   Widget _buildHeaderBackground(bool inScroll) {
     return Container(
-      height: 216.81.h,
-      width: 375.w,
+      // height: 20.81.h,
+      // width: 375.w,
       decoration: const BoxDecoration(
-        color: Color(0xFF0077FF),
+        // color: Color(0xFF0077FF),
         image: DecorationImage(
           image: AssetImage('assets/images/background_home_screen.png'),
           fit: BoxFit.fill,
@@ -243,14 +193,15 @@ class CommunityScreen extends StatelessWidget {
   }
 
   Widget _buildHeaderContent(bool inScroll) {
-    return  inScroll ? SafeArea(child: Column(
+    return  inScroll ?
+    SafeArea(child: Column(
       children: [
         // 50.ph(),
-        inScroll?0.ph():50.ph(),
+        // inScroll?0.ph():64.ph(),
         Expanded(child: SizedBox(
           width:327.w,
           // 327.w,
-          height:inScroll? 40.h : 50.h,
+          height:40.h,
           child: Row(
             children: [
               Expanded(child: _buildLogoContainer(),),
@@ -265,10 +216,11 @@ class CommunityScreen extends StatelessWidget {
         inScroll?0.ph(): 24.ph(),
         inScroll?0.ph(): _buildCategoryTabs(),
       ],
-    )) : Column(
+    )) :
+    Column(
       children: [
         // 50.ph(),
-        inScroll?0.ph():50.ph(),
+        inScroll?0.ph():64.ph(),
         SizedBox(
           height: 55.h,
           width: 327.w,
@@ -283,8 +235,52 @@ class CommunityScreen extends StatelessWidget {
             ],
           ),
         ),
-        inScroll?0.ph(): 24.ph(),
-        inScroll?0.ph(): _buildCategoryTabs(),
+      20.ph(),
+        SizedBox(
+          width: 327.w,
+          height: 24.h,
+          child: Row(
+            children: [
+              AppText(text: 'التخصصات', fontSize: 16.sp,color: Colors.white,),
+              Spacer(),
+              AppText(text: 'عرض المزيد', fontSize: 12.sp,color: Colors.lightBlueAccent,),
+
+            ],
+          ),
+        ),
+        26.ph(),
+        Container(
+          padding: EdgeInsets.only(right: 24.w),
+          height: 110.h,
+          // width: 327.w,
+          child: ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+              itemBuilder:(context, index) {
+                return Column(
+                  children: [
+                    Container(
+                      width: 56.w,
+                      height: 56.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.r)
+                      ),
+                    ),
+                    12.ph(),
+                    AppText(text: 'شائع', fontSize: 14.sp,color: Colors.white,)
+                  ],
+                );
+
+              },
+              separatorBuilder: (context, index) {
+                return 21.pw();
+
+              },
+              itemCount: 6),
+        )
+        // _buildCategoryTabs(),
       ],
     );
   }
@@ -342,18 +338,7 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIconButtonInScroll(String iconPath) {
-    return IconButton(
-      onPressed: () {},
-      icon: Image.asset(
-        iconPath,
-        height: 20.h,
-        width: 20.w,
-        color: Colors.black,
-      ),
-      padding: EdgeInsets.zero,
-    );
-  }
+
 
   Widget _buildCategoryTabs() {
     return Container(
@@ -466,6 +451,8 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 }
+
+
 
 class ExpandableText extends StatefulWidget {
   final String text;

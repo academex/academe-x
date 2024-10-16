@@ -2,7 +2,6 @@ import 'package:academe_x/navigation/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -20,7 +19,6 @@ class Main extends StatelessWidget {
           375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      // Use builder only if you need to use library outside ScreenUtilInit context
       builder: (_ , child) {
         return MaterialApp(
           title: 'AcademeX',
