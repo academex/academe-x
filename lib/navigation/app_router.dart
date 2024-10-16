@@ -1,3 +1,6 @@
+import 'package:academe_x/features/home/presentaion/screens/community_screen.dart';
+import 'package:academe_x/features/launch/presentation/screens/on_boarding.dart';
+import 'package:academe_x/features/launch/presentation/screens/privacy_policy.dart';
 import 'package:flutter/material.dart';
 // Import your screen files here
 import '../features/auth/presentation/screens/EduInfoScreen.dart';
