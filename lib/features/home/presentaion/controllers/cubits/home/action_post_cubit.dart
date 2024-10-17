@@ -1,9 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// This Cubit will manage the selected category index
-class ActionPostCubit extends Cubit<bool> {
-  ActionPostCubit() : super(false); // Initial state: first category selected
+import '../../states/action_post_states.dart';
 
-  // Change the selected index
-  void performAction(bool isLike) => emit(isLike);
+class ActionPostCubit extends Cubit<ActionPostState> {
+  ActionPostCubit() : super(ActionPostState(isLiked: false, isSaved: false));
+
+  // Method to toggle the like state
+  void performLikeAction(bool isLike) {
+    emit(state.copyWith(isLiked: isLike));
+  }
+
+  // Method to toggle the save state
+  void performSaveAction(bool isSave) {
+    emit(state.copyWith(isSaved: isSave,));
+  }
 }

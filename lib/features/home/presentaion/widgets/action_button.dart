@@ -10,21 +10,21 @@ import '../../../../core/widgets/app_text.dart';
 class ActionButton extends StatelessWidget {
   late String iconPath;
   late String count;
-  late bool isLike;
+  // late bool isLike;
+  late VoidCallback onTap;
+
   ActionButton({
     super.key,
     required this.iconPath,
     required this.count,
-     this.isLike=false
+    required this.onTap,
+     // this.isLike=false
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        context.read<ActionPostCubit>().performAction(!isLike);
-
-      },
+      onTap:onTap,
       // focusColor: const Color(0xffF7F7F8),
       borderRadius: BorderRadius.circular(10.r),
       highlightColor: const Color(0xffF7F7F8),
@@ -37,7 +37,7 @@ class ActionButton extends StatelessWidget {
         child:Row(
           children: [
             Image.asset(
-            isLike? 'assets/images/liked_button.png':  iconPath,
+         iconPath,
               height: 17.h,
               width: 19.w,
             ),

@@ -2,11 +2,14 @@ import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/home/action_post_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/home/category_cubit.dart';
+import 'package:academe_x/features/home/presentaion/controllers/states/action_post_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/const/app_size.dart';
 import '../widgets/action_button.dart';
+import '../widgets/custom_bottom_nav_bar.dart';
 
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
@@ -14,59 +17,20 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 5.0,
-          child: SizedBox(
-            height: 112.h,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Left side of the navigation bar
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildNavItem('assets/icons/community.png', 'مجتمعي', true),
-                    24.pw(),
-                    _buildNavItem('assets/icons/library.png', 'مكتبتي', false),
-
-                  ],
-                ),
-
-                FloatingActionButton(
-                  onPressed: () {
-                  },
-                  backgroundColor: Colors.blue,
-                  child: const Icon(Icons.add, size: 32.0),
-                ),
-
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildNavItem('assets/icons/chatbot.png', 'شات بوت', false),
-                    24.pw(),
-                    _buildNavItem('assets/icons/setting.png', 'الاعدادات', false),
-                  ],
-                ),
-                // Right side of the navigation bar
-
-              ],
-            ),
-          )),
-      // extendBodyBehindAppBar: true,
+      bottomNavigationBar: const CustomBottomNavBar(),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         slivers: [
           SliverAppBar(
             automaticallyImplyLeading: true,
-            expandedHeight: 284.h,
+            expandedHeight: kAppBarExpandedHeight.h,
             pinned: true,
             leading: 0.pw(),
             flexibleSpace:LayoutBuilder(
               builder: (context, constraints) {
                 // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
-                final percent = (constraints.maxHeight - kToolbarHeight) / (217.h - kToolbarHeight);
+                final percent = (constraints.maxHeight - kToolbarHeight) / (kAppBarExpandedHeight.h - kToolbarHeight);
 
                 return FlexibleSpaceBar(
                   centerTitle: true,
@@ -82,7 +46,7 @@ class CommunityScreen extends StatelessWidget {
       ),
           SliverToBoxAdapter(
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                padding: EdgeInsets.symmetric(horizontal: kPaddingHorizontal.w),
                 child: ListView.separated(
                   shrinkWrap: true,
 
@@ -128,34 +92,47 @@ class CommunityScreen extends StatelessWidget {
                         // 20.ph(),
                        BlocProvider(
                          create:(context) =>  ActionPostCubit(),
-                         child:  BlocBuilder<ActionPostCubit,bool>(
-                           builder: (context, isLike) {
-                             return SizedBox(
-                               width: 326.w,
-                               height: 42.h,
-                               child: Row(
-                                 children: [
-                                   ActionButton(iconPath:  'assets/icons/favourite.png',count: '450',isLike:isLike),
-                                   10.pw(),
-                                   ActionButton(iconPath:  'assets/icons/comment.png',count: '21',),
-                                   10.pw(),
-                                   ActionButton(iconPath:  'assets/icons/share.png',count: '15',),
-                                   const Spacer(),
-                                   IconButton(
+                         child:  SizedBox(
+                           width: 326.w,
+                           height: 42.h,
+                           child: Row(
+                             children: [
+                               BlocBuilder<ActionPostCubit,ActionPostState>(
+                                 builder: (context, state) {
+                                   return ActionButton(iconPath:state.isLiked? 'assets/icons/favourite_selected.png':'assets/icons/favourite.png',count: '450',onTap:  () {
+                                     context.read<ActionPostCubit>().performLikeAction(!state.isLiked);
+
+                                   },);
+                                 },
+                               ),
+                               10.pw(),
+                               ActionButton(iconPath:  'assets/icons/comment.png',count: '21',onTap: () {
+
+                               },),
+                               10.pw(),
+                               ActionButton(iconPath:  'assets/icons/share.png',count: '15',onTap: () {
+                                 showShareOptions(context);
+                               },),
+                               const Spacer(),
+                               BlocBuilder<ActionPostCubit,ActionPostState>(
+                                 builder: (context, state) {
+                                   return IconButton(
                                      icon: Image.asset(
-                                       'assets/icons/Bookmark.png',
+                                       state.isSaved?'assets/icons/bookMark_selected.png':  'assets/icons/Bookmark.png',
                                        height: 17.h,
                                        width: 19.w,
                                      ),
                                      padding: EdgeInsets.zero,
-                                     onPressed: () {},
-                                   ),
-                                 ],
-                               )  ,
-                             );
+                                     onPressed: () {
+                                       context.read<ActionPostCubit>().performSaveAction(!state.isSaved);
+                                     },
+                                   );
+                                 },
 
-                           },
-                         ),
+                               )
+                             ],
+                           )  ,
+                         )
                        )
                       ],
                     );
@@ -166,7 +143,7 @@ class CommunityScreen extends StatelessWidget {
                         16.ph(),
                     Divider(
                     color: Colors.grey.shade300,
-                      endIndent: 24.w,
+                      endIndent: kPaddingHorizontal.w,
                       indent: 25.w,
                     ),
                         16.ph()
@@ -248,7 +225,7 @@ class CommunityScreen extends StatelessWidget {
             ],
           ),
         ),),
-        inScroll?0.ph(): 24.ph(),
+        inScroll?0.ph(): kPaddingHorizontal.ph(),
         inScroll?0.ph(): _buildCategoryTabs(),
       ],
     )) :
@@ -288,8 +265,8 @@ class CommunityScreen extends StatelessWidget {
          BlocBuilder<CategoryCubit,int>(
            builder: (BuildContext context, selectedIndex) {
              return Container(
-               padding: EdgeInsets.only(right: 24.w),
-               height: 110.h,
+               padding: EdgeInsets.only(right: kPaddingHorizontal.w),
+               height: kCategoryHeight.h,
                // width: 327.w,
                child: ListView.separated(
                    physics: const BouncingScrollPhysics(),
@@ -435,7 +412,7 @@ class CommunityScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
               image,
-              height: 292.h,
+              height: kPostImageHeight.h,
               width: 326.w,
               fit: BoxFit.cover,
             )),
@@ -539,66 +516,121 @@ class _ExpandableTextState extends State<ExpandableText> {
   }
 }
 
-class CustomBottomNavBar extends StatelessWidget {
-  const CustomBottomNavBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Center(
-        child: Text("Main Content Here"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Define what happens when the center button is pressed
-        },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add, size: 32.0),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0, // Margin around the FAB notch
-        child: Container(
-          height: 70.h, // Adjust height to match your UI needs
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: Colors.blue, width: 1.0),
+void showShareOptions(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+    ),
+    backgroundColor: Colors.white,
+    builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 4.h,
+              width: 56.w,
+              color: Color(0xffE7E8EA),
             ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _buildNavItem(Icons.settings, 'الاعدادات'),
-              _buildNavItem(Icons.flash_on, 'شات بوت'),
-              SizedBox(width: 40.w), // Empty space for the FAB in the center
-              _buildNavItem(Icons.book, 'مكتبتي'),
-              _buildNavItem(Icons.people, 'مجتمعي', isSelected: true),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+            20.ph(),
+            // Close button and title
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                100.pw(),
 
-  Widget _buildNavItem(IconData icon, String label, {bool isSelected = false}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          color: isSelected ? Colors.blue : Colors.grey,
-          size: 24.0,
+                AppText(text:  'مشاركة بواسطة', fontSize: 16,
+                fontWeight: FontWeight.w600,),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: const Icon(Icons.close, color: Colors.grey),
+                ),
+               // To balance the close icon space
+              ],
+            ),
+            // Sharing options
+            20.ph(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildShareOption(
+                  iconPath: 'assets/icons/copy_link.png',
+                  label: 'نسخ الرابط',
+                  onTap: () {
+                    // Add your Copy Link logic here
+                    Navigator.pop(context);
+                  },
+                ),
+                _buildShareOption(
+                  iconPath: 'assets/icons/telegram.png',
+                  label: 'تلجرام',
+                  onTap: () {
+                    // Add your Telegram sharing logic here
+                    Navigator.pop(context);
+                  },
+                ),
+                _buildShareOption(
+                  iconPath: 'assets/icons/X.png',
+                  label: 'تويتر',
+                  onTap: () {
+                    // Add your Twitter sharing logic here
+                    Navigator.pop(context);
+                  },
+                ),
+                _buildShareOption(
+                  iconPath: 'assets/icons/whatsapp.png',
+                  label: 'واتساب',
+                  onTap: () {
+                    // Add your WhatsApp sharing logic here
+                    Navigator.pop(context); // Close the bottom sheet
+                  },
+                ),
+
+
+
+              ],
+            ),
+            SizedBox(height: 16),
+          ],
         ),
-        Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.blue : Colors.grey,
-            fontSize: 12.sp,
+      );
+    },
+  );
+}
+
+// Helper widget to build a share option
+Widget _buildShareOption({
+  required String iconPath,
+  required String label,
+  required VoidCallback onTap,
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 69.h,
+          width: 69.w,
+          decoration: BoxDecoration(
+            color: const Color(0xF9F9F9C4),
+            shape: BoxShape.circle,
+            image: DecorationImage(image: AssetImage(iconPath,),)
           ),
         ),
+        // CircleAvatar(
+        //   radius: 28.0,
+        //   backgroundColor: Colors.grey.shade200,
+        //   child: Image.asset(iconPath, height: 30, width: 30),
+        // ),
+        SizedBox(height: 8),
+        AppText(text: label, fontSize: 12.sp,color: Color(0xff3D5A80),)
+
       ],
-    );
-  }
+    ),
+  );
 }
+
