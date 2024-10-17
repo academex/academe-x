@@ -1,6 +1,9 @@
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
+import 'package:academe_x/features/home/presentaion/controllers/cubits/home/action_post_cubit.dart';
+import 'package:academe_x/features/home/presentaion/controllers/cubits/home/category_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../widgets/action_button.dart';
@@ -77,7 +80,7 @@ class CommunityScreen extends StatelessWidget {
               },
             ),
       ),
-       SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: ListView.separated(
@@ -123,32 +126,37 @@ class CommunityScreen extends StatelessWidget {
                         10.ph(),
                         // _buildDotsIndicator(),
                         // 20.ph(),
-                        SizedBox(
-                          width: 326.w,
-                          height: 42.h,
-                          child: Row(
-                            children: [
-                              ActionButton(iconPath:  'assets/icons/favourite.png',count: '450',),
-                              10.pw(),
-                              ActionButton(iconPath:  'assets/icons/share.png',count: '21',),
-                              10.pw(),
-                              ActionButton(iconPath:  'assets/icons/share.png',count: '15',),
+                       BlocProvider(
+                         create:(context) =>  ActionPostCubit(),
+                         child:  BlocBuilder<ActionPostCubit,bool>(
+                           builder: (context, isLike) {
+                             return SizedBox(
+                               width: 326.w,
+                               height: 42.h,
+                               child: Row(
+                                 children: [
+                                   ActionButton(iconPath:  'assets/icons/favourite.png',count: '450',isLike:isLike),
+                                   10.pw(),
+                                   ActionButton(iconPath:  'assets/icons/comment.png',count: '21',),
+                                   10.pw(),
+                                   ActionButton(iconPath:  'assets/icons/share.png',count: '15',),
+                                   const Spacer(),
+                                   IconButton(
+                                     icon: Image.asset(
+                                       'assets/icons/Bookmark.png',
+                                       height: 17.h,
+                                       width: 19.w,
+                                     ),
+                                     padding: EdgeInsets.zero,
+                                     onPressed: () {},
+                                   ),
+                                 ],
+                               )  ,
+                             );
 
-
-                              const Spacer(),
-                              IconButton(
-                                icon: Image.asset(
-                                  'assets/icons/Bookmark.png',
-                                  height: 17.h,
-                                  width: 19.w,
-                                ),
-                                padding: EdgeInsets.zero,
-                                onPressed: () {},
-                              ),
-// 20.ph()
-                            ],
-                          )  ,
-                        )
+                           },
+                         ),
+                       )
                       ],
                     );
                   },
@@ -193,6 +201,33 @@ class CommunityScreen extends StatelessWidget {
   }
 
   Widget _buildHeaderContent(bool inScroll) {
+    List<Map<String,String>> list= [
+    {
+      'عام': 'assets/images/image_test1.png',
+    },
+      {
+        'تطوير برمجيات': 'assets/images/image_test1.png',
+      },
+      {
+        'علم حاسوب': 'assets/images/image_test1.png',
+      },
+      {
+        'حوسبة متنقلة': 'assets/images/image_test1.png',
+      },
+      {
+        'وسائط متعددة': 'assets/images/image_test1.png',
+      },
+    ];
+    /*
+
+    [
+      'عام',
+      'تطوير برمجيات',
+      'علم حاسوب',
+      'حوسبة متنقلة',
+      'وسائط متعددة',
+    ];
+     */
     return  inScroll ?
     SafeArea(child: Column(
       children: [
@@ -217,72 +252,88 @@ class CommunityScreen extends StatelessWidget {
         inScroll?0.ph(): _buildCategoryTabs(),
       ],
     )) :
-    Column(
-      children: [
-        // 50.ph(),
-        inScroll?0.ph():64.ph(),
-        SizedBox(
-          height: 55.h,
-          width: 327.w,
-          child: Row(
-            children: [
-              _buildLogoContainer(),
-              8.pw(),
-              _buildTitleAndSubtitle(inScroll),
-              const Spacer(),
-              _buildIconButton('assets/icons/search.png',inScroll),
-              _buildIconButton('assets/icons/notification.png',inScroll),
-            ],
-          ),
-        ),
-      20.ph(),
-        SizedBox(
-          width: 327.w,
-          height: 24.h,
-          child: Row(
-            children: [
-              AppText(text: 'التخصصات', fontSize: 16.sp,color: Colors.white,),
-              Spacer(),
-              AppText(text: 'عرض المزيد', fontSize: 12.sp,color: Colors.lightBlueAccent,),
+   BlocProvider(
+     create: (context) => CategoryCubit(),
+     child:  Column(
+       children: [
+         inScroll?0.ph():64.ph(),
+         SizedBox(
+           height: 55.h,
+           width: 327.w,
+           child: Row(
+             children: [
+               _buildLogoContainer(),
+               8.pw(),
+               _buildTitleAndSubtitle(inScroll),
+               const Spacer(),
+               _buildIconButton('assets/icons/search.png',inScroll),
+               _buildIconButton('assets/icons/notification.png',inScroll),
+             ],
+           ),
+         ),
+         20.ph(),
+         SizedBox(
+           width: 327.w,
+           height: 24.h,
+           child: Row(
+             children: [
+               AppText(text: 'التخصصات', fontSize: 16.sp,color: Colors.white,),
+               Spacer(),
+               AppText(text: 'عرض المزيد', fontSize: 12.sp,color: Colors.lightBlueAccent,),
 
-            ],
-          ),
-        ),
-        26.ph(),
-        Container(
-          padding: EdgeInsets.only(right: 24.w),
-          height: 110.h,
-          // width: 327.w,
-          child: ListView.separated(
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-              itemBuilder:(context, index) {
-                return Column(
-                  children: [
-                    Container(
-                      width: 56.w,
-                      height: 56.h,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.r)
-                      ),
-                    ),
-                    12.ph(),
-                    AppText(text: 'شائع', fontSize: 14.sp,color: Colors.white,)
-                  ],
-                );
+             ],
+           ),
+         ),
+         26.ph(),
+         BlocBuilder<CategoryCubit,int>(
+           builder: (BuildContext context, selectedIndex) {
+             return Container(
+               padding: EdgeInsets.only(right: 24.w),
+               height: 110.h,
+               // width: 327.w,
+               child: ListView.separated(
+                   physics: const BouncingScrollPhysics(),
+                   shrinkWrap: true,
+                   scrollDirection: Axis.horizontal,
+                   itemBuilder:(context, index) {
+                     String title= list[index].keys.first;
+                     String image= list[index].values.first;
+                     return Column(
+                       children: [
+                         GestureDetector(
+                           child: Container(
+                             width: 56.w,
+                             height: 56.h,
+                             decoration: BoxDecoration(
+                               // image:
+                                 color: selectedIndex == index ? Colors.white : Colors.blue,
+                                 borderRadius: BorderRadius.circular(10.r)
+                             ),
+                             child: Image.asset(image),
+                           ),
+                           onTap: () {
+                             context.read<CategoryCubit>().selectCategory(index);
+                           },
+                         ),
+                         12.ph(),
+                         AppText(text: title, fontSize: 14.sp,color: Colors.white,)
+                       ],
+                     );
 
-              },
-              separatorBuilder: (context, index) {
-                return 21.pw();
+                   },
+                   separatorBuilder: (context, index) {
+                     return 20.pw();
 
-              },
-              itemCount: 6),
-        )
-        // _buildCategoryTabs(),
-      ],
-    );
+                   },
+                   itemCount: list.length),
+             );
+           },
+         )
+         // _buildCategoryTabs(),
+       ],
+     ),
+
+   );
   }
   Widget _buildLogoContainer() {
     return Container(
