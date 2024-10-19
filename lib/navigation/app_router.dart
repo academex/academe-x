@@ -12,13 +12,12 @@ import '../features/auth/presentation/screens/login_screen.dart';
 import '../features/auth/presentation/screens/robot_intro.dart';
 import '../features/auth/presentation/screens/sign_up_screen.dart';
 import '../features/auth/presentation/screens/verification_code.dart';
-import '../features/launch/presentation/screens/launch_screen.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/lunch':
-        return MaterialPageRoute(builder: (_) => const LunchScreen());
+        // return MaterialPageRoute(builder: (_) => const LunchScreen());
       case '/on_boarding':
         return MaterialPageRoute(builder: (_) => const OnBoarding());
       case '/login':
