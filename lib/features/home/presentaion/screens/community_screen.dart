@@ -1,5 +1,9 @@
+// import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
+import 'package:academe_x/features/home/presentaion/model/comment';
+import 'package:academe_x/features/home/presentaion/widgets/comments_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,222 +13,221 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 5.0,
-          child: SizedBox(
-            height: 112.h,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Left side of the navigation bar
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildNavItem('assets/icons/community.png', 'مجتمعي', true),
-                    24.pw(),
-                    _buildNavItem('assets/icons/library.png', 'مكتبتي', false),
-
-                  ],
-                ),
-
-                FloatingActionButton(
-                  onPressed: () {
-                  },
-                  backgroundColor: Colors.blue,
-                  child: const Icon(Icons.add, size: 32.0),
-                ),
-
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildNavItem('assets/icons/chatbot.png', 'شات بوت', false),
-                    24.pw(),
-                    _buildNavItem('assets/icons/setting.png', 'الاعدادات', false),
-                  ],
-                ),
-                // Right side of the navigation bar
-
-              ],
-            ),
-          )),
-      // extendBodyBehindAppBar: true,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        slivers: [
-          SliverAppBar(
-            automaticallyImplyLeading: true,
-            expandedHeight: 217.h,
-            pinned: true,
-            leading: 0.pw(),
-            flexibleSpace:LayoutBuilder(
-              builder: (context, constraints) {
-                // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
-                final percent = (constraints.maxHeight - kToolbarHeight) / (217.h - kToolbarHeight);
-
-                return FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: AnimatedOpacity(
-                    opacity: percent < 0.2 ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 100),
-                    child: _buildHeaderContent(true)
+        bottomNavigationBar: BottomAppBar(
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 5.0,
+            child: SizedBox(
+              height: 112.h,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Left side of the navigation bar
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildNavItem(
+                          'assets/icons/community.png', 'مجتمعي', true),
+                      24.pw(),
+                      _buildNavItem(
+                          'assets/icons/library.png', 'مكتبتي', false),
+                    ],
                   ),
-                  background:_buildHeaderBackground(false),
-                );
-              },
+
+                  FloatingActionButton(
+                    onPressed: () {},
+                    backgroundColor: Colors.blue,
+                    child: const Icon(Icons.add, size: 32.0),
+                  ),
+
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildNavItem(
+                          'assets/icons/chatbot.png', 'شات بوت', false),
+                      24.pw(),
+                      _buildNavItem(
+                          'assets/icons/setting.png', 'الاعدادات', false),
+                    ],
+                  ),
+                  // Right side of the navigation bar
+                ],
+              ),
+            )),
+        // extendBodyBehindAppBar: true,
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          shrinkWrap: true,
+          slivers: [
+            SliverAppBar(
+              automaticallyImplyLeading: true,
+              expandedHeight: 217.h,
+              pinned: true,
+              leading: 0.pw(),
+              flexibleSpace: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
+                  final percent = (constraints.maxHeight - kToolbarHeight) /
+                      (217.h - kToolbarHeight);
+
+                  return FlexibleSpaceBar(
+                    centerTitle: true,
+                    title: AnimatedOpacity(
+                        opacity: percent < 0.2 ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 100),
+                        child: _buildHeaderContent(true)),
+                    background: _buildHeaderBackground(false),
+                  );
+                },
+              ),
             ),
-      ),
-       SliverToBoxAdapter(
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Row(
+            SliverToBoxAdapter(
+                child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Column(
                           children: [
-                            const CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37')),
-                            10.pw(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
                               children: [
-                                AppText(
-                                  text: 'حسين غباين',
-                                  fontSize: 14.sp,
+                                const CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37')),
+                                10.pw(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppText(
+                                      text: 'حسين غباين',
+                                      fontSize: 14.sp,
+                                    ),
+                                    4.ph(),
+                                    AppText(
+                                      text: 'منذ 4 دقائق',
+                                      fontSize: 12.sp,
+                                      color: Color(0xff64748B),
+                                    )
+                                  ],
                                 ),
-                                4.ph(),
-                                AppText(
-                                  text: 'منذ 4 دقائق',
-                                  fontSize: 12.sp,
-                                  color: Color(0xff64748B),
-                                )
+                                const Spacer(),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.more_horiz))
                               ],
                             ),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.more_horiz))
-                          ],
-                        ),
-                        10.ph(),
-                        const ExpandableText(
-                            text:
-                            'مرحبا اصدقائي اريد معرفة الشباتر المطلوبة للامتحان النهائي وموعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور موعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور '),
-                        12.ph(),
-                        _buildPostImage(
-                            'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37'),
-                        10.ph(),
-                        _buildDotsIndicator(),
-                        20.ph(),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 74.w,
-                              height: 42.h,
-                              child: IconButton(
-                                // focusColor: Colors.red.shade300,
-                                // highlightColor: Colors.red.shade300,
-                                icon: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/favourite.png',
-                                      height: 17.h,
-                                      width: 19.w,
+                            10.ph(),
+                            const ExpandableText(
+                                text:
+                                    'مرحبا اصدقائي اريد معرفة الشباتر المطلوبة للامتحان النهائي وموعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور موعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور '),
+                            12.ph(),
+                            _buildPostImage(
+                                'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37'),
+                            10.ph(),
+                            _buildDotsIndicator(),
+                            20.ph(),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 74.w,
+                                  height: 42.h,
+                                  child: IconButton(
+                                    // focusColor: Colors.red.shade300,
+                                    // highlightColor: Colors.red.shade300,
+                                    icon: Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/icons/favourite.png',
+                                          height: 17.h,
+                                          width: 19.w,
+                                        ),
+                                        4.pw(),
+                                        AppText(
+                                          text: '223',
+                                          fontSize: 14.sp,
+                                          color: Color(0xff707281),
+                                        )
+                                      ],
                                     ),
-                                    4.pw(),
-                                    AppText(
-                                      text: '223',
-                                      fontSize: 14.sp,
-                                      color: Color(0xff707281),
-                                    )
-                                  ],
-                                ),
-                                padding: EdgeInsets.zero,
+                                    padding: EdgeInsets.zero,
 
-                                onPressed: () {},
-                              ),
-                            ),
-                            SizedBox(
-                              width: 74.w,
-                              height: 42.h,
-                              child: IconButton(
-                                icon: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/comment.png',
-                                      height: 17.h,
-                                      width: 19.w,
-                                    ),
-                                    4.pw(),
-                                    AppText(
-                                      text: '21',
-                                      fontSize: 14.sp,
-                                      color: const Color(0xff707281),
-                                    )
-                                  ],
+                                    onPressed: () {},
+                                  ),
                                 ),
-                                padding: EdgeInsets.zero,
-                                onPressed: () {},
-                              ),
-                            ),
-                            SizedBox(
-                              width: 74.w,
-                              height: 42.h,
-                              child: IconButton(
-                                icon: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/icons/share.png',
-                                      height: 17.h,
-                                      width: 19.w,
+                                SizedBox(
+                                  width: 74.w,
+                                  height: 42.h,
+                                  child: IconButton(
+                                    icon: Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/icons/comment.png',
+                                          height: 17.h,
+                                          width: 19.w,
+                                        ),
+                                        4.pw(),
+                                        AppText(
+                                          text: '21',
+                                          fontSize: 14.sp,
+                                          color: const Color(0xff707281),
+                                        )
+                                      ],
                                     ),
-                                    4.pw(),
-                                    AppText(
-                                      text: '15',
-                                      fontSize: 14.sp,
-                                      color: Color(0xff707281),
-                                    )
-                                  ],
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      CommentsList(context: context,postId: 5);
+                                    },
+                                  ),
                                 ),
-                                padding: EdgeInsets.zero,
-                                onPressed: () {},
-                              ),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              icon: Image.asset(
-                                'assets/icons/Bookmark.png',
-                                height: 17.h,
-                                width: 19.w,
-                              ),
-                              padding: EdgeInsets.zero,
-                              onPressed: () {},
+                                SizedBox(
+                                  width: 74.w,
+                                  height: 42.h,
+                                  child: IconButton(
+                                    icon: Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/icons/share.png',
+                                          height: 17.h,
+                                          width: 19.w,
+                                        ),
+                                        4.pw(),
+                                        AppText(
+                                          text: '15',
+                                          fontSize: 14.sp,
+                                          color: Color(0xff707281),
+                                        )
+                                      ],
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                const Spacer(),
+                                IconButton(
+                                  icon: Image.asset(
+                                    'assets/icons/Bookmark.png',
+                                    height: 17.h,
+                                    width: 19.w,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {},
+                                )
+                              ],
                             )
                           ],
-                        )
-                      ],
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      color: Colors.grey.shade300,
-                      endIndent: 24.w,
-                      indent: 25.w,
-                    );
-                  },
-                  itemCount: 5,
-                  physics: BouncingScrollPhysics(),
-                ))
-          ),
-        ],
-      )
-
-
-    );
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          color: Colors.grey.shade300,
+                          endIndent: 24.w,
+                          indent: 25.w,
+                        );
+                      },
+                      itemCount: 5,
+                      physics: BouncingScrollPhysics(),
+                    ))),
+          ],
+        ));
   }
 
   Widget _buildHeaderBackground(bool inScroll) {
@@ -243,51 +246,60 @@ class CommunityScreen extends StatelessWidget {
   }
 
   Widget _buildHeaderContent(bool inScroll) {
-    return  inScroll ? SafeArea(child: Column(
-      children: [
-        // 50.ph(),
-        inScroll?0.ph():50.ph(),
-        Expanded(child: SizedBox(
-          width:327.w,
-          // 327.w,
-          height:inScroll? 40.h : 50.h,
-          child: Row(
+    return inScroll
+        ? SafeArea(
+            child: Column(
             children: [
-              Expanded(child: _buildLogoContainer(),),
-              8.pw(),
-              _buildTitleAndSubtitle(inScroll),
-              const Spacer(),
-              _buildIconButton('assets/icons/search.png',inScroll),
-              _buildIconButton('assets/icons/notification.png',inScroll),
+              // 50.ph(),
+              inScroll ? 0.ph() : 50.ph(),
+              Expanded(
+                child: SizedBox(
+                  width: 327.w,
+                  // 327.w,
+                  height: inScroll ? 40.h : 50.h,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildLogoContainer(),
+                      ),
+                      8.pw(),
+                      _buildTitleAndSubtitle(inScroll),
+                      const Spacer(),
+                      _buildIconButton('assets/icons/search.png', inScroll),
+                      _buildIconButton(
+                          'assets/icons/notification.png', inScroll),
+                    ],
+                  ),
+                ),
+              ),
+              inScroll ? 0.ph() : 24.ph(),
+              inScroll ? 0.ph() : _buildCategoryTabs(),
             ],
-          ),
-        ),),
-        inScroll?0.ph(): 24.ph(),
-        inScroll?0.ph(): _buildCategoryTabs(),
-      ],
-    )) : Column(
-      children: [
-        // 50.ph(),
-        inScroll?0.ph():50.ph(),
-        SizedBox(
-          height: 55.h,
-          width: 327.w,
-          child: Row(
+          ))
+        : Column(
             children: [
-              _buildLogoContainer(),
-              8.pw(),
-              _buildTitleAndSubtitle(inScroll),
-              const Spacer(),
-              _buildIconButton('assets/icons/search.png',inScroll),
-              _buildIconButton('assets/icons/notification.png',inScroll),
+              // 50.ph(),
+              inScroll ? 0.ph() : 50.ph(),
+              SizedBox(
+                height: 55.h,
+                width: 327.w,
+                child: Row(
+                  children: [
+                    _buildLogoContainer(),
+                    8.pw(),
+                    _buildTitleAndSubtitle(inScroll),
+                    const Spacer(),
+                    _buildIconButton('assets/icons/search.png', inScroll),
+                    _buildIconButton('assets/icons/notification.png', inScroll),
+                  ],
+                ),
+              ),
+              inScroll ? 0.ph() : 24.ph(),
+              inScroll ? 0.ph() : _buildCategoryTabs(),
             ],
-          ),
-        ),
-        inScroll?0.ph(): 24.ph(),
-        inScroll?0.ph(): _buildCategoryTabs(),
-      ],
-    );
+          );
   }
+
   Widget _buildLogoContainer() {
     return Container(
       width: 50.w,
@@ -312,10 +324,9 @@ class CommunityScreen extends StatelessWidget {
         AppText(
           text: 'تطوير البرمجيات',
           fontSize: 18.sp,
-          color:inScroll? Colors.black:Colors.white,
+          color: inScroll ? Colors.black : Colors.white,
           // fontWeight: FontWeight.bold,
         ),
-
         if (!inScroll) ...[
           6.ph(),
           AppText(
@@ -324,19 +335,18 @@ class CommunityScreen extends StatelessWidget {
             color: Colors.white,
           ),
         ],
-
       ],
     );
   }
 
-  Widget _buildIconButton(String iconPath,bool inScroll) {
+  Widget _buildIconButton(String iconPath, bool inScroll) {
     return IconButton(
       onPressed: () {},
       icon: Image.asset(
         iconPath,
         height: 20.h,
         width: 20.w,
-        color: inScroll? Colors.black: Colors.white,
+        color: inScroll ? Colors.black : Colors.white,
       ),
       padding: EdgeInsets.zero,
     );
@@ -453,7 +463,7 @@ class CommunityScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-       Image.asset(imagePath),
+        Image.asset(imagePath),
         SizedBox(height: 4.h),
         Text(
           label,
