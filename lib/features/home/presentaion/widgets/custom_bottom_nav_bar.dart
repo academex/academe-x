@@ -1,4 +1,5 @@
 import 'package:academe_x/core/widgets/app_text.dart';
+import 'package:academe_x/features/home/presentaion/widgets/create_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,19 +18,20 @@ class CustomBottomNavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _buildNavItem('assets/icons/community.png', 'مجتمعي', isSelected: true),
+            _buildNavItem('assets/icons/community.png', 'مجتمعي',
+                isSelected: true),
             _buildNavItem('assets/icons/library.png', 'مكتبتي'),
-        FloatingActionButton(
-                      onPressed: () {
-                      },
-                      backgroundColor: Colors.blue,
-                      child: const Icon(Icons.add, size: 32.0),
-                    ),
+            FloatingActionButton(
+              onPressed: () {
+                CreatePost().showCreatePostModal(context);
+              },
+              backgroundColor: Colors.blue,
+              child: const Icon(Icons.add, size: 32.0),
+            ),
             // SizedBox(width: 40.w),
             _buildNavItem('assets/icons/chatbot.png', 'شات بوت'),
             _buildNavItem('assets/icons/setting.png', 'الاعدادات'),
-
-               ],
+          ],
         ),
       ),
     );
@@ -42,8 +44,10 @@ class CustomBottomNavBar extends StatelessWidget {
       children: [
         Image.asset(icon),
         // Icon(icon, color: isSelected ? Colors.blue : Colors.grey, size: 24.0),
-        AppText(text: label, color: isSelected ? Colors.blue : Colors.grey, fontSize: 12.sp)
-
+        AppText(
+            text: label,
+            color: isSelected ? Colors.blue : Colors.grey,
+            fontSize: 12.sp)
       ],
     );
   }

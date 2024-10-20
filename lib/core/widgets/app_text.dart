@@ -67,6 +67,7 @@ class AppText extends StatelessWidget {
       onTap: onPressed,
       child: Text(
         text,
+        
         textAlign: textAlign,
         style: TextStyle(
           fontSize: fontSize.sp,

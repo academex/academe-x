@@ -16,7 +16,7 @@ import '../features/auth/presentation/screens/verification_code.dart';
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/lunch':
+      // case '/lunch':
         // return MaterialPageRoute(builder: (_) => const LunchScreen());
       case '/on_boarding':
         return MaterialPageRoute(builder: (_) => const OnBoarding());

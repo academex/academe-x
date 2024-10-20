@@ -44,7 +44,7 @@ class Main extends StatelessWidget {
               surface: Colors.white,
             ),
           ),
-          initialRoute: '/on_boarding',
+          initialRoute: '/community_screen',
           onGenerateRoute: AppRouter.generateRoute,
         );
       },

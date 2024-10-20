@@ -3,6 +3,7 @@ import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/home/action_post_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/home/category_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/states/action_post_states.dart';
+import 'package:academe_x/features/home/presentaion/widgets/comments_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,149 +18,169 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const CustomBottomNavBar(),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        slivers: [
-          SliverAppBar(
-            automaticallyImplyLeading: true,
-            expandedHeight: kAppBarExpandedHeight.h,
-            pinned: true,
-            leading: 0.pw(),
-            flexibleSpace:LayoutBuilder(
-              builder: (context, constraints) {
-                // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
-                final percent = (constraints.maxHeight - kToolbarHeight) / (kAppBarExpandedHeight.h - kToolbarHeight);
+        bottomNavigationBar: const CustomBottomNavBar(),
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          shrinkWrap: true,
+          slivers: [
+            SliverAppBar(
+              automaticallyImplyLeading: true,
+              expandedHeight: kAppBarExpandedHeight.h,
+              pinned: true,
+              leading: 0.pw(),
+              flexibleSpace: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
+                  final percent = (constraints.maxHeight - kToolbarHeight) /
+                      (kAppBarExpandedHeight.h - kToolbarHeight);
 
-                return FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: AnimatedOpacity(
-                    opacity: percent < 0.2 ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 100),
-                    child: _buildHeaderContent(true)
-                  ),
-                  background:_buildHeaderBackground(false),
-                );
-              },
+                  return FlexibleSpaceBar(
+                    centerTitle: true,
+                    title: AnimatedOpacity(
+                        opacity: percent < 0.2 ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 100),
+                        child: _buildHeaderContent(true)),
+                    background: _buildHeaderBackground(false),
+                  );
+                },
+              ),
             ),
-      ),
-          SliverToBoxAdapter(
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: kPaddingHorizontal.w),
-                child: ListView.separated(
-                  shrinkWrap: true,
-
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Row(
+            SliverToBoxAdapter(
+                child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: kPaddingHorizontal.w),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Column(
                           children: [
-                            const CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37')),
-                            10.pw(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
                               children: [
-                                AppText(
-                                  text: 'حسين غباين',
-                                  fontSize: 14.sp,
+                                const CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37')),
+                                10.pw(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppText(
+                                      text: 'حسين غباين',
+                                      fontSize: 14.sp,
+                                    ),
+                                    4.ph(),
+                                    AppText(
+                                      text: 'منذ 4 دقائق',
+                                      fontSize: 12.sp,
+                                      color: Color(0xff64748B),
+                                    )
+                                  ],
                                 ),
-                                4.ph(),
-                                AppText(
-                                  text: 'منذ 4 دقائق',
-                                  fontSize: 12.sp,
-                                  color: Color(0xff64748B),
-                                )
+                                const Spacer(),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.more_horiz))
                               ],
                             ),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.more_horiz))
+                            10.ph(),
+                            const ExpandableText(
+                                text:
+                                    'مرحبا اصدقائي اريد معرفة الشباتر المطلوبة للامتحان النهائي وموعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور موعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور '),
+                            12.ph(),
+                            _buildPostImage(
+                                'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37'),
+                            10.ph(),
+                            // _buildDotsIndicator(),
+                            // 20.ph(),
+                            BlocProvider(
+                                create: (context) => ActionPostCubit(),
+                                child: SizedBox(
+                                  width: 326.w,
+                                  height: 42.h,
+                                  child: Row(
+                                    children: [
+                                      BlocBuilder<ActionPostCubit,
+                                          ActionPostState>(
+                                        builder: (context, state) {
+                                          return ActionButton(
+                                            iconPath: state.isLiked
+                                                ? 'assets/icons/favourite_selected.png'
+                                                : 'assets/icons/favourite.png',
+                                            count: '450',
+                                            onTap: () {
+                                              context
+                                                  .read<ActionPostCubit>()
+                                                  .performLikeAction(
+                                                      !state.isLiked);
+                                            },
+                                          );
+                                        },
+                                      ),
+                                      10.pw(),
+                                      ActionButton(
+                                        iconPath: 'assets/icons/comment.png',
+                                        count: '21',
+                                        onTap: () {
+                                          CommentsList(
+                                              context: context, postId: 5);
+                                        },
+                                      ),
+                                      10.pw(),
+                                      ActionButton(
+                                        iconPath: 'assets/icons/share.png',
+                                        count: '15',
+                                        onTap: () {
+                                          showShareOptions(context);
+                                        },
+                                      ),
+                                      const Spacer(),
+                                      BlocBuilder<ActionPostCubit,
+                                          ActionPostState>(
+                                        builder: (context, state) {
+                                          return IconButton(
+                                            icon: Image.asset(
+                                              state.isSaved
+                                                  ? 'assets/icons/bookMark_selected.png'
+                                                  : 'assets/icons/Bookmark.png',
+                                              height: 17.h,
+                                              width: 19.w,
+                                            ),
+                                            padding: EdgeInsets.zero,
+                                            onPressed: () {
+                                              CommentsList(
+                                                  context: context, postId: 5);
+
+                                              context
+                                                  .read<ActionPostCubit>()
+                                                  .performSaveAction(
+                                                      !state.isSaved);
+                                            },
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ))
                           ],
-                        ),
-                        10.ph(),
-                        const ExpandableText(
-                            text:
-                            'مرحبا اصدقائي اريد معرفة الشباتر المطلوبة للامتحان النهائي وموعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور موعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور '),
-                        12.ph(),
-                        _buildPostImage(
-                            'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37'),
-                        10.ph(),
-                        // _buildDotsIndicator(),
-                        // 20.ph(),
-                       BlocProvider(
-                         create:(context) =>  ActionPostCubit(),
-                         child:  SizedBox(
-                           width: 326.w,
-                           height: 42.h,
-                           child: Row(
-                             children: [
-                               BlocBuilder<ActionPostCubit,ActionPostState>(
-                                 builder: (context, state) {
-                                   return ActionButton(iconPath:state.isLiked? 'assets/icons/favourite_selected.png':'assets/icons/favourite.png',count: '450',onTap:  () {
-                                     context.read<ActionPostCubit>().performLikeAction(!state.isLiked);
-
-                                   },);
-                                 },
-                               ),
-                               10.pw(),
-                               ActionButton(iconPath:  'assets/icons/comment.png',count: '21',onTap: () {
-
-                               },),
-                               10.pw(),
-                               ActionButton(iconPath:  'assets/icons/share.png',count: '15',onTap: () {
-                                 showShareOptions(context);
-                               },),
-                               const Spacer(),
-                               BlocBuilder<ActionPostCubit,ActionPostState>(
-                                 builder: (context, state) {
-                                   return IconButton(
-                                     icon: Image.asset(
-                                       state.isSaved?'assets/icons/bookMark_selected.png':  'assets/icons/Bookmark.png',
-                                       height: 17.h,
-                                       width: 19.w,
-                                     ),
-                                     padding: EdgeInsets.zero,
-                                     onPressed: () {
-                                       context.read<ActionPostCubit>().performSaveAction(!state.isSaved);
-                                     },
-                                   );
-                                 },
-
-                               )
-                             ],
-                           )  ,
-                         )
-                       )
-                      ],
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        16.ph(),
-                    Divider(
-                    color: Colors.grey.shade300,
-                      endIndent: kPaddingHorizontal.w,
-                      indent: 25.w,
-                    ),
-                        16.ph()
-                      ],
-                    );
-
-                  },
-                  itemCount: 5,
-                  physics: BouncingScrollPhysics(),
-                ))
-          ),
-        ],
-      )
-
-
-    );
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            16.ph(),
+                            Divider(
+                              color: Colors.grey.shade300,
+                              endIndent: kPaddingHorizontal.w,
+                              indent: 25.w,
+                            ),
+                            16.ph()
+                          ],
+                        );
+                      },
+                      itemCount: 5,
+                      physics: BouncingScrollPhysics(),
+                    ))),
+          ],
+        ));
   }
 
   Widget _buildHeaderBackground(bool inScroll) {
@@ -178,10 +199,10 @@ class CommunityScreen extends StatelessWidget {
   }
 
   Widget _buildHeaderContent(bool inScroll) {
-    List<Map<String,String>> list= [
-    {
-      'عام': 'assets/images/image_test1.png',
-    },
+    List<Map<String, String>> list = [
+      {
+        'عام': 'assets/images/image_test1.png',
+      },
       {
         'تطوير برمجيات': 'assets/images/image_test1.png',
       },
@@ -205,113 +226,133 @@ class CommunityScreen extends StatelessWidget {
       'وسائط متعددة',
     ];
      */
-    return  inScroll ?
-    SafeArea(child: Column(
-      children: [
-        // 50.ph(),
-        // inScroll?0.ph():64.ph(),
-        Expanded(child: SizedBox(
-          width:327.w,
-          // 327.w,
-          height:40.h,
-          child: Row(
+    return inScroll
+        ? SafeArea(
+            child: Column(
             children: [
-              Expanded(child: _buildLogoContainer(),),
-              8.pw(),
-              _buildTitleAndSubtitle(inScroll),
-              const Spacer(),
-              _buildIconButton('assets/icons/search.png',inScroll),
-              _buildIconButton('assets/icons/notification.png',inScroll),
+              // 50.ph(),
+              // inScroll?0.ph():64.ph(),
+              Expanded(
+                child: SizedBox(
+                  width: 327.w,
+                  // 327.w,
+                  height: 40.h,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildLogoContainer(),
+                      ),
+                      8.pw(),
+                      _buildTitleAndSubtitle(inScroll),
+                      const Spacer(),
+                      _buildIconButton('assets/icons/search.png', inScroll),
+                      _buildIconButton(
+                          'assets/icons/notification.png', inScroll),
+                    ],
+                  ),
+                ),
+              ),
+              inScroll ? 0.ph() : kPaddingHorizontal.ph(),
+              inScroll ? 0.ph() : _buildCategoryTabs(),
             ],
-          ),
-        ),),
-        inScroll?0.ph(): kPaddingHorizontal.ph(),
-        inScroll?0.ph(): _buildCategoryTabs(),
-      ],
-    )) :
-   BlocProvider(
-     create: (context) => CategoryCubit(),
-     child:  Column(
-       children: [
-         inScroll?0.ph():64.ph(),
-         SizedBox(
-           height: 55.h,
-           width: 327.w,
-           child: Row(
-             children: [
-               _buildLogoContainer(),
-               8.pw(),
-               _buildTitleAndSubtitle(inScroll),
-               const Spacer(),
-               _buildIconButton('assets/icons/search.png',inScroll),
-               _buildIconButton('assets/icons/notification.png',inScroll),
-             ],
-           ),
-         ),
-         20.ph(),
-         SizedBox(
-           width: 327.w,
-           height: 24.h,
-           child: Row(
-             children: [
-               AppText(text: 'التخصصات', fontSize: 16.sp,color: Colors.white,),
-               Spacer(),
-               AppText(text: 'عرض المزيد', fontSize: 12.sp,color: Colors.lightBlueAccent,),
-
-             ],
-           ),
-         ),
-         26.ph(),
-         BlocBuilder<CategoryCubit,int>(
-           builder: (BuildContext context, selectedIndex) {
-             return Container(
-               padding: EdgeInsets.only(right: kPaddingHorizontal.w),
-               height: kCategoryHeight.h,
-               // width: 327.w,
-               child: ListView.separated(
-                   physics: const BouncingScrollPhysics(),
-                   shrinkWrap: true,
-                   scrollDirection: Axis.horizontal,
-                   itemBuilder:(context, index) {
-                     String title= list[index].keys.first;
-                     String image= list[index].values.first;
-                     return Column(
-                       children: [
-                         GestureDetector(
-                           child: Container(
-                             width: 56.w,
-                             height: 56.h,
-                             decoration: BoxDecoration(
-                               // image:
-                                 color: selectedIndex == index ? Colors.white : Colors.blue,
-                                 borderRadius: BorderRadius.circular(10.r)
-                             ),
-                             child: Image.asset(image),
-                           ),
-                           onTap: () {
-                             context.read<CategoryCubit>().selectCategory(index);
-                           },
-                         ),
-                         12.ph(),
-                         AppText(text: title, fontSize: 14.sp,color: Colors.white,)
-                       ],
-                     );
-
-                   },
-                   separatorBuilder: (context, index) {
-                     return 20.pw();
-
-                   },
-                   itemCount: list.length),
-             );
-           },
-         )
-         // _buildCategoryTabs(),
-       ],
-     ),
-
-   );
+          ))
+        : BlocProvider(
+            create: (context) => CategoryCubit(),
+            child: Column(
+              children: [
+                inScroll ? 0.ph() : 64.ph(),
+                SizedBox(
+                  height: 55.h,
+                  width: 327.w,
+                  child: Row(
+                    children: [
+                      _buildLogoContainer(),
+                      8.pw(),
+                      _buildTitleAndSubtitle(inScroll),
+                      const Spacer(),
+                      _buildIconButton('assets/icons/search.png', inScroll),
+                      _buildIconButton(
+                          'assets/icons/notification.png', inScroll),
+                    ],
+                  ),
+                ),
+                20.ph(),
+                SizedBox(
+                  width: 327.w,
+                  height: 24.h,
+                  child: Row(
+                    children: [
+                      AppText(
+                        text: 'التخصصات',
+                        fontSize: 16.sp,
+                        color: Colors.white,
+                      ),
+                      Spacer(),
+                      AppText(
+                        text: 'عرض المزيد',
+                        fontSize: 12.sp,
+                        color: Colors.lightBlueAccent,
+                      ),
+                    ],
+                  ),
+                ),
+                26.ph(),
+                BlocBuilder<CategoryCubit, int>(
+                  builder: (BuildContext context, selectedIndex) {
+                    return Container(
+                      padding: EdgeInsets.only(right: kPaddingHorizontal.w),
+                      height: kCategoryHeight.h,
+                      // width: 327.w,
+                      child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            String title = list[index].keys.first;
+                            String image = list[index].values.first;
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  child: Container(
+                                    width: 56.w,
+                                    height: 56.h,
+                                    decoration: BoxDecoration(
+                                        // image:
+                                        color: selectedIndex == index
+                                            ? Colors.white
+                                            : Colors.blue,
+                                        borderRadius:
+                                            BorderRadius.circular(10.r)),
+                                    child: Image.asset(image),
+                                  ),
+                                  onTap: () {
+                                    context
+                                        .read<CategoryCubit>()
+                                        .selectCategory(index);
+                                  },
+                                ),
+                                12.ph(),
+                                AppText(
+                                  text: title,
+                                  fontSize: 14.sp,
+                                  color: Colors.white,
+                                )
+                              ],
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return 20.pw();
+                          },
+                          itemCount: list.length),
+                    );
+                  },
+                )
+                // _buildCategoryTabs(),
+              ],
+            ),
+          );
   }
+
   Widget _buildLogoContainer() {
     return Container(
       width: 50.w,
@@ -336,10 +377,9 @@ class CommunityScreen extends StatelessWidget {
         AppText(
           text: 'تطوير البرمجيات',
           fontSize: 18.sp,
-          color:inScroll? Colors.black:Colors.white,
+          color: inScroll ? Colors.black : Colors.white,
           // fontWeight: FontWeight.bold,
         ),
-
         if (!inScroll) ...[
           6.ph(),
           AppText(
@@ -348,25 +388,22 @@ class CommunityScreen extends StatelessWidget {
             color: Colors.white,
           ),
         ],
-
       ],
     );
   }
 
-  Widget _buildIconButton(String iconPath,bool inScroll) {
+  Widget _buildIconButton(String iconPath, bool inScroll) {
     return IconButton(
       onPressed: () {},
       icon: Image.asset(
         iconPath,
         height: 20.h,
         width: 20.w,
-        color: inScroll? Colors.black: Colors.white,
+        color: inScroll ? Colors.black : Colors.white,
       ),
       padding: EdgeInsets.zero,
     );
   }
-
-
 
   Widget _buildCategoryTabs() {
     return Container(
@@ -466,7 +503,7 @@ class CommunityScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-       Image.asset(imagePath),
+        Image.asset(imagePath),
         SizedBox(height: 4.h),
         Text(
           label,
@@ -479,8 +516,6 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 }
-
-
 
 class ExpandableText extends StatefulWidget {
   final String text;
@@ -541,14 +576,17 @@ void showShareOptions(BuildContext context) {
               children: [
                 100.pw(),
 
-                AppText(text:  'مشاركة بواسطة', fontSize: 16,
-                fontWeight: FontWeight.w600,),
+                AppText(
+                  text: 'مشاركة بواسطة',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
                 const Spacer(),
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: const Icon(Icons.close, color: Colors.grey),
                 ),
-               // To balance the close icon space
+                // To balance the close icon space
               ],
             ),
             // Sharing options
@@ -588,9 +626,6 @@ void showShareOptions(BuildContext context) {
                     Navigator.pop(context); // Close the bottom sheet
                   },
                 ),
-
-
-
               ],
             ),
             SizedBox(height: 16),
@@ -616,10 +651,13 @@ Widget _buildShareOption({
           height: 69.h,
           width: 69.w,
           decoration: BoxDecoration(
-            color: const Color(0xF9F9F9C4),
-            shape: BoxShape.circle,
-            image: DecorationImage(image: AssetImage(iconPath,),)
-          ),
+              color: const Color(0xF9F9F9C4),
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage(
+                  iconPath,
+                ),
+              )),
         ),
         // CircleAvatar(
         //   radius: 28.0,
@@ -627,10 +665,12 @@ Widget _buildShareOption({
         //   child: Image.asset(iconPath, height: 30, width: 30),
         // ),
         SizedBox(height: 8),
-        AppText(text: label, fontSize: 12.sp,color: Color(0xff3D5A80),)
-
+        AppText(
+          text: label,
+          fontSize: 12.sp,
+          color: Color(0xff3D5A80),
+        )
       ],
     ),
   );
 }
-
