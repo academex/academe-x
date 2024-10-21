@@ -1,14 +1,15 @@
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/home/action_post_cubit.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/home/category_cubit.dart';
-import 'package:academe_x/features/home/presentaion/controllers/states/action_post_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/const/app_size.dart';
+import '../controllers/cubits/home/action_post_cubit.dart';
+import '../controllers/cubits/home/category_cubit.dart';
+import '../controllers/states/action_post_states.dart';
 import '../widgets/action_button.dart';
+import '../widgets/comments_list.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 
 class CommunityScreen extends StatelessWidget {
@@ -57,7 +58,7 @@ class CommunityScreen extends StatelessWidget {
                           children: [
                             const CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                    'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37')),
+                                    'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=3zXhjg5POMoQ7kNvgEaeogu&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AZfV6b1yRcUmoKX3s-jXRo5&oh=00_AYDZNQMHGTZ1-1WwX8xXh_4Ox1LCVrngo1zxSAON4Cf_Uw&oe=67194CF7')),
                             10.pw(),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +87,7 @@ class CommunityScreen extends StatelessWidget {
                             'مرحبا اصدقائي اريد معرفة الشباتر المطلوبة للامتحان النهائي وموعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور موعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور '),
                         12.ph(),
                         _buildPostImage(
-                            'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37'),
+                            'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=3zXhjg5POMoQ7kNvgEaeogu&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AZfV6b1yRcUmoKX3s-jXRo5&oh=00_AYDZNQMHGTZ1-1WwX8xXh_4Ox1LCVrngo1zxSAON4Cf_Uw&oe=67194CF7'),
                         10.ph(),
                         // _buildDotsIndicator(),
                         // 20.ph(),
@@ -107,6 +108,7 @@ class CommunityScreen extends StatelessWidget {
                                ),
                                10.pw(),
                                ActionButton(iconPath:  'assets/icons/comment.png',count: '21',onTap: () {
+                                 CommentsList(postId:0, context: context);
 
                                },),
                                10.pw(),
@@ -602,11 +604,7 @@ void showShareOptions(BuildContext context) {
 }
 
 // Helper widget to build a share option
-Widget _buildShareOption({
-  required String iconPath,
-  required String label,
-  required VoidCallback onTap,
-}) {
+Widget _buildShareOption({required String iconPath,required String label,required VoidCallback onTap}) {
   return GestureDetector(
     onTap: onTap,
     child: Column(

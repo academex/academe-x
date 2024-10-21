@@ -1,9 +1,9 @@
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:academe_x/core/widgets/app_text_field.dart';
-import 'package:academe_x/features/home/presentaion/model/comment';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../model/comment.dart';
 import 'comment_card.dart'; // Assuming this is the file name
 
 class CommentsList {
@@ -127,6 +127,7 @@ class CommentsList {
                             commentText: comments[index].commentText,
                             likes: comments[index].likes,
                             reply: () {
+                              print('object');
                               FocusScope.of(context).requestFocus(_focusNode);
                               text = 'رد على @${comments[index].commenter}';
                             },
