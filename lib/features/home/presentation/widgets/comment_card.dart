@@ -8,7 +8,7 @@ class CommentCard extends StatelessWidget {
   final String commenter;
   final String commentText;
   final int likes;
-  final void Function() reply; 
+  final VoidCallback reply;
 
   const CommentCard({
     required this.commenter,
