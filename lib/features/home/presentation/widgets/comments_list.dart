@@ -127,7 +127,6 @@ class CommentsList {
                             commentText: comments[index].commentText,
                             likes: comments[index].likes,
                             reply: () {
-                              print('object');
                               FocusScope.of(context).requestFocus(_focusNode);
                               text = 'رد على @${comments[index].commenter}';
                             },

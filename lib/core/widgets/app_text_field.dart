@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_text.dart';
 
 class AppTextField extends StatelessWidget {
-   AppTextField({
+  AppTextField({
     Key? key,
     required this.hintText,
 
@@ -20,6 +20,8 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.suffix,
     this.prefixText,
+    this.maxLine = 1,
+    this.withBoarder = false,
     // this.isOTP=false,
     this.suffixIcon,
   }) : super(key: key);
@@ -27,11 +29,14 @@ class AppTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final TextEditingController controller;
   final Widget? suffixIcon;
-  final bool obscureText ;
-  final Widget? suffix ;
+  final bool obscureText;
+  final Widget? suffix;
   final String? prefixText;
+  int? maxLine;
+  bool withBoarder;
+
   // final bool isOTP;
-   FocusNode? focusNode = FocusNode();
+  FocusNode? focusNode = FocusNode();
 
   final Function(String)? onSubmitted;
   final Function(String)? onChanged;
@@ -42,6 +47,7 @@ class AppTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+          maxLines: maxLine,
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
@@ -54,15 +60,16 @@ class AppTextField extends StatelessWidget {
             suffix: suffix,
             prefixText: prefixText,
             hintText: hintText,
+            hintStyle: TextStyle(color: Colors.black26),
             hintMaxLines: 1,
             suffixIcon: suffixIcon,
-            enabledBorder: OutlineInputBorder(
+            enabledBorder:withBoarder? OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xffD9D9D9)),
-            ),
+            ):null,
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xff3253FF)),
+              borderSide: BorderSide(color: withBoarder?Color(0xff3253FF):Colors.transparent),
             ),
             // enabledBorder: buildOutlineInputBorder(color:focusedBorderColor),
             // focusedBorder: buildOutlineInputBorder(color:focusedBorderColor),

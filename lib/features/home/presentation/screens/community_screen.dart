@@ -18,20 +18,21 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const CustomBottomNavBar(),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        slivers: [
-          SliverAppBar(
-            automaticallyImplyLeading: true,
-            expandedHeight: kAppBarExpandedHeight.h,
-            pinned: true,
-            leading: 0.pw(),
-            flexibleSpace:LayoutBuilder(
-              builder: (context, constraints) {
-                // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
-                final percent = (constraints.maxHeight - kToolbarHeight) / (kAppBarExpandedHeight.h - kToolbarHeight);
+        bottomNavigationBar: const CustomBottomNavBar(),
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          shrinkWrap: true,
+          slivers: [
+            SliverAppBar(
+              automaticallyImplyLeading: true,
+              expandedHeight: kAppBarExpandedHeight.h,
+              pinned: true,
+              leading: 0.pw(),
+              flexibleSpace: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
+                  final percent = (constraints.maxHeight - kToolbarHeight) /
+                      (kAppBarExpandedHeight.h - kToolbarHeight);
 
                 return FlexibleSpaceBar(
                   centerTitle: true,
@@ -162,6 +163,153 @@ class CommunityScreen extends StatelessWidget {
 
 
     );
+                  // return FlexibleSpaceBar(
+                  //   centerTitle: true,
+                  //   title: AnimatedOpacity(
+                  //       opacity: percent < 0.2 ? 1.0 : 0.0,
+                  //       duration: const Duration(milliseconds: 100),
+                  //       child: _buildHeaderContent(true)),
+                  //   background: _buildHeaderBackground(false),
+                  // );
+            //     },
+            //   ),
+            // ),
+        //     SliverToBoxAdapter(
+        //         child: Padding(
+        //             padding:
+        //                 EdgeInsets.symmetric(horizontal: kPaddingHorizontal.w),
+        //             child: ListView.separated(
+        //               shrinkWrap: true,
+        //               itemBuilder: (context, index) {
+        //                 return Column(
+        //                   children: [
+        //                     Row(
+        //                       children: [
+        //                         const CircleAvatar(
+        //                             backgroundImage: NetworkImage(
+        //                                 'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37')),
+        //                         10.pw(),
+        //                         Column(
+        //                           crossAxisAlignment: CrossAxisAlignment.start,
+        //                           children: [
+        //                             AppText(
+        //                               text: 'حسين غباين',
+        //                               fontSize: 14.sp,
+        //                             ),
+        //                             4.ph(),
+        //                             AppText(
+        //                               text: 'منذ 4 دقائق',
+        //                               fontSize: 12.sp,
+        //                               color: Color(0xff64748B),
+        //                             )
+        //                           ],
+        //                         ),
+        //                         const Spacer(),
+        //                         IconButton(
+        //                             onPressed: () {},
+        //                             icon: const Icon(Icons.more_horiz))
+        //                       ],
+        //                     ),
+        //                     10.ph(),
+        //                     const ExpandableText(
+        //                         text:
+        //                             'مرحبا اصدقائي اريد معرفة الشباتر المطلوبة للامتحان النهائي وموعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور موعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور '),
+        //                     12.ph(),
+        //                     _buildPostImage(
+        //                         'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=dy9GqZDay4UQ7kNvgHdEbqB&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AmMjF5Eha2nBoTKp3X46xw6&oh=00_AYBh4xXrqkDSbNsQgWbIlmkcNjugFuu95x_Gr5qfGyB5ug&oe=67119C37'),
+        //                     10.ph(),
+        //                     // _buildDotsIndicator(),
+        //                     // 20.ph(),
+        //                     BlocProvider(
+        //                         create: (context) => ActionPostCubit(),
+        //                         child: SizedBox(
+        //                           width: 326.w,
+        //                           height: 42.h,
+        //                           child: Row(
+        //                             children: [
+        //                               BlocBuilder<ActionPostCubit,
+        //                                   ActionPostState>(
+        //                                 builder: (context, state) {
+        //                                   return ActionButton(
+        //                                     iconPath: state.isLiked
+        //                                         ? 'assets/icons/favourite_selected.png'
+        //                                         : 'assets/icons/favourite.png',
+        //                                     count: '450',
+        //                                     onTap: () {
+        //                                       context
+        //                                           .read<ActionPostCubit>()
+        //                                           .performLikeAction(
+        //                                               !state.isLiked);
+        //                                     },
+        //                                   );
+        //                                 },
+        //                               ),
+        //                               10.pw(),
+        //                               ActionButton(
+        //                                 iconPath: 'assets/icons/comment.png',
+        //                                 count: '21',
+        //                                 onTap: () {
+        //                                   CommentsList(
+        //                                       context: context, postId: 5);
+        //                                 },
+        //                               ),
+        //                               10.pw(),
+        //                               ActionButton(
+        //                                 iconPath: 'assets/icons/share.png',
+        //                                 count: '15',
+        //                                 onTap: () {
+        //                                   showShareOptions(context);
+        //                                 },
+        //                               ),
+        //                               const Spacer(),
+        //                               BlocBuilder<ActionPostCubit,
+        //                                   ActionPostState>(
+        //                                 builder: (context, state) {
+        //                                   return IconButton(
+        //                                     icon: Image.asset(
+        //                                       state.isSaved
+        //                                           ? 'assets/icons/bookMark_selected.png'
+        //                                           : 'assets/icons/Bookmark.png',
+        //                                       height: 17.h,
+        //                                       width: 19.w,
+        //                                     ),
+        //                                     padding: EdgeInsets.zero,
+        //                                     onPressed: () {
+        //                                       CommentsList(
+        //                                           context: context, postId: 5);
+        //
+        //                                       context
+        //                                           .read<ActionPostCubit>()
+        //                                           .performSaveAction(
+        //                                               !state.isSaved);
+        //                                     },
+        //                                   );
+        //                                 },
+        //                               )
+        //                             ],
+        //                           ),
+        //                         ))
+        //                   ],
+        //                 );
+        //               },
+        //               separatorBuilder: (context, index) {
+        //                 return Column(
+        //                   children: [
+        //                     16.ph(),
+        //                     Divider(
+        //                       color: Colors.grey.shade300,
+        //                       endIndent: kPaddingHorizontal.w,
+        //                       indent: 25.w,
+        //                     ),
+        //                     16.ph()
+        //                   ],
+        //                 );
+        //               },
+        //               itemCount: 5,
+        //               physics: BouncingScrollPhysics(),
+        //             ))),
+        //   ],
+        // ));
   }
 
   Widget _buildHeaderBackground(bool inScroll) {
@@ -604,7 +752,11 @@ void showShareOptions(BuildContext context) {
 }
 
 // Helper widget to build a share option
-Widget _buildShareOption({required String iconPath,required String label,required VoidCallback onTap}) {
+Widget _buildShareOption({
+  required String iconPath,
+  required String label,
+  required VoidCallback onTap,
+}) {
   return GestureDetector(
     onTap: onTap,
     child: Column(
