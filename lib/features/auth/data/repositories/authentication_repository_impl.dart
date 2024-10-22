@@ -8,7 +8,6 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/exception.dart';
 import '../../../../core/error/failure.dart';
-import '../../../home/presentaion/model/home_product_model.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   // final NetworkConnection networkConnection;

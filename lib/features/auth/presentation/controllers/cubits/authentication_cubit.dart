@@ -6,7 +6,6 @@ import 'package:academe_x/features/auth/data/models/requset/login_requset_model.
 import 'package:academe_x/features/auth/domain/entities/request/login_requset_entity.dart';
 import 'package:academe_x/features/auth/domain/usecases/authentication_use_case.dart';
 import 'package:academe_x/features/auth/presentation/controllers/states/authentication_states.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/home/home_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
