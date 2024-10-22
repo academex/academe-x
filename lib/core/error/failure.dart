@@ -34,3 +34,7 @@ class ApiFailure extends Failure {
 }
 
 
+class TimeOutFailure extends Failure {
+  TimeOutFailure({required String message}) : super(message: message);
+}
+
