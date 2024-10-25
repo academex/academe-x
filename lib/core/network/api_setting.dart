@@ -1,7 +1,9 @@
 class ApiSetting {
-  static const String baseUrl = "https://fakestoreapi.com/";
+  static const String baseUrl = "https://academex-ruwm.onrender.com/";
 
-  static const String productsHome = "${baseUrl}products";
+
+  static const String login = "${baseUrl}auth/signin";
+
 
 
 }

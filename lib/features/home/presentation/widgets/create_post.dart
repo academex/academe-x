@@ -60,7 +60,7 @@ class CreatePost {
                     SizedBox(width: 50.w), // Placeholder for alignment
                   ],
                 ),
-                SizedBox(height: 16.h),
+               16.ph(),
                 Row(
                   children: [
                     CircleAvatar(

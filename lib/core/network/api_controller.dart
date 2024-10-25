@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:academe_x/core/error/exception.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -57,22 +60,48 @@ class ApiController {
     return now.difference(timeExpires).inSeconds > 0;
   }
 
-  Future<Map> post(
-    Uri url, {
-    Map<String, String>? headers,
-    Object? body,
-    Encoding? encoding,
-  }) async {
-    // Logger().i(body);
-    // Logger().i(url);
-    http.Response response = await http.post(url,
-        headers: headers ?? {'Content-Type': 'application/json'}, body: body);
-    // Logger().i(body);
-    // Logger().i(response.body);
-    // Logger().i(response.statusCode);
-    Map<String, dynamic> data = await jsonDecode(response.body);
-    return data;
+
+  Future<Map<String, dynamic>> post(
+      Uri url, {
+        Map<String, String>? headers,
+        Object? body,
+        Encoding? encoding,
+        required int timeAlive,
+      }) async {
+    try {
+      Logger().w(url);
+      Logger().w(body.toString());
+      // Use Future.timeout to set a time limit for the request
+      http.Response response = await http
+          .post(
+        url,
+        // headers: headers ?? {'Content-Type': 'application/json'},
+        body: body,
+      )
+          .timeout(Duration(seconds: timeAlive), onTimeout: () {
+        // This block executes if the request times out
+        throw TimeoutException('Request took longer than $timeAlive seconds.');
+      });
+
+      Logger().w(response.body);
+      if(response.statusCode == 401){
+        throw WrongDataException(errorMessage: 'wrong username or password');
+      }
+      Map<String, dynamic> data = jsonDecode(response.body);
+      return data;
+
+    } on WrongDataException catch (e) {
+      // Handle timeout exception
+      throw WrongDataException(errorMessage: e.errorMessage);
+    } on TimeoutException catch (e) {
+      // Handle timeout exception
+      throw TimeoutException(e.message);
+    } catch (e) {
+      // Handle other errors (such as parsing or HTTP errors)
+      throw Exception('Request failed: $e');
+    }
   }
+
 
   Future<Map> patch(
     Uri url, {

@@ -1,9 +1,9 @@
-import 'package:academe_x/core/widgets/app_text.dart';
-import 'package:academe_x/features/home/presentaion/widgets/create_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/const/app_size.dart';
+import '../../../../core/widgets/app_text.dart';
+import 'create_post.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({super.key});

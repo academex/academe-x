@@ -10,6 +10,9 @@ class CustomTextField extends StatelessWidget {
   final bool isPassword;
   final VoidCallback? togglePasswordVisibility;
   final bool isPasswordVisible;
+  final String? Function(String?)? validator;
+
+
 
   const CustomTextField({
     super.key,
@@ -19,12 +22,13 @@ class CustomTextField extends StatelessWidget {
     this.isPassword = false,
     this.togglePasswordVisibility,
     this.isPasswordVisible = false,
+    this.validator
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 100.h, // Adjust as needed
+      height: 115.h, // Adjust as needed
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -35,12 +39,14 @@ class CustomTextField extends StatelessWidget {
             color: Colors.black87,
           ),
           12.ph(),
-          TextField(
+          TextFormField(
             controller: controller,
             obscureText: isPassword && !isPasswordVisible,
+            validator: validator,
             // textAlign: TextAlign.right,
             decoration: InputDecoration(
               hintText: hintText,
+
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(10.r),
@@ -66,6 +72,7 @@ class CustomTextField extends StatelessWidget {
               )
                   : null,
             ),
+
           ),
         ],
       ),

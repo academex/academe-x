@@ -1,6 +1,4 @@
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/features/auth/presentation/screens/login_screen.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/home/action_post_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
