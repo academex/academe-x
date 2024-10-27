@@ -17,7 +17,9 @@ class AppTextField extends StatelessWidget {
     this.suffix,
     this.prefixText,
     this.maxLine = 1,
+    this.minLine = 1,
     this.withBoarder = false,
+    this.autofocus = false,
     // this.isOTP=false,
     this.suffixIcon,
   });
@@ -29,7 +31,9 @@ class AppTextField extends StatelessWidget {
   final Widget? suffix;
   final String? prefixText;
   int? maxLine;
+  int? minLine;
   bool withBoarder;
+  bool autofocus;
 
   // final bool isOTP;
   FocusNode? focusNode = FocusNode();
@@ -43,7 +47,9 @@ class AppTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+          autofocus: autofocus,
           maxLines: maxLine,
+          minLines: minLine,
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
