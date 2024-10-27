@@ -34,8 +34,8 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: AppCustomAppBar(
-        leading: const SizedBox(), // No leading widget
+      appBar: const AppCustomAppBar(
+        leading: SizedBox(), // No leading widget
       ),
       body: Padding(
         padding: EdgeInsets.only(left: 24.w, right: 24.w),
@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                     isPassword: true,
                     togglePasswordVisibility: () {
                       // Logger().e('hi');
-                      context.read<AuthActionCubit>().togglePasswordVisibility(isVisible: !isVisible);
+                      context.read<AuthActionCubit>().togglePasswordVisibility(isVisible: isVisible);
                     },
                     isPasswordVisible: isVisible,
                     validator: (value) {
@@ -156,10 +156,11 @@ class LoginScreen extends StatelessWidget {
                         if (formKey.currentState!.validate()) {
                           final email = emailController.text;
                           final password = passwordController.text;
+                          Navigator.pushReplacementNamed(context, '/community_screen');
 
-                          await context.read<AuthenticationCubit>().login(
-                            LoginRequsetModel(username: email, password: password),
-                          );
+                          // await context.read<AuthenticationCubit>().login(
+                          //   LoginRequsetModel(username: email, password: password),
+                          // );
                         } else {
                           // Show error if fields are invalid
                           context.showSnackBar(message: 'يرجى ملء جميع الحقول المطلوبة',error: true);

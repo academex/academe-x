@@ -18,13 +18,14 @@ class AuthenticationRemoteDataSource {
   AuthenticationRemoteDataSource({required this.apiController,required this.internetConnectionChecker});
 
   Future<AuthTokenModel> login(LoginRequsetModel user) async {
+
     if(await internetConnectionChecker.hasConnection){
       Logger().d(Uri.parse(ApiSetting.login)); // Log the login API endpoint
       try {
         final response = await apiController.post(
           Uri.parse(ApiSetting.login),
           body: user.toJson(),
-          timeAlive: 20, // Timeout set to 10 seconds
+          timeAlive: 10, // Timeout set to 10 seconds
         );
 
         Logger().d(response); // Log the response
@@ -33,16 +34,17 @@ class AuthenticationRemoteDataSource {
       }on WrongDataException catch (e) {
         // Handle timeout
         throw WrongDataException(errorMessage: e.errorMessage);
-      }on TimeoutException catch (e) {
+      }on TimeOutExeption catch (e) {
         // Handle timeout
-        Logger().e('Timeout: $e');
-        throw Exception('The request timed out. Please try again later.');
+        Logger().e('Timeout: ${e.errorMessage}');
+        throw TimeOutExeption(errorMessage: e.errorMessage);
       } on Exception catch (e) {
         // Handle general exceptions
         Logger().e('Error: $e');
-        throw Exception('An error occurred: $e');
+        throw Exception('Assdn error occurred: $e');
       }
-    }else{
+    }
+    else{
       throw OfflineException(errorMessage: 'No Internet Connection');
     }
 

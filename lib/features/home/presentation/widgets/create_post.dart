@@ -34,7 +34,7 @@ class CreatePost {
                     width: 56.w,
                     height: 5.h,
                     decoration: BoxDecoration(
-                      color: Color(0xffE7E8EA),
+                      color: const Color(0xffE7E8EA),
                       borderRadius: BorderRadius.circular(12.w),
                     ),
                   ),
@@ -64,7 +64,7 @@ class CreatePost {
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/profile.jpg'),
+                      backgroundImage: const AssetImage('assets/images/profile.jpg'),
                       radius: 20.w,
                     ),
                     SizedBox(width: 8.w),
@@ -97,14 +97,14 @@ class CreatePost {
                     onTap: () {
                       _postController.clear();
                     },
-                    child: Icon(Icons.clear, color: Colors.grey),
+                    child: const Icon(Icons.clear, color: Colors.grey),
                   ),
                 ),
                 // need if statment as : if(textController.isNotEmpty) do the loop
                 // for loop for the hashes
                 for (int i = 0; i < 1; i++)
                   AppText(
-                    text: '   ' + '#تطوير برمجيات',
+                    text: '   ' '#تطوير برمجيات',
                     fontSize: 14.sp,
                     color: const Color(0xff0077FF),
                   ),
@@ -133,7 +133,7 @@ class CreatePost {
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 GestureDetector(
                   onTap: () {
                     // Handle post submission
@@ -142,7 +142,7 @@ class CreatePost {
                     height: 50.h,
                     decoration: BoxDecoration(
                       color:
-                          Color(0xFF007AFF), // Blue color for the post button
+                          const Color(0xFF007AFF), // Blue color for the post button
                       borderRadius: BorderRadius.circular(10.w),
                     ),
                     child: Center(

@@ -105,7 +105,7 @@ class CommentsList {
                   width: 56.w, // Custom width for the divider
                   child: Divider(
                     thickness: 5.h, // Thickness of the divider
-                    color: Color(0xffE7E8EA), // Color of the divider
+                    color: const Color(0xffE7E8EA), // Color of the divider
                   ),
                 ),
                 16.ph(),

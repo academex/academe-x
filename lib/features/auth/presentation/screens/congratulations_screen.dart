@@ -10,7 +10,7 @@ import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import '../../../../core/const/app_robot.dart'; // Robot SVG import
 
 class AccountCreationSuccessScreen extends StatelessWidget {
-  const AccountCreationSuccessScreen({Key? key}) : super(key: key);
+  const AccountCreationSuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

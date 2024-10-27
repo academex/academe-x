@@ -12,7 +12,7 @@ import '../widgets/custom_text_field.dart';
 import '../widgets/progress_bar_with_close_button.dart';
 
 class SignUpScreen extends StatelessWidget {
-  SignUpScreen({Key? key}) : super(key: key);
+  SignUpScreen({super.key});
 
   // Controllers for text fields
   final TextEditingController nameController = TextEditingController();
@@ -103,7 +103,7 @@ class SignUpScreen extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: AppText(
             text: text,
             fontSize: 16.sp,

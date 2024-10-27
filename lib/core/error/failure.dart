@@ -9,32 +9,32 @@ abstract class Failure extends Equatable {
 }
 
 class ServerFailure extends Failure {
-  ServerFailure({required String message}) : super(message: message);
+  ServerFailure({required super.message});
 }
 
 class WrongPasswordOrEmailFailure extends Failure {
-  WrongPasswordOrEmailFailure({required String message}) : super(message: message);
+  WrongPasswordOrEmailFailure({required super.message});
 }
 
 class CacheFailure extends Failure {
-  CacheFailure({required String message}) : super(message: message);
+  CacheFailure({required super.message});
 }
 
 class NoInternetConnectionFailure extends Failure {
-  NoInternetConnectionFailure({required String message}) : super(message: message);
+  NoInternetConnectionFailure({required super.message});
 }
 
 class NoDataFailure extends Failure {
-  NoDataFailure({required String message}) : super(message: message);
+  NoDataFailure({required super.message});
 }
 
 
 class ApiFailure extends Failure {
-  ApiFailure({required String message}) : super(message: message);
+  ApiFailure({required super.message});
 }
 
 
 class TimeOutFailure extends Failure {
-  TimeOutFailure({required String message}) : super(message: message);
+  TimeOutFailure({required super.message});
 }
 

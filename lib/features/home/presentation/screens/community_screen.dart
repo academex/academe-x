@@ -72,7 +72,7 @@ class CommunityScreen extends StatelessWidget {
                                 AppText(
                                   text: 'منذ 4 دقائق',
                                   fontSize: 12.sp,
-                                  color: Color(0xff64748B),
+                                  color: const Color(0xff64748B),
                                 )
                               ],
                             ),
@@ -155,7 +155,7 @@ class CommunityScreen extends StatelessWidget {
 
                   },
                   itemCount: 5,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                 ))
           ),
         ],
@@ -363,7 +363,7 @@ class CommunityScreen extends StatelessWidget {
         Expanded(child: SizedBox(
           width:327.w,
           // 327.w,
-          height:40.h,
+          height:45.h,
           child: Row(
             children: [
               Expanded(child: _buildLogoContainer(),),
@@ -405,7 +405,7 @@ class CommunityScreen extends StatelessWidget {
            child: Row(
              children: [
                AppText(text: 'التخصصات', fontSize: 16.sp,color: Colors.white,),
-               Spacer(),
+               const Spacer(),
                AppText(text: 'عرض المزيد', fontSize: 12.sp,color: Colors.lightBlueAccent,),
 
              ],
@@ -491,7 +491,7 @@ class CommunityScreen extends StatelessWidget {
         ),
 
         if (!inScroll) ...[
-          6.ph(),
+          // 6.ph(),
           AppText(
             text: 'مجتمع مخصص لكل تساؤلاتك',
             fontSize: 12.sp,
@@ -634,7 +634,7 @@ class CommunityScreen extends StatelessWidget {
 
 class ExpandableText extends StatefulWidget {
   final String text;
-  const ExpandableText({required this.text});
+  const ExpandableText({super.key, required this.text});
 
   @override
   _ExpandableTextState createState() => _ExpandableTextState();
@@ -658,7 +658,7 @@ class _ExpandableTextState extends State<ExpandableText> {
           onTap: () => setState(() => _isExpanded = !_isExpanded),
           child: Text(
             _isExpanded ? 'عرض أقل' : 'عرض المزيد',
-            style: TextStyle(color: Colors.blue),
+            style: const TextStyle(color: Colors.blue),
           ),
         ),
       ],
@@ -682,7 +682,7 @@ void showShareOptions(BuildContext context) {
             Container(
               height: 4.h,
               width: 56.w,
-              color: Color(0xffE7E8EA),
+              color: const Color(0xffE7E8EA),
             ),
             20.ph(),
             // Close button and title
@@ -743,7 +743,7 @@ void showShareOptions(BuildContext context) {
 
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
         ),
       );
@@ -776,8 +776,8 @@ Widget _buildShareOption({
         //   backgroundColor: Colors.grey.shade200,
         //   child: Image.asset(iconPath, height: 30, width: 30),
         // ),
-        SizedBox(height: 8),
-        AppText(text: label, fontSize: 12.sp,color: Color(0xff3D5A80),)
+        const SizedBox(height: 8),
+        AppText(text: label, fontSize: 12.sp,color: const Color(0xff3D5A80),)
 
       ],
     ),

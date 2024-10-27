@@ -59,7 +59,6 @@ class ResetPasswordTypeWayWidget extends StatelessWidget {
                   Container(
                     height: 20.h,
                     width: 20.w,
-                    child: isSelect? Icon(Icons.check,color: Colors.blue,size: 18,) : null  ,
                     decoration: BoxDecoration(
                         border: Border.all(
                           color: const Color(0xFFE2E8F0),
@@ -68,6 +67,7 @@ class ResetPasswordTypeWayWidget extends StatelessWidget {
                         color: Colors.white
                       // color: isSelect? const Color(0xFF5A73F9) : const Color(0xFFF1F5F9),
                     ),
+                    child: isSelect? const Icon(Icons.check,color: Colors.blue,size: 18,) : null  ,
                   )
                 ],
               ),

@@ -7,7 +7,11 @@ class OfflineException implements Exception {
 OfflineException({required this.errorMessage});
 }
 
-class SocketException implements Exception {}
+class TimeOutExeption implements Exception {
+  final String errorMessage;
+  TimeOutExeption({required this.errorMessage});
+
+}
 
 class WrongDataException implements Exception {
   final String errorMessage;

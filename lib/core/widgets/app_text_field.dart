@@ -1,13 +1,9 @@
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:google_fonts/google_fonts.dart';
-import 'app_text.dart';
 
 class AppTextField extends StatelessWidget {
   AppTextField({
-    Key? key,
+    super.key,
     required this.hintText,
 
     // required this.text,
@@ -24,7 +20,7 @@ class AppTextField extends StatelessWidget {
     this.withBoarder = false,
     // this.isOTP=false,
     this.suffixIcon,
-  }) : super(key: key);
+  });
   final String hintText;
   final TextInputType keyboardType;
   final TextEditingController controller;
@@ -60,7 +56,7 @@ class AppTextField extends StatelessWidget {
             suffix: suffix,
             prefixText: prefixText,
             hintText: hintText,
-            hintStyle: TextStyle(color: Colors.black26),
+            hintStyle: const TextStyle(color: Colors.black26),
             hintMaxLines: 1,
             suffixIcon: suffixIcon,
             enabledBorder:withBoarder? OutlineInputBorder(
@@ -69,7 +65,7 @@ class AppTextField extends StatelessWidget {
             ):null,
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: withBoarder?Color(0xff3253FF):Colors.transparent),
+              borderSide: BorderSide(color: withBoarder?const Color(0xff3253FF):Colors.transparent),
             ),
             // enabledBorder: buildOutlineInputBorder(color:focusedBorderColor),
             // focusedBorder: buildOutlineInputBorder(color:focusedBorderColor),

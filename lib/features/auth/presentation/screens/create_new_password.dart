@@ -18,8 +18,8 @@ class CreateNewPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppCustomAppBar(
-        leading: const BackButton(color: Colors.black),
+      appBar: const AppCustomAppBar(
+        leading: BackButton(color: Colors.black),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
@@ -60,7 +60,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text:'  '+  context.localizations.passwordMinimumChars,
+                    text:'  ${context.localizations.passwordMinimumChars}',
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: Colors.blue, // Color for highlighted text
@@ -68,7 +68,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text:'  '+  context.localizations.passwordRequirement2,
+                    text:'  ${context.localizations.passwordRequirement2}',
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: Colors.black87, // Continue with the default color

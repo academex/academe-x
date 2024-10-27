@@ -33,7 +33,7 @@ class AppRouter {
       case '/account_creation_success':
         return MaterialPageRoute(builder: (_) => const AccountCreationSuccessScreen());
       case '/verification_code':
-        return MaterialPageRoute(builder: (_) =>  VerificationCodeScreen());
+        return MaterialPageRoute(builder: (_) =>  const VerificationCodeScreen());
       case '/forgot_password':
         return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
       case '/create_new_password':

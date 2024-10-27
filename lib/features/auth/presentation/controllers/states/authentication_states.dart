@@ -7,7 +7,7 @@ enum AuthenticationErrorType {
   invalidCredentials,
   wrongUserNameOrPassword,
   unknownError,
-  timeoutError,
+  timeOutError,
 }
 
 
@@ -37,8 +37,8 @@ class AuthenticationSuccessState extends AuthenticationStates {}
 
 class AuthenticationErrorState extends AuthenticationStates {
 
- const AuthenticationErrorState({required  this.message,required this.errorType});
+ const AuthenticationErrorState({required  this.message,});
   final String message;
-  final AuthenticationErrorType errorType;
+  // final AuthenticationErrorType errorType;
 }
 

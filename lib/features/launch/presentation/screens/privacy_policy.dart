@@ -19,7 +19,7 @@ class PrivacyPolicyPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.close),
+                    icon: const Icon(Icons.close),
                     onPressed: () {
                       Navigator.pop(context); // Close the page
                     },
@@ -31,7 +31,7 @@ class PrivacyPolicyPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 40), // Space to align text center
+                  const SizedBox(width: 40), // Space to align text center
                 ],
               ),
               10.ph(),

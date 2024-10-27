@@ -8,7 +8,7 @@ import '../../../../core/const/app_robot.dart';
 import '../../../../core/widgets/app_custom_appBar_widget.dart';
 
 class AccountCreationScreen extends StatefulWidget {
-  const AccountCreationScreen({Key? key}) : super(key: key);
+  const AccountCreationScreen({super.key});
 
   @override
   _AccountCreationScreenState createState() => _AccountCreationScreenState();
@@ -25,7 +25,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
       duration: const Duration(seconds: 2),
     )..repeat(); // Loop
 
-    Future.delayed(Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 4), () {
       Navigator.pushReplacementNamed(context, '/account_creation_success');
     });// animation
   }
@@ -107,7 +107,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
                     scale: Tween(begin: 0.7, end: 1.2).animate(
                       CurvedAnimation(
                         parent: _controller,
-                        curve: Interval(0.4, 1.0, curve: Curves.easeInOut),
+                        curve: const Interval(0.4, 1.0, curve: Curves.easeInOut),
                       ),
                     ),
                     child: _buildDot(),
@@ -117,7 +117,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
                     scale: Tween(begin: 0.7, end: 1.2).animate(
                       CurvedAnimation(
                         parent: _controller,
-                        curve: Interval(0.8, 1.0, curve: Curves.easeInOut),
+                        curve: const Interval(0.8, 1.0, curve: Curves.easeInOut),
                       ),
                     ),
                     child: _buildDot(),
@@ -126,7 +126,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
               );
             },
           ),
-          Spacer(),
+          const Spacer(),
           AppText(
             text:
             context.localizations.accountPreparationMessage,

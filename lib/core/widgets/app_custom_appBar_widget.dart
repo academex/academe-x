@@ -8,15 +8,15 @@ class AppCustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showCloseButton;
   final VoidCallback? onCloseButtonPressed;
 
-  AppCustomAppBar({
-    Key? key,
+  const AppCustomAppBar({
+    super.key,
     this.backgroundColor = Colors.transparent,
     this.elevation = 0.0,
     this.leading,
     this.actions,
     this.showCloseButton = false,
     this.onCloseButtonPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

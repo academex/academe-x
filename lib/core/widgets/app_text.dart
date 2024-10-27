@@ -50,7 +50,7 @@ class AppText extends StatelessWidget {
   final VoidCallback? onPressed; // Added onPressed for click functionality
 
   AppText({
-    Key? key,
+    super.key,
     required this.text,
     required this.fontSize,
     this.color = Colors.black,
@@ -58,7 +58,7 @@ class AppText extends StatelessWidget {
     this.isUnderline = false,
     this.fontWeight = FontWeight.normal,
     this.onPressed, // Accept onPressed as a parameter
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

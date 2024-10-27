@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:academe_x/core/error/exception.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -77,10 +76,9 @@ class ApiController {
         url,
         // headers: headers ?? {'Content-Type': 'application/json'},
         body: body,
-      )
-          .timeout(Duration(seconds: timeAlive), onTimeout: () {
+      ).timeout(Duration(seconds: timeAlive), onTimeout: () {
         // This block executes if the request times out
-        throw TimeoutException('Request took longer than $timeAlive seconds.');
+        throw TimeOutExeption(errorMessage: 'Request took longer than $timeAlive seconds.');
       });
 
       Logger().w(response.body);
@@ -93,9 +91,9 @@ class ApiController {
     } on WrongDataException catch (e) {
       // Handle timeout exception
       throw WrongDataException(errorMessage: e.errorMessage);
-    } on TimeoutException catch (e) {
+    } on TimeOutExeption catch (e) {
       // Handle timeout exception
-      throw TimeoutException(e.message);
+      throw TimeOutExeption(errorMessage: e.errorMessage);
     } catch (e) {
       // Handle other errors (such as parsing or HTTP errors)
       throw Exception('Request failed: $e');
