@@ -18,6 +18,7 @@ class CommentCard extends StatelessWidget {
   final void Function() reply;
   final List<Comment>? replies;
   bool _showReplyVisibility = false;
+  bool isEndReply;
 
   CommentCard({
     required this.commenter,
@@ -27,6 +28,7 @@ class CommentCard extends StatelessWidget {
     this.commentIndex,
     this.isReply = false,
     this.replies = const [],
+    this.isEndReply = false,
     super.key,
   });
 
@@ -35,13 +37,36 @@ class CommentCard extends StatelessWidget {
     return BlocProvider(
       create: (_) => FavoriteCubit(false),
       child: Padding(
-        padding: EdgeInsets.only(top: isReply?0:9.h,right: !isReply? 25.w : 50.w,left: 15.w),
+        padding: EdgeInsets.only(top: isReply?0:9.h,right: 25.w,left: 15.w),
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if(isReply) const VerticalDivider(color: Colors.black26,width: 1, ),
-              CircleAvatar(child: Text(commenter[0])), // Placeholder avatar
+              if(isReply) Padding(padding: EdgeInsets.only(right: isEndReply?19.w:20.w),child: !isEndReply? const VerticalDivider(color: Colors.black26,width: 0,):null),
+              if(isReply) Container(
+                width: 15.w,
+                height: 20.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(15.r)),
+                  border: Border(bottom: const BorderSide(color: Colors.black26),right: isEndReply? const BorderSide(color: Colors.black26):BorderSide.none),
+                ),
+                
+              ),
+              Column(
+                children: [
+                  CircleAvatar(child: Text(commenter[0]),radius: 20,),
+                  if(!isReply)
+                  BlocBuilder<ShowRepliesCubit,ShowReplyesState>(
+                    buildWhen: (previous, current) => current.index == commentIndex,
+                    builder: (context, state) {
+                      return Visibility(
+                        visible: state.show,
+                          child: const Expanded(child: VerticalDivider(color: Colors.black26, )),
+                        );
+                    },
+                  ),
+                ],
+              ), // Placeholder avatar
               9.pw(),
               Expanded(
                 child: Column(
@@ -147,32 +172,32 @@ class CommentCard extends StatelessWidget {
     );
   }
 
-  Widget _buildLikeButton(
-      {required int likeCount, required BuildContext context}) {
-    return InkWell(
-      onTap: () {
-        context.read<FavoriteCubit>().change();
-      },
-      child: BlocBuilder(
-        builder: (context, state) => Row(
-          children: [
-            if (!(state as bool))
-              Image.asset(
-                'assets/icons/favourite.png',
-                height: 17.h,
-                width: 19.w,
-              ),
-            if (state)
-              Image.asset(
-                'assets/icons/favourite_selected.png',
-                height: 17.h,
-                width: 19.w,
-              ),
-            2.pw(),
-            Text(likeCount.toString()),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildLikeButton(
+  //     {required int likeCount, required BuildContext context}) {
+  //   return InkWell(
+  //     onTap: () {
+  //       context.read<FavoriteCubit>().change();
+  //     },
+  //     child: BlocBuilder(
+  //       builder: (context, state) => Row(
+  //         children: [
+  //           if (!(state as bool))
+  //             Image.asset(
+  //               'assets/icons/favourite.png',
+  //               height: 17.h,
+  //               width: 19.w,
+  //             ),
+  //           if (state)
+  //             Image.asset(
+  //               'assets/icons/favourite_selected.png',
+  //               height: 17.h,
+  //               width: 19.w,
+  //             ),
+  //           2.pw(),
+  //           Text(likeCount.toString()),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }

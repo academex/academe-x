@@ -79,8 +79,8 @@ class CommentsList {
                                 builder: (context, state) {
                               return Column(
                                 children: [
-                                  for (int i = 0;
-                                      i < comments[index].replies.length &&  state.show && state.index == index; i++)
+                                  for (int i = 0; 
+                                  i < comments[index].replies.length &&  state.show && state.index == index; i++)
                                     CommentCard(
                                       isReply: true,
                                       commenter:
@@ -94,6 +94,7 @@ class CommentsList {
                                             commenter:
                                                 'رد على @${comments[index].replies[i].commenter}');
                                       },
+                                      isEndReply: i == ((comments[index].replies.length)-1),
                                     ),
                                 ],
                               );
