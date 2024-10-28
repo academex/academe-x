@@ -1,4 +1,4 @@
-import 'package:academe_x/features/home/presentaion/model/comment.dart';
+import 'package:academe_x/features/home/presentation/model/comment.dart';
 
 List<Comment> comments = [
   Comment(

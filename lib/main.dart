@@ -55,7 +55,7 @@ class Main extends StatelessWidget {
                 surface: Colors.white,
               ),
             ),
-            initialRoute: '/login',
+            initialRoute: '/community_screen',
             onGenerateRoute: AppRouter.generateRoute,
           ),
         );

@@ -6,7 +6,6 @@ import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/r
 import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/show_replies_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/states/comment/reply_state.dart';
 import 'package:academe_x/features/home/presentaion/controllers/states/comment/show_replyes_state.dart';
-import 'package:academe_x/features/home/presentaion/model/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -65,21 +64,18 @@ class CommentsList {
                               commenter: comments[index].commenter,
                               commentText: comments[index].commentText,
                               likes: comments[index].likes,
+                              replies:comments[index].replies,
                               reply: () {
                                 context.read<ReplyCubit>().reply(
                                     commenter:
                                         'رد على @${comments[index].commenter}');
                               },
-                              showReplies: comments[index].replies.isNotEmpty
-                                  ? () {
-                                      context
-                                          .read<ShowRepliesCubit>()
-                                          .change(postIndex: index);
-                                    }
-                                  : null,
                               commentIndex: index,
                             ),
                             BlocBuilder<ShowRepliesCubit, ShowReplyesState>(
+                              buildWhen: (previous, current) {
+                                return current.index == index;
+                              },
                                 builder: (context, state) {
                               return Column(
                                 children: [

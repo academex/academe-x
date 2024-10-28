@@ -2,7 +2,7 @@ import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/favorite_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/show_replies_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/states/comment/show_replyes_state.dart';
-import 'package:academe_x/features/home/presentaion/widgets/comments_list.dart';
+import 'package:academe_x/features/home/presentation/model/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,16 +16,17 @@ class CommentCard extends StatelessWidget {
   final int? commentIndex;
   final bool isReply;
   final void Function() reply;
-  final void Function()? showReplies;
+  final List<Comment>? replies;
+  bool _showReplyVisibility = false;
 
   CommentCard({
     required this.commenter,
     required this.commentText,
     required this.likes,
     required this.reply,
-    this.showReplies,
     this.commentIndex,
     this.isReply = false,
+    this.replies = const [],
     super.key,
   });
 
@@ -75,15 +76,21 @@ class CommentCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if(showReplies != null)
+                        if(replies!.isNotEmpty)
                         InkWell(
                           borderRadius: BorderRadius.circular(20.r),
-                          onTap: showReplies,
+                          onTap: () {
+                            _showReplyVisibility = !_showReplyVisibility;
+                            context.read<ShowRepliesCubit>().change(postIndex: commentIndex!,visibility: _showReplyVisibility);
+                          },   
                           child:Padding(
                             padding: EdgeInsets.symmetric(horizontal: 7.w,vertical: 5.h),
                             child: BlocBuilder<ShowRepliesCubit,ShowReplyesState>(
+                              buildWhen: (previous, current) {
+                                return commentIndex==current.index;
+                              },
                               builder:(context, state) =>  AppText(
-                                text: !state.show && state.index == commentIndex? 'عرض الردور':'اخفاء الردور',
+                                text: !_showReplyVisibility? 'عرض الردور':'اخفاء الردور',
                                 fontSize: 12.sp,
                                 color: Colors.black,
                               ),
