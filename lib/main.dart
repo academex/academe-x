@@ -1,5 +1,6 @@
 import 'package:academe_x/core/di/dependency_injection.dart';
 import 'package:academe_x/features/auth/presentation/controllers/cubits/authentication_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/home/bottom_nav_cubit.dart';
 import 'package:academe_x/navigation/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +34,9 @@ class Main extends StatelessWidget {
             ),
             BlocProvider<AuthActionCubit>(
               create: (context) => getIt<AuthActionCubit>(), // Providing the AuthCubit
+            ),
+            BlocProvider<BottomNavCubit>(
+              create: (context) => getIt<BottomNavCubit>(), // Providing the AuthCubit
             ),
           ],
           child: MaterialApp(

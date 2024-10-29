@@ -6,11 +6,9 @@ import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/r
 import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/show_replies_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/states/comment/reply_state.dart';
 import 'package:academe_x/features/home/presentaion/controllers/states/comment/show_replyes_state.dart';
-import 'package:academe_x/features/home/presentaion/model/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../model/comment.dart';
 import 'comment_card.dart'; // Assuming this is the file name
 
 class CommentsList {
@@ -45,7 +43,7 @@ class CommentsList {
                     width: 56.w, // Custom width for the divider
                     child: Divider(
                       thickness: 5.h, // Thickness of the divider
-                      color: Color(0xffE7E8EA), // Color of the divider
+                      color: const Color(0xffE7E8EA), // Color of the divider
                     ),
                   ),
                   16.ph(),

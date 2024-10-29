@@ -126,7 +126,7 @@ class LoginScreen extends StatelessWidget {
               BlocConsumer<AuthenticationCubit, AuthenticationStates>(
                 listener: (context, state) {
                   if (state is AuthenticationSuccessState) {
-                    Navigator.pushReplacementNamed(context, '/community_screen');
+                    Navigator.pushReplacementNamed(context, '/home_screen');
                   }else if(state is AuthenticationErrorState){
                     Logger().d(state.message);
                     context.showSnackBar(message: state.message,error: true);
@@ -156,7 +156,7 @@ class LoginScreen extends StatelessWidget {
                         if (formKey.currentState!.validate()) {
                           final email = emailController.text;
                           final password = passwordController.text;
-                          Navigator.pushReplacementNamed(context, '/community_screen');
+                          Navigator.pushReplacementNamed(context, '/home_screen');
 
                           // await context.read<AuthenticationCubit>().login(
                           //   LoginRequsetModel(username: email, password: password),
@@ -181,10 +181,11 @@ class LoginScreen extends StatelessWidget {
                       if (formKey.currentState!.validate()) {
                         final email = emailController.text;
                         final password = passwordController.text;
+                          Navigator.pushReplacementNamed(context, '/home_screen');
 
-                        await context.read<AuthenticationCubit>().login(
-                          LoginRequsetModel(username: email, password: password),
-                        );
+                        // await context.read<AuthenticationCubit>().login(
+                        //   LoginRequsetModel(username: email, password: password),
+                        // );
                       } else {
                         // Show error if fields are invalid
                         context.showSnackBar(message: 'يرجى ملء جميع الحقول المطلوبة',error: true);

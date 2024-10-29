@@ -7,6 +7,7 @@ import 'package:academe_x/features/auth/data/repositories/authentication_reposit
 import 'package:academe_x/features/auth/domain/repositories/authentication_repository.dart';
 import 'package:academe_x/features/auth/domain/usecases/authentication_use_case.dart';
 import 'package:academe_x/features/auth/presentation/controllers/cubits/authentication_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/home/bottom_nav_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -26,6 +27,11 @@ Future<void> init() async {
   getIt.registerFactory<AuthActionCubit>(
         () {
       return AuthActionCubit(false);
+    },
+  );
+  getIt.registerFactory<BottomNavCubit>(
+        () {
+      return BottomNavCubit();
     },
   );
 

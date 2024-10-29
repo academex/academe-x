@@ -60,11 +60,12 @@ class CreatePost {
                     SizedBox(width: 50.w), // Placeholder for alignment
                   ],
                 ),
-               16.ph(),
+                16.ph(),
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundImage: const AssetImage('assets/images/profile.jpg'),
+                      backgroundImage:
+                          const AssetImage('assets/images/profile.jpg'),
                       radius: 20.w,
                     ),
                     SizedBox(width: 8.w),
@@ -112,8 +113,8 @@ class CreatePost {
                 Row(
                   children: [
                     IconButton(
-                      icon:
-                          const ImageIcon(AssetImage('assets/icons/image.png')),
+                      icon: const ImageIcon(
+                          AssetImage('assets/icons/download_file.png')),
                       onPressed: () {},
                     ),
                     IconButton(
@@ -141,8 +142,8 @@ class CreatePost {
                   child: Container(
                     height: 50.h,
                     decoration: BoxDecoration(
-                      color:
-                          const Color(0xFF007AFF), // Blue color for the post button
+                      color: const Color(
+                          0xFF007AFF), // Blue color for the post button
                       borderRadius: BorderRadius.circular(10.w),
                     ),
                     child: Center(

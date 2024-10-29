@@ -2,7 +2,6 @@ import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/favorite_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/show_replies_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/states/comment/show_replyes_state.dart';
-import 'package:academe_x/features/home/presentaion/widgets/comments_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -114,7 +113,7 @@ class CommentCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [ 
-                        if (!(state as bool))
+                        if (!(state))
                           Image.asset(
                             'assets/icons/favourite.png',
                             height: 17.h,
