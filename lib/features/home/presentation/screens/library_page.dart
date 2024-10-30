@@ -1,5 +1,6 @@
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
+import 'package:academe_x/features/home/presentation/widgets/header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,7 +48,7 @@ class LibraryPage extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       return LibrarySection(
-                        icon: Icons.book_online,
+                        icon: 'assets/icons/book_icon.png',
                         title: 'الكتب',
                         items: List.generate(
                           4,
@@ -89,23 +90,13 @@ class LibraryPage extends StatelessWidget {
         ? SafeArea(
             child: Column(
             children: [
-
               Expanded(
                 child: Padding(padding: EdgeInsets.symmetric(horizontal: 20.w),child: SizedBox(
                   // width: 327.w,
                   // 327.w,
                   // height: 45.h,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildLogoContainer(),
-                      ),
-                      8.pw(),
-                      _buildTitleAndSubtitle(inScroll),
-                      const Spacer(),
-                      _buildIconButton('assets/icons/filter.png', inScroll),
-                    ],
-                  ),
+                  child:
+                  HeaderWidget(inScroll: inScroll, logoPath: 'assets/icons/logo_library.png', title: 'مكتبتي', subTitle: 'كل ما تحتاجه من كتب وملخصات وشباتر', secondIconPath: 'assets/icons/filter.png'),
                 ),)
               ),
               inScroll ? 0.ph() : kPaddingHorizontal.ph(),
@@ -121,20 +112,11 @@ class LibraryPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildLogoContainer(),
-                        8.pw(),
-                        _buildTitleAndSubtitle(inScroll),
-                        const Spacer(),
-                        _buildIconButton('assets/icons/filter.png', inScroll),
-                      ],
-                    ),
+                    HeaderWidget(inScroll: inScroll, logoPath: 'assets/icons/logo_library.png', title: 'مكتبتي', subTitle: 'كل ما تحتاجه من كتب وملخصات وشباتر', secondIconPath: 'assets/icons/filter.png'),
                     16.ph(),
                     AppText(
                       text: 'المواد الخاصة بي',
-                      fontSize: 16.sp,
+                      fontSize: 14.sp,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                     ),
@@ -187,59 +169,6 @@ class LibraryPage extends StatelessWidget {
           );
   }
 
-  Widget _buildLogoContainer() {
-    return Container(
-      width: 50.w,
-      height: 50.h,
-      decoration: const BoxDecoration(
-        color: Color(0xff007BFF),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-      ),
-      child: Image.asset(
-        'assets/icons/logo_library.png',
-        height: 28.h,
-        width: 28.w,
-      ),
-    );
-  }
-
-  Widget _buildTitleAndSubtitle(bool inScroll) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppText(
-          text: 'مكتبتي',
-          fontSize: 16.sp,
-          color: inScroll ? Colors.black : Colors.white,
-          fontWeight: FontWeight.w600,
-        ),
-        if (!inScroll) ...[
-          // 6.ph(),
-          AppText(
-            text: 'كل ما تحتاجه من كتب وملخصات وشباتر',
-            fontSize: 10.sp,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildIconButton(String iconPath, bool inScroll) {
-    return IconButton(
-      onPressed: () {},
-      icon: Image.asset(
-        iconPath,
-        height: 20.h,
-        width: 20.w,
-        color: inScroll ? Colors.black : Colors.white,
-      ),
-      padding: EdgeInsets.zero,
-    );
-  }
-
   Widget _buildCategoryTabs() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
@@ -277,6 +206,3 @@ class LibraryPage extends StatelessWidget {
     );
   }
 }
-
-
-// Widget for an individual library item

@@ -2,13 +2,13 @@ import 'package:academe_x/core/domy_data/domy_comments.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:academe_x/core/widgets/app_text_field.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/reply_cubit.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/show_replies_cubit.dart';
-import 'package:academe_x/features/home/presentaion/controllers/states/comment/reply_state.dart';
-import 'package:academe_x/features/home/presentaion/controllers/states/comment/show_replyes_state.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/comment/reply_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../controllers/cubits/comment/reply_cubit.dart';
+import '../controllers/cubits/comment/show_replies_cubit.dart';
+import '../controllers/states/comment/show_replyes_state.dart';
 import 'comment_card.dart'; // Assuming this is the file name
 
 class CommentsList {
@@ -64,26 +64,23 @@ class CommentsList {
                               commenter: comments[index].commenter,
                               commentText: comments[index].commentText,
                               likes: comments[index].likes,
+                              replies:comments[index].replies,
                               reply: () {
                                 context.read<ReplyCubit>().reply(
                                     commenter:
                                         'رد على @${comments[index].commenter}');
                               },
-                              showReplies: comments[index].replies.isNotEmpty
-                                  ? () {
-                                      context
-                                          .read<ShowRepliesCubit>()
-                                          .change(postIndex: index);
-                                    }
-                                  : null,
                               commentIndex: index,
                             ),
                             BlocBuilder<ShowRepliesCubit, ShowReplyesState>(
+                              buildWhen: (previous, current) {
+                                return current.index == index;
+                              },
                                 builder: (context, state) {
                               return Column(
                                 children: [
-                                  for (int i = 0;
-                                      i < comments[index].replies.length &&  state.show && state.index == index; i++)
+                                  for (int i = 0; 
+                                  i < comments[index].replies.length &&  state.show && state.index == index; i++)
                                     CommentCard(
                                       isReply: true,
                                       commenter:
@@ -97,6 +94,7 @@ class CommentsList {
                                             commenter:
                                                 'رد على @${comments[index].replies[i].commenter}');
                                       },
+                                      isEndReply: i == ((comments[index].replies.length)-1),
                                     ),
                                 ],
                               );

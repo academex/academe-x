@@ -1,5 +1,6 @@
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
+import 'package:academe_x/features/home/presentation/widgets/header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -218,19 +219,21 @@ class CommunityPage extends StatelessWidget {
                   width: 327.w,
                   // 327.w,
                   height: 45.h,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildLogoContainer(),
-                      ),
-                      8.pw(),
-                      _buildTitleAndSubtitle(inScroll),
-                      const Spacer(),
-                      _buildIconButton('assets/icons/search.png', inScroll),
-                      _buildIconButton(
-                          'assets/icons/notification.png', inScroll),
-                    ],
-                  ),
+                  child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
+                  ,
+                  // child: Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: _buildLogoContainer(),
+                  //     ),
+                  //     8.pw(),
+                  //     _buildTitleAndSubtitle(inScroll),
+                  //     const Spacer(),
+                  //     _buildIconButton('assets/icons/search.png', inScroll),
+                  //     _buildIconButton(
+                  //         'assets/icons/notification.png', inScroll),
+                  //   ],
+                  // ),
                 ),
               ),
               inScroll ? 0.ph() : kPaddingHorizontal.ph(),
@@ -241,47 +244,55 @@ class CommunityPage extends StatelessWidget {
             create: (context) => CategoryCubit(),
             child: Column(
               children: [
-                inScroll ? 0.ph() : 40.ph(),
-                SizedBox(
-                  height: 55.h,
-                  width: 327.w,
-                  child: Row(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
                     children: [
-                      _buildLogoContainer(),
-                      8.pw(),
-                      _buildTitleAndSubtitle(inScroll),
-                      const Spacer(),
-                      _buildIconButton('assets/icons/search.png', inScroll),
-                      _buildIconButton(
-                          'assets/icons/notification.png', inScroll),
+                      inScroll ? 0.ph() : 40.ph(),
+
+
+                      HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
+                      // Row(
+                      //   children: [
+                      //     _buildLogoContainer(),
+                      //     8.pw(),
+                      //     _buildTitleAndSubtitle(inScroll),
+                      //     const Spacer(),
+                      //     _buildIconButton('assets/icons/search.png', inScroll),
+                      //     _buildIconButton(
+                      //         'assets/icons/notification.png', inScroll),
+                      //   ],
+                      // ),
+                      ,20.ph(),
+                      SizedBox(
+                        width: 327.w,
+                        height: 24.h,
+                        child: Row(
+                          children: [
+                            AppText(
+                              text: 'التخصصات',
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
+                            const Spacer(),
+                            AppText(
+                              text: 'عرض المزيد',
+                              fontSize: 12.sp,
+                              color: Colors.lightBlueAccent,
+                            ),
+                          ],
+                        ),
+                      ),
+                      30.ph(),
+
+                      // _buildCategoryTabs(),
                     ],
                   ),
                 ),
-                20.ph(),
-                SizedBox(
-                  width: 327.w,
-                  height: 24.h,
-                  child: Row(
-                    children: [
-                      AppText(
-                        text: 'التخصصات',
-                        fontSize: 16.sp,
-                        color: Colors.white,
-                      ),
-                      const Spacer(),
-                      AppText(
-                        text: 'عرض المزيد',
-                        fontSize: 12.sp,
-                        color: Colors.lightBlueAccent,
-                      ),
-                    ],
-                  ),
-                ),
-                30.ph(),
                 BlocBuilder<CategoryCubit, int>(
                   builder: (BuildContext context, selectedIndex) {
                     return Container(
-                      padding: EdgeInsets.only(right: kPaddingHorizontal.w),
+                      padding: EdgeInsets.only(right: 24.w),
                       height: kCategoryHeight.h,
                       // width: 327.w,
                       child: ListView.separated(
@@ -328,63 +339,11 @@ class CommunityPage extends StatelessWidget {
                     );
                   },
                 )
-                // _buildCategoryTabs(),
               ],
-            ),
-          );
+            ));
   }
 
-  Widget _buildLogoContainer() {
-    return Container(
-      width: 50.w,
-      height: 50.h,
-      decoration: const BoxDecoration(
-        color: Color(0xff007BFF),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-      ),
-      child: Image.asset(
-        'assets/images/Frame.png',
-        height: 28.h,
-        width: 28.w,
-      ),
-    );
-  }
 
-  Widget _buildTitleAndSubtitle(bool inScroll) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppText(
-          text: 'تطوير البرمجيات',
-          fontSize: 18.sp,
-          color: inScroll ? Colors.black : Colors.white,
-          // fontWeight: FontWeight.bold,
-        ),
-        if (!inScroll) ...[
-          // 6.ph(),
-          AppText(
-            text: 'مجتمع مخصص لكل تساؤلاتك',
-            fontSize: 12.sp,
-            color: Colors.white,
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildIconButton(String iconPath, bool inScroll) {
-    return IconButton(
-      onPressed: () {},
-      icon: Image.asset(
-        iconPath,
-        height: 20.h,
-        width: 20.w,
-        color: inScroll ? Colors.black : Colors.white,
-      ),
-      padding: EdgeInsets.zero,
-    );
-  }
 
   Widget _buildCategoryTabs() {
     return Container(
@@ -478,7 +437,6 @@ class CommunityPage extends StatelessWidget {
     }
     return const SizedBox.shrink();
   }
-
 }
 
 void showShareOptions(BuildContext context) {
@@ -567,7 +525,10 @@ void showShareOptions(BuildContext context) {
 }
 
 // Helper widget to build a share option
-Widget _buildShareOption({required String iconPath,required String label,required VoidCallback onTap}){
+Widget _buildShareOption(
+    {required String iconPath,
+    required String label,
+    required VoidCallback onTap}) {
   return GestureDetector(
     onTap: onTap,
     child: Column(

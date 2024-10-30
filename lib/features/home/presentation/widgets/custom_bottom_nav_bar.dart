@@ -26,7 +26,6 @@ class CustomBottomNavBar extends StatelessWidget {
               label: 'مجتمعي',
               onTap: () {
                 context.read<BottomNavCubit>().changePage(0);
-                print(context.read<BottomNavCubit>().state);
               },
               index: 0,
             ),
@@ -87,7 +86,7 @@ class CustomBottomNavBar extends StatelessWidget {
               children: [
                 Image.asset(
                   iconPath,
-                  color: isSelected ? Colors.blue : Colors.grey,
+                  color: isSelected ? Colors.black : Colors.grey,
                   height: 24.h,
                   width: 24.w,
                 ),
@@ -95,6 +94,7 @@ class CustomBottomNavBar extends StatelessWidget {
                   text: label,
                   color: isSelected ? Colors.blue : Colors.grey,
                   fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
                 ),
               ],
             );

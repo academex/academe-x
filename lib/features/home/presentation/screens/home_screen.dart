@@ -18,7 +18,6 @@ class HomeScreen extends StatelessWidget {
           builder: (context, currentIndex) {
             return Scaffold(
               floatingActionButton:currentIndex==1 ?
-
                SizedBox(
                 width: 60.0,
                 height: 60.0,

@@ -32,13 +32,14 @@ class LibraryItem extends StatelessWidget {
                   AppText(
                     text: title,
                     fontSize: 14.01.sp,
-                    fontWeight: FontWeight.w600,
+                     color: Color(0xff0F172A),
+                     fontWeight: FontWeight.w500,
                   ),
                   AppText(
                     text: description,
                     fontSize: 12.01.sp,
-                    color: const Color(0xff64748B),
-                    fontWeight: FontWeight.w400,
+                    color: Color(0xff64748B),
+                    fontWeight: FontWeight.w500,
                   ),
                 ],
               ),
@@ -50,7 +51,7 @@ class LibraryItem extends StatelessWidget {
                 height: 44.h,
                 width: 44.w,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: Colors.grey.shade50,
                   borderRadius: BorderRadius.circular(5.r),
                 ),
                 child: Image.asset(

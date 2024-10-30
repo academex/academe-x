@@ -6,7 +6,7 @@ import '../../../../core/widgets/app_text.dart';
 import 'library_item.dart';
 
 class LibrarySection extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String title;
   final List<LibraryItem> items;
 
@@ -24,7 +24,7 @@ class LibrarySection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon),
+            Image.asset(icon),
             8.w.pw(),
             AppText(
               text: title,
