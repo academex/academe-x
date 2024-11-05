@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/const/app_size.dart';
 import '../../../../core/widgets/app_text.dart';
-import 'create_post.dart';
+import 'create_post_widgets/create_post.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({super.key});

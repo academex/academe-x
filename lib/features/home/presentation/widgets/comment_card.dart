@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/favorite_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/show_replies_cubit.dart';

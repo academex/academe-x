@@ -1,6 +1,7 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/widgets/app_text.dart';
