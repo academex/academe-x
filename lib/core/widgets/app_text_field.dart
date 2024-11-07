@@ -75,7 +75,7 @@ class AppTextField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
-          
+
           // inputFormatters:isOTP? [
           //   LengthLimitingTextInputFormatter(1),
           //   FilteringTextInputFormatter.digitsOnly
@@ -85,7 +85,7 @@ class AppTextField extends StatelessWidget {
           onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             fillColor: fillColor,
-            isDense: isDense, 
+            isDense: isDense,
             contentPadding: contentPadding,
             suffix: suffix,
             prefixText: prefixText,
@@ -98,8 +98,8 @@ class AppTextField extends StatelessWidget {
               borderSide: BorderSide(color: enableBoarderColor?? Color(0xffD9D9D9)),
             ):null,
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: withBoarder?fucusBoarderColor??Color(0xff3253FF):Colors.transparent),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: withBoarder?Color(0xff3253FF):Colors.transparent),
             ),
             disabledBorder:withBoarder? OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),

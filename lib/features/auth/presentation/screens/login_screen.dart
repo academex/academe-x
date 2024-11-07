@@ -1,4 +1,4 @@
-import 'package:academe_x/core/const/app_robot.dart';
+import 'package:academe_x/core/constants/app_robot.dart';
 import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/features/auth/data/models/requset/login_requset_model.dart';
@@ -34,8 +34,8 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: AppCustomAppBar(
-        leading: const SizedBox(), // No leading widget
+      appBar: const AppCustomAppBar(
+        leading: SizedBox(), // No leading widget
       ),
       body: Padding(
         padding: EdgeInsets.only(left: 24.w, right: 24.w),
@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                     isPassword: true,
                     togglePasswordVisibility: () {
                       // Logger().e('hi');
-                      context.read<AuthActionCubit>().togglePasswordVisibility(isVisible: !isVisible);
+                      context.read<AuthActionCubit>().togglePasswordVisibility(isVisible: isVisible);
                     },
                     isPasswordVisible: isVisible,
                     validator: (value) {
@@ -126,7 +126,7 @@ class LoginScreen extends StatelessWidget {
               BlocConsumer<AuthenticationCubit, AuthenticationStates>(
                 listener: (context, state) {
                   if (state is AuthenticationSuccessState) {
-                    Navigator.pushReplacementNamed(context, '/community_screen');
+                    Navigator.pushReplacementNamed(context, '/home_screen');
                   }else if(state is AuthenticationErrorState){
                     Logger().d(state.message);
                     context.showSnackBar(message: state.message,error: true);
@@ -156,10 +156,11 @@ class LoginScreen extends StatelessWidget {
                         if (formKey.currentState!.validate()) {
                           final email = emailController.text;
                           final password = passwordController.text;
+                          Navigator.pushReplacementNamed(context, '/home_screen');
 
-                          await context.read<AuthenticationCubit>().login(
-                            LoginRequsetModel(username: email, password: password),
-                          );
+                          // await context.read<AuthenticationCubit>().login(
+                          //   LoginRequsetModel(username: email, password: password),
+                          // );
                         } else {
                           // Show error if fields are invalid
                           context.showSnackBar(message: 'يرجى ملء جميع الحقول المطلوبة',error: true);
@@ -180,10 +181,11 @@ class LoginScreen extends StatelessWidget {
                       if (formKey.currentState!.validate()) {
                         final email = emailController.text;
                         final password = passwordController.text;
+                          Navigator.pushReplacementNamed(context, '/home_screen');
 
-                        await context.read<AuthenticationCubit>().login(
-                          LoginRequsetModel(username: email, password: password),
-                        );
+                        // await context.read<AuthenticationCubit>().login(
+                        //   LoginRequsetModel(username: email, password: password),
+                        // );
                       } else {
                         // Show error if fields are invalid
                         context.showSnackBar(message: 'يرجى ملء جميع الحقول المطلوبة',error: true);

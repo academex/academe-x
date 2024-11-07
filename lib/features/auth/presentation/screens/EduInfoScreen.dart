@@ -2,15 +2,14 @@ import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/features/auth/presentation/widgets/progress_bar_with_close_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/const/app_robot.dart';
+import '../../../../core/constants/app_robot.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../../../../core/extensions/sized_box_extension.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/robot_with_speech_bubble.dart';
 
 class EduInfoScreen extends StatefulWidget {
-  const EduInfoScreen({Key? key}) : super(key: key);
+  const EduInfoScreen({super.key});
 
   @override
   _EduInfoScreenState createState() => _EduInfoScreenState();

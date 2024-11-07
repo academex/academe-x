@@ -1,9 +1,7 @@
-import 'dart:developer';
 
 import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_custom_appBar_widget.dart';
-import 'package:academe_x/core/widgets/app_text_field.dart';
 import 'package:academe_x/features/auth/presentation/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +10,7 @@ import 'package:pinput/pinput.dart';
 import '../../../../core/widgets/app_text.dart';
 
 class VerificationCodeScreen extends StatelessWidget {
-  VerificationCodeScreen({super.key});
+  const VerificationCodeScreen({super.key});
   // FocusNode
 
   @override
@@ -34,8 +32,8 @@ class VerificationCodeScreen extends StatelessWidget {
     );
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar:AppCustomAppBar(
-          leading: const BackButton(color: Colors.black),
+        appBar:const AppCustomAppBar(
+          leading: BackButton(color: Colors.black),
           elevation: 0,
           backgroundColor: Colors.transparent,
         ),
@@ -56,12 +54,12 @@ class VerificationCodeScreen extends StatelessWidget {
               AppText(
                 text:context.localizations.verificationSubTitle,
                 fontSize: 14.sp,
-                color: Color(0xff94A3B8),
+                color: const Color(0xff94A3B8),
               ),
               AppText(
                 text: '****aklouk@mail.com',
                 fontSize: 14.sp,
-                color: Color(0xFF3253FF),
+                color: const Color(0xFF3253FF),
               ),
               23.ph(),
               Pinput(

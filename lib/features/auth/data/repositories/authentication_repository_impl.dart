@@ -10,23 +10,24 @@ import '../../../../core/error/exception.dart';
 import '../../../../core/error/failure.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
-  // final NetworkConnection networkConnection;
   final AuthenticationRemoteDataSource remoteDataSource;
 
   AuthenticationRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<Either<Failure,AuthTokenModel>> login(LoginRequsetModel user) async {
-    // TODO: implement getProductHomeData
     try {
       final result = await remoteDataSource.login(user);
-
       return Right(result);
-    }on TimeoutException {
-      return Left(TimeOutFailure(message: 'Request took longer than 10 seconds.'));
+    }on WrongDataException catch (e) {
+       return Left(WrongPasswordOrEmailFailure(message: e.errorMessage));
+    }on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    }on NoInternetConnectionFailure catch (e) {
+      return Left(TimeOutFailure(message: e.message));
     }
-    on ServerException {
-      return Left(ServerFailure(message: 'something went wrong'));
+    on Exception catch (e) {
+      return Left(ServerFailure(message: 'An error occurred: $e'));
     }
   }
 

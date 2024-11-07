@@ -6,10 +6,10 @@ class ProgressBarWithCloseButton extends StatelessWidget {
   final double progressValue;
 
   const ProgressBarWithCloseButton({
-    Key? key,
+    super.key,
     required this.onClose,
      this.progressValue=0.0
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -7,10 +7,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:academe_x/core/widgets/app_text.dart'; // Assuming you have this custom text widget
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 // import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/const/app_robot.dart'; // Robot SVG import
+import '../../../../core/constants/app_robot.dart'; // Robot SVG import
 
 class AccountCreationSuccessScreen extends StatelessWidget {
-  const AccountCreationSuccessScreen({Key? key}) : super(key: key);
+  const AccountCreationSuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

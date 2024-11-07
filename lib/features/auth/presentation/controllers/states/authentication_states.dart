@@ -1,15 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 
-enum AuthenticationErrorType {
-  noInternetConnectionError,
-  serverError,
-  invalidCredentials,
-  wrongUserNameOrPassword,
-  unknownError,
-  timeoutError,
-}
-
 
 abstract class AuthenticationStates extends Equatable{
 
@@ -37,8 +28,8 @@ class AuthenticationSuccessState extends AuthenticationStates {}
 
 class AuthenticationErrorState extends AuthenticationStates {
 
- const AuthenticationErrorState({required  this.message,required this.errorType});
+ const AuthenticationErrorState({required  this.message,});
   final String message;
-  final AuthenticationErrorType errorType;
+  // final AuthenticationErrorType errorType;
 }
 

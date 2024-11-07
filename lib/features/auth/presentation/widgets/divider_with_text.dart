@@ -6,7 +6,7 @@ import '../../../../core/widgets/app_text.dart';
 class DividerWithText extends StatelessWidget {
   final String text;
 
-  const DividerWithText({Key? key, required this.text}) : super(key: key);
+  const DividerWithText({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class DividerWithText extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: AppText(
             text: text,
             fontSize: 14.sp,

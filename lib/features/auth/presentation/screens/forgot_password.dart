@@ -15,8 +15,8 @@ class ForgotPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppCustomAppBar(
-          leading: const BackButton(color: Colors.black),
+        appBar: const AppCustomAppBar(
+          leading: BackButton(color: Colors.black),
           elevation: 0,
           backgroundColor: Colors.transparent,
         ),
@@ -59,7 +59,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   child: CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 16.sp,fontWeight: FontWeight.w600,), onPressed: (){
                         Navigator.pushNamed(context, '/verification_code');
 
-                  }, color: Color(0xFF0077FF))
+                  }, color: const Color(0xFF0077FF))
 
                   // AppButton(
                   //   width: 327.w,

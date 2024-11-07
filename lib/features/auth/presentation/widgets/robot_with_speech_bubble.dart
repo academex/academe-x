@@ -7,10 +7,10 @@ class RobotWithSpeechBubble extends StatelessWidget {
   final String speechText;
 
   const RobotWithSpeechBubble({
-    Key? key,
+    super.key,
     required this.svgString,
     required this.speechText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

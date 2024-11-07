@@ -1,15 +1,15 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/favorite_cubit.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/comment/show_replies_cubit.dart';
-import 'package:academe_x/features/home/presentaion/controllers/states/comment/show_replyes_state.dart';
 import 'package:academe_x/features/home/presentation/model/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/widgets/app_text.dart';
+import '../controllers/cubits/comment/favorite_cubit.dart';
+import '../controllers/cubits/comment/show_replies_cubit.dart';
+import '../controllers/states/comment/show_replyes_state.dart';
 
 class CommentCard extends StatelessWidget {
   final String commenter;
@@ -27,6 +27,7 @@ class CommentCard extends StatelessWidget {
     required this.commentText,
     required this.likes,
     required this.reply,
+    // this.showReplies,
     this.commentIndex,
     this.isReply = false,
     this.replies = const [],
@@ -52,7 +53,7 @@ class CommentCard extends StatelessWidget {
                   borderRadius: BorderRadius.only(bottomRight: Radius.circular(15.r)),
                   border: Border(bottom: const BorderSide(color: Colors.black26),right: isEndReply? const BorderSide(color: Colors.black26):BorderSide.none),
                 ),
-                
+
               ),
               Column(
                 children: [
@@ -109,7 +110,7 @@ class CommentCard extends StatelessWidget {
                           onTap: () {
                             _showReplyVisibility = !_showReplyVisibility;
                             context.read<ShowRepliesCubit>().change(postIndex: commentIndex!,visibility: _showReplyVisibility);
-                          },   
+                          },
                           child:Padding(
                             padding: EdgeInsets.symmetric(horizontal: 7.w,vertical: 5.h),
                             child: BlocBuilder<ShowRepliesCubit,ShowReplyesState>(

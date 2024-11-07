@@ -1,5 +1,6 @@
 import 'package:academe_x/core/di/dependency_injection.dart';
 import 'package:academe_x/features/auth/presentation/controllers/cubits/authentication_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/home/bottom_nav_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/cubits/create_post/create_post_icons_cubit.dart';
 import 'package:academe_x/features/home/presentaion/controllers/states/create_post/create_post_icons_state.dart';
 import 'package:academe_x/navigation/app_router.dart';
@@ -15,7 +16,6 @@ void main() async{
   await init();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const Main());
-
 }
 
 class Main extends StatelessWidget {
@@ -36,6 +36,9 @@ class Main extends StatelessWidget {
             ),
             BlocProvider<AuthActionCubit>(
               create: (context) => getIt<AuthActionCubit>(), // Providing the AuthCubit
+            ),
+            BlocProvider<BottomNavCubit>(
+              create: (context) => getIt<BottomNavCubit>(), // Providing the AuthCubit
             ),
             BlocProvider(
               create: (context) => PickerCubit(CreatePostIconsInit()),
@@ -61,7 +64,7 @@ class Main extends StatelessWidget {
                 surface: Colors.white,
               ),
             ),
-            initialRoute: '/community_screen',
+            initialRoute: '/login',
             onGenerateRoute: AppRouter.generateRoute,
           ),
         );

@@ -8,16 +8,16 @@ import '../../../../core/widgets/app_text.dart';
 import '../widgets/custom_button.dart';
 
 class RobotIntroScreen extends StatelessWidget {
-  const RobotIntroScreen({Key? key}) : super(key: key);
+  const RobotIntroScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppCustomAppBar(
+      appBar: const AppCustomAppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
+        leading: BackButton(color: Colors.black),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w),
