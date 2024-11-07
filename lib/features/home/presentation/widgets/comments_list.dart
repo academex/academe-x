@@ -1,4 +1,4 @@
-import 'package:academe_x/core/domy_data/domy_comments.dart';
+import 'package:academe_x/core/mock_data/domy_comments.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:academe_x/core/widgets/app_text_field.dart';

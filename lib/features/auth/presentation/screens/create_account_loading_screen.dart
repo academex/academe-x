@@ -4,7 +4,7 @@ import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/const/app_robot.dart';
+import '../../../../core/constants/app_robot.dart';
 import '../../../../core/widgets/app_custom_appBar_widget.dart';
 
 class AccountCreationScreen extends StatefulWidget {

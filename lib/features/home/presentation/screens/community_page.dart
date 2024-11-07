@@ -5,17 +5,75 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/const/app_size.dart';
+import '../../../../core/constants/app_size.dart';
+import '../../domain/entities/home/post_entity.dart';
 import '../controllers/cubits/home/action_post_cubit.dart';
 import '../controllers/cubits/home/category_cubit.dart';
 import '../controllers/states/action_post_states.dart';
 import '../widgets/action_button.dart';
 import '../widgets/comments_list.dart';
-import '../widgets/expandable_text.dart';
+import '../widgets/post_widget.dart';
 
 class CommunityPage extends StatelessWidget {
-  const CommunityPage({super.key});
+   CommunityPage({super.key});
 
+  List<PostEntity> posts = [
+   PostEntity(
+   userId: '1',
+   username: 'حسين غباين',
+   userAvatar: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
+   timeAgo: 'الان',
+   content: 'مرحبا كيف الحال اليوم جبتلكم ملفات مهمة',
+   images: ['https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp', 'https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp'],
+   type: PostType.textWithFile,
+   likesCount: 450,
+   fileName: 'Flutter Projects',
+   commentsCount: 201,
+   sharesCount: 150,
+   ),
+   PostEntity(
+   userId: '2',
+   username: 'ابراهيم العكلوك',
+   userAvatar: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
+   timeAgo: 'منذ 4 دقائق',
+   content: 'مرحبا كيف الحال',
+   images: ['https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp', 'https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp'],
+   type: PostType.textOnly,
+   likesCount: 13,
+   commentsCount: 2,
+   sharesCount: 1,
+   ),
+   PostEntity(
+   userId: '3',
+   username: 'خالد الخليلي',
+   userAvatar: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
+   timeAgo: 'منذ 7 دقائق',
+   content: 'مرحبا كيف الحال',
+   images: ['https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp', 'https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp'],
+   type: PostType.textWithImage,
+   likesCount: 10,
+   commentsCount: 21,
+   sharesCount: 0,
+   ),
+    PostEntity(
+      userId: '4',
+      username: 'براء مبارك',
+      userAvatar: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
+      timeAgo: 'منذ 40 دقائق',
+      content: 'اليوم بدي اعمل تصويت لاختيار انسب وقت للامتحان',
+      images: ['https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp', 'https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp'],
+      type: PostType.textWithPoll,
+      pollOptions: {
+        'السبت':40,
+        'الاحد':0,
+        'الاثنين':50,
+
+      },
+      likesCount: 1,
+      commentsCount: 0,
+      sharesCount: 8,
+    )
+  ];
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -49,110 +107,109 @@ class CommunityPage extends StatelessWidget {
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Row(
-                          children: [
-                            const CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=3zXhjg5POMoQ7kNvgEaeogu&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AZfV6b1yRcUmoKX3s-jXRo5&oh=00_AYDZNQMHGTZ1-1WwX8xXh_4Ox1LCVrngo1zxSAON4Cf_Uw&oe=67194CF7')),
-                            10.pw(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AppText(
-                                  text: 'حسين غباين',
-                                  fontSize: 14.sp,
-                                ),
-                                4.ph(),
-                                AppText(
-                                  text: 'منذ 4 دقائق',
-                                  fontSize: 12.sp,
-                                  color: const Color(0xff64748B),
-                                )
-                              ],
-                            ),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.more_horiz))
-                          ],
-                        ),
-                        10.ph(),
-                        const ExpandableText(
-                            text:
-                                'مرحبا اصدقائي اريد معرفة الشباتر المطلوبة للامتحان النهائي وموعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور موعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور '),
-                        12.ph(),
-                        _buildPostImage(
-                            'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=3zXhjg5POMoQ7kNvgEaeogu&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AZfV6b1yRcUmoKX3s-jXRo5&oh=00_AYDZNQMHGTZ1-1WwX8xXh_4Ox1LCVrngo1zxSAON4Cf_Uw&oe=67194CF7'),
-                        10.ph(),
-                        // _buildDotsIndicator(),
-                        // 20.ph(),
-                        BlocProvider(
-                            create: (context) => ActionPostCubit(),
-                            child: SizedBox(
-                              width: 326.w,
-                              height: 50.h,
-                              child: Row(
-                                children: [
-                                  BlocBuilder<ActionPostCubit, ActionPostState>(
-                                    builder: (context, state) {
-                                      return ActionButton(
-                                        iconPath: state.isLiked
-                                            ? 'assets/icons/favourite_selected.png'
-                                            : 'assets/icons/favourite.png',
-                                        count: '450',
-                                        onTap: () {
-                                          context
-                                              .read<ActionPostCubit>()
-                                              .performLikeAction(
-                                                  !state.isLiked);
-                                        },
-                                      );
-                                    },
-                                  ),
-                                  10.pw(),
-                                  ActionButton(
-                                    iconPath: 'assets/icons/comment.png',
-                                    count: '21',
-                                    onTap: () {
-                                      CommentsList(postId: 0, context: context);
-                                    },
-                                  ),
-                                  10.pw(),
-                                  ActionButton(
-                                    iconPath: 'assets/icons/share.png',
-                                    count: '15',
-                                    onTap: () {
-                                      showShareOptions(context);
-                                    },
-                                  ),
-                                  const Spacer(),
-                                  BlocBuilder<ActionPostCubit, ActionPostState>(
-                                    builder: (context, state) {
-                                      return IconButton(
-                                        icon: Image.asset(
-                                          state.isSaved
-                                              ? 'assets/icons/bookMark_selected.png'
-                                              : 'assets/icons/Bookmark.png',
-                                          height: 17.h,
-                                          width: 19.w,
-                                        ),
-                                        padding: EdgeInsets.zero,
-                                        onPressed: () {
-                                          context
-                                              .read<ActionPostCubit>()
-                                              .performSaveAction(
-                                                  !state.isSaved);
-                                        },
-                                      );
-                                    },
-                                  )
-                                ],
-                              ),
-                            ))
-                      ],
-                    );
+                    return PostWidget(post: posts[index]);
+                    // return Column(
+                    //   children: [
+                    //     Row(
+                    //       children: [
+                    //         const CircleAvatar(
+                    //             backgroundImage: NetworkImage(
+                    //                 'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=3zXhjg5POMoQ7kNvgEaeogu&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AZfV6b1yRcUmoKX3s-jXRo5&oh=00_AYDZNQMHGTZ1-1WwX8xXh_4Ox1LCVrngo1zxSAON4Cf_Uw&oe=67194CF7')),
+                    //         10.pw(),
+                    //         Column(
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: [
+                    //             AppText(
+                    //               text: 'حسين غباين',
+                    //               fontSize: 14.sp,
+                    //             ),
+                    //             4.ph(),
+                    //             AppText(
+                    //               text: 'منذ 4 دقائق',
+                    //               fontSize: 12.sp,
+                    //               color: const Color(0xff64748B),
+                    //             )
+                    //           ],
+                    //         ),
+                    //         const Spacer(),
+                    //         IconButton(
+                    //             onPressed: () {},
+                    //             icon: const Icon(Icons.more_horiz))
+                    //       ],
+                    //     ),
+                    //     10.ph(),
+                    //     const ExpandableText(
+                    //         text:
+                    //             'مرحبا اصدقائي اريد معرفة الشباتر المطلوبة للامتحان النهائي وموعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور موعد الامتحان  بالاضافة لحل السؤال التالي الموضح بالصور '),
+                    //     12.ph(),
+                    //     _buildPostImage(
+                    //         'https://scontent.ftlv21-1.fna.fbcdn.net/v/t39.30808-6/295928553_2070311023148654_6760145031800456898_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=3zXhjg5POMoQ7kNvgEaeogu&_nc_ht=scontent.ftlv21-1.fna&_nc_gid=AZfV6b1yRcUmoKX3s-jXRo5&oh=00_AYDZNQMHGTZ1-1WwX8xXh_4Ox1LCVrngo1zxSAON4Cf_Uw&oe=67194CF7'),
+                    //     10.ph(),
+                    //     BlocProvider(
+                    //         create: (context) => ActionPostCubit(),
+                    //         child: SizedBox(
+                    //           width: 326.w,
+                    //           height: 50.h,
+                    //           child: Row(
+                    //             children: [
+                    //               BlocBuilder<ActionPostCubit, ActionPostState>(
+                    //                 builder: (context, state) {
+                    //                   return ActionButton(
+                    //                     iconPath: state.isLiked
+                    //                         ? 'assets/icons/favourite_selected.png'
+                    //                         : 'assets/icons/favourite.png',
+                    //                     count: '450',
+                    //                     onTap: () {
+                    //                       context
+                    //                           .read<ActionPostCubit>()
+                    //                           .performLikeAction(
+                    //                               !state.isLiked);
+                    //                     },
+                    //                   );
+                    //                 },
+                    //               ),
+                    //               10.pw(),
+                    //               ActionButton(
+                    //                 iconPath: 'assets/icons/comment.png',
+                    //                 count: '21',
+                    //                 onTap: () {
+                    //                   CommentsList(postId: 0, context: context);
+                    //                 },
+                    //               ),
+                    //               10.pw(),
+                    //               ActionButton(
+                    //                 iconPath: 'assets/icons/share.png',
+                    //                 count: '15',
+                    //                 onTap: () {
+                    //                   showShareOptions(context);
+                    //                 },
+                    //               ),
+                    //               const Spacer(),
+                    //               BlocBuilder<ActionPostCubit, ActionPostState>(
+                    //                 builder: (context, state) {
+                    //                   return IconButton(
+                    //                     icon: Image.asset(
+                    //                       state.isSaved
+                    //                           ? 'assets/icons/bookMark_selected.png'
+                    //                           : 'assets/icons/Bookmark.png',
+                    //                       height: 17.h,
+                    //                       width: 19.w,
+                    //                     ),
+                    //                     padding: EdgeInsets.zero,
+                    //                     onPressed: () {
+                    //                       context
+                    //                           .read<ActionPostCubit>()
+                    //                           .performSaveAction(
+                    //                               !state.isSaved);
+                    //                     },
+                    //                   );
+                    //                 },
+                    //               )
+                    //             ],
+                    //           ),
+                    //         ))
+                    //   ],
+                    // );
                   },
                   separatorBuilder: (context, index) {
                     return Column(
@@ -167,7 +224,7 @@ class CommunityPage extends StatelessWidget {
                       ],
                     );
                   },
-                  itemCount: 5,
+                  itemCount: posts.length,
                   physics: const BouncingScrollPhysics(),
                 ))),
       ],

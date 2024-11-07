@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/const/app_robot.dart';
+import '../../../../core/constants/app_robot.dart';
 import '../../../../core/widgets/app_text.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';

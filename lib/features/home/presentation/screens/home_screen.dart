@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
                 bottomNavigationBar: const CustomBottomNavBar(),
                 body: IndexedStack(
                   index: currentIndex,
-                  children: const [CommunityPage(),LibraryPage(), Text('2'), Text('3')],
+                  children:  [CommunityPage(),LibraryPage(), Text('2'), Text('3')],
                 ));
           },
         ));

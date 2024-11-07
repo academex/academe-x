@@ -1,17 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/entities/home/reaction_type.dart';
 import '../../states/action_post_states.dart';
 
 class ActionPostCubit extends Cubit<ActionPostState> {
-  ActionPostCubit() : super(ActionPostState(isLiked: false, isSaved: false));
+  ActionPostCubit() : super(ActionPostState());
 
-  // Method to toggle the like state
-  void performLikeAction(bool isLike) {
-    emit(state.copyWith(isLiked: isLike));
+  void toggleDefaultReaction() {
+    if (state.selectedReaction != null) {
+      emit(state.copyWith(selectedReaction: null));
+    } else {
+      emit(state.copyWith(selectedReaction: ReactionType.like));
+    }
   }
 
-  // Method to toggle the save state
-  void performSaveAction(bool isSave) {
-    emit(state.copyWith(isSaved: isSave,));
+  void selectReaction(ReactionType reaction) {
+    emit(state.copyWith(selectedReaction: reaction));
+  }
+
+  void performSaveAction(bool isSaved) {
+    emit(state.copyWith(isSaved: isSaved));
   }
 }

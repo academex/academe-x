@@ -1,20 +1,21 @@
+import '../../../domain/entities/home/reaction_type.dart';
+
 class ActionPostState {
-  final bool isLiked;
   final bool isSaved;
+  final ReactionType? selectedReaction;
 
   ActionPostState({
-    required this.isLiked,
-    required this.isSaved,
+    this.isSaved = false,
+    this.selectedReaction,
   });
 
-  // Create a copyWith method to update specific fields in the state
   ActionPostState copyWith({
-    bool? isLiked,
     bool? isSaved,
+    ReactionType? selectedReaction,
   }) {
     return ActionPostState(
-      isLiked: isLiked ?? this.isLiked,
       isSaved: isSaved ?? this.isSaved,
+      selectedReaction: selectedReaction,
     );
   }
 }

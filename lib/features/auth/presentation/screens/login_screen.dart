@@ -1,4 +1,4 @@
-import 'package:academe_x/core/const/app_robot.dart';
+import 'package:academe_x/core/constants/app_robot.dart';
 import 'package:academe_x/core/extensions/context_extenssion.dart';
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/features/auth/data/models/requset/login_requset_model.dart';

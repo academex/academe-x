@@ -45,7 +45,7 @@ class AppRouter {
       case '/create_new_password':
         return MaterialPageRoute(builder: (_) => CreateNewPasswordScreen());
       case '/community_screen':
-        return MaterialPageRoute(builder: (_) => const CommunityPage());
+        return MaterialPageRoute(builder: (_) =>  CommunityPage());
       case '/privacy_policy_page':
         return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
       default:
