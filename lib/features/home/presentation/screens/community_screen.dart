@@ -39,9 +39,9 @@ class CommunityScreen extends StatelessWidget {
                   title: AnimatedOpacity(
                     opacity: percent < 0.2 ? 1.0 : 0.0,
                     duration: const Duration(milliseconds: 100),
-                    child: _buildHeaderContent(true)
+                    child: _buildHeaderContent(true,context)
                   ),
-                  background:_buildHeaderBackground(false),
+                  background:_buildHeaderBackground(false,context),
                 );
               },
             ),
@@ -312,7 +312,7 @@ class CommunityScreen extends StatelessWidget {
         // ));
   }
 
-  Widget _buildHeaderBackground(bool inScroll) {
+  Widget _buildHeaderBackground(bool inScroll,BuildContext context) {
     return Container(
       // height: 20.81.h,
       // width: 375.w,
@@ -323,11 +323,11 @@ class CommunityScreen extends StatelessWidget {
           fit: BoxFit.fill,
         ),
       ),
-      child: _buildHeaderContent(inScroll),
+      child: _buildHeaderContent(inScroll,context),
     );
   }
 
-  Widget _buildHeaderContent(bool inScroll) {
+  Widget _buildHeaderContent(bool inScroll,BuildContext context) {
     List<Map<String,String>> list= [
     {
       'عام': 'assets/images/image_test1.png',
@@ -371,7 +371,9 @@ class CommunityScreen extends StatelessWidget {
               _buildTitleAndSubtitle(inScroll),
               const Spacer(),
               _buildIconButton('assets/icons/search.png',inScroll),
-              _buildIconButton('assets/icons/notification.png',inScroll),
+              _buildIconButton('assets/icons/notification.png',inScroll,onPressed: () {
+                 Navigator.pushNamed(context, '/app_notification');
+               },),
             ],
           ),
         ),),
@@ -394,7 +396,9 @@ class CommunityScreen extends StatelessWidget {
                _buildTitleAndSubtitle(inScroll),
                const Spacer(),
                _buildIconButton('assets/icons/search.png',inScroll),
-               _buildIconButton('assets/icons/notification.png',inScroll),
+               _buildIconButton('assets/icons/notification.png',inScroll,onPressed: () {
+                 Navigator.pushNamed(context, '/app_notification');
+               },),
              ],
            ),
          ),
@@ -503,9 +507,9 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIconButton(String iconPath,bool inScroll) {
+  Widget _buildIconButton(String iconPath,bool inScroll,{VoidCallback? onPressed}) {
     return IconButton(
-      onPressed: () {},
+      onPressed: onPressed,
       icon: Image.asset(
         iconPath,
         height: 20.h,
