@@ -1,9 +1,12 @@
+import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:google_fonts/google_fonts.dart';
+import 'app_text.dart';
 
 class AppTextField extends StatelessWidget {
   AppTextField({
-    super.key,
+    Key? key,
     required this.hintText,
 
     // required this.text,
@@ -20,9 +23,18 @@ class AppTextField extends StatelessWidget {
     this.minLine = 1,
     this.withBoarder = false,
     this.autofocus = false,
+    this.enableBoarderColor,
+    this.fucusBoarderColor,
     // this.isOTP=false,
     this.suffixIcon,
-  });
+    this.isDense,
+    this.enabled,
+    this.contentPadding,
+    this.hintStyle,
+    this.fillColor,
+    this.onFieldSubmitted,
+    this.textInputAction,
+  }) : super(key: key);
   final String hintText;
   final TextInputType keyboardType;
   final TextEditingController controller;
@@ -34,6 +46,15 @@ class AppTextField extends StatelessWidget {
   int? minLine;
   bool withBoarder;
   bool autofocus;
+  Color? enableBoarderColor;
+  Color? fucusBoarderColor;
+  Color? fillColor;
+  bool? isDense;
+  bool? enabled;
+  EdgeInsetsGeometry? contentPadding;
+  TextStyle? hintStyle;
+  ValueChanged<String>? onFieldSubmitted;
+  TextInputAction? textInputAction;
 
   // final bool isOTP;
   FocusNode? focusNode = FocusNode();
@@ -47,32 +68,43 @@ class AppTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+          enabled: enabled,
           autofocus: autofocus,
           maxLines: maxLine,
           minLines: minLine,
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
+
           // inputFormatters:isOTP? [
           //   LengthLimitingTextInputFormatter(1),
           //   FilteringTextInputFormatter.digitsOnly
           // ] : null,
           onChanged: onChanged,
+          textInputAction: textInputAction,
+          onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
+            fillColor: fillColor,
+            isDense: isDense,
+            contentPadding: contentPadding,
             suffix: suffix,
             prefixText: prefixText,
             hintText: hintText,
-            hintStyle: const TextStyle(color: Colors.black26),
+            hintStyle: hintStyle?? TextStyle(color: Colors.black26),
             hintMaxLines: 1,
             suffixIcon: suffixIcon,
             enabledBorder:withBoarder? OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xffD9D9D9)),
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: enableBoarderColor?? Color(0xffD9D9D9)),
             ):null,
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: withBoarder?const Color(0xff3253FF):Colors.transparent),
+              borderSide: BorderSide(color: withBoarder?Color(0xff3253FF):Colors.transparent),
             ),
+            disabledBorder:withBoarder? OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: enableBoarderColor?? Color(0xffD9D9D9)),
+            ):null,
             // enabledBorder: buildOutlineInputBorder(color:focusedBorderColor),
             // focusedBorder: buildOutlineInputBorder(color:focusedBorderColor),
           ),

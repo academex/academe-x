@@ -17,8 +17,7 @@ final getIt = GetIt.instance;
 
 Future<void> init() async {
   /// Cubits ///
-  getIt.registerFactory<AuthenticationCubit>(
-        () {
+  getIt.registerFactory<AuthenticationCubit>(() {
       return AuthenticationCubit(
         authUseCase: getIt(),
       );
