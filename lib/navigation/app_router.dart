@@ -12,6 +12,8 @@ import '../features/auth/presentation/screens/robot_intro.dart';
 import '../features/auth/presentation/screens/sign_up_screen.dart';
 import '../features/auth/presentation/screens/verification_code.dart';
 import '../features/home/presentation/screens/community_page.dart';
+import '../features/home/presentation/screens/home_screen.dart';
+import '../features/home/presentation/screens/notification.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -45,13 +47,12 @@ class AppRouter {
       case '/community_screen':
         return MaterialPageRoute(builder: (_) =>  CommunityPage());
         return MaterialPageRoute(builder: (_) => CreateNewPasswordScreen());
-      case '/community_screen':
-        return MaterialPageRoute(builder: (_) => const CommunityScreen());
+
       case '/privacy_policy_page':
         return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
         return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
       case '/app_notification':
-        return MaterialPageRoute(builder: (_) => const AppNotification());
+        return MaterialPageRoute(builder: (_) =>  AppNotification());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

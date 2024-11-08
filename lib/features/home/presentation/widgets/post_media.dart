@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
+import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/file_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,7 +21,8 @@ class PostMedia extends StatelessWidget {
       case PostType.textWithPoll:
         return _buildPoll(post.pollOptions!);
       case PostType.textWithFile:
-        return _buildFileAttachment();
+        return FileContainer(fileName: post.fileName,fileUrl: post.fileUrl,);
+        // return _buildFileAttachment();
       default:
         return const SizedBox.shrink();
     }
