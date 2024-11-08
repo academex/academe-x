@@ -1,6 +1,6 @@
 
-import 'package:academe_x/core/core.dart';
-import 'package:academe_x/features/features.dart';
+import 'package:academe_x/lib.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

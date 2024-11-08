@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:academe_x/features/home/presentation/controllers/states/create_post/create_post_icons_state.dart';
+import 'package:academe_x/lib.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';

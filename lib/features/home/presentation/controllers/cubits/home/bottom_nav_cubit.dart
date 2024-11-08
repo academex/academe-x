@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import '../../../../../../core/constants/navigation_constants.dart';
+import 'package:academe_x/lib.dart';
 
 class BottomNavCubit extends Cubit<int> {
   BottomNavCubit() : super(NavigationIndex.community);

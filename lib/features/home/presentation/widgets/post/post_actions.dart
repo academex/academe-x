@@ -1,11 +1,7 @@
-import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/domain.dart';
-import '../../controllers/controllers.dart';
-import '../action_button.dart';
-import '../comment/comment.dart';
-import '../../screens/screens.dart';
+import 'package:academe_x/lib.dart';
+
 
 class PostActions extends StatelessWidget {
   final PostEntity post;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/core.dart';
+import 'package:academe_x/lib.dart';
 
 class BuildCategoryTab extends StatelessWidget {
   late String title;

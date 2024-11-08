@@ -1,7 +1,6 @@
-import 'package:academe_x/core/core.dart';
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 
-import 'build_category_type.dart';
 
 class BuildCategoryTabs extends StatelessWidget {
   const BuildCategoryTabs({super.key});

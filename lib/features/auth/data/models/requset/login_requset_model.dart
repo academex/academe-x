@@ -1,4 +1,4 @@
-import 'package:academe_x/features/auth/domain/entities/request/login_requset_entity.dart';
+import 'package:academe_x/lib.dart';
 
 class LoginRequsetModel extends LoginRequsetEntity{
   LoginRequsetModel({super.username, super.password});

@@ -1,7 +1,5 @@
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../core/core.dart';
-
 class DividerWithText extends StatelessWidget {
   final String text;
 

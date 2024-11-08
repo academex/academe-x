@@ -1,8 +1,7 @@
 
-import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/widgets/app_text.dart';
+import 'package:academe_x/lib.dart';
 
 class HeaderWidget extends StatelessWidget {
   bool inScroll;

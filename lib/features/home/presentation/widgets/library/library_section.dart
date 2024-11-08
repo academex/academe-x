@@ -1,6 +1,5 @@
-import 'package:academe_x/core/core.dart';
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
-import 'library_item.dart';
 
 
 class LibrarySection extends StatelessWidget {

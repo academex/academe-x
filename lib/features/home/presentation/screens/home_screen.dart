@@ -40,16 +40,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/navigation_constants.dart';
-import '../../../../core/core.dart';
+import 'package:academe_x/lib.dart';
 
-import '../../../../core/di/dependency_injection.dart';
-import '../controllers/cubits/home/bottom_nav_cubit.dart';
-import '../widgets/custom_bottom_nav_bar.dart';
-import 'community_page.dart';
-import 'library_page.dart';
-import '../../../features.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:academe_x/core/core.dart';
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 
 

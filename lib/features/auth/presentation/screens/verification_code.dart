@@ -1,7 +1,6 @@
-import 'package:academe_x/core/core.dart';
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
-import 'package:pinput/pinput.dart';
-class VerificationCodeScreen extends StatelessWidget {
+import 'package:pinput/pinput.dart';class VerificationCodeScreen extends StatelessWidget {
   const VerificationCodeScreen({super.key});
   // FocusNode
 

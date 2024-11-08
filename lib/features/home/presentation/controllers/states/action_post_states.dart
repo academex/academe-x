@@ -1,4 +1,4 @@
-import '../../../domain/entities/home/reaction_type.dart';
+import 'package:academe_x/lib.dart';
 
 class ActionPostState {
   final bool isSaved;

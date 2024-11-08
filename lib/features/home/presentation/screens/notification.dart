@@ -1,5 +1,5 @@
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/core/widgets/app_text.dart';
+import 'package:academe_x/lib.dart';
+
 import 'package:flutter/material.dart';
 
 class AppNotification extends StatelessWidget {

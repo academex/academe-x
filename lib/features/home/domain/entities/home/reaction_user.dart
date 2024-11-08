@@ -1,4 +1,4 @@
-import 'package:academe_x/features/home/domain/entities/home/reaction_type.dart';
+import 'package:academe_x/lib.dart';
 
 class ReactionUser {
   final String userId;

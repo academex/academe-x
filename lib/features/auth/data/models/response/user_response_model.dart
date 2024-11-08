@@ -1,5 +1,5 @@
 
-import 'package:academe_x/features/auth/domain/entities/response/user_response_entity.dart';
+import 'package:academe_x/lib.dart';
 
 class UserResponseModel extends UserResponseEntity {
 

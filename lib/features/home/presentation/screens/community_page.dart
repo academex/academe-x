@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/core.dart';
-import '../../home.dart';
+import 'package:academe_x/lib.dart';
+
 
 class CommunityPage extends StatelessWidget {
    CommunityPage({super.key});

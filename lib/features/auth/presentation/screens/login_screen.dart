@@ -1,10 +1,7 @@
-import 'package:academe_x/features/features.dart';
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/core.dart';
-
+import 'package:flutter_svg/svg.dart';
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 

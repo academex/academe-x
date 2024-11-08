@@ -1,8 +1,6 @@
-import 'package:academe_x/core/core.dart';
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/widgets.dart';
-class CreateNewPasswordScreen extends StatelessWidget {
+import 'package:flutter_svg/svg.dart';class CreateNewPasswordScreen extends StatelessWidget {
    CreateNewPasswordScreen({super.key});
 
   final TextEditingController _passwordController = TextEditingController();

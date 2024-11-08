@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../controllers/controllers.dart';
-import '../../../../../core/core.dart';
-import 'comment_card.dart';
+import 'package:academe_x/lib.dart';
+
 
 
 class CommentsList {

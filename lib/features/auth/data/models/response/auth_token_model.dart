@@ -1,6 +1,5 @@
 
-import 'package:academe_x/features/auth/data/models/response/user_response_model.dart';
-import 'package:academe_x/features/auth/domain/entities/response/auth_token_entity.dart';
+import 'package:academe_x/lib.dart';
 
 class AuthTokenModel extends AuthTokenEntity{
   //

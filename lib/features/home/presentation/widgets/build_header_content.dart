@@ -1,9 +1,7 @@
-import 'package:academe_x/core/core.dart';
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 
-import 'build_icon_button.dart';
-import 'build_logo_container.dart';
-import 'build_title_and_subtitle.dart';
+
 
 class BuildHeaderContent extends StatelessWidget {
   bool inScroll;

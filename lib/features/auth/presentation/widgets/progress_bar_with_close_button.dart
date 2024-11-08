@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:academe_x/core/core.dart';
+
 
 class ProgressBarWithCloseButton extends StatelessWidget {
   final VoidCallback onClose;

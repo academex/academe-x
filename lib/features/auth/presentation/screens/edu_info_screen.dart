@@ -1,7 +1,6 @@
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/core.dart';
-import '../widgets/widgets.dart';
-
+import 'package:flutter_svg/svg.dart';
 class EduInfoScreen extends StatefulWidget {
   const EduInfoScreen({super.key});
 

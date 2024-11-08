@@ -1,7 +1,6 @@
-import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
 
-import '../../domain/domain.dart';
+import 'package:academe_x/lib.dart';
 
 class PostMedia extends StatelessWidget {
   final PostEntity post;

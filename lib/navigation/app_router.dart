@@ -1,7 +1,6 @@
-import 'package:academe_x/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import '../features/features.dart';
-import '../features/home/presentation/screens/notification.dart';
+import 'package:academe_x/lib.dart';
+
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {

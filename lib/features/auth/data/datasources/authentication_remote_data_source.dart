@@ -1,13 +1,10 @@
 import 'dart:async';
 
-import 'package:academe_x/core/error/exception.dart';
-import 'package:academe_x/features/auth/data/models/requset/login_requset_model.dart';
-import 'package:academe_x/features/auth/data/models/response/auth_token_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:logger/web.dart';
 
-import '../../../../core/network/api_controller.dart';
-import '../../../../core/network/api_setting.dart';
+import 'package:academe_x/lib.dart';
+
 
 class AuthenticationRemoteDataSource {
   final ApiController apiController;
