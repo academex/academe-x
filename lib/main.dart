@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'lib.dart';
+import 'dart:io';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -85,16 +86,32 @@ class Main extends StatelessWidget {
     return BlocListener<ConnectivityCubit, ConnectivityStatus>(
       listener: (context, status) {
         if (status == ConnectivityStatus.disconnected) {
-          _showNoConnectionBanner(context);
+          _showNoConnectionBanner(context,ConnectivityStatus.disconnected);
         }
+
+        if (status == ConnectivityStatus.connected) {
+          _showNoConnectionBanner(context,ConnectivityStatus.connected);
+        }
+
       },
       child: child!,
     );
   }
 
-  void _showNoConnectionBanner(BuildContext context) {
+  void _showNoConnectionBanner(BuildContext context, ConnectivityStatus disconnected) {
 
-    context.showSnackBar(message: 'لا يوجد اتصال بالإنترنت',error: true);
+    switch(disconnected){
+      case ConnectivityStatus.connected:
+        AppLogger.success('connected');
+        context.showSnackBar(message: 'تم الاتصال بالانترنت',);
+
+        break;
+      case ConnectivityStatus.disconnected:
+        AppLogger.success('not connected');
+        context.showSnackBar(message: 'لا يوجد اتصال بالإنترنت',error: true);
+        break;
+    }
+
   }
 }
 

@@ -70,7 +70,6 @@ class PostMedia extends StatelessWidget {
                     );
                   },),
                   onPageChanged: (value) {
-                    AppLogger.wtf(value.toString());
                     ctx.read<PostImageCubit>().changeImageIndex(value);
                   },
                 ),)
@@ -90,7 +89,6 @@ class PostMedia extends StatelessWidget {
     if (images.length > 1) {
       return BlocBuilder<PostImageCubit,int>(
         builder: (context, currentIndex) {
-          AppLogger.wtf(currentIndex.toString());
           return Positioned(
             top: 8.0,
             left: 8.0,
@@ -117,7 +115,6 @@ class PostMedia extends StatelessWidget {
 
       return BlocBuilder<PostImageCubit,int>(
         builder: (context, currentIndex) {
-          AppLogger.wtf(currentIndex.toString());
           return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(images.length, (index) {
