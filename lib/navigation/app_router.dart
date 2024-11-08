@@ -1,4 +1,3 @@
-import 'package:academe_x/features/home/presentation/screens/home_screen.dart';
 import 'package:academe_x/features/launch/presentation/screens/on_boarding.dart';
 import 'package:academe_x/features/launch/presentation/screens/privacy_policy.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +12,14 @@ import '../features/auth/presentation/screens/robot_intro.dart';
 import '../features/auth/presentation/screens/sign_up_screen.dart';
 import '../features/auth/presentation/screens/verification_code.dart';
 import '../features/home/presentation/screens/community_page.dart';
+import '../features/home/presentation/screens/home_screen.dart';
+import '../features/home/presentation/screens/notification.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       // case '/lunch':
-      // return MaterialPageRoute(builder: (_) => const LunchScreen());
+        // return MaterialPageRoute(builder: (_) => const LunchScreen());
       case '/on_boarding':
         return MaterialPageRoute(builder: (_) => const OnBoarding());
 
@@ -29,14 +30,13 @@ class AppRouter {
       case '/robot_intro':
         return MaterialPageRoute(builder: (_) => const RobotIntroScreen());
       case '/sign_up':
-        return MaterialPageRoute(builder: (_) => SignUpScreen());
+        return MaterialPageRoute(builder: (_) =>  SignUpScreen());
       case '/edu_info':
         return MaterialPageRoute(builder: (_) => const EduInfoScreen());
       case '/account_creation':
         return MaterialPageRoute(builder: (_) => const AccountCreationScreen());
       case '/account_creation_success':
-        return MaterialPageRoute(
-            builder: (_) => const AccountCreationSuccessScreen());
+        return MaterialPageRoute(builder: (_) => const AccountCreationSuccessScreen());
       case '/verification_code':
         return MaterialPageRoute(
             builder: (_) => const VerificationCodeScreen());
@@ -46,8 +46,13 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => CreateNewPasswordScreen());
       case '/community_screen':
         return MaterialPageRoute(builder: (_) =>  CommunityPage());
+        return MaterialPageRoute(builder: (_) => CreateNewPasswordScreen());
+
       case '/privacy_policy_page':
         return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
+        return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
+      case '/app_notification':
+        return MaterialPageRoute(builder: (_) =>  AppNotification());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

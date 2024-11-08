@@ -2,8 +2,8 @@
 import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/core/widgets/app_text.dart';
 import 'package:academe_x/core/widgets/app_text_field.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/create_post/create_post_icons_cubit.dart';
-import 'package:academe_x/features/home/presentaion/controllers/states/create_post/create_post_icons_state.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_icons_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/create_post/create_post_icons_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_multi_choice_widget.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/file_container.dart';
 import 'package:flutter/material.dart';
