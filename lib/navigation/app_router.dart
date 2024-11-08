@@ -1,6 +1,7 @@
 import 'package:academe_x/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import '../features/features.dart';
+import '../features/home/presentation/screens/notification.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -34,8 +35,13 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => CreateNewPasswordScreen());
       case '/community_screen':
         return MaterialPageRoute(builder: (_) =>  CommunityPage());
+        return MaterialPageRoute(builder: (_) => CreateNewPasswordScreen());
+
       case '/privacy_policy_page':
         return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
+        return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
+      case '/app_notification':
+        return MaterialPageRoute(builder: (_) =>  AppNotification());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(
