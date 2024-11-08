@@ -26,8 +26,6 @@ class SizeConfig {
         ? screenHeight * 0.024
         : screenWidth * 0.024;
 
-    AppLogger.wtf(screenWidth.toString());
-    AppLogger.wtf(screenHeight.toString());
   }
 
   // Get the proportionate height according to screen size
