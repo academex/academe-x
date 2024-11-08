@@ -1,5 +1,5 @@
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BuildLogoContainer extends StatelessWidget {
   const BuildLogoContainer({super.key});
@@ -7,16 +7,16 @@ class BuildLogoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 50.w,
-      height: 50.h,
+      width: 50    ,
+      height: 50,
       decoration: const BoxDecoration(
         color: Color(0xff007BFF),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
       child: Image.asset(
         'assets/icons/logo_library.png',
-        height: 28.h,
-        width: 28.w,
+        height: 28,
+        width: 28    ,
       ),
     );
   }

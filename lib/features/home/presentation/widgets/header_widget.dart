@@ -1,7 +1,6 @@
 
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/widgets/app_text.dart';
 
@@ -40,16 +39,16 @@ class HeaderWidget extends StatelessWidget {
 
   Widget _buildLogoContainer(String image) {
     return Container(
-      width: 50.w,
-      height: 50.h,
+      width: 50,
+      height: 50,
       decoration: const BoxDecoration(
         color: Color(0xff007BFF),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
       child: Image.asset(
        image, //'assets/images/Frame.png'
-        height: 28.h,
-        width: 28.w,
+        height: 28,
+        width: 28,
       ),
     );
   }
@@ -61,16 +60,16 @@ class HeaderWidget extends StatelessWidget {
       children: [
         AppText(
           text: title, //
-          fontSize: 16.sp,
+          fontSize: 16  ,
           color: inScroll ? Colors.black : Colors.white,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
 
         ),
         if (!inScroll) ...[
-          // 6.ph(),
+          6.ph(),
           AppText(
             text:subTitle, // 'مجتمع مخصص لكل تساؤلاتك'
-            fontSize: 10.sp,
+            fontSize: 12,
             color: Colors.white,
           ),
         ],
@@ -83,8 +82,8 @@ class HeaderWidget extends StatelessWidget {
       onPressed: () {},
       icon: Image.asset(
         iconPath,
-        height: 20.h,
-        width: 20.w,
+        height: 20,
+        width: 20,
         color: inScroll ? Colors.black : Colors.white,
       ),
       padding: EdgeInsets.zero,

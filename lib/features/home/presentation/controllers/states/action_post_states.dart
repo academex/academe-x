@@ -18,4 +18,13 @@ class ActionPostState {
       selectedReaction: selectedReaction,
     );
   }
+
+
+  ActionPostState changeSelect({
+    bool? isSaved,
+  }) {
+    return ActionPostState(
+      isSaved: isSaved ?? this.isSaved,
+    );
+  }
 }

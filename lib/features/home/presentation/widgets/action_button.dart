@@ -1,10 +1,8 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/widgets/app_text.dart';
 
 class ActionButton extends StatelessWidget {
   late String iconPath;
@@ -25,25 +23,27 @@ class ActionButton extends StatelessWidget {
     return InkWell(
       onTap:onTap,
       // focusColor: const Color(0xffF7F7F8),
-      borderRadius: BorderRadius.circular(10.r),
-      highlightColor: const Color(0xffF7F7F8),
-
+      borderRadius: BorderRadius.circular(10),
+      // highlightColor: const Color(0xffF7F7F8),
 
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
+       decoration: BoxDecoration(
+         color: const Color(0xffF7F7F8),
+         borderRadius: BorderRadius.all(Radius.circular(10)),
+       ),
+        padding: EdgeInsets.symmetric(horizontal: 8   ,vertical: 12.h),
         // alignment: AlignmentDirectional.center,
-
         child:Row(
           children: [
             Image.asset(
          iconPath,
-              height: 17.h,
-              width: 19.w,
+              height: 25,
+              width: 25   ,
             ),
             4.pw(),
             AppText(
               text: count,
-              fontSize: 14.sp,
+              fontSize: 14  ,
 
               color: const Color(0xff707281),
             )

@@ -1,6 +1,6 @@
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RobotWithSpeechBubble extends StatelessWidget {
   final String svgString;
@@ -19,8 +19,8 @@ class RobotWithSpeechBubble extends StatelessWidget {
       children: [
         SvgPicture.string(
           svgString,
-          height: 150.h,
-          width: 150.w,
+          height: 150   ,
+          width: 150   ,
         ),
         SpeechBubble(text: speechText),
       ],
@@ -38,15 +38,15 @@ class SpeechBubble extends StatelessWidget {
     return CustomPaint(
       painter: SpeechBubblePainter(),
       child: Container(
-        width: 74.w,
-        height: 58.h,
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+        width: 74   ,
+        height: 58   ,
+        padding: EdgeInsets.symmetric(horizontal: 8   , vertical: 8   ),
         child: Text(
           text,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: const Color(0xFF474CA8),
-            fontSize: 12.sp,
+            fontSize: 12  ,
             fontWeight: FontWeight.bold,
           ),
           maxLines: 2,

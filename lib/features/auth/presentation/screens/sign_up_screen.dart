@@ -1,15 +1,7 @@
-import 'package:academe_x/core/extensions/context_extenssion.dart';
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/features/auth/presentation/widgets/robot_with_speech_bubble.dart';
+import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../core/constants/app_robot.dart';
-import '../../../../core/widgets/app_text.dart';
-import '../widgets/custom_button.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/progress_bar_with_close_button.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -26,7 +18,7 @@ class SignUpScreen extends StatelessWidget {
       backgroundColor: Colors.white,
 
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        padding: EdgeInsets.symmetric(horizontal: 24   ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -78,7 +70,7 @@ class SignUpScreen extends StatelessWidget {
           10.pw(),
           AppText(
             text:context.localizations.createAccountTitle,
-            fontSize: 16.sp,
+            fontSize: 16  ,
             color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
@@ -106,7 +98,7 @@ class SignUpScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: AppText(
             text: text,
-            fontSize: 16.sp,
+            fontSize: 16  ,
             fontWeight: FontWeight.normal,
             color: Colors.black,
           ),
@@ -162,7 +154,7 @@ class SignUpScreen extends StatelessWidget {
       },
       widget: AppText(
         text: context.localizations.collegeLabel,
-        fontSize: 14.sp,
+        fontSize: 14  ,
         color: Colors.white,
         fontWeight: FontWeight.bold,
 
@@ -178,7 +170,7 @@ class SignUpScreen extends StatelessWidget {
       children: [
         AppText(
           text: context.localizations.already_have_account,
-          fontSize: 14.sp,
+          fontSize: 14  ,
           color: Colors.black,
         ),
         GestureDetector(
@@ -187,7 +179,7 @@ class SignUpScreen extends StatelessWidget {
           },
           child: AppText(
             text: context.localizations.loginTitle,
-            fontSize: 14.sp,
+            fontSize: 14  ,
             color: Colors.blue,
           ),
         ),

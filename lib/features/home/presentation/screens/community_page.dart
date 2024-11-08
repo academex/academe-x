@@ -1,79 +1,12 @@
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/core/widgets/app_text.dart';
-import 'package:academe_x/features/home/presentation/widgets/header_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/constants/app_size.dart';
-import '../../domain/entities/home/post_entity.dart';
-import '../controllers/cubits/home/action_post_cubit.dart';
-import '../controllers/cubits/home/category_cubit.dart';
-import '../controllers/states/action_post_states.dart';
-import '../widgets/action_button.dart';
-import '../widgets/comments_list.dart';
-import '../widgets/post_widget.dart';
+import '../../../../core/core.dart';
+import '../../home.dart';
 
 class CommunityPage extends StatelessWidget {
    CommunityPage({super.key});
 
-  List<PostEntity> posts = [
-   PostEntity(
-   userId: '1',
-   username: 'حسين غباين',
-   userAvatar: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
-   timeAgo: 'الان',
-   content: 'مرحبا كيف الحال اليوم جبتلكم ملفات مهمة',
-   images: ['https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp', 'https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp'],
-   type: PostType.textWithFile,
-   likesCount: 450,
-   fileName: 'Flutter Projects',
-   commentsCount: 201,
-   sharesCount: 150,
-   ),
-   PostEntity(
-   userId: '2',
-   username: 'ابراهيم العكلوك',
-   userAvatar: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
-   timeAgo: 'منذ 4 دقائق',
-   content: 'مرحبا كيف الحال',
-   images: ['https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp', 'https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp'],
-   type: PostType.textOnly,
-   likesCount: 13,
-   commentsCount: 2,
-   sharesCount: 1,
-   ),
-   PostEntity(
-   userId: '3',
-   username: 'خالد الخليلي',
-   userAvatar: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
-   timeAgo: 'منذ 7 دقائق',
-   content: 'مرحبا كيف الحال',
-   images: ['https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp', 'https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp'],
-   type: PostType.textWithImage,
-   likesCount: 10,
-   commentsCount: 21,
-   sharesCount: 0,
-   ),
-    PostEntity(
-      userId: '4',
-      username: 'براء مبارك',
-      userAvatar: 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
-      timeAgo: 'منذ 40 دقائق',
-      content: 'اليوم بدي اعمل تصويت لاختيار انسب وقت للامتحان',
-      images: ['https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp', 'https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://static.wixstatic.com/media/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png/v1/fill/w_980,h_553,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/919b05_e3d12f7b87a245f0a7f80234388ee981~mv2.png','https://cdn.pixelbin.io/v2/dummy-cloudname/EEM2O3/original/619340761ca096a589ca891f/66c47e28ee26e35883181545_66c47d762975b12fcc9d8b71_1.webp'],
-      type: PostType.textWithPoll,
-      pollOptions: {
-        'السبت':40,
-        'الاحد':0,
-        'الاثنين':50,
-
-      },
-      likesCount: 1,
-      commentsCount: 0,
-      sharesCount: 8,
-    )
-  ];
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -82,14 +15,14 @@ class CommunityPage extends StatelessWidget {
       slivers: [
         SliverAppBar(
           automaticallyImplyLeading: true,
-          expandedHeight: kAppBarExpandedHeight.h,
+          expandedHeight: 250,
           pinned: true,
           leading: 0.pw(),
           flexibleSpace: LayoutBuilder(
             builder: (context, constraints) {
               // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
               final percent = (constraints.maxHeight - kToolbarHeight) /
-                  (kAppBarExpandedHeight.h - kToolbarHeight);
+                  (280   - kToolbarHeight);
               return FlexibleSpaceBar(
                 centerTitle: true,
                 title: AnimatedOpacity(
@@ -103,11 +36,11 @@ class CommunityPage extends StatelessWidget {
         ),
         SliverToBoxAdapter(
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: kPaddingHorizontal.w),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return PostWidget(post: posts[index]);
+                    return PostWidget(post: MockData.posts[index]);
                     // return Column(
                     //   children: [
                     //     Row(
@@ -121,12 +54,12 @@ class CommunityPage extends StatelessWidget {
                     //           children: [
                     //             AppText(
                     //               text: 'حسين غباين',
-                    //               fontSize: 14.sp,
+                    //               fontSize: 14  ,
                     //             ),
                     //             4.ph(),
                     //             AppText(
                     //               text: 'منذ 4 دقائق',
-                    //               fontSize: 12.sp,
+                    //               fontSize: 12  ,
                     //               color: const Color(0xff64748B),
                     //             )
                     //           ],
@@ -149,7 +82,7 @@ class CommunityPage extends StatelessWidget {
                     //         create: (context) => ActionPostCubit(),
                     //         child: SizedBox(
                     //           width: 326.w,
-                    //           height: 50.h,
+                    //           height: 50  ,
                     //           child: Row(
                     //             children: [
                     //               BlocBuilder<ActionPostCubit, ActionPostState>(
@@ -192,7 +125,7 @@ class CommunityPage extends StatelessWidget {
                     //                       state.isSaved
                     //                           ? 'assets/icons/bookMark_selected.png'
                     //                           : 'assets/icons/Bookmark.png',
-                    //                       height: 17.h,
+                    //                       height: 17  ,
                     //                       width: 19.w,
                     //                     ),
                     //                     padding: EdgeInsets.zero,
@@ -217,14 +150,14 @@ class CommunityPage extends StatelessWidget {
                         16.ph(),
                         Divider(
                           color: Colors.grey.shade300,
-                          endIndent: kPaddingHorizontal.w,
-                          indent: 25.w,
+                          endIndent: 25,
+                          indent: 25,
                         ),
                         16.ph()
                       ],
                     );
                   },
-                  itemCount: posts.length,
+                  itemCount: MockData.posts.length,
                   physics: const BouncingScrollPhysics(),
                 ))),
       ],
@@ -233,7 +166,7 @@ class CommunityPage extends StatelessWidget {
 
   Widget _buildHeaderBackground(bool inScroll) {
     return Container(
-      height: 20.81.h,
+      height: 20.81  ,
       // width: 375.w,
       decoration: const BoxDecoration(
         // color: Color(0xFF0077FF),
@@ -269,31 +202,15 @@ class CommunityPage extends StatelessWidget {
         ? SafeArea(
             child: Column(
             children: [
-              // 50.ph(),
-              // inScroll?0.ph():64.ph(),
               Expanded(
                 child: SizedBox(
-                  width: 327.w,
+                  width: 327,
                   // 327.w,
-                  height: 45.h,
+                  height: 45  ,
                   child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-                  ,
-                  // child: Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: _buildLogoContainer(),
-                  //     ),
-                  //     8.pw(),
-                  //     _buildTitleAndSubtitle(inScroll),
-                  //     const Spacer(),
-                  //     _buildIconButton('assets/icons/search.png', inScroll),
-                  //     _buildIconButton(
-                  //         'assets/icons/notification.png', inScroll),
-                  //   ],
-                  // ),
                 ),
               ),
-              inScroll ? 0.ph() : kPaddingHorizontal.ph(),
+              inScroll ? 0.ph() : 15.ph(),
               inScroll ? 0.ph() : _buildCategoryTabs(),
             ],
           ))
@@ -302,8 +219,9 @@ class CommunityPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  padding: const EdgeInsets.symmetric(horizontal: 24    ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       inScroll ? 0.ph() : 40.ph(),
 
@@ -320,37 +238,37 @@ class CommunityPage extends StatelessWidget {
                       //         'assets/icons/notification.png', inScroll),
                       //   ],
                       // ),
-                      ,20.ph(),
+                      ,18.ph(),
                       SizedBox(
-                        width: 327.w,
-                        height: 24.h,
+                        // width: 327,
+                        height: 24  ,
                         child: Row(
                           children: [
                             AppText(
                               text: 'التخصصات',
-                              fontSize: 16.sp,
+                              fontSize: 16  ,
+                              fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
                             const Spacer(),
                             AppText(
                               text: 'عرض المزيد',
-                              fontSize: 12.sp,
-                              color: Colors.lightBlueAccent,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12  ,
+                              color: Colors.white.withOpacity(0.6600000262260437),
                             ),
                           ],
                         ),
                       ),
-                      30.ph(),
-
-                      // _buildCategoryTabs(),
+                      12.ph(),
                     ],
                   ),
                 ),
                 BlocBuilder<CategoryCubit, int>(
                   builder: (BuildContext context, selectedIndex) {
                     return Container(
-                      padding: EdgeInsets.only(right: 24.w),
-                      height: kCategoryHeight.h,
+                      padding: const EdgeInsets.only(right: 24),
+                      height: 100  ,
                       // width: 327.w,
                       child: ListView.separated(
                           physics: const BouncingScrollPhysics(),
@@ -363,15 +281,14 @@ class CommunityPage extends StatelessWidget {
                               children: [
                                 GestureDetector(
                                   child: Container(
-                                    width: 56.w,
-                                    height: 56.h,
+                                    width: 56,
+                                    height: 56  ,
                                     decoration: BoxDecoration(
-                                        // image:
                                         color: selectedIndex == index
                                             ? Colors.white
                                             : Colors.blue,
                                         borderRadius:
-                                            BorderRadius.circular(10.r)),
+                                            BorderRadius.circular(10)),
                                     child: Image.asset(image),
                                   ),
                                   onTap: () {
@@ -383,8 +300,10 @@ class CommunityPage extends StatelessWidget {
                                 12.ph(),
                                 AppText(
                                   text: title,
-                                  fontSize: 14.sp,
+                                  fontSize: 14  ,
                                   color: Colors.white,
+                                  fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
+
                                 )
                               ],
                             );
@@ -404,12 +323,12 @@ class CommunityPage extends StatelessWidget {
 
   Widget _buildCategoryTabs() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
-      height: 55.h,
-      width: 327.w,
+      padding: const EdgeInsets.symmetric(vertical: 5  , horizontal: 8),
+      height: 55  ,
+      width: 327,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         children: [
@@ -425,10 +344,10 @@ class CommunityPage extends StatelessWidget {
     return Expanded(
       child: Container(
         alignment: AlignmentDirectional.center,
-        height: 43.h,
+        height: 43  ,
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xff2769F2) : Colors.white,
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: AppText(
           text: title,
@@ -446,8 +365,8 @@ class CommunityPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
               image,
-              height: kPostImageHeight.h,
-              width: 326.w,
+              height: 200  ,
+              width: 326,
               fit: BoxFit.cover,
             )),
         _buildImageCounter(),
@@ -468,7 +387,7 @@ class CommunityPage extends StatelessWidget {
             ),
             child: AppText(
               text: '${0 + 1}/${0}',
-              fontSize: 10.sp,
+              fontSize: 10,
               color: Colors.white,
             )),
       );
@@ -510,8 +429,8 @@ void showShareOptions(BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              height: 4.h,
-              width: 56.w,
+              height: 4  ,
+              width: 56    ,
               color: const Color(0xffE7E8EA),
             ),
             20.ph(),
@@ -592,8 +511,8 @@ Widget _buildShareOption(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          height: 69.h,
-          width: 69.w,
+          height: 69  ,
+          width: 69    ,
           decoration: BoxDecoration(
               color: const Color(0xF9F9F9C4),
               shape: BoxShape.circle,

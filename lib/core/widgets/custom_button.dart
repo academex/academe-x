@@ -1,22 +1,20 @@
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomButton extends StatelessWidget {
   final Widget widget;
   final VoidCallback onPressed;
   final Color color;
   final bool wihtBorder;
-   Size size;
 
 
 
-   CustomButton({
+  const CustomButton({
     super.key,
     required this.widget,
     required this.onPressed,
     this.wihtBorder= false,
     required this.color  ,
-     required this.size ,
   });
 
   @override
@@ -28,9 +26,9 @@ class CustomButton extends StatelessWidget {
           color: Colors.white
         ) : BorderSide.none,
         padding: EdgeInsets.symmetric(vertical: 12.h), backgroundColor: color,
-        minimumSize:size.isEmpty? Size(double.infinity, 50.h) :size,
+        minimumSize: Size(double.infinity, 50.h),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
 
         ),
       ),

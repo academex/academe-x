@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/widgets/app_text.dart';
+import '../../../../core/core.dart';
 
 class ResetPasswordTypeWayWidget extends StatelessWidget {
   ResetPasswordTypeWayWidget({
@@ -23,8 +22,8 @@ class ResetPasswordTypeWayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 146.h,
-        width: 327.w,
+        height: 146   ,
+        width: 327   ,
         decoration: BoxDecoration(
           color:isSelect? const Color(0xFF0077FF): const Color(0xFFF9F9F9),
           border: Border.all(
@@ -34,7 +33,7 @@ class ResetPasswordTypeWayWidget extends StatelessWidget {
         ),
         child: Padding(
           padding:
-          EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          EdgeInsets.symmetric(horizontal: 20   , vertical: 20   ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -57,8 +56,8 @@ class ResetPasswordTypeWayWidget extends StatelessWidget {
                   ),
                   const Spacer(),
                   Container(
-                    height: 20.h,
-                    width: 20.w,
+                    height: 20   ,
+                    width: 20   ,
                     decoration: BoxDecoration(
                         border: Border.all(
                           color: const Color(0xFFE2E8F0),
@@ -73,13 +72,13 @@ class ResetPasswordTypeWayWidget extends StatelessWidget {
               ),
               AppText(
                 text: title,
-                fontSize: 16.sp,
+                fontSize: 16  ,
                 fontWeight: FontWeight.bold,
                 color: isSelect? Colors.white : Colors.black,
               ),
               AppText(
                 text: subtitle ,
-                fontSize: 12.sp,
+                fontSize: 12  ,
                 fontWeight: FontWeight.bold,
                 color: isSelect? Colors.white : Colors.black,
               ),

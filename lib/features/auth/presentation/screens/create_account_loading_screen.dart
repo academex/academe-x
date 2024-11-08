@@ -1,11 +1,6 @@
-import 'package:academe_x/core/extensions/context_extenssion.dart';
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/core/widgets/app_text.dart';
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/constants/app_robot.dart';
-import '../../../../core/widgets/app_custom_appBar_widget.dart';
 
 class AccountCreationScreen extends StatefulWidget {
   const AccountCreationScreen({super.key});
@@ -50,20 +45,20 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
         },
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
+        padding: EdgeInsets.symmetric(horizontal: 24   , vertical: 40   ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children:[
           SvgPicture.string(
           mySignInRobotSVG,
-          height: 150.h,
-          width: 150.w,
+          height: 150   ,
+          width: 150   ,
         ),
           20.ph(),
           AppText(
             text:
             context.localizations.accountCreationLoadingTitle,
-            fontSize: 26.sp,
+            fontSize: 26 ,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -71,7 +66,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
           AppText(
             text:
             context.localizations.accountCreationLoadingSubTitle,
-            fontSize: 16.sp,
+            fontSize: 16 ,
             // fontWeight: FontWeight.n,
             color: Colors.white,
             textAlign: TextAlign.center,
@@ -130,7 +125,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
           AppText(
             text:
             context.localizations.accountPreparationMessage,
-            fontSize: 12.sp,
+            fontSize: 12 ,
             color: Colors.white,
           )
     ])));
@@ -139,8 +134,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
 
   Widget _buildDot() {
     return Container(
-      height: 6.w,
-      width: 6.w,
+      height: 6   ,
+      width: 6   ,
       decoration: const BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,

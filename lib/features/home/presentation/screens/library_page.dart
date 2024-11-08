@@ -1,14 +1,6 @@
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/core/widgets/app_text.dart';
-import 'package:academe_x/features/home/presentation/widgets/header_widget.dart';
+import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/features.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../core/constants/app_size.dart';
-import '../controllers/cubits/home/category_cubit.dart';
-import '../widgets/library_item.dart';
-import '../widgets/library_section.dart';
 
 class LibraryPage extends StatelessWidget {
   const LibraryPage({super.key});
@@ -21,7 +13,7 @@ class LibraryPage extends StatelessWidget {
       slivers: [
         SliverAppBar(
           automaticallyImplyLeading: true,
-          expandedHeight: 200.h,
+          expandedHeight: 200,
           pinned: true,
           leading: 0.pw(),
           flexibleSpace: LayoutBuilder(
@@ -42,7 +34,7 @@ class LibraryPage extends StatelessWidget {
         ),
         SliverToBoxAdapter(
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: kPaddingHorizontal.w),
+                padding: EdgeInsets.symmetric(horizontal: 20    ),
                 child:  ListView.separated(
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
@@ -72,7 +64,7 @@ class LibraryPage extends StatelessWidget {
 
   Widget _buildHeaderBackground(bool inScroll) {
     return Container(
-      height: 20.81.h,
+      height: 20.81,
       // width: 375.w,
       decoration: const BoxDecoration(
         // color: Color(0xFF0077FF),
@@ -91,7 +83,7 @@ class LibraryPage extends StatelessWidget {
             child: Column(
             children: [
               Expanded(
-                child: Padding(padding: EdgeInsets.symmetric(horizontal: 20.w),child: SizedBox(
+                child: Padding(padding: EdgeInsets.symmetric(horizontal: 20    ),child: SizedBox(
                   // width: 327.w,
                   // 327.w,
                   // height: 45.h,
@@ -99,7 +91,7 @@ class LibraryPage extends StatelessWidget {
                   HeaderWidget(inScroll: inScroll, logoPath: 'assets/icons/logo_library.png', title: 'مكتبتي', subTitle: 'كل ما تحتاجه من كتب وملخصات وشباتر', secondIconPath: 'assets/icons/filter.png'),
                 ),)
               ),
-              inScroll ? 0.ph() : kPaddingHorizontal.ph(),
+              inScroll ? 0.ph() : 15.ph(),
               inScroll ? 0.ph() : _buildCategoryTabs(),
             ],
           ))
@@ -108,7 +100,7 @@ class LibraryPage extends StatelessWidget {
             children: [
               inScroll ? 0.ph() : 40.ph(),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                padding: EdgeInsets.symmetric(horizontal: 24    ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -116,7 +108,7 @@ class LibraryPage extends StatelessWidget {
                     16.ph(),
                     AppText(
                       text: 'المواد الخاصة بي',
-                      fontSize: 14.sp,
+                      fontSize: 14  ,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                     ),
@@ -126,9 +118,9 @@ class LibraryPage extends StatelessWidget {
               ),
 
               Padding(
-                padding: EdgeInsets.only(right: 24.w),
+                padding: EdgeInsets.only(right: 24    ),
                 child: SizedBox(
-                  height: 40.h,
+                  height: 40,
                   child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
@@ -138,12 +130,12 @@ class LibraryPage extends StatelessWidget {
                           children: [
                             GestureDetector(
                               child: Container(
-                                width: 70.w,
-                                height: 40.h,
+                                width: 70    ,
+                                height: 40,
                                 decoration: BoxDecoration(
                                     // image:
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.r)),
+                                    borderRadius: BorderRadius.circular(10)),
                                 child: Center(
                                   child: Text('data'),
                                 ),
@@ -171,12 +163,12 @@ class LibraryPage extends StatelessWidget {
 
   Widget _buildCategoryTabs() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
-      height: 55.h,
-      width: 327.w,
+      padding: EdgeInsets.symmetric(vertical: 5     ,horizontal: 8    ),
+      height: 55,
+      width: 327    ,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         children: [
@@ -192,14 +184,14 @@ class LibraryPage extends StatelessWidget {
     return Expanded(
       child: Container(
         alignment: AlignmentDirectional.center,
-        height: 43.h,
+        height: 43,
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xff2769F2) : Colors.white,
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: AppText(
           text: title,
-          fontSize: 14.sp,
+          fontSize: 14  ,
           color: isSelected ? Colors.white : Colors.grey,
         ),
       ),

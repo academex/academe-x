@@ -1,11 +1,6 @@
-import 'package:academe_x/core/extensions/context_extenssion.dart';
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/core/widgets/app_custom_appBar_widget.dart';
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/widgets/app_text.dart';
-import '../widgets/custom_button.dart';
 
 class RobotIntroScreen extends StatelessWidget {
   const RobotIntroScreen({super.key});
@@ -20,11 +15,11 @@ class RobotIntroScreen extends StatelessWidget {
         leading: BackButton(color: Colors.black),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        padding: EdgeInsets.symmetric(horizontal: 24   ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 50.h), // Use SizedBox for vertical spacing
+            SizedBox(height: 50   ), // Use SizedBox for vertical spacing
             // Load the SVG robot logo
             SvgPicture.string(
               '''<svg width="154" height="154" viewBox="0 0 154 154" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,14 +65,14 @@ class RobotIntroScreen extends StatelessWidget {
 </g>
 <path d="M77.2136 5.14395C37.7802 5.14395 5.69891 37.224 5.69891 76.6573C5.69891 116.091 37.7802 148.172 77.2136 148.172C116.647 148.172 148.728 116.091 148.728 76.6573C148.728 37.224 116.647 5.14395 77.2136 5.14395ZM77.2136 153.316C34.9448 153.316 0.555176 118.927 0.555176 76.6573C0.555176 34.388 34.9448 0 77.2136 0C119.483 0 153.872 34.388 153.872 76.6573C153.872 118.927 119.483 153.316 77.2136 153.316Z" fill="#E4EDFF"/>
               </svg>''',
-              height: 150.h,
-              width: 150.w,
+              height: 150   ,
+              width: 150   ,
             ),
         30.ph(), // Vertical spacing
             // Using AppText for the title
             AppText(
               text: context.localizations.robotIntroTitle,
-              fontSize: 24.sp,
+              fontSize: 24  ,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
               textAlign: TextAlign.center,
@@ -86,7 +81,7 @@ class RobotIntroScreen extends StatelessWidget {
             // Using AppText for the description
             AppText(
               text:context.localizations.robotIntroSubTitle,
-              fontSize: 16.sp,
+              fontSize: 16  ,
               color: Colors.grey,
               textAlign: TextAlign.center,
             ),
@@ -99,7 +94,7 @@ class RobotIntroScreen extends StatelessWidget {
                 Navigator.pushNamed(context, '/sign_up');
 
                 // Add your navigation logic here for the next step
-              }, widget: AppText(text: context.localizations.startButton, fontSize: 16.sp,color: Colors.white,),
+              }, widget: AppText(text: context.localizations.startButton, fontSize: 16  ,color: Colors.white,),
             ),
           ],
         ),

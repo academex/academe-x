@@ -1,24 +1,9 @@
-import 'package:academe_x/core/constants/app_robot.dart';
-import 'package:academe_x/core/extensions/context_extenssion.dart';
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/features/auth/data/models/requset/login_requset_model.dart';
-import 'package:academe_x/features/auth/presentation/controllers/cubits/authentication_cubit.dart';
-import 'package:academe_x/features/auth/presentation/controllers/states/authentication_states.dart';
-import 'package:academe_x/features/auth/presentation/widgets/divider_with_text.dart';
+import 'package:academe_x/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logger/logger.dart';
-import '../../../../core/widgets/app_custom_appBar_widget.dart';
-import '../../../../core/widgets/app_text.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/custom_button.dart';
-
-
-
-
+import '../../../../core/core.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -38,7 +23,7 @@ class LoginScreen extends StatelessWidget {
         leading: SizedBox(), // No leading widget
       ),
       body: Padding(
-        padding: EdgeInsets.only(left: 24.w, right: 24.w),
+        padding: EdgeInsets.only(left: 24 , right: 24 ),
         child: Form(
           key: formKey, // Assign the form key
           child: Column(
@@ -46,18 +31,18 @@ class LoginScreen extends StatelessWidget {
             children: [
               AppText(
                 text: context.localizations.loginTitle,
-                fontSize: 24.sp,
+                fontSize: 24  ,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
               8.ph(),
               AppText(
                 text: context.localizations.loginSubTitle,
-                fontSize: 14.sp,
+                fontSize: 14  ,
                 color: Colors.grey,
                 textAlign: TextAlign.center,
               ),
-              23.ph(),
+              SizedBox(height: 23,),
               CustomTextField(
                 label: context.localizations.emailLabel,
                 hintText: context.localizations.emailHint,
@@ -104,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                     onTap: () {},
                     child: AppText(
                       text: context.localizations.rememberMe,
-                      fontSize: 14.sp,
+                      fontSize: 14  ,
                       color: const Color(0xff232323),
                     ),
                   ),
@@ -115,7 +100,7 @@ class LoginScreen extends StatelessWidget {
                     },
                     child: AppText(
                       text: context.localizations.forgotPassword,
-                      fontSize: 14.sp,
+                      fontSize: 14  ,
                       isUnderline: true,
                       color: const Color(0xff232323),
                     ),
@@ -128,7 +113,7 @@ class LoginScreen extends StatelessWidget {
                   if (state is AuthenticationSuccessState) {
                     Navigator.pushReplacementNamed(context, '/home_screen');
                   }else if(state is AuthenticationErrorState){
-                    Logger().d(state.message);
+                    AppLogger.d(state.message);
                     context.showSnackBar(message: state.message,error: true);
                   }
 
@@ -147,7 +132,7 @@ class LoginScreen extends StatelessWidget {
                       color: Colors.blueAccent,
                       widget: AppText(
                         text: context.localizations.loginButton,
-                        fontSize: 16.sp,
+                        fontSize: 16,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
@@ -172,7 +157,7 @@ class LoginScreen extends StatelessWidget {
                     color: Colors.blueAccent,
                     widget: AppText(
                       text: context.localizations.loginButton,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -206,7 +191,7 @@ class LoginScreen extends StatelessWidget {
                     10.pw(),
                     AppText(
                       text: context.localizations.googleAccount,
-                      fontSize: 16.sp,
+                      fontSize: 16 ,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
@@ -220,13 +205,13 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   AppText(
                     text: context.localizations.noAccount,
-                    fontSize: 14.sp,
+                    fontSize: 14 ,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                   AppText(
                     text: context.localizations.createAccount,
-                    fontSize: 14.sp,
+                    fontSize: 14 ,
                     color: Colors.blueAccent,
                     fontWeight: FontWeight.bold,
                     onPressed: () {

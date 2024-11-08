@@ -1,14 +1,6 @@
-
-import 'package:academe_x/core/extensions/context_extenssion.dart';
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/core/widgets/app_custom_appBar_widget.dart';
-import 'package:academe_x/features/auth/presentation/widgets/custom_button.dart';
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
-
-import '../../../../core/widgets/app_text.dart';
-
 class VerificationCodeScreen extends StatelessWidget {
   const VerificationCodeScreen({super.key});
   // FocusNode
@@ -19,10 +11,10 @@ class VerificationCodeScreen extends StatelessWidget {
     const fillColor = Color(0xFFF9F9F9);
     var borderColor =  Colors.grey[200];
     final defaultPinTheme = PinTheme(
-      width: 70.w,
-      height: 56.h,
+      width: 70   ,
+      height: 56   ,
       textStyle:  TextStyle(
-        fontSize: 22.sp,
+        fontSize: 22  ,
         color:const Color.fromRGBO(30, 60, 87, 1),
       ),
       decoration: BoxDecoration(
@@ -39,13 +31,13 @@ class VerificationCodeScreen extends StatelessWidget {
         ),
 
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.h,vertical: 30.h),
+          padding: EdgeInsets.symmetric(horizontal: 20   ,vertical: 30   ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
                 text: context.localizations.verificationTitle,
-                fontSize: 24.sp,
+                fontSize: 24  ,
 
                 // color: Col,
                 fontWeight: FontWeight.w600,
@@ -53,12 +45,12 @@ class VerificationCodeScreen extends StatelessWidget {
               8.ph(),
               AppText(
                 text:context.localizations.verificationSubTitle,
-                fontSize: 14.sp,
+                fontSize: 14  ,
                 color: const Color(0xff94A3B8),
               ),
               AppText(
                 text: '****aklouk@mail.com',
-                fontSize: 14.sp,
+                fontSize: 14  ,
                 color: const Color(0xFF3253FF),
               ),
               23.ph(),
@@ -104,14 +96,14 @@ class VerificationCodeScreen extends StatelessWidget {
                 children: [
                   AppText(
                     text: context.localizations.resendCode,
-                    fontSize: 16.sp,
+                    fontSize: 16  ,
                     fontWeight: FontWeight.w500,
                     isUnderline: true,
                   ),
                 ],
               ),
               const Spacer(),
-              CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 14.sp,color: Colors.white,fontWeight: FontWeight.bold,), onPressed: (){
+              CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 14  ,color: Colors.white,fontWeight: FontWeight.bold,), onPressed: (){
                 Navigator.pushNamed(context, '/create_new_password');
 
               }, color: const Color(0xff0077FF)),

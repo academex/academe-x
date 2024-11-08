@@ -1,14 +1,11 @@
 
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/core/widgets/app_text.dart';
-import 'package:academe_x/core/widgets/app_text_field.dart';
-import 'package:academe_x/features/home/presentaion/controllers/cubits/create_post/create_post_icons_cubit.dart';
-import 'package:academe_x/features/home/presentaion/controllers/states/create_post/create_post_icons_state.dart';
-import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_multi_choice_widget.dart';
-import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/file_container.dart';
+import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'create_multi_choice_widget.dart';
+import 'file_container.dart';
 
 class CreatePost {
   final TextEditingController _postController = TextEditingController();
@@ -19,7 +16,7 @@ class CreatePost {
       context: parContext,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16.w)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16   )),
       ),
       builder: (context) {
         return FractionallySizedBox(
@@ -27,24 +24,24 @@ class CreatePost {
           child: Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: 24.w,
-              right: 24.w,
-              top: 16.h,
+              left: 24   ,
+              right: 24   ,
+              top: 16
             ), // Adjust for keyboard and padding
             child: SingleChildScrollView(
               child: SizedBox(
-                height: 0.85.sh,
+                height: 0.85,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Top handle to indicate drag
                     Center(
                       child: Container(
-                        width: 56.w,
-                        height: 5.h,
+                        width: 56   ,
+                        height: 5,
                         decoration: BoxDecoration(
                           color: Color(0xffE7E8EA),
-                          borderRadius: BorderRadius.circular(12.w),
+                          borderRadius: BorderRadius.circular(12   ),
                         ),
                       ),
                     ),
@@ -54,7 +51,7 @@ class CreatePost {
                       children: [
                         AppText(
                           text: 'الغاء',
-                          fontSize: 14.sp,
+                          fontSize: 14  ,
                           color: Colors.green,
                           onPressed: () {
                             Navigator.pop(context);
@@ -62,36 +59,36 @@ class CreatePost {
                         ),
                         AppText(
                           text: 'إنشاء بوست',
-                          fontSize: 16.sp,
+                          fontSize: 16  ,
                           fontWeight: FontWeight.w600,
                         ),
                         // You can add another icon or widget here if needed
-                        SizedBox(width: 50.w), // Placeholder for alignment
+                        SizedBox(width: 50   ), // Placeholder for alignment
                       ],
                     ),
                     16.ph(),
                     Row(
                       children: [
                         CircleAvatar(
-                          radius: 20.w,
+                          radius: 20   ,
                           child: AppText(
                             text: 'إ',
-                            fontSize: 15.sp,
+                            fontSize: 15  ,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(width: 8.w),
+                        SizedBox(width: 8   ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             AppText(
                               text: 'إبراهيم',
-                              fontSize: 14.sp,
+                              fontSize: 14  ,
                               fontWeight: FontWeight.w600,
                             ),
                             AppText(
                               text: '#تطوير البرمجيات',
-                              fontSize: 12.sp,
+                              fontSize: 12  ,
                               color: Colors.grey,
                             ),
                           ],
@@ -118,7 +115,7 @@ class CreatePost {
                     for (int i = 0; i < 1; i++)
                       AppText(
                         text: '   ' + '#تطوير برمجيات',
-                        fontSize: 14.sp,
+                        fontSize: 14  ,
                         color: const Color(0xff0077FF),
                       ),
                     SizedBox(height: 16.h),
@@ -133,12 +130,12 @@ class CreatePost {
                                     index < state.images.length;
                                     index++)
                                   Container(
-                                    margin: EdgeInsets.symmetric(horizontal: 9.w),
-                                    height: 178.h,
-                                    width: state.images.length == 1 ? 300.w : 178.w,
+                                    margin: EdgeInsets.symmetric(horizontal: 9   ),
+                                    height: 178,
+                                    width: state.images.length == 1 ? 300    : 178   ,
                                     decoration: BoxDecoration(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(12.r)),
+                                          BorderRadius.all(Radius.circular(12)),
                                       image: DecorationImage(
                                         image: FileImage(state.images[index]),
                                         fit: BoxFit.cover,
@@ -193,16 +190,16 @@ class CreatePost {
                         // Handle post submission
                       },
                       child: Container(
-                        height: 50.h,
+                        height: 50,
                         decoration: BoxDecoration(
                           color:
                               Color(0xFF007AFF), // Blue color for the post button
-                          borderRadius: BorderRadius.circular(10.w),
+                          borderRadius: BorderRadius.circular(10   ),
                         ),
                         child: Center(
                           child: AppText(
                             text: 'نشر',
-                            fontSize: 16.sp,
+                            fontSize: 16  ,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),

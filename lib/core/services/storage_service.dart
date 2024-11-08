@@ -1,13 +1,32 @@
+// import 'package:hive_flutter/hive_flutter.dart';
+//
 // class StorageService {
-//   final SharedPreferences _prefs;
+//   static late Box _box;
 //
-//   StorageService(this._prefs);
-//
-//   Future<void> saveToken(String token) async {
-//     await _prefs.setString('token', token);
+//   static Future<void> init() async {
+//     await Hive.initFlutter();
+//     _box = await Hive.openBox('app_box');
 //   }
 //
-//   String? getToken() {
-//     return _prefs.getString('token');
+//   static Future<void> saveUser(UserEntity user) async {
+//     await _box.put('user', user.toJson());
+//   }
+//
+//   static UserEntity? getUser() {
+//     final userData = _box.get('user');
+//     if (userData == null) return null;
+//     return UserEntity.fromJson(userData);
+//   }
+//
+//   static Future<void> clearUser() async {
+//     await _box.delete('user');
+//   }
+//
+//   static Future<void> saveTheme(bool isDark) async {
+//     await _box.put('isDark', isDark);
+//   }
+//
+//   static bool getTheme() {
+//     return _box.get('isDark', defaultValue: false);
 //   }
 // }

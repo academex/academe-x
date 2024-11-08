@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/widgets/app_text.dart';
+import '../../../../core/core.dart';
 
 class DividerWithText extends StatelessWidget {
   final String text;
@@ -22,7 +21,7 @@ class DividerWithText extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: AppText(
             text: text,
-            fontSize: 14.sp,
+            fontSize: 14  ,
             fontWeight: FontWeight.normal,
             color: Colors.black,
           ),

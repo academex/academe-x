@@ -1,5 +1,5 @@
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BuildIconButton extends StatelessWidget {
   String iconPath; bool inScroll;
@@ -11,8 +11,8 @@ class BuildIconButton extends StatelessWidget {
       onPressed: () {},
       icon: Image.asset(
         iconPath,
-        height: 20.h,
-        width: 20.w,
+        height: 20,
+        width: 20    ,
         color: inScroll ? Colors.black : Colors.white,
       ),
       padding: EdgeInsets.zero,

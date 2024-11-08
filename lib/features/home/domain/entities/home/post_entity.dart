@@ -1,3 +1,5 @@
+import 'package:academe_x/features/home/domain/entities/home/reaction_user.dart';
+
 enum PostType {
   textOnly,
   textWithImage,
@@ -19,6 +21,7 @@ class PostEntity {
   final int likesCount;
   final int commentsCount;
   final int sharesCount;
+  final List<ReactionUser>? reactionUsers;
 
   PostEntity({
     required this.userId,
@@ -34,5 +37,6 @@ class PostEntity {
     required this.likesCount,
     required this.commentsCount,
     required this.sharesCount,
+    this.reactionUsers,
   });
 }

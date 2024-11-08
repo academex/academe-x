@@ -1,8 +1,6 @@
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/widgets/app_text.dart';
 import 'build_icon_button.dart';
 import 'build_logo_container.dart';
 import 'build_title_and_subtitle.dart';
@@ -18,7 +16,7 @@ class BuildHeaderContent extends StatelessWidget {
       children: [
         inScroll ? 0.ph() : 40.ph(),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          padding: EdgeInsets.symmetric(horizontal: 24   ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -34,7 +32,7 @@ class BuildHeaderContent extends StatelessWidget {
               16.ph(),
               AppText(
                 text: 'المواد الخاصة بي',
-                fontSize: 16.sp,
+                fontSize: 16  ,
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
               ),
@@ -43,9 +41,9 @@ class BuildHeaderContent extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(right: 24.w),
+          padding: EdgeInsets.only(right: 24   ),
           child: SizedBox(
-            height: 40.h,
+            height: 40,
             child: ListView.separated(
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
@@ -55,12 +53,12 @@ class BuildHeaderContent extends StatelessWidget {
                     children: [
                       GestureDetector(
                         child: Container(
-                          width: 70.w,
-                          height: 40.h,
+                          width: 70   ,
+                          height: 40,
                           decoration: BoxDecoration(
                             // image:
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.r)),
+                              borderRadius: BorderRadius.circular(10 )),
                           child: Center(
                             child: Text('data'),
                           ),

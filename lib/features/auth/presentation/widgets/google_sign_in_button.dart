@@ -1,5 +1,5 @@
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -13,21 +13,21 @@ class GoogleSignInButton extends StatelessWidget {
       onPressed: onPressed,
       icon: Icon(
         Icons.g_mobiledata, // Placeholder for Google icon
-        size: 24.sp,
+        size: 24 ,
         color: Colors.black54,
       ),
       label: Text(
         'حساب جوجل',
         style: TextStyle(
-          fontSize: 16.sp,
+          fontSize: 16 ,
           color: Colors.black87,
         ),
       ),
       style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
+        padding: EdgeInsets.symmetric(vertical: 12   , horizontal: 20   ),
         side: const BorderSide(color: Colors.grey),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(10 ),
         ),
       ),
     );

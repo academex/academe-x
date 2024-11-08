@@ -1,12 +1,7 @@
-import 'package:academe_x/core/extensions/context_extenssion.dart';
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/core/widgets/app_custom_appBar_widget.dart';
-import 'package:academe_x/features/auth/presentation/widgets/custom_button.dart';
-import 'package:academe_x/features/auth/presentation/widgets/reset_password_type_way_widget.dart';
+import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/features.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/widgets/app_text.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -21,13 +16,13 @@ class ForgotPasswordScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
         body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20   ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppText(
                   text: context.localizations.forgotPasswordTitle,
-                  fontSize: 22.sp,
+                  fontSize: 22 ,
                   fontWeight: FontWeight.w700,
                   color: Colors.black,
                 ),
@@ -35,7 +30,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 AppText(
                   text:
                   context.localizations.forgotPasswordSubTitle,
-                  fontSize: 14.sp,
+                  fontSize: 14 ,
                   fontWeight: FontWeight.w400,
                   color: const Color(0xff94A3B8),
                   textAlign: TextAlign.start,
@@ -56,7 +51,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ),
                 50.ph(),
                 Center(
-                  child: CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 16.sp,fontWeight: FontWeight.w600,), onPressed: (){
+                  child: CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 16 ,fontWeight: FontWeight.w600,), onPressed: (){
                         Navigator.pushNamed(context, '/verification_code');
 
                   }, color: const Color(0xFF0077FF))
@@ -65,7 +60,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   //   width: 327.w,
                   //   height: 56.h,
                   //   color: const Color(0xFF0077FF),
-                  //   fontSize: 16.sp,
+                  //   fontSize: 16  ,
                   //   onPressed: () {
                   //     Navigator.pushNamed(context, '/verification_code');
                   //   },

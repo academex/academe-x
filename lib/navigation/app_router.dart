@@ -1,18 +1,6 @@
 import 'package:academe_x/features/home/presentation/screens/home_screen.dart';
-import 'package:academe_x/features/launch/presentation/screens/on_boarding.dart';
-import 'package:academe_x/features/launch/presentation/screens/privacy_policy.dart';
 import 'package:flutter/material.dart';
-// Import your screen files here
-import '../features/auth/presentation/screens/EduInfoScreen.dart';
-import '../features/auth/presentation/screens/congratulations_screen.dart';
-import '../features/auth/presentation/screens/create_account_loading_screen.dart';
-import '../features/auth/presentation/screens/create_new_password.dart';
-import '../features/auth/presentation/screens/forgot_password.dart';
-import '../features/auth/presentation/screens/login_screen.dart';
-import '../features/auth/presentation/screens/robot_intro.dart';
-import '../features/auth/presentation/screens/sign_up_screen.dart';
-import '../features/auth/presentation/screens/verification_code.dart';
-import '../features/home/presentation/screens/community_page.dart';
+import '../features/features.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {

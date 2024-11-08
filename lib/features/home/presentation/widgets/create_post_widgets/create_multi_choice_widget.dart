@@ -1,7 +1,5 @@
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
-import 'package:academe_x/core/widgets/app_text_field.dart';
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class CreateMultiChoiceWidget extends StatefulWidget {
@@ -41,7 +39,7 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 0.4.sh,
+      height: 0.4,
       child: RawScrollbar(
         thumbVisibility: true,
         thumbColor: Colors.blue.shade100,
@@ -83,10 +81,10 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
                     borderType: BorderType.RRect,
                     dashPattern: [10, 8],
                     strokeWidth: 1,
-                    radius: Radius.circular(12.r),
+                    radius: Radius.circular(12),
                     color: const Color(0xffD9D9D9),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(12.r)),
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
                       child: AppTextField(
                         hintStyle:
                             TextStyle(color: Color.fromRGBO(59, 186, 166, 1)),

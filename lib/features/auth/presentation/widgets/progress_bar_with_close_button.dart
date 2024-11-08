@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:academe_x/core/core.dart';
 
 class ProgressBarWithCloseButton extends StatelessWidget {
   final VoidCallback onClose;
@@ -14,7 +14,7 @@ class ProgressBarWithCloseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50.h,
+      height: 50   ,
       child: Stack(
         children: [
           Positioned.fill(
@@ -24,11 +24,11 @@ class ProgressBarWithCloseButton extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: SizedBox(
-                  height: 10.h,
-                  width: 284.w,
+                  height: 10   ,
+                  width: 284   ,
                   child: LinearProgressIndicator(
                     value: progressValue,
-                    minHeight: 16.h,
+                    minHeight: 16   ,
                     backgroundColor: Colors.grey[200],
                     color: const Color(0xff5DCA14),
                   ),
@@ -39,7 +39,7 @@ class ProgressBarWithCloseButton extends StatelessWidget {
           Positioned(
             right: 0,
             child: IconButton(
-              icon: Icon(Icons.close, size: 24.w, color: Colors.black),
+              icon: Icon(Icons.close, size: 24   , color: Colors.black),
               onPressed: onClose,
             ),
           ),

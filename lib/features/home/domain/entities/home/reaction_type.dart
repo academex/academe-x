@@ -1,9 +1,11 @@
+import 'dart:ui';
+
 enum ReactionType {
-  celebrate,
   heart,
+  like,
   question,
   insightful,
-  like
+  celebrate,
 }
 
 class ReactionEntity {
@@ -17,20 +19,7 @@ class ReactionEntity {
     this.isSelected = false,
   });
 
-  String get reactionText {
-    switch (type) {
-      case ReactionType.celebrate:
-        return 'تصفيق';
-      case ReactionType.heart:
-        return 'قلب';
-      case ReactionType.question:
-        return 'سؤال';
-      case ReactionType.insightful:
-        return 'مدهش';
-      case ReactionType.like:
-        return 'إعجاب';
-    }
-  }
+
 
 
 }
@@ -50,4 +39,35 @@ extension ReactionTypeExtension on ReactionType {
         return 'assets/icons/reactions/celebrate.png';
     }
   }
+
+  String get reactionText {
+    switch (this) {
+      case ReactionType.celebrate:
+        return 'تصفيق';
+      case ReactionType.heart:
+        return 'قلب';
+      case ReactionType.question:
+        return 'سؤال';
+      case ReactionType.insightful:
+        return 'مذهل';
+      case ReactionType.like:
+        return 'إعجاب';
+    }
+  }
+
+  Color get reactionColor {
+    switch (this) {
+      case ReactionType.celebrate:
+        return Color(0xffFFDCD4);
+      case ReactionType.heart:
+        return Color(0xffFF5D5D);
+      case ReactionType.question:
+        return Color(0xff0EC2B4);
+      case ReactionType.insightful:
+        return Color(0xffFF7D99);
+      case ReactionType.like:
+        return Color(0xff6582FD);
+    }
+  }
 }
+

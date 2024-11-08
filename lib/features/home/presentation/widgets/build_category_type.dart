@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/widgets/app_text.dart';
+import '../../../../core/core.dart';
 
 class BuildCategoryTab extends StatelessWidget {
   late String title;
@@ -14,14 +13,14 @@ class BuildCategoryTab extends StatelessWidget {
   return Expanded(
   child: Container(
   alignment: AlignmentDirectional.center,
-  height: 43.h,
+  height: 43,
   decoration: BoxDecoration(
   color: isSelected ? const Color(0xff2769F2) : Colors.white,
-  borderRadius: BorderRadius.circular(10.r),
+  borderRadius: BorderRadius.circular(10 ),
   ),
   child: AppText(
   text: title,
-  fontSize: 14.sp,
+  fontSize: 14  ,
   color: isSelected ? Colors.white : Colors.grey,
   ),
   ),

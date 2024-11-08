@@ -1,6 +1,6 @@
-import 'package:academe_x/features/home/presentation/widgets/build_header_content.dart';
+import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/features.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BuildHeaderBackground extends StatelessWidget {
   bool inScroll;
@@ -9,7 +9,7 @@ class BuildHeaderBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 20.81.h,
+      height: 20.81,
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/background_library.png'),

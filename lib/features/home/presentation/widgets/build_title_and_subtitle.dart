@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/widgets/app_text.dart';
+import '../../../../core/core.dart';
 
 class BuildTitleAndSubtitle extends StatelessWidget {
   bool inScroll;
@@ -15,7 +14,7 @@ class BuildTitleAndSubtitle extends StatelessWidget {
       children: [
         AppText(
           text: 'مكتبتي',
-          fontSize: 16.sp,
+          fontSize: 16  ,
           color: inScroll ? Colors.black : Colors.white,
           fontWeight: FontWeight.w600,
         ),
@@ -23,7 +22,7 @@ class BuildTitleAndSubtitle extends StatelessWidget {
           // 6.ph(),
           AppText(
             text: 'كل ما تحتاجه من كتب وملخصات وشباتر',
-            fontSize: 10.sp,
+            fontSize: 10  ,
             fontWeight: FontWeight.w400,
             color: Colors.white,
           ),
