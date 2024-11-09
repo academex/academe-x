@@ -1,19 +1,37 @@
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import 'app_text.dart';
 
 class AppTextField extends StatelessWidget {
   AppTextField({
     super.key,
+=======
+import 'package:academe_x/core/extensions/sized_box_extension.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'app_text.dart';
+
+class AppTextField extends StatelessWidget {
+   AppTextField({
+    Key? key,
+>>>>>>> 536135a (Description of changes)
     required this.hintText,
 
     // required this.text,
     // required this.labeltext,
     required this.keyboardType,
+<<<<<<< HEAD
     this.obscureText = false,
+=======
+    required this.obscureText,
+>>>>>>> 536135a (Description of changes)
     required this.controller,
     this.focusNode,
     this.onSubmitted,
     this.onChanged,
+<<<<<<< HEAD
     this.suffix,
     this.prefixText,
     this.maxLine = 1,
@@ -32,11 +50,17 @@ class AppTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.textInputAction,
   });
+=======
+    // this.isOTP=false,
+    this.suffixIcon,
+  }) : super(key: key);
+>>>>>>> 536135a (Description of changes)
   final String hintText;
   final TextInputType keyboardType;
   final TextEditingController controller;
   final Widget? suffixIcon;
   final bool obscureText;
+<<<<<<< HEAD
   final Widget? suffix;
   final String? prefixText;
   int? maxLine;
@@ -55,6 +79,10 @@ class AppTextField extends StatelessWidget {
 
   // final bool isOTP;
   FocusNode? focusNode = FocusNode();
+=======
+  // final bool isOTP;
+   FocusNode? focusNode = FocusNode();
+>>>>>>> 536135a (Description of changes)
 
   final Function(String)? onSubmitted;
   final Function(String)? onChanged;
@@ -65,6 +93,7 @@ class AppTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+<<<<<<< HEAD
           enabled: enabled,
           autofocus: autofocus,
           maxLines: maxLine,
@@ -73,11 +102,17 @@ class AppTextField extends StatelessWidget {
           keyboardType: keyboardType,
           obscureText: obscureText,
 
+=======
+          controller: controller,
+          keyboardType: keyboardType,
+          obscureText: obscureText,
+>>>>>>> 536135a (Description of changes)
           // inputFormatters:isOTP? [
           //   LengthLimitingTextInputFormatter(1),
           //   FilteringTextInputFormatter.digitsOnly
           // ] : null,
           onChanged: onChanged,
+<<<<<<< HEAD
           textInputAction: textInputAction,
           onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
@@ -102,6 +137,20 @@ class AppTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: enableBoarderColor?? Color(0xffD9D9D9)),
             ):null,
+=======
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintMaxLines: 1,
+            suffixIcon: suffixIcon,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xffD9D9D9)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xff3253FF)),
+            ),
+>>>>>>> 536135a (Description of changes)
             // enabledBorder: buildOutlineInputBorder(color:focusedBorderColor),
             // focusedBorder: buildOutlineInputBorder(color:focusedBorderColor),
           ),

@@ -8,7 +8,10 @@
 	<true/>
 	<key>com.apple.security.network.server</key>
 	<true/>
+<<<<<<< HEAD
 	<key>com.apple.security.files.user-selected.read-only</key>
   	<true/>
+=======
+>>>>>>> 536135a (Description of changes)
 </dict>
 </plist>

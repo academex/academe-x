@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:academe_x/core/error/exception.dart';
+=======
+import 'dart:convert';
+
+>>>>>>> 536135a (Description of changes)
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -59,6 +64,7 @@ class ApiController {
     return now.difference(timeExpires).inSeconds > 0;
   }
 
+<<<<<<< HEAD
 
   Future<Map<String, dynamic>> post(
       Uri url, {
@@ -101,6 +107,25 @@ class ApiController {
   }
 
 
+=======
+  Future<Map> post(
+    Uri url, {
+    Map<String, String>? headers,
+    Object? body,
+    Encoding? encoding,
+  }) async {
+    // Logger().i(body);
+    // Logger().i(url);
+    http.Response response = await http.post(url,
+        headers: headers ?? {'Content-Type': 'application/json'}, body: body);
+    // Logger().i(body);
+    // Logger().i(response.body);
+    // Logger().i(response.statusCode);
+    Map<String, dynamic> data = await jsonDecode(response.body);
+    return data;
+  }
+
+>>>>>>> 536135a (Description of changes)
   Future<Map> patch(
     Uri url, {
     Map<String, String>? headers,
