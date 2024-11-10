@@ -21,5 +21,4 @@ extension contextExtenssion on BuildContext {
   // AppLocalizations
 
   AppLocalizations get localizations => AppLocalizations.of(this)!;
-
 }

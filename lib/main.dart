@@ -16,12 +16,11 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
         providers: _getProviders(),
         child: AppLifecycleManager(
-      child: _buildApp(),
-    ));
+          child: _buildApp(),
+        ));
   }
 
   Widget _buildApp() {
@@ -45,7 +44,6 @@ class Main extends StatelessWidget {
       BlocProvider<ConnectivityCubit>(
         create: (context) => getIt<ConnectivityCubit>(),
       ),
-
       BlocProvider<PostImageCubit>(
         create: (context) => getIt<PostImageCubit>(),
       ),
@@ -86,32 +84,32 @@ class Main extends StatelessWidget {
     return BlocListener<ConnectivityCubit, ConnectivityStatus>(
       listener: (context, status) {
         if (status == ConnectivityStatus.disconnected) {
-          _showNoConnectionBanner(context,ConnectivityStatus.disconnected);
+          _showNoConnectionBanner(context, ConnectivityStatus.disconnected);
         }
 
         if (status == ConnectivityStatus.connected) {
-          _showNoConnectionBanner(context,ConnectivityStatus.connected);
+          _showNoConnectionBanner(context, ConnectivityStatus.connected);
         }
-
       },
       child: child!,
     );
   }
 
-  void _showNoConnectionBanner(BuildContext context, ConnectivityStatus disconnected) {
-
-    switch(disconnected){
+  void _showNoConnectionBanner(
+      BuildContext context, ConnectivityStatus disconnected) {
+    switch (disconnected) {
       case ConnectivityStatus.connected:
         AppLogger.success('connected');
-        context.showSnackBar(message: 'تم الاتصال بالانترنت',);
+        context.showSnackBar(
+          message: 'تم الاتصال بالانترنت',
+        );
 
         break;
       case ConnectivityStatus.disconnected:
         AppLogger.success('not connected');
-        context.showSnackBar(message: 'لا يوجد اتصال بالإنترنت',error: true);
+        context.showSnackBar(message: 'لا يوجد اتصال بالإنترنت', error: true);
         break;
     }
-
   }
 }
 
@@ -168,7 +166,8 @@ class _AppLifecycleManagerState extends State<AppLifecycleManager>
 
     // Refresh data if needed
     final currentIndex = context.read<BottomNavCubit>().state;
-    if (currentIndex == 0) { // If on home screen
+    if (currentIndex == 0) {
+      // If on home screen
       // Refresh posts
       // context.read<HomeCubit>().refreshPosts();
     }
