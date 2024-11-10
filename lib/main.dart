@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,20 +8,6 @@ import 'dart:io';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await init();
-=======
-import 'package:academe_x/features/launch/presentation/screens/launch_screen.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import 'features/auth/presentation/screens/login_screen.dart';
-import 'features/auth/presentation/screens/robot_intro.dart';
-
-void main() {
->>>>>>> 536135a (Description of changes)
   runApp(const Main());
 }
 
@@ -31,13 +16,11 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-
     return MultiBlocProvider(
         providers: _getProviders(),
         child: AppLifecycleManager(
-      child: _buildApp(),
-    ));
+          child: _buildApp(),
+        ));
   }
 
   Widget _buildApp() {
@@ -61,7 +44,6 @@ class Main extends StatelessWidget {
       BlocProvider<ConnectivityCubit>(
         create: (context) => getIt<ConnectivityCubit>(),
       ),
-
       BlocProvider<PostImageCubit>(
         create: (context) => getIt<PostImageCubit>(),
       ),
@@ -102,32 +84,32 @@ class Main extends StatelessWidget {
     return BlocListener<ConnectivityCubit, ConnectivityStatus>(
       listener: (context, status) {
         if (status == ConnectivityStatus.disconnected) {
-          _showNoConnectionBanner(context,ConnectivityStatus.disconnected);
+          _showNoConnectionBanner(context, ConnectivityStatus.disconnected);
         }
 
         if (status == ConnectivityStatus.connected) {
-          _showNoConnectionBanner(context,ConnectivityStatus.connected);
+          _showNoConnectionBanner(context, ConnectivityStatus.connected);
         }
-
       },
       child: child!,
     );
   }
 
-  void _showNoConnectionBanner(BuildContext context, ConnectivityStatus disconnected) {
-
-    switch(disconnected){
+  void _showNoConnectionBanner(
+      BuildContext context, ConnectivityStatus disconnected) {
+    switch (disconnected) {
       case ConnectivityStatus.connected:
         AppLogger.success('connected');
-        context.showSnackBar(message: 'تم الاتصال بالانترنت',);
+        context.showSnackBar(
+          message: 'تم الاتصال بالانترنت',
+        );
 
         break;
       case ConnectivityStatus.disconnected:
         AppLogger.success('not connected');
-        context.showSnackBar(message: 'لا يوجد اتصال بالإنترنت',error: true);
+        context.showSnackBar(message: 'لا يوجد اتصال بالإنترنت', error: true);
         break;
     }
-
   }
 }
 
@@ -184,7 +166,8 @@ class _AppLifecycleManagerState extends State<AppLifecycleManager>
 
     // Refresh data if needed
     final currentIndex = context.read<BottomNavCubit>().state;
-    if (currentIndex == 0) { // If on home screen
+    if (currentIndex == 0) {
+      // If on home screen
       // Refresh posts
       // context.read<HomeCubit>().refreshPosts();
     }
@@ -225,53 +208,3 @@ class _AppLifecycleManagerState extends State<AppLifecycleManager>
   @override
   Widget build(BuildContext context) => widget.child;
 }
-=======
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   const SystemUiOverlayStyle(
-    //     systemNavigationBarColor: Colors.transparent,
-    //     statusBarColor: Colors.transparent,
-    //     systemNavigationBarIconBrightness: Brightness.dark,
-    //   ),
-    // );
-    return ScreenUtilInit(
-      designSize: const Size(
-          375, 812),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      // Use builder only if you need to use library outside ScreenUtilInit context
-      builder: (_ , child) {
-        return MaterialApp(
-
-          title: 'AcademeX',
-          locale: const Locale('ar'), // Set the locale to Arabic
-          supportedLocales: const [
-            Locale('en', 'US'),
-            Locale('ar', ''),
-            Locale('ar', 'IQ'),
-          ],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: GoogleFonts.cairo().fontFamily,
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(background: Colors.white),
-          ),
-          initialRoute: '/login',
-          routes: {
-            '/lunch': (context) => const LunchScreen(),
-            '/login': (context) => const LoginScreen(),
-            '/robot_intro': (context) => const RobotIntroScreen(),
-            // '/verification_code': (context) =>  VerificationCode(),
-            // '/forgot_Password': (context) =>  const ForgotPassword(),
-          },
-        );
-      },
-    );
-  }
-}
->>>>>>> 536135a (Description of changes)
