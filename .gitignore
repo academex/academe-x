@@ -41,6 +41,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+<<<<<<< HEAD
 .dart_tool/
 .packages
 .flutter-plugins
@@ -57,3 +58,5 @@ ios/Pods/
 pubspec.lock
 android/.gradle/
 android/app/build/
+=======
+>>>>>>> 536135a (Description of changes)

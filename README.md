@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AcademX - Educational Platform
 
 ## Overview
@@ -104,3 +105,21 @@ For questions, issues, or feedback, feel free to reach out:
 - **Maintainers:** Baraa M Mubarak, Hussen Ghabayen
 - **Email:** Baraa: praa.m.2002@gamil.com
 - **Email:** Hussen: ghabayenhussej@gamil.com
+=======
+# academe_x
+
+A new Flutter project.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
+>>>>>>> 536135a (Description of changes)

@@ -3,8 +3,13 @@
     "short_name": "academe_x",
     "start_url": ".",
     "display": "standalone",
+<<<<<<< HEAD
     "background_color": "#hexcode",
     "theme_color": "#hexcode",
+=======
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+>>>>>>> 536135a (Description of changes)
     "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
@@ -32,4 +37,8 @@
             "purpose": "maskable"
         }
     ]
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 536135a (Description of changes)

@@ -37,8 +37,13 @@
 // }
 
 
+<<<<<<< HEAD
 import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
+=======
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+>>>>>>> 536135a (Description of changes)
 
 class AppText extends StatelessWidget {
   final String text;
@@ -50,7 +55,11 @@ class AppText extends StatelessWidget {
   final VoidCallback? onPressed; // Added onPressed for click functionality
 
   AppText({
+<<<<<<< HEAD
     super.key,
+=======
+    Key? key,
+>>>>>>> 536135a (Description of changes)
     required this.text,
     required this.fontSize,
     this.color = Colors.black,
@@ -58,7 +67,11 @@ class AppText extends StatelessWidget {
     this.isUnderline = false,
     this.fontWeight = FontWeight.normal,
     this.onPressed, // Accept onPressed as a parameter
+<<<<<<< HEAD
   });
+=======
+  }) : super(key: key);
+>>>>>>> 536135a (Description of changes)
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +80,16 @@ class AppText extends StatelessWidget {
       onTap: onPressed,
       child: Text(
         text,
+<<<<<<< HEAD
         overflow: TextOverflow.ellipsis,
         textAlign: textAlign,
         style: TextStyle(
           fontSize: fontSize,
+=======
+        textAlign: textAlign,
+        style: TextStyle(
+          fontSize: fontSize.sp,
+>>>>>>> 536135a (Description of changes)
           color: color,
           decoration: isUnderline ? TextDecoration.underline : null,
           fontWeight: fontWeight,
