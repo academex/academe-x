@@ -47,8 +47,8 @@ dependencies:
   # Media
   image_picker: ^1.0.7
   file_picker: ^6.1.1
-  # video_player: ^2.8.2
-  # chewie: ^1.7.4  # Video player UI
+  video_player: ^2.8.2
+  chewie: ^1.7.4  # Video player UI
 
   # Firebase (Uncomment as needed)
   # firebase_core: ^2.24.2
@@ -88,6 +88,20 @@ flutter_icons:
   adaptive_icon_background: "#ffffff"
   adaptive_icon_foreground: "assets/icons/logo.png"
 
+# Splash Screen Configuration
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/splash.png
+  branding: assets/images/branding.png
+  color_dark: "#000000"
+  image_dark: assets/images/splash_dark.png
+  branding_dark: assets/images/branding_dark.png
+
+  android_12:
+    image: assets/images/splash_android12.png
+    icon_background_color: "#FFFFFF"
+    image_dark: assets/images/splash_android12_dark.png
+    icon_background_color_dark: "#000000"
 
 flutter:
   uses-material-design: true
