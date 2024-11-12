@@ -25,7 +25,7 @@ class SignUpScreen extends StatelessWidget {
 
             },
               progressValue: 0.5,),            19.ph(),
-             RobotWithSpeechBubble(svgString: mySignInRobotSVG, speechText: context.localizations.personalData),
+             // RobotWithSpeechBubble(svgString: mySignInRobotSVG, speechText: context.localizations.personalData),
 
             // _buildRobotWithSpeechBubble(),
             20.ph(),
@@ -57,7 +57,7 @@ class SignUpScreen extends StatelessWidget {
   // Extracted Google Sign-In Button
   Widget _buildGoogleSignInButton(BuildContext context) {
     return CustomButton(
-      color: const Color(0xffF9F9F9),
+      backgraoundColor: const Color(0xffF9F9F9),
       widget: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -157,7 +157,7 @@ class SignUpScreen extends StatelessWidget {
         fontWeight: FontWeight.bold,
 
       ),
-      color: Colors.blueAccent,
+      backgraoundColor: Colors.blueAccent,
     );
   }
 

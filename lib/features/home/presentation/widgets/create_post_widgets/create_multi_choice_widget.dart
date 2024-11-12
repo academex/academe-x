@@ -55,7 +55,7 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
             children: [
               for (int i = 0; i < numberOfChoices; i++)
                 Padding(
-                  padding: EdgeInsets.only(bottom: 8.h),
+                  padding: EdgeInsets.only(bottom: 8),
                   child: AppTextField(
                     hintText: _hintText[i > 2 ? 2 : i],
                     keyboardType: TextInputType.text,
@@ -76,7 +76,7 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
                   });
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2.0.h),
+                  padding: EdgeInsets.symmetric(horizontal: 2.0),
                   child: DottedBorder(
                     borderType: BorderType.RRect,
                     dashPattern: [10, 8],

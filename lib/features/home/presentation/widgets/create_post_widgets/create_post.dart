@@ -15,7 +15,7 @@ class CreatePost {
     showModalBottomSheet(
       context: parContext,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16   )),
       ),
       builder: (context) {
@@ -30,7 +30,7 @@ class CreatePost {
             ), // Adjust for keyboard and padding
             child: SingleChildScrollView(
               child: SizedBox(
-                height: 0.85,
+                height: 1,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -95,7 +95,7 @@ class CreatePost {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: 16),
                     AppTextField(
                       withBoarder: false,
                       maxLine: null,
@@ -118,7 +118,7 @@ class CreatePost {
                         fontSize: 14  ,
                         color: const Color(0xff0077FF),
                       ),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: 16),
                     BlocBuilder<PickerCubit, CreatePostIconsState>(
                       builder: (context, state) {
                         if (state is ImagePickerLoaded) {
@@ -174,6 +174,7 @@ class CreatePost {
                           icon:
                               const ImageIcon(AssetImage('assets/icons/menu.png')),
                           onPressed: () {
+                            AppLogger.success('hello');
                             context.read<PickerCubit>().createMulteChoice();
                           },
                         ),

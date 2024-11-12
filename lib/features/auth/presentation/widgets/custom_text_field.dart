@@ -26,15 +26,15 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 115, // Adjust as needed
+      height: 94, // Adjust as needed
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppText(
             text:label,
+            color: AppColors.black,
             fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            fontWeight: FontWeight.w500,
           ),
           12.ph(),
           TextFormField(
@@ -44,7 +44,13 @@ class CustomTextField extends StatelessWidget {
             // textAlign: TextAlign.right,
             decoration: InputDecoration(
               hintText: hintText,
-
+              hintStyle: const TextStyle(
+                color: Color(0xFF949494),
+                fontSize: 14,
+                fontFamily: 'Cairo',
+                fontWeight: FontWeight.w400,
+                height: 0.11,
+              ),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(10),
@@ -52,25 +58,20 @@ class CustomTextField extends StatelessWidget {
               focusedBorder: OutlineInputBorder(
                 // borderSide: BorderSide.none,
                 borderSide: const BorderSide(
-                  color: Color(0xff3253FF)
+                  strokeAlign: BorderSide.strokeAlignCenter,
+                  color: Color(0x38D9D9D9),
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
-
               filled: true,
-              fillColor: Colors.grey[100],
+              fillColor: const Color(0xFFF9F9F9),
               suffixIcon: isPassword
                   ? IconButton(
-                icon: Icon(
-                  isPasswordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off,
-                ),
+                icon: Image.asset(AppAssets.visibilePassword,height: 24,width: 24,),
                 onPressed: togglePasswordVisibility,
               )
                   : null,
             ),
-
           ),
         ],
       ),

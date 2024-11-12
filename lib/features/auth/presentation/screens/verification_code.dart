@@ -105,7 +105,7 @@ import 'package:pinput/pinput.dart';class VerificationCodeScreen extends Statele
               CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 14  ,color: Colors.white,fontWeight: FontWeight.bold,), onPressed: (){
                 Navigator.pushNamed(context, '/create_new_password');
 
-              }, color: const Color(0xff0077FF)),
+              }, backgraoundColor: const Color(0xff0077FF)),
 
             ],
           ),

@@ -122,7 +122,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 for (int j = 0; j < 3; j++)
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 3   ),
-                    width: _indexPage != j ? 8.h : 24   ,
+                    width: _indexPage != j ? 8: 24   ,
                     height: 8,
                     decoration: BoxDecoration(
                       color: _indexPage != j

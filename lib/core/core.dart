@@ -16,8 +16,6 @@ export 'data/data.dart';
 export 'error/error.dart';
 
 
-// Extensions
-export 'extensions/extensions.dart';
 
 // LifeCycle
 
@@ -35,6 +33,7 @@ export 'widgets/widgets.dart';
 
 // Utils
 export 'utils/utils.dart';
+
 
 // Network
 export 'network/network.dart';

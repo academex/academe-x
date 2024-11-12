@@ -104,7 +104,7 @@ class CommentsList {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        bottom: 5   ,  left: 24   , right: 24   , top: 2.h),
+                        bottom: 5   ,  left: 24   , right: 24   , top: 2),
                     child: Row(
                       children: [
                         Expanded(

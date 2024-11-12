@@ -31,7 +31,7 @@ class ActionButton extends StatelessWidget {
          color: const Color(0xffF7F7F8),
          borderRadius: BorderRadius.all(Radius.circular(10)),
        ),
-        padding: EdgeInsets.symmetric(horizontal: 8   ,vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 8   ,vertical: 12),
         // alignment: AlignmentDirectional.center,
         child:Row(
           children: [

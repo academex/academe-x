@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   final Widget widget;
   final VoidCallback onPressed;
-  final Color color;
+  final Color backgraoundColor;
+  final Color borderColor;
   final bool wihtBorder;
 
 
@@ -14,19 +15,23 @@ class CustomButton extends StatelessWidget {
     required this.widget,
     required this.onPressed,
     this.wihtBorder= false,
-    required this.color  ,
+    required this.backgraoundColor  ,
+     this.borderColor = const Color(0xFF6D6D6D) ,
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
+
       style: ElevatedButton.styleFrom(
-        side: wihtBorder? const BorderSide(
-          color: Colors.white
-        ) : BorderSide.none,
-        padding: EdgeInsets.symmetric(vertical: 12.h), backgroundColor: color,
-        minimumSize: Size(double.infinity, 50.h),
+        elevation: 0,
+        side: wihtBorder? BorderSide(
+          width: 1,
+          strokeAlign: BorderSide.strokeAlignCenter,
+          color: borderColor,
+        ) : BorderSide.none, backgroundColor: backgraoundColor,
+        minimumSize: const Size(double.infinity, 60),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
 

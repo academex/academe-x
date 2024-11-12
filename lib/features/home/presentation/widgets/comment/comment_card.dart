@@ -106,7 +106,7 @@ class CommentCard extends StatelessWidget {
                             context.read<ShowRepliesCubit>().change(postIndex: commentIndex!,visibility: _showReplyVisibility);
                           },
                           child:Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 7   ,vertical: 5.h),
+                            padding: EdgeInsets.symmetric(horizontal: 7   ,vertical: 5),
                             child: BlocBuilder<ShowRepliesCubit,ShowReplyesState>(
                               buildWhen: (previous, current) {
                                 return commentIndex==current.index;

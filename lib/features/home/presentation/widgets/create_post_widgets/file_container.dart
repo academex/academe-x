@@ -69,14 +69,14 @@ class FileContainer extends StatelessWidget {
               // Logger().i('On Click Download');
             }:null,
             child: Container(
-              height: 36.h,
-              width: 68.w,
+              height: 36,
+              width: 68,
               decoration: BoxDecoration(
                   color: _fromCreatePost()?Colors.white:Color(0xff0077ff), borderRadius: BorderRadius.circular(10)),
               child: Visibility(
                 visible: _fromCreatePost(),
                 child: LoadingFile(fromCreatePost: _fromCreatePost(),),
-                replacement: Center(child: AppText(text: 'تنزيل', fontSize: 14.sp,fontWeight: FontWeight.w500,color: Colors.white,)),
+                replacement: Center(child: AppText(text: 'تنزيل', fontSize: 14,fontWeight: FontWeight.w500,color: Colors.white,)),
               ),
             ),
           ),
@@ -101,13 +101,13 @@ class LoadingFile extends StatelessWidget {
       children: [
         Text(
           fromCreatePost? 'قيد الرفع' : 'قيد التنزيل',
-          style: TextStyle(fontSize: 7.5.sp, color: Colors.grey[600]),
+          style: TextStyle(fontSize: 7.5, color: Colors.grey[600]),
         ),
         4.pw(),
         Text(
           '84%',
           style: TextStyle(
-              fontSize: 12.sp,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
               color: Colors.black),
         ),

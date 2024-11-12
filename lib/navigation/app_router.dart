@@ -40,7 +40,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
         return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
       case '/app_notification':
-        return MaterialPageRoute(builder: (_) =>  AppNotification());
+        return MaterialPageRoute(builder: (_) =>  const AppNotification());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

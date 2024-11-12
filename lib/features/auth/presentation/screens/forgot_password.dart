@@ -53,7 +53,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   child: CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 16 ,fontWeight: FontWeight.w600,), onPressed: (){
                         Navigator.pushNamed(context, '/verification_code');
 
-                  }, color: const Color(0xFF0077FF))
+                  }, backgraoundColor: const Color(0xFF0077FF))
 
                   // AppButton(
                   //   width: 327.w,

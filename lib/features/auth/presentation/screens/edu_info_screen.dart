@@ -53,7 +53,7 @@ class _EduInfoScreenState extends State<EduInfoScreen> {
             },
             progressValue: 1,),
             19.ph(),
-             RobotWithSpeechBubble(svgString: myEduInfoRobotSVG, speechText: context.localizations.educationalLevel,),
+             // RobotWithSpeechBubble(svgString: myEduInfoRobotSVG, speechText: context.localizations.educationalLevel,),
             20.ph(),
             _buildSelectionGrid(context.localizations.collegeLabel, colleges, selectedCollege, (value) {
               setState(() {
@@ -86,7 +86,7 @@ class _EduInfoScreenState extends State<EduInfoScreen> {
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
-              color: Colors.blueAccent,
+              backgraoundColor: Colors.blueAccent,
             ),
             16.ph(),
             _buildBottomText(context),
