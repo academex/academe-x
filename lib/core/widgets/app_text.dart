@@ -67,7 +67,7 @@ class AppText extends StatelessWidget {
       onTap: onPressed,
       child: Text(
         text,
-        overflow: TextOverflow.ellipsis,
+        // overflow: TextOverflow.ellipsis,
         textAlign: textAlign,
         style: TextStyle(
           fontSize: fontSize,
