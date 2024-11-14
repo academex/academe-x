@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 
 
 class ProgressBarWithCloseButton extends StatelessWidget {
-  final VoidCallback onClose;
+  final VoidCallback onTap;
   final double progressValue;
+  final bool isBack;
 
   const ProgressBarWithCloseButton({
     super.key,
-    required this.onClose,
+    required this.onTap,
+     this.isBack=false,
      this.progressValue=0.0
   });
 
@@ -16,16 +18,19 @@ class ProgressBarWithCloseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const SizedBox(
+         SizedBox(
           width: 24,
           height: 24,
-          child: Icon(Icons.close, size: 24   , color: Colors.black),
+          child: GestureDetector(
+            onTap: onTap,
+            child: Icon( isBack ? Icons.arrow_back_ios: Icons.close, size: 24   , color: Colors.black),
+          ),
         ),
         19.pw(),
         Stack(
           children: [
             Container(
-              width: 284,
+              width: 350,
               height: 16,
               decoration: ShapeDecoration(
                 color: Color(0xFFEDEDED),
@@ -33,7 +38,7 @@ class ProgressBarWithCloseButton extends StatelessWidget {
               ),
             ),
             Container(
-              width:progressValue== 0.5? 142 : 284,
+              width:progressValue== 0.5? 350/2 : 350,
               height: 16,
               decoration: ShapeDecoration(
                 gradient: const LinearGradient(

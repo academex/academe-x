@@ -18,8 +18,6 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const RobotIntroScreen());
       case '/sign_up':
         return MaterialPageRoute(builder: (_) => SignUpScreen());
-      case '/edu_info':
-        return MaterialPageRoute(builder: (_) => const EduInfoScreen());
       case '/account_creation':
         return MaterialPageRoute(builder: (_) => const AccountCreationScreen());
       case '/account_creation_success':

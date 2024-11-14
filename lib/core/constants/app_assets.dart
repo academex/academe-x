@@ -45,4 +45,11 @@ abstract class AppAssets {
   static const String book = 'assets/icons/book_icon.png';
   static const String filter = 'assets/icons/filter.png';
   static const String logoLibrary = 'assets/icons/logo_library.png';
+
+
+  //affects
+  static const String lightUnderContent = 'assets/images/light_under_content.png';
+  static const String celebrateCreatingAccount = 'assets/images/celebrate_creating_account.png';
+  static const String introSplash = 'assets/images/intro_splash.png';
+
 }

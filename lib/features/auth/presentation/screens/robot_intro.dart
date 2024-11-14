@@ -9,15 +9,11 @@ class RobotIntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF00009A),
-      appBar:  AppCustomAppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: 0.ph(),
-      ),
-      body: Stack(
+      backgroundColor: const Color(0xFF2200F3),
+      body:Stack(
         // alignment: AlignmentDirectional.bottomEnd,
         children: [
+          Image.asset(AppAssets.lightUnderContent,width: 812,fit: BoxFit.fill,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -25,7 +21,7 @@ class RobotIntroScreen extends StatelessWidget {
               children: [
                 // Load the SVG robot logo
                 SvgPicture.string(
-                  mySignInfoRobotSVG,
+                  signInfoRobotSVG,
                   width: 153.31,
                   height: 154.66,
                 ),
