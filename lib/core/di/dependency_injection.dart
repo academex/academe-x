@@ -1,4 +1,7 @@
 import 'package:academe_x/features/features.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/create_post/tag_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../core.dart';
@@ -6,7 +9,6 @@ import '../core.dart';
 final getIt = GetIt.instance;
 
 Future<void> init() async {
-
   // Cubits
   _initCubits();
 
@@ -25,48 +27,54 @@ Future<void> init() async {
 
 void _initCubits() {
   getIt.registerFactory<AuthenticationCubit>(
-        () => AuthenticationCubit(authUseCase: getIt()),
+    () => AuthenticationCubit(authUseCase: getIt()),
   );
 
   getIt.registerFactory<AuthActionCubit>(
-        () => AuthActionCubit(false),
+    () => AuthActionCubit(false),
   );
 
   getIt.registerFactory<BottomNavCubit>(
-        () => BottomNavCubit(),
+    () => BottomNavCubit(),
   );
 
   getIt.registerFactory<HomeCubit>(
-        () => HomeCubit(),
+    () => HomeCubit(),
   );
 
   getIt.registerFactory<PickerCubit>(
-        () => PickerCubit(CreatePostIconsInit()),
+    () => PickerCubit(CreatePostIconsInit()),
+  );
+  getIt.registerFactory<TagCubit>(
+    () => TagCubit(TagState(selectedTags: [MockData.tags.first])),
+  );
+  getIt.registerFactory<ShowTagCubit>(
+    () => ShowTagCubit(false),
   );
   getIt.registerFactory<ConnectivityCubit>(
-        () => ConnectivityCubit(),
+    () => ConnectivityCubit(),
   );
 
   getIt.registerFactory<PostImageCubit>(
-        () => PostImageCubit(),
+    () => PostImageCubit(),
   );
 }
 
 void _initUseCases() {
   getIt.registerLazySingleton<AuthenticationUseCase>(
-        () => AuthenticationUseCase(authenticationRepository: getIt()),
+    () => AuthenticationUseCase(authenticationRepository: getIt()),
   );
 }
 
 void _initRepositories() {
   getIt.registerLazySingleton<AuthenticationRepository>(
-        () => AuthenticationRepositoryImpl(remoteDataSource: getIt()),
+    () => AuthenticationRepositoryImpl(remoteDataSource: getIt()),
   );
 }
 
 void _initDataSources() {
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
-        () => AuthenticationRemoteDataSource(
+    () => AuthenticationRemoteDataSource(
       apiController: getIt(),
       internetConnectionChecker: getIt(),
     ),
@@ -76,6 +84,6 @@ void _initDataSources() {
 void _initExternalDependencies() {
   getIt.registerLazySingleton(() => ApiController());
   getIt.registerFactory<InternetConnectionChecker>(
-        () => InternetConnectionChecker(),
+    () => InternetConnectionChecker(),
   );
 }

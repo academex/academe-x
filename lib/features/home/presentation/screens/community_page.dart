@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:academe_x/lib.dart';
 
-
 class CommunityPage extends StatelessWidget {
-   CommunityPage({super.key});
+  CommunityPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class CommunityPage extends StatelessWidget {
             builder: (context, constraints) {
               // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
               final percent = (constraints.maxHeight - kToolbarHeight) /
-                  (280   - kToolbarHeight);
+                  (280 - kToolbarHeight);
               return FlexibleSpaceBar(
                 centerTitle: true,
                 title: AnimatedOpacity(
@@ -166,7 +165,7 @@ class CommunityPage extends StatelessWidget {
 
   Widget _buildHeaderBackground(bool inScroll) {
     return Container(
-      height: 20.81  ,
+      height: 20.81,
       // width: 375.w,
       decoration: const BoxDecoration(
         // color: Color(0xFF0077FF),
@@ -204,11 +203,16 @@ class CommunityPage extends StatelessWidget {
             children: [
               Expanded(
                 child: SizedBox(
-                  width: 327,
-                  // 327.w,
-                  height: 45  ,
-                  child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-                ),
+                    width: 327,
+                    // 327.w,
+                    height: 45,
+                    child: HeaderWidget(
+                        inScroll: inScroll,
+                        logoPath: 'assets/images/Frame.png',
+                        title: 'تطوير البرمجيات',
+                        subTitle: 'مجتمع مخصص لكل تساؤلاتك',
+                        firstIconPath: 'assets/icons/search.png',
+                        secondIconPath: 'assets/icons/notification.png')),
               ),
               inScroll ? 0.ph() : 15.ph(),
               inScroll ? 0.ph() : _buildCategoryTabs(),
@@ -219,14 +223,18 @@ class CommunityPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24    ),
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       inScroll ? 0.ph() : 40.ph(),
-
-
-                      HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
+                      HeaderWidget(
+                          inScroll: inScroll,
+                          logoPath: 'assets/images/Frame.png',
+                          title: 'تطوير البرمجيات',
+                          subTitle: 'مجتمع مخصص لكل تساؤلاتك',
+                          firstIconPath: 'assets/icons/search.png',
+                          secondIconPath: 'assets/icons/notification.png')
                       // Row(
                       //   children: [
                       //     _buildLogoContainer(),
@@ -238,15 +246,16 @@ class CommunityPage extends StatelessWidget {
                       //         'assets/icons/notification.png', inScroll),
                       //   ],
                       // ),
-                      ,18.ph(),
+                      ,
+                      18.ph(),
                       SizedBox(
                         // width: 327,
-                        height: 24  ,
+                        height: 24,
                         child: Row(
                           children: [
                             AppText(
                               text: 'التخصصات',
-                              fontSize: 16  ,
+                              fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -254,8 +263,9 @@ class CommunityPage extends StatelessWidget {
                             AppText(
                               text: 'عرض المزيد',
                               fontWeight: FontWeight.w500,
-                              fontSize: 12  ,
-                              color: Colors.white.withOpacity(0.6600000262260437),
+                              fontSize: 12,
+                              color:
+                                  Colors.white.withOpacity(0.6600000262260437),
                             ),
                           ],
                         ),
@@ -268,7 +278,7 @@ class CommunityPage extends StatelessWidget {
                   builder: (BuildContext context, selectedIndex) {
                     return Container(
                       padding: const EdgeInsets.only(right: 24),
-                      height: 100  ,
+                      height: 100,
                       // width: 327.w,
                       child: ListView.separated(
                           physics: const BouncingScrollPhysics(),
@@ -282,7 +292,7 @@ class CommunityPage extends StatelessWidget {
                                 GestureDetector(
                                   child: Container(
                                     width: 56,
-                                    height: 56  ,
+                                    height: 56,
                                     decoration: BoxDecoration(
                                         color: selectedIndex == index
                                             ? Colors.white
@@ -300,10 +310,11 @@ class CommunityPage extends StatelessWidget {
                                 12.ph(),
                                 AppText(
                                   text: title,
-                                  fontSize: 14  ,
+                                  fontSize: 14,
                                   color: Colors.white,
-                                  fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
-
+                                  fontWeight: selectedIndex == index
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                 )
                               ],
                             );
@@ -319,12 +330,10 @@ class CommunityPage extends StatelessWidget {
             ));
   }
 
-
-
   Widget _buildCategoryTabs() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5  , horizontal: 8),
-      height: 55  ,
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      height: 55,
       width: 327,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -344,7 +353,7 @@ class CommunityPage extends StatelessWidget {
     return Expanded(
       child: Container(
         alignment: AlignmentDirectional.center,
-        height: 43  ,
+        height: 43,
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xff2769F2) : Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -365,7 +374,7 @@ class CommunityPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
               image,
-              height: 200  ,
+              height: 200,
               width: 326,
               fit: BoxFit.cover,
             )),
@@ -429,8 +438,8 @@ void showShareOptions(BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              height: 4  ,
-              width: 56    ,
+              height: 4,
+              width: 56,
               color: const Color(0xffE7E8EA),
             ),
             20.ph(),
@@ -511,8 +520,8 @@ Widget _buildShareOption(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          height: 69  ,
-          width: 69    ,
+          height: 69,
+          width: 69,
           decoration: BoxDecoration(
               color: const Color(0xF9F9F9C4),
               shape: BoxShape.circle,

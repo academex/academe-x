@@ -1,3 +1,4 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 import 'package:academe_x/lib.dart';
@@ -31,7 +32,7 @@ class PostMedia extends StatelessWidget {
         crossAxisCount: images.length == 1 ? 1 : 2,
         crossAxisSpacing: 8.w,
         mainAxisSpacing: 8.h,
-        childAspectRatio: images.length == 1 ? 16/9 : 1,
+        childAspectRatio: images.length == 1 ? 16 / 9 : 1,
       ),
       itemCount: images.length,
       itemBuilder: (context, index) => ClipRRect(
@@ -48,7 +49,8 @@ class PostMedia extends StatelessWidget {
     return Column(
       children: options.entries.map((option) {
         final percentage = option.value /
-            options.values.reduce((sum, value) => sum + value) * 100;
+            options.values.reduce((sum, value) => sum + value) *
+            100;
 
         return Container(
           margin: EdgeInsets.only(bottom: 8.h),
@@ -93,15 +95,13 @@ class PostMedia extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.download),
             onPressed: () {
-            //   => _downloadFile(post.fileUrl!)
+              //   => _downloadFile(post.fileUrl!)
             },
           ),
         ],
       ),
     );
   }
-
-
 
 // ... Include the _buildImageGrid, _buildPoll, and _buildFileAttachment methods
 }

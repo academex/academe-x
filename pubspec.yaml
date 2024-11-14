@@ -43,6 +43,7 @@ dependencies:
   path_provider: ^2.1.2
   url_launcher: ^6.2.4  # For launching URLs
   share_plus: ^7.2.1  # For sharing content
+  flutter_screenutil: ^5.9.3
 
   # Media
   image_picker: ^1.0.7

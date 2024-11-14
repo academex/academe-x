@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academe_x/lib.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PostActions extends StatelessWidget {
   final PostEntity post;
@@ -39,7 +39,8 @@ class PostActions extends StatelessWidget {
   Widget _buildReactionsBar() {
     return BlocBuilder<ActionPostCubit, ActionPostState>(
       builder: (context, state) {
-        if (post.likesCount == 0 && post.commentsCount == 0) return const SizedBox();
+        if (post.likesCount == 0 && post.commentsCount == 0)
+          return const SizedBox();
 
         return Row(
           children: [
@@ -47,12 +48,14 @@ class PostActions extends StatelessWidget {
             if (post.reactionUsers != null && post.reactionUsers!.isNotEmpty)
               SizedBox(
                 height: 24,
-                width: post.reactionUsers!.length > 1 ? 53    : 24   ,
+                width: post.reactionUsers!.length > 1 ? 53 : 24,
                 child: Stack(
                   children: List.generate(
-                    post.reactionUsers!.length > 3 ? 3 : post.reactionUsers!.length,
-                        (index) => Positioned(
-                      right: index * 15   ,  // For RTL support
+                    post.reactionUsers!.length > 3
+                        ? 3
+                        : post.reactionUsers!.length,
+                    (index) => Positioned(
+                      right: index * 15, // For RTL support
                       child: _buildReactionAvatar(post.reactionUsers![index]),
                     ),
                   ).reversed.toList(),
@@ -65,12 +68,13 @@ class PostActions extends StatelessWidget {
                 child: Text.rich(
                   TextSpan(
                     children: [
-                      if (post.reactionUsers != null && post.reactionUsers!.isNotEmpty)
+                      if (post.reactionUsers != null &&
+                          post.reactionUsers!.isNotEmpty)
                         TextSpan(
                           text: _getReactionsText(),
                           style: TextStyle(
                             color: Colors.grey[600],
-                            fontSize: 13  ,
+                            fontSize: 13,
                           ),
                         ),
                     ],
@@ -89,7 +93,7 @@ class PostActions extends StatelessWidget {
   Widget _buildReactionsButton() {
     return BlocBuilder<ActionPostCubit, ActionPostState>(
       builder: (context, state) {
-        if(state.selectedReaction?.assetPath == null){
+        if (state.selectedReaction?.assetPath == null) {
           return GestureDetector(
             onTapDown: (details) => _showReactionPicker(context, details),
             child: ActionButton(
@@ -99,34 +103,42 @@ class PostActions extends StatelessWidget {
               onTap: () {
                 context.read<ActionPostCubit>().toggleDefaultReaction();
               },
-            ) ,
-
+            ),
           );
-        }else{
+        } else {
           return GestureDetector(
-            onTapDown: (details) => _showReactionPicker(context, details),
-            child: GestureDetector(
-              onTap: () =>context.read<ActionPostCubit>().toggleDefaultReaction(),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                height: 43,
-                // width: 74.w,
-                decoration: BoxDecoration(
-                    color: state.selectedReaction!.reactionColor,
-                    borderRadius: BorderRadius.circular(10)
+              onTapDown: (details) => _showReactionPicker(context, details),
+              child: GestureDetector(
+                onTap: () =>
+                    context.read<ActionPostCubit>().toggleDefaultReaction(),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 43,
+                  // width: 74.w,
+                  decoration: BoxDecoration(
+                      color: state.selectedReaction!.reactionColor,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        state.selectedReaction!.assetPath,
+                        width: 22,
+                        height: 22,
+                      ),
+                      5.pw(),
+                      AppText(
+                        text: state.selectedReaction!.reactionText,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: state.selectedReaction!.name != 'celebrate'
+                            ? Colors.white
+                            : Colors.black,
+                      )
+                    ],
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Image.asset(state.selectedReaction!.assetPath,width: 22   ,height: 22,),
-                    5.pw(),
-                    AppText(text: state.selectedReaction!.reactionText, fontSize: 10  ,fontWeight: FontWeight.bold,color:state.selectedReaction!.name != 'celebrate'? Colors.white : Colors.black,)
-                  ],
-                ),
-              ),
-            )
-          );
+              ));
         }
-
       },
     );
   }
@@ -135,7 +147,7 @@ class PostActions extends StatelessWidget {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final Offset position = button.localToGlobal(Offset.zero);
     AppLogger.success(position.dx.toString());
-    AppLogger.success( button.size.width.toString());
+    AppLogger.success(button.size.width.toString());
     AppLogger.success((position.dx + button.size.width).toString());
 
     showMenu(
@@ -147,13 +159,10 @@ class PostActions extends StatelessWidget {
         position.dy,
       ),
       elevation: 0,
-
       color: Colors.transparent,
-
       items: [
         PopupMenuItem(
           padding: EdgeInsets.zero,
-
           child: _ReactionPickerWidget(
             onReactionSelected: (reaction) {
               context.read<ActionPostCubit>().selectReaction(reaction);
@@ -172,6 +181,7 @@ class PostActions extends StatelessWidget {
       onTap: () => CommentsList(postId: post.userId, context: context),
     );
   }
+
 //
 //
   Widget _buildShareButton(BuildContext context) {
@@ -191,7 +201,7 @@ class PostActions extends StatelessWidget {
                 ? 'assets/icons/bookMark_selected.png'
                 : 'assets/icons/Bookmark.png',
             height: 17,
-            width: 19   ,
+            width: 19,
           ),
           padding: EdgeInsets.zero,
           onPressed: () {
@@ -267,11 +277,11 @@ class PostActions extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (context) => _ReactionsBottomSheet(reactions: post.reactionUsers ?? []),
+      builder: (context) =>
+          _ReactionsBottomSheet(reactions: post.reactionUsers ?? []),
     );
   }
 }
-
 
 class _ReactionPickerWidget extends StatelessWidget {
   final Function(ReactionType) onReactionSelected;
@@ -286,17 +296,13 @@ class _ReactionPickerWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.black,
-          strokeAlign: 0.74
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(9.12),
-          topLeft: Radius.circular(9.12),
-          topRight: Radius.circular(9.12),
-        )
-      ),
+          color: Colors.white,
+          border: Border.all(color: Colors.black, strokeAlign: 0.74),
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(9.12),
+            topLeft: Radius.circular(9.12),
+            topRight: Radius.circular(9.12),
+          )),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: ReactionType.values.map((type) {
@@ -314,7 +320,6 @@ class _ReactionPickerWidget extends StatelessWidget {
     );
   }
 }
-
 
 class SelectedReactionButton extends StatelessWidget {
   final ReactionType reaction;
@@ -339,17 +344,13 @@ class SelectedReactionButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              reaction.assetPath,
-              width: 16    ,
-              height: 16
-            ),
+            Image.asset(reaction.assetPath, width: 16, height: 16),
             4.pw(),
             Text(
               _getReactionText(reaction),
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 12  ,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -390,7 +391,6 @@ class SelectedReactionButton extends StatelessWidget {
   }
 }
 
-
 class _ReactionsBottomSheet extends StatelessWidget {
   final List<ReactionUser> reactions;
 
@@ -403,7 +403,7 @@ class _ReactionsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 400,
-      padding: EdgeInsets.symmetric(horizontal: 16    , vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -411,7 +411,7 @@ class _ReactionsBottomSheet extends StatelessWidget {
             children: [
               AppText(
                 text: 'التفاعلات',
-                fontSize: 16  ,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
               const Spacer(),
@@ -431,9 +431,12 @@ class _ReactionsBottomSheet extends StatelessWidget {
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(user.avatarUrl),
                   ),
-                  title: AppText(text: user.name, fontSize: 12  ,),
+                  title: AppText(
+                    text: user.name,
+                    fontSize: 12,
+                  ),
                   trailing: Container(
-                    padding: EdgeInsets.all(8    ),
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: user.reactionType.reactionColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -441,7 +444,7 @@ class _ReactionsBottomSheet extends StatelessWidget {
                     child: Image.asset(
                       user.reactionType.assetPath,
                       height: 20,
-                      width: 20    ,
+                      width: 20,
                     ),
                   ),
                 );

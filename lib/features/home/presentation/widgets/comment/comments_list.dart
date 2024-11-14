@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academe_x/lib.dart';
-
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CommentsList {
   final FocusNode _focusNode = FocusNode();
   TextEditingController comment = TextEditingController();
 
-
   // MockData mockData =MockData();
-  var comments=MockData.comments;
+  var comments = MockData.comments;
 
   CommentsList({required postId, required BuildContext context}) {
     showModalBottomSheet(
@@ -38,16 +36,16 @@ class CommentsList {
                 children: [
                   20.ph(),
                   SizedBox(
-                    width: 56   , // Custom width for the divider
+                    width: 56, // Custom width for the divider
                     child: Divider(
-                      thickness: 5  ,   // Thickness of the divider
+                      thickness: 5, // Thickness of the divider
                       color: const Color(0xffE7E8EA), // Color of the divider
                     ),
                   ),
                   16.ph(),
                   AppText(
                     text: 'التعليقات',
-                    fontSize: 16  ,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                   20.ph(),
@@ -62,7 +60,7 @@ class CommentsList {
                               commenter: comments[index].commenter,
                               commentText: comments[index].commentText,
                               likes: comments[index].likes,
-                              replies:comments[index].replies,
+                              replies: comments[index].replies,
                               reply: () {
                                 context.read<ReplyCubit>().reply(
                                     commenter:
@@ -71,14 +69,16 @@ class CommentsList {
                               commentIndex: index,
                             ),
                             BlocBuilder<ShowRepliesCubit, ShowReplyesState>(
-                              buildWhen: (previous, current) {
-                                return current.index == index;
-                              },
-                                builder: (context, state) {
+                                buildWhen: (previous, current) {
+                              return current.index == index;
+                            }, builder: (context, state) {
                               return Column(
                                 children: [
-                                  for (int i = 0; 
-                                  i < comments[index].replies.length &&  state.show && state.index == index; i++)
+                                  for (int i = 0;
+                                      i < comments[index].replies.length &&
+                                          state.show &&
+                                          state.index == index;
+                                      i++)
                                     CommentCard(
                                       isReply: true,
                                       commenter:
@@ -92,7 +92,9 @@ class CommentsList {
                                             commenter:
                                                 'رد على @${comments[index].replies[i].commenter}');
                                       },
-                                      isEndReply: i == ((comments[index].replies.length)-1),
+                                      isEndReply: i ==
+                                          ((comments[index].replies.length) -
+                                              1),
                                     ),
                                 ],
                               );
@@ -104,7 +106,7 @@ class CommentsList {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        bottom: 5   ,  left: 24   , right: 24   , top: 2.h),
+                        bottom: 5, left: 24, right: 24, top: 2.h),
                     child: Row(
                       children: [
                         Expanded(
@@ -163,7 +165,7 @@ class CommentsList {
                           child: Center(
                             child: AppText(
                               text: '😍', // Emoji
-                              fontSize: 20  , // Size of the emoji
+                              fontSize: 20, // Size of the emoji
                             ),
                           ),
                         ),

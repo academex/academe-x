@@ -1,5 +1,5 @@
 import 'package:academe_x/lib.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 class LibraryPage extends StatelessWidget {
@@ -34,30 +34,30 @@ class LibraryPage extends StatelessWidget {
         ),
         SliverToBoxAdapter(
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20    ),
-                child:  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return LibrarySection(
-                        icon: 'assets/icons/book_icon.png',
-                        title: 'الكتب',
-                        items: List.generate(
-                          4,
-                              (index) {
-                            return const LibraryItem(
-                              title: 'كتاب علم البرمجة',
-                              description:
-                              'مختص بشرح اهم اساسيات البرمجة ',
-                            );
-                          },
-                        ),
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: ListView.separated(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return LibrarySection(
+                  icon: 'assets/icons/book_icon.png',
+                  title: 'الكتب',
+                  items: List.generate(
+                    4,
+                    (index) {
+                      return const LibraryItem(
+                        title: 'كتاب علم البرمجة',
+                        description: 'مختص بشرح اهم اساسيات البرمجة ',
                       );
                     },
-                    separatorBuilder: (context, index) {
-                      return 20.ph();
-                    },
-                    itemCount: 5),)),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return 20.ph();
+              },
+              itemCount: 5),
+        )),
       ],
     );
   }
@@ -83,14 +83,20 @@ class LibraryPage extends StatelessWidget {
             child: Column(
             children: [
               Expanded(
-                child: Padding(padding: EdgeInsets.symmetric(horizontal: 20    ),child: SizedBox(
+                  child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
                   // width: 327.w,
                   // 327.w,
                   // height: 45.h,
-                  child:
-                  HeaderWidget(inScroll: inScroll, logoPath: 'assets/icons/logo_library.png', title: 'مكتبتي', subTitle: 'كل ما تحتاجه من كتب وملخصات وشباتر', secondIconPath: 'assets/icons/filter.png'),
-                ),)
-              ),
+                  child: HeaderWidget(
+                      inScroll: inScroll,
+                      logoPath: 'assets/icons/logo_library.png',
+                      title: 'مكتبتي',
+                      subTitle: 'كل ما تحتاجه من كتب وملخصات وشباتر',
+                      secondIconPath: 'assets/icons/filter.png'),
+                ),
+              )),
               inScroll ? 0.ph() : 15.ph(),
               inScroll ? 0.ph() : _buildCategoryTabs(),
             ],
@@ -100,15 +106,20 @@ class LibraryPage extends StatelessWidget {
             children: [
               inScroll ? 0.ph() : 40.ph(),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24    ),
+                padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    HeaderWidget(inScroll: inScroll, logoPath: 'assets/icons/logo_library.png', title: 'مكتبتي', subTitle: 'كل ما تحتاجه من كتب وملخصات وشباتر', secondIconPath: 'assets/icons/filter.png'),
+                    HeaderWidget(
+                        inScroll: inScroll,
+                        logoPath: 'assets/icons/logo_library.png',
+                        title: 'مكتبتي',
+                        subTitle: 'كل ما تحتاجه من كتب وملخصات وشباتر',
+                        secondIconPath: 'assets/icons/filter.png'),
                     16.ph(),
                     AppText(
                       text: 'المواد الخاصة بي',
-                      fontSize: 14  ,
+                      fontSize: 14,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                     ),
@@ -118,7 +129,7 @@ class LibraryPage extends StatelessWidget {
               ),
 
               Padding(
-                padding: EdgeInsets.only(right: 24    ),
+                padding: EdgeInsets.only(right: 24),
                 child: SizedBox(
                   height: 40,
                   child: ListView.separated(
@@ -130,7 +141,7 @@ class LibraryPage extends StatelessWidget {
                           children: [
                             GestureDetector(
                               child: Container(
-                                width: 70    ,
+                                width: 70,
                                 height: 40,
                                 decoration: BoxDecoration(
                                     // image:
@@ -163,9 +174,9 @@ class LibraryPage extends StatelessWidget {
 
   Widget _buildCategoryTabs() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5     ,horizontal: 8    ),
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       height: 55,
-      width: 327    ,
+      width: 327,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -191,7 +202,7 @@ class LibraryPage extends StatelessWidget {
         ),
         child: AppText(
           text: title,
-          fontSize: 14  ,
+          fontSize: 14,
           color: isSelected ? Colors.white : Colors.grey,
         ),
       ),

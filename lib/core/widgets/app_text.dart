@@ -36,7 +36,6 @@
 //   }
 // }
 
-
 import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +46,7 @@ class AppText extends StatelessWidget {
   FontWeight fontWeight;
   TextAlign? textAlign;
   bool isUnderline;
-  final VoidCallback? onPressed; // Added onPressed for click functionality
+  final Function()? onPressed; // Added onPressed for click functionality
 
   AppText({
     super.key,
