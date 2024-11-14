@@ -8,6 +8,8 @@ import 'dart:io';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await init();
+  await StorageService.init();
+
   runApp(const Main());
 }
 
@@ -83,6 +85,7 @@ class Main extends StatelessWidget {
 
   Widget _buildAppWithExtra(BuildContext context, Widget? child) {
     SizeConfig.init(context);
+
     return BlocListener<ConnectivityCubit, ConnectivityStatus>(
       listener: (context, status) {
         if (status == ConnectivityStatus.disconnected) {

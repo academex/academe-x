@@ -17,15 +17,13 @@ class AuthenticationRemoteDataSource {
   Future<AuthTokenModel> login(LoginRequsetModel user) async {
 
     if(await internetConnectionChecker.hasConnection){
-      Logger().d(Uri.parse(ApiSetting.login)); // Log the login API endpoint
       try {
         final response = await apiController.post(
           Uri.parse(ApiSetting.login),
           body: user.toJson(),
-          timeAlive: 10, // Timeout set to 10 seconds
+          timeAlive: 10,
         );
 
-        Logger().d(response); // Log the response
 
         return AuthTokenModel.fromJson(response); // Parse the response
       }on WrongDataException catch (e) {

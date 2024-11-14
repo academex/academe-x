@@ -7,8 +7,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
+
 
     final formKey = GlobalKey<FormState>();
 
@@ -44,7 +43,7 @@ class LoginScreen extends StatelessWidget {
                 CustomTextField(
                   label: context.localizations.emailLabel,
                   hintText: context.localizations.emailHint,
-                  controller: emailController,
+                  controller: context.read<AuthenticationCubit>().emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'البريد الإلكتروني مطلوب'; // Error message for empty email
@@ -58,7 +57,8 @@ class LoginScreen extends StatelessWidget {
                     return CustomTextField(
                       label: context.localizations.passwordLabel,
                       hintText: context.localizations.passwordHint,
-                      controller: passwordController,
+                      controller:context.read<AuthenticationCubit>().passwordController
+                      ,
                       isPassword: true,
                       togglePasswordVisibility: () {
                         context.read<AuthActionCubit>().togglePasswordVisibility(isVisible: isVisible);
@@ -136,13 +136,12 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () async {
                           // Validate the form fields before submitting
                           if (formKey.currentState!.validate()) {
-                            final email = emailController.text;
-                            final password = passwordController.text;
-                            Navigator.pushReplacementNamed(context, '/home_screen');
+                            final email = context.read<AuthenticationCubit>().emailController.text;
+                            final password = context.read<AuthenticationCubit>().passwordController.text;
 
-                            // await context.read<AuthenticationCubit>().login(
-                            //   LoginRequsetModel(username: email, password: password),
-                            // );
+                            await context.read<AuthenticationCubit>().login(
+                              LoginRequsetModel(username: email, password: password),
+                            );
                           } else {
                             // Show error if fields are invalid
                             context.showSnackBar(message: 'يرجى ملء جميع الحقول المطلوبة',error: true);
@@ -161,13 +160,14 @@ class LoginScreen extends StatelessWidget {
                       onPressed: () async {
                         // Validate the form fields before submitting
                         if (formKey.currentState!.validate()) {
-                          final email = emailController.text;
-                          final password = passwordController.text;
-                          Navigator.pushReplacementNamed(context, '/home_screen');
+                          final email = context.read<AuthenticationCubit>().emailController.text;
+                          final password = context.read<AuthenticationCubit>().passwordController.text;
 
-                          // await context.read<AuthenticationCubit>().login(
-                          //   LoginRequsetModel(username: email, password: password),
-                          // );
+                          // Navigator.pushReplacementNamed(context, '/home_screen');
+
+                          await context.read<AuthenticationCubit>().login(
+                            LoginRequsetModel(username: email, password: password),
+                          );
                         } else {
                           // Show error if fields are invalid
                           context.showSnackBar(message: 'يرجى ملء جميع الحقول المطلوبة',error: true);

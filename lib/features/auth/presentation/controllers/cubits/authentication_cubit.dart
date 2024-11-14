@@ -1,9 +1,12 @@
 import 'package:academe_x/lib.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class AuthenticationCubit extends Cubit<AuthenticationStates> {
   final AuthenticationUseCase _authenticationUseCase;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   AuthenticationCubit({required AuthenticationUseCase authUseCase }) :_authenticationUseCase=authUseCase, super(AuthenticationInitialState());
   Future<void> login(LoginRequsetModel user) async {
 
@@ -15,7 +18,9 @@ class AuthenticationCubit extends Cubit<AuthenticationStates> {
        emit(AuthenticationErrorState(message: l.message,));
 
      },
-     (r) {
+     (r) async{
+
+     await  StorageService.saveUser(r);
        // r.user
        emit(AuthenticationSuccessState());
      },

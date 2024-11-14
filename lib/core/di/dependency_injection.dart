@@ -78,4 +78,8 @@ void _initExternalDependencies() {
   getIt.registerFactory<InternetConnectionChecker>(
         () => InternetConnectionChecker(),
   );
+
+  getIt.registerFactory<StorageService>(
+        () => StorageService(),
+  );
 }

@@ -11,8 +11,8 @@ class UserResponseEntity {
   String gender;
   String phoneNum;
   int tagId;
-  DateTime createdAt;
-  DateTime updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
   UserResponseEntity({
     required this.id,
