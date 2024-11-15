@@ -1,7 +1,10 @@
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'lib.dart';
 import 'dart:io';
 
@@ -18,12 +21,11 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
         providers: _getProviders(),
         child: AppLifecycleManager(
-      child: _buildApp(),
-    ));
+          child: _buildApp(),
+        ));
   }
 
   Widget _buildApp() {
@@ -44,10 +46,15 @@ class Main extends StatelessWidget {
       BlocProvider<PickerCubit>(
         create: (context) => getIt<PickerCubit>(),
       ),
+      BlocProvider<TagCubit>(
+        create: (context) => getIt<TagCubit>(),
+      ),
+      BlocProvider<ShowTagCubit>(
+        create: (context) => getIt<ShowTagCubit>(),
+      ),
       BlocProvider<ConnectivityCubit>(
         create: (context) => getIt<ConnectivityCubit>(),
       ),
-
       BlocProvider<PostImageCubit>(
         create: (context) => getIt<PostImageCubit>(),
       ),
@@ -55,21 +62,26 @@ class Main extends StatelessWidget {
   }
 
   Widget _buildMaterialApp() {
-    return MaterialApp(
-      title: 'AcademeX',
-      locale: const Locale('ar'),
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      debugShowCheckedModeBanner: false,
-      theme: _buildTheme(),
-      initialRoute: '/login',
-      onGenerateRoute: AppRouter.generateRoute,
-      builder: _buildAppWithExtra,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      child: MaterialApp(
+        title: 'AcademeX',
+        locale: const Locale('ar'),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        debugShowCheckedModeBanner: false,
+        theme: _buildTheme(),
+        initialRoute: '/home_screen',
+        onGenerateRoute: AppRouter.generateRoute,
+        builder: _buildAppWithExtra,
+      ),
     );
   }
 
@@ -89,31 +101,124 @@ class Main extends StatelessWidget {
     return BlocListener<ConnectivityCubit, ConnectivityStatus>(
       listener: (context, status) {
         if (status == ConnectivityStatus.disconnected) {
-          _showNoConnectionBanner(context,ConnectivityStatus.disconnected);
+          _showNoConnectionBanner(context, ConnectivityStatus.disconnected);
         }
 
         if (status == ConnectivityStatus.connected) {
-          _showNoConnectionBanner(context,ConnectivityStatus.connected);
+          _showNoConnectionBanner(context, ConnectivityStatus.connected);
         }
-
       },
       child: child!,
     );
   }
 
-  void _showNoConnectionBanner(BuildContext context, ConnectivityStatus disconnected) {
-
-    switch(disconnected){
+  void _showNoConnectionBanner(
+      BuildContext context, ConnectivityStatus disconnected) {
+    switch (disconnected) {
       case ConnectivityStatus.connected:
         AppLogger.success('connected');
-        context.showSnackBar(message: 'تم الاتصال بالانترنت',);
+        context.showSnackBar(
+          message: 'تم الاتصال بالانترنت',
+        );
 
         break;
       case ConnectivityStatus.disconnected:
         AppLogger.success('not connected');
-        context.showSnackBar(message: 'لا يوجد اتصال بالإنترنت',error: true);
+        context.showSnackBar(message: 'لا يوجد اتصال بالإنترنت', error: true);
         break;
     }
-
   }
+}
+
+class AppLifecycleManager extends StatefulWidget {
+  final Widget child;
+
+  const AppLifecycleManager({
+    required this.child,
+    super.key,
+  });
+
+  @override
+  State<AppLifecycleManager> createState() => _AppLifecycleManagerState();
+}
+
+class _AppLifecycleManagerState extends State<AppLifecycleManager>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _onResumed(context);
+        break;
+      case AppLifecycleState.paused:
+        _onPaused(context);
+        break;
+      case AppLifecycleState.inactive:
+        _onInactive(context);
+        break;
+      case AppLifecycleState.detached:
+        _onDetached(context);
+        break;
+      default:
+        break;
+    }
+  }
+
+  void _onResumed(BuildContext context) {
+    AppLogger.wtf('_onResumed');
+    // Check authentication status
+    // context.read<AuthenticationCubit>().checkAuthStatus();
+
+    // Refresh data if needed
+    final currentIndex = context.read<BottomNavCubit>().state;
+    if (currentIndex == 0) {
+      // If on home screen
+      // Refresh posts
+      // context.read<HomeCubit>().refreshPosts();
+    }
+
+    // Reconnect to services if needed
+    // context.read<ChatCubit>().reconnect();
+
+    // Check for new notifications
+    // context.read<NotificationCubit>().checkNewNotifications();
+  }
+
+  void _onPaused(BuildContext context) {
+    AppLogger.wtf('_onPaused');
+    // Save any unsaved data
+    // context.read<PostCubit>().saveDrafts();
+
+    // Disconnect from services to save battery
+    // context.read<ChatCubit>().disconnect();
+
+    // Save app state
+    // context.read<AppStateCubit>().saveState();
+  }
+
+  void _onInactive(BuildContext context) {
+    AppLogger.wtf('_onInactive');
+    // Handle when app becomes inactive (e.g., during a phone call)
+    // Pause sensitive operations
+    // context.read<MediaPlayerCubit>().pause();
+  }
+
+  void _onDetached(BuildContext context) {
+    AppLogger.wtf('_onDetached');
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

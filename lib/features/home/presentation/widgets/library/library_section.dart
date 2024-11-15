@@ -1,6 +1,6 @@
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LibrarySection extends StatelessWidget {
   final String icon;
@@ -22,10 +22,10 @@ class LibrarySection extends StatelessWidget {
         Row(
           children: [
             Image.asset(icon),
-            8   .pw(),
+            8.pw(),
             AppText(
               text: title,
-              fontSize: 16  ,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ],

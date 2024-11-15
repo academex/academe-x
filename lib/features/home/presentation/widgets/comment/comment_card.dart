@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:academe_x/lib.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,34 +34,54 @@ class CommentCard extends StatelessWidget {
     return BlocProvider(
       create: (_) => FavoriteCubit(false),
       child: Padding(
-        padding: EdgeInsets.only(top: isReply?0:9,    right: 25   ,left: 15   ),
+        padding: EdgeInsets.only(top: isReply ? 0 : 9, right: 25, left: 15),
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if(isReply) Padding(padding: EdgeInsets.only(right: isEndReply?19   :20   ),child: !isEndReply? const VerticalDivider(color: Colors.black26,width: 0,):null),
-              if(isReply) Container(
-                width: 15   ,
-                height: 20,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(15)),
-                  border: Border(bottom: const BorderSide(color: Colors.black26),right: isEndReply? const BorderSide(color: Colors.black26):BorderSide.none),
+              if (isReply)
+                Padding(
+                    padding: EdgeInsets.only(right: isEndReply ? 19 : 20),
+                    child: !isEndReply
+                        ? const VerticalDivider(
+                            color: Colors.black26,
+                            width: 0,
+                          )
+                        : null),
+              if (isReply)
+                Container(
+                  width: 15,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.only(bottomRight: Radius.circular(15)),
+                    border: Border(
+                        bottom: const BorderSide(color: Colors.black26),
+                        right: isEndReply
+                            ? const BorderSide(color: Colors.black26)
+                            : BorderSide.none),
+                  ),
                 ),
-
-              ),
               Column(
                 children: [
-                  CircleAvatar(child: Text(commenter[0]),radius: 20,),
-                  if(!isReply)
-                  BlocBuilder<ShowRepliesCubit,ShowReplyesState>(
-                    buildWhen: (previous, current) => current.index == commentIndex,
-                    builder: (context, state) {
-                      return Visibility(
-                        visible: state.show,
-                          child: const Expanded(child: VerticalDivider(color: Colors.black26, )),
-                        );
-                    },
+                  CircleAvatar(
+                    child: Text(commenter[0]),
+                    radius: 20,
                   ),
+                  if (!isReply)
+                    BlocBuilder<ShowRepliesCubit, ShowReplyesState>(
+                      buildWhen: (previous, current) =>
+                          current.index == commentIndex,
+                      builder: (context, state) {
+                        return Visibility(
+                          visible: state.show,
+                          child: const Expanded(
+                              child: VerticalDivider(
+                            color: Colors.black26,
+                          )),
+                        );
+                      },
+                    ),
                 ],
               ), // Placeholder avatar
               9.pw(),
@@ -71,7 +91,7 @@ class CommentCard extends StatelessWidget {
                   children: [
                     AppText(
                       text: commenter,
-                      fontSize: 13  ,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),
                     5.ph(),
@@ -80,7 +100,7 @@ class CommentCard extends StatelessWidget {
                       children: [
                         AppText(
                           text: 'قبل ساعتين',
-                          fontSize: 13  ,
+                          fontSize: 13,
                           color: const Color(0xffA0A1AB),
                         ),
                         8.pw(),
@@ -88,51 +108,56 @@ class CommentCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                           onTap: reply,
                           child: SizedBox(
-                            width: 30   ,
+                            width: 30,
                             height: 30,
                             child: Center(
                               child: AppText(
                                 text: "رد",
-                                fontSize: 13  ,
+                                fontSize: 13,
                               ),
                             ),
                           ),
                         ),
-                        if(replies!.isNotEmpty)
-                        InkWell(
-                          borderRadius: BorderRadius.circular(20),
-                          onTap: () {
-                            _showReplyVisibility = !_showReplyVisibility;
-                            context.read<ShowRepliesCubit>().change(postIndex: commentIndex!,visibility: _showReplyVisibility);
-                          },
-                          child:Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 7   ,vertical: 5),
-                            child: BlocBuilder<ShowRepliesCubit,ShowReplyesState>(
-                              buildWhen: (previous, current) {
-                                return commentIndex==current.index;
-                              },
-                              builder:(context, state) =>  AppText(
-                                text: !_showReplyVisibility? 'عرض الردور':'اخفاء الردور',
-                                fontSize: 12  ,
-                                color: Colors.black,
+                        if (replies!.isNotEmpty)
+                          InkWell(
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: () {
+                              _showReplyVisibility = !_showReplyVisibility;
+                              context.read<ShowRepliesCubit>().change(
+                                  postIndex: commentIndex!,
+                                  visibility: _showReplyVisibility);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 7, vertical: 5.h),
+                              child: BlocBuilder<ShowRepliesCubit,
+                                  ShowReplyesState>(
+                                buildWhen: (previous, current) {
+                                  return commentIndex == current.index;
+                                },
+                                builder: (context, state) => AppText(
+                                  text: !_showReplyVisibility
+                                      ? 'عرض الردور'
+                                      : 'اخفاء الردور',
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                     9.ph(),
                   ],
                 ),
               ),
-              BlocBuilder<FavoriteCubit,bool>(
-                
-                builder:(context, state) =>  InkWell(
-                  borderRadius:  BorderRadius.circular(10),
+              BlocBuilder<FavoriteCubit, bool>(
+                builder: (context, state) => InkWell(
+                  borderRadius: BorderRadius.circular(10),
                   onTap: () {
-                    if (!state){
+                    if (!state) {
                       likes++;
-                    }else{
+                    } else {
                       likes--;
                     }
                     context.read<FavoriteCubit>().change();
@@ -142,18 +167,18 @@ class CommentCard extends StatelessWidget {
                     width: 60,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [ 
+                      children: [
                         if (!(state as bool))
                           Image.asset(
                             'assets/icons/favourite.png',
                             height: 17,
-                            width: 19   ,
+                            width: 19,
                           ),
                         if (state)
                           Image.asset(
                             'assets/icons/favourite_selected.png',
                             height: 17,
-                            width: 19   ,
+                            width: 19,
                           ),
                         2.pw(),
                         Text(likes.toString()),

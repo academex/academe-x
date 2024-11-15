@@ -1,6 +1,7 @@
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CreateMultiChoiceWidget extends StatefulWidget {
   CreateMultiChoiceWidget({
@@ -39,7 +40,7 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 0.4,
+      height: 0.4.sh,
       child: RawScrollbar(
         thumbVisibility: true,
         thumbColor: Colors.blue.shade100,
@@ -65,7 +66,9 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
                         const TextStyle(color: Color.fromRGBO(59, 186, 166, 1)),
                     autofocus:
                         i + 1 == numberOfChoices && i != 1 ? true : false,
-                    textInputAction: i + 1 == numberOfChoices? TextInputAction.done :TextInputAction.next,
+                    textInputAction: i + 1 == numberOfChoices
+                        ? TextInputAction.done
+                        : TextInputAction.next,
                   ),
                 ),
               GestureDetector(

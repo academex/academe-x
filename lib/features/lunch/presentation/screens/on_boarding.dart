@@ -1,6 +1,7 @@
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -40,7 +41,7 @@ class _OnBoardingState extends State<OnBoarding> {
           children: [
             // Skip button at the top-right
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25   ),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
@@ -50,7 +51,7 @@ class _OnBoardingState extends State<OnBoarding> {
                   child: Text(
                     'تخطي',
                     style: TextStyle(
-                      fontSize: 16  ,
+                      fontSize: 16,
                       color: const Color(0xffCBAEAE),
                     ),
                   ),
@@ -70,16 +71,16 @@ class _OnBoardingState extends State<OnBoarding> {
                 },
                 itemBuilder: (context, indexPage) {
                   return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25   ),
+                    padding: EdgeInsets.symmetric(horizontal: 25),
                     child: Column(
                       children: [
                         // Onboarding image with rounded corners
                         Container(
                           height: 335,
-                          width: 327   ,
+                          width: 327,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(30 ),
+                              Radius.circular(30),
                             ),
                             image: DecorationImage(
                               image: AssetImage(data['images']![indexPage]),
@@ -93,7 +94,7 @@ class _OnBoardingState extends State<OnBoarding> {
                           data['titles']![indexPage],
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 22  ,
+                            fontSize: 22,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -103,7 +104,7 @@ class _OnBoardingState extends State<OnBoarding> {
                           data['descriptions']![indexPage],
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 14  ,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: const Color(0xff848484),
                           ),
@@ -121,14 +122,14 @@ class _OnBoardingState extends State<OnBoarding> {
               children: [
                 for (int j = 0; j < 3; j++)
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 3   ),
-                    width: _indexPage != j ? 8: 24   ,
+                    margin: EdgeInsets.symmetric(horizontal: 3.w),
+                    width: _indexPage != j ? 8.h : 24.h,
                     height: 8,
                     decoration: BoxDecoration(
                       color: _indexPage != j
                           ? const Color(0xffCBD5E1)
                           : Colors.blue,
-                      borderRadius: BorderRadius.circular(6 ),
+                      borderRadius: BorderRadius.circular(6),
                     ),
                   ),
               ],
@@ -136,7 +137,7 @@ class _OnBoardingState extends State<OnBoarding> {
             30.ph(),
             // Buttons: Previous, Next, and Start
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24   ),
+              padding: EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -154,20 +155,20 @@ class _OnBoardingState extends State<OnBoarding> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey[300],
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10 ),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: Text(
                           'السابق',
                           style: TextStyle(
-                            fontSize: 14  ,
+                            fontSize: 14,
                             color: Colors.black,
                           ),
                         ),
                       ),
                     ),
                   if (_indexPage > 0)
-                    SizedBox(width: 15   ), // Spacing between buttons
+                    SizedBox(width: 15), // Spacing between buttons
                   // Next or Start button
                   Expanded(
                     child: ElevatedButton(
@@ -183,13 +184,13 @@ class _OnBoardingState extends State<OnBoarding> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10 ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       child: Text(
                         _indexPage < 2 ? 'التالي' : 'ابدأ الآن',
                         style: TextStyle(
-                          fontSize: 14  ,
+                          fontSize: 14,
                           color: Colors.white,
                         ),
                       ),
@@ -201,13 +202,13 @@ class _OnBoardingState extends State<OnBoarding> {
             20.ph(),
             // Terms and privacy text at the bottom
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 59   ),
+              padding: EdgeInsets.symmetric(horizontal: 59),
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   text: 'استخدامك للتطبيق يعتبر موافقة ضمنية على ',
                   style: TextStyle(
-                    fontSize: 12  ,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Colors.black, // اللون الافتراضي للنص
                   ),
@@ -215,7 +216,7 @@ class _OnBoardingState extends State<OnBoarding> {
                     TextSpan(
                       text: 'شروط الخدمة وسياسة الخصوصية',
                       style: TextStyle(
-                        fontSize: 14  ,
+                        fontSize: 14,
                         decoration: TextDecoration.underline,
                       ),
                       recognizer: TapGestureRecognizer()

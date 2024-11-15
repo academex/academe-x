@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:academe_x/lib.dart';
 
-
 class CommunityPage extends StatelessWidget {
-   CommunityPage({super.key});
+  CommunityPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +110,7 @@ class CommunityPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24    ),
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -154,7 +153,7 @@ class CommunityPage extends StatelessWidget {
                   builder: (BuildContext context, selectedIndex) {
                     return Container(
                       padding: const EdgeInsets.only(right: 24),
-                      height: 100  ,
+                      height: 100,
                       // width: 327.w,
                       child: ListView.separated(
                           physics: const BouncingScrollPhysics(),
@@ -168,7 +167,7 @@ class CommunityPage extends StatelessWidget {
                                 GestureDetector(
                                   child: Container(
                                     width: 56,
-                                    height: 56  ,
+                                    height: 56,
                                     decoration: BoxDecoration(
                                         color: selectedIndex == index
                                             ? Colors.white
@@ -186,7 +185,7 @@ class CommunityPage extends StatelessWidget {
                                 12.ph(),
                                 AppText(
                                   text: title,
-                                  fontSize: 14  ,
+                                  fontSize: 14,
                                   color: Colors.white,
                                   fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
 
@@ -259,8 +258,8 @@ void showShareOptions(BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              height: 4  ,
-              width: 56    ,
+              height: 4,
+              width: 56,
               color: const Color(0xffE7E8EA),
             ),
             20.ph(),
@@ -341,8 +340,8 @@ Widget _buildShareOption(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          height: 69  ,
-          width: 69    ,
+          height: 69,
+          width: 69,
           decoration: BoxDecoration(
               color: const Color(0xF9F9F9C4),
               shape: BoxShape.circle,

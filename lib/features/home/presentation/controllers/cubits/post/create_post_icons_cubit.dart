@@ -4,6 +4,7 @@ import 'package:academe_x/lib.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+
 class PickerCubit extends Cubit<CreatePostIconsState> {
   PickerCubit(super.initialState);
   final ImagePicker _imagePicker = ImagePicker();
@@ -36,7 +37,8 @@ class PickerCubit extends Cubit<CreatePostIconsState> {
       emit(CreatePOstIconsError('no file selected'));
     }
   }
-  createMulteChoice(){
+
+  createMulteChoice() {
     emit(CreateMultiChoice());
   }
 }

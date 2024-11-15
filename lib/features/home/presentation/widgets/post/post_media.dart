@@ -1,8 +1,9 @@
+import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/file_container.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:academe_x/lib.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class PostMedia extends StatelessWidget {
   final PostEntity post;
@@ -13,11 +14,11 @@ class PostMedia extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (post.type) {
       case PostType.textWithImage:
-        return _buildPostImage(context,post.images!);
+        return _buildPostImage(context, post.images!);
       case PostType.textWithPoll:
         return _buildPoll(post.pollOptions!);
       case PostType.textWithFile:
-        return _buildFileAttachment();
+        return FileContainer(fileName: post.fileName, fileUrl: post.fileUrl);
       default:
         return const SizedBox.shrink();
     }
@@ -46,16 +47,19 @@ class PostMedia extends StatelessWidget {
   //   );
   // }
 
-
-  Widget _buildPostImage(BuildContext ctx,List<String> images) {
-    return  Column(
+  Widget _buildPostImage(BuildContext ctx, List<String> images) {
+    return Column(
       children: [
         Stack(
           children: [
             ClipRRect(
-              // borderRadius: BorderRadius.circular(8.0),
-                child: SizedBox(height: 292,child: PageView(
-                  children: List.generate(images.length, (index) {
+                // borderRadius: BorderRadius.circular(8.0),
+                child: SizedBox(
+              height: 292,
+              child: PageView(
+                children: List.generate(
+                  images.length,
+                  (index) {
                     return Container(
                       // width: 326,
                       decoration: ShapeDecoration(
@@ -68,13 +72,13 @@ class PostMedia extends StatelessWidget {
                         ),
                       ),
                     );
-                  },),
-                  onPageChanged: (value) {
-                    ctx.read<PostImageCubit>().changeImageIndex(value);
                   },
-                ),)
-            ),
-
+                ),
+                onPageChanged: (value) {
+                  ctx.read<PostImageCubit>().changeImageIndex(value);
+                },
+              ),
+            )),
             _buildImageCounter(images),
           ],
         ),
@@ -84,16 +88,16 @@ class PostMedia extends StatelessWidget {
     );
   }
 
-
   Widget _buildImageCounter(List<String> images) {
     if (images.length > 1) {
-      return BlocBuilder<PostImageCubit,int>(
+      return BlocBuilder<PostImageCubit, int>(
         builder: (context, currentIndex) {
           return Positioned(
             top: 8.0,
             left: 8.0,
             child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 decoration: BoxDecoration(
                   color: Colors.black54,
                   borderRadius: BorderRadius.circular(12.0),
@@ -112,8 +116,7 @@ class PostMedia extends StatelessWidget {
 
   Widget _buildDotsIndicator(List<String> images) {
     if (images.length > 1) {
-
-      return BlocBuilder<PostImageCubit,int>(
+      return BlocBuilder<PostImageCubit, int>(
         builder: (context, currentIndex) {
           return Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -124,23 +127,24 @@ class PostMedia extends StatelessWidget {
                   height: 7,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: index == currentIndex ? Color(0xFF0077FF) : Color(0xFFEEEEEE),
+                    color: index == currentIndex
+                        ? Color(0xFF0077FF)
+                        : Color(0xFFEEEEEE),
                   ),
                 );
               }));
         },
       );
-
     }
     return const SizedBox.shrink();
   }
-
 
   Widget _buildPoll(Map<String, int> options) {
     return Column(
       children: options.entries.map((option) {
         final percentage = option.value /
-            options.values.reduce((sum, value) => sum + value) * 100;
+            options.values.reduce((sum, value) => sum + value) *
+            100;
 
         return Container(
           margin: EdgeInsets.only(bottom: 8),
@@ -153,49 +157,6 @@ class PostMedia extends StatelessWidget {
       }).toList(),
     );
   }
-
-
-
-  Widget _buildFileAttachment() {
-    return Container(
-      padding: EdgeInsets.all(12   ),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.file_present, size: 24   ),
-          8.pw(),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppText(
-                  text: post.fileName ?? 'File',
-                  fontSize: 14  ,
-                ),
-                4.ph(),
-                AppText(
-                  text: 'Tap to download',
-                  fontSize: 12  ,
-                  color: Colors.grey,
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.download),
-            onPressed: () {
-            //   => _downloadFile(post.fileUrl!)
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-
 
 // ... Include the _buildImageGrid, _buildPoll, and _buildFileAttachment methods
 }
@@ -215,7 +176,7 @@ class _PollOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12   , vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.grey[200],
@@ -234,11 +195,11 @@ class _PollOption extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: AppText(text: text, fontSize: 14  ),
+                child: AppText(text: text, fontSize: 14),
               ),
               AppText(
                 text: '${percentage.toStringAsFixed(1)}% ($votes)',
-                fontSize: 12  ,
+                fontSize: 12,
                 color: Colors.grey.shade600,
               ),
             ],
