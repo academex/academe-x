@@ -80,7 +80,7 @@ import 'package:flutter_svg/svg.dart';class CreateNewPasswordScreen extends Stat
             ),
             const Spacer(),
             CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 16 ,color: Colors.white,), onPressed: () {
-            },   color: const Color(0xFF0077FF),)
+            },   backgraoundColor: const Color(0xFF0077FF),)
             ,
             20.ph(),
           ],

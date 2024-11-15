@@ -48,11 +48,11 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children:[
-          SvgPicture.string(
-          mySignInRobotSVG,
-          height: 150   ,
-          width: 150   ,
-        ),
+        //   SvgPicture.string(
+        //   mySignInRobotSVG,
+        //   height: 150   ,
+        //   width: 150   ,
+        // ),
           20.ph(),
           AppText(
             text:

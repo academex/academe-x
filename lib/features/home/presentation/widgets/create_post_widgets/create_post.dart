@@ -196,6 +196,7 @@ class CreatePost {
                           icon: const ImageIcon(
                               AssetImage('assets/icons/menu.png')),
                           onPressed: () {
+                            AppLogger.success('hello');
                             context.read<PickerCubit>().createMulteChoice();
                           },
                         ),

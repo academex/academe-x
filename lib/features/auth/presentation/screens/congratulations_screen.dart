@@ -27,11 +27,11 @@ class AccountCreationSuccessScreen extends StatelessWidget {
           children: [
 
             // Robot SVG Image
-            SvgPicture.string(
-              mySignInRobotSVG,
-              height: 150   ,
-              width: 150   ,
-            ),
+            // SvgPicture.string(
+            //   mySignInRobotSVG,
+            //   height: 150   ,
+            //   width: 150   ,
+            // ),
             20.ph(),
             // Success Message
             AppText(
@@ -75,7 +75,7 @@ class AccountCreationSuccessScreen extends StatelessWidget {
             16.ph(),
             CustomButton(
                 widget: AppText(text: context.localizations.goToMainPage, fontSize: 16 ,color: Colors.white,),
-                onPressed:(){}, color:const Color(0xff2200F3),
+                onPressed:(){}, backgraoundColor:const Color(0xff2200F3),
               wihtBorder: true,
 
             ),

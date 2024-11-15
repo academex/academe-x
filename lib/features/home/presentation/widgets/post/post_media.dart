@@ -146,7 +146,7 @@ class PostMedia extends StatelessWidget {
             100;
 
         return Container(
-          margin: EdgeInsets.only(bottom: 8.h),
+          margin: EdgeInsets.only(bottom: 8),
           child: _PollOption(
             text: option.key,
             percentage: percentage,
@@ -214,7 +214,7 @@ class _PollOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.grey[200],

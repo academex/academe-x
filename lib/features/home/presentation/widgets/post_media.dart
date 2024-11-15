@@ -53,7 +53,7 @@ class PostMedia extends StatelessWidget {
             100;
 
         return Container(
-          margin: EdgeInsets.only(bottom: 8.h),
+          margin: EdgeInsets.only(bottom: 8),
           child: _PollOption(
             text: option.key,
             percentage: percentage,
@@ -66,14 +66,14 @@ class PostMedia extends StatelessWidget {
 
   Widget _buildFileAttachment() {
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey[300]!),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
-          Icon(Icons.file_present, size: 24.w),
+          Icon(Icons.file_present, size: 24),
           8.pw(),
           Expanded(
             child: Column(
@@ -81,12 +81,12 @@ class PostMedia extends StatelessWidget {
               children: [
                 AppText(
                   text: post.fileName ?? 'File',
-                  fontSize: 14.sp,
+                  fontSize: 14,
                 ),
                 4.ph(),
                 AppText(
                   text: 'Tap to download',
-                  fontSize: 12.sp,
+                  fontSize: 12,
                   color: Colors.grey,
                 ),
               ],
@@ -121,7 +121,7 @@ class _PollOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.grey[200],
@@ -140,11 +140,11 @@ class _PollOption extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: AppText(text: text, fontSize: 14.sp),
+                child: AppText(text: text, fontSize: 14),
               ),
               AppText(
                 text: '${percentage.toStringAsFixed(1)}% ($votes)',
-                fontSize: 12.sp,
+                fontSize: 12,
                 color: Colors.grey.shade600,
               ),
             ],

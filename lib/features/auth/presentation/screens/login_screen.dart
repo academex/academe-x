@@ -10,17 +10,16 @@ class LoginScreen extends StatelessWidget {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
-    // Global key for form validation
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: const AppCustomAppBar(
-        leading: SizedBox(), // No leading widget
+      appBar:  AppCustomAppBar(
+        leading: 0.ph(), // No leading widget
       ),
       body: Padding(
-        padding: EdgeInsets.only(left: 24 , right: 24 ),
+        padding: const EdgeInsets.symmetric(horizontal: 24 , vertical: 24 ),
         child: Form(
           key: formKey, // Assign the form key
           child: Column(
@@ -28,18 +27,19 @@ class LoginScreen extends StatelessWidget {
             children: [
               AppText(
                 text: context.localizations.loginTitle,
-                fontSize: 24  ,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+            color:AppColors.textPrimary,
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
               ),
               8.ph(),
               AppText(
                 text: context.localizations.loginSubTitle,
-                fontSize: 14  ,
-                color: Colors.grey,
                 textAlign: TextAlign.center,
+                color: Color(0xFF94A3B8),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
               ),
-              SizedBox(height: 23,),
+              20.ph(),
               CustomTextField(
                 label: context.localizations.emailLabel,
                 hintText: context.localizations.emailHint,
@@ -60,7 +60,6 @@ class LoginScreen extends StatelessWidget {
                     controller: passwordController,
                     isPassword: true,
                     togglePasswordVisibility: () {
-                      // Logger().e('hi');
                       context.read<AuthActionCubit>().togglePasswordVisibility(isVisible: isVisible);
                     },
                     isPasswordVisible: isVisible,
@@ -73,22 +72,22 @@ class LoginScreen extends StatelessWidget {
                   );
                 },
               ),
-              12.ph(),
               Row(
                 children: [
                   Checkbox(
                     value: false,
-                    side: const BorderSide(color: Color(0xffECECEC)),
+                    side: const BorderSide(
+                width: 1,
+                strokeAlign: BorderSide.strokeAlignCenter,
+                color: Color(0xFFECEBEB),
+              ),
                     activeColor: const Color(0xFF474CA8), // Customize the active color
                     onChanged: (bool? value) {},
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: AppText(
-                      text: context.localizations.rememberMe,
-                      fontSize: 14  ,
-                      color: const Color(0xff232323),
-                    ),
+                  ),AppText(
+                    text: context.localizations.rememberMe,
+                    fontSize: 14  ,
+                    color: Color(0xFF232323),
+                    fontWeight: FontWeight.w500,
                   ),
                   const Spacer(),
                   GestureDetector(
@@ -99,7 +98,7 @@ class LoginScreen extends StatelessWidget {
                       text: context.localizations.forgotPassword,
                       fontSize: 14  ,
                       isUnderline: true,
-                      color: const Color(0xff232323),
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -118,7 +117,7 @@ class LoginScreen extends StatelessWidget {
                 builder: (context, state) {
                   if (state is AuthenticationLoadingState) {
                     return CustomButton(
-                      color: Colors.blueAccent,
+                      backgraoundColor: Colors.blueAccent,
                       widget: const CircularProgressIndicator(
                         color: Colors.white,
                       ),
@@ -126,7 +125,7 @@ class LoginScreen extends StatelessWidget {
                     );
                   } else if (state is AuthenticationErrorState) {
                     return CustomButton(
-                      color: Colors.blueAccent,
+                      backgraoundColor: Colors.blueAccent,
                       widget: AppText(
                         text: context.localizations.loginButton,
                         fontSize: 16,
@@ -151,7 +150,7 @@ class LoginScreen extends StatelessWidget {
                     );
                   }
                   return CustomButton(
-                    color: Colors.blueAccent,
+                    backgraoundColor: Colors.blueAccent,
                     widget: AppText(
                       text: context.localizations.loginButton,
                       fontSize: 16,
@@ -176,11 +175,11 @@ class LoginScreen extends StatelessWidget {
                   );
                 },
               ),
-              20.ph(),
+              24.ph(),
               DividerWithText(text: context.localizations.orLoginWith),
-              20.ph(),
+              24.ph(),
               CustomButton(
-                color: const Color(0xffF9F9F9),
+                backgraoundColor: Colors.white,
                 widget: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -189,12 +188,13 @@ class LoginScreen extends StatelessWidget {
                     AppText(
                       text: context.localizations.googleAccount,
                       fontSize: 16 ,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0F172A),
+                      fontWeight: FontWeight.w600,
                     ),
                   ],
                 ),
                 onPressed: () {},
+                wihtBorder: true,
               ),
               const Spacer(),
               Row(
@@ -203,14 +203,14 @@ class LoginScreen extends StatelessWidget {
                   AppText(
                     text: context.localizations.noAccount,
                     fontSize: 14 ,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Color(0xFF0F172A),
+                    fontWeight: FontWeight.w500,
                   ),
                   AppText(
                     text: context.localizations.createAccount,
-                    fontSize: 14 ,
-                    color: Colors.blueAccent,
-                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF3253FF),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                     onPressed: () {
                       Navigator.pushNamed(context, '/robot_intro');
                     },

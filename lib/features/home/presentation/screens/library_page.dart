@@ -20,7 +20,7 @@ class LibraryPage extends StatelessWidget {
             builder: (context, constraints) {
               // Get the scroll percentage (1 = fully expanded, 0 = collapsed)
               final percent = (constraints.maxHeight - kToolbarHeight) /
-                  (200.h - kToolbarHeight);
+                  (200- kToolbarHeight);
               return FlexibleSpaceBar(
                 centerTitle: true,
                 title: AnimatedOpacity(

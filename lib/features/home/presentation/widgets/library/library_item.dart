@@ -15,7 +15,7 @@ class LibraryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.only(bottom: 10),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -25,7 +25,7 @@ class LibraryItem extends StatelessWidget {
         child: Row(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8.h),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

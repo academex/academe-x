@@ -19,6 +19,7 @@ abstract class AppAssets {
   static const String share = 'assets/icons/share.png';
   static const String bookmark = 'assets/icons/Bookmark.png';
   static const String bookmarkSelected = 'assets/icons/bookMark_selected.png';
+  static const String visibilePassword = 'assets/icons/visibile_password.png';
 
   // Reactions
   static const String heart = 'assets/icons/reactions/heart.png';

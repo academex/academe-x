@@ -360,7 +360,7 @@ class CommunityPage extends StatelessWidget {
         ),
         child: AppText(
           text: title,
-          fontSize: 14.sp,
+          fontSize: 14,
           color: isSelected ? Colors.white : Colors.grey,
         ),
       ),
@@ -539,7 +539,7 @@ Widget _buildShareOption(
         const SizedBox(height: 8),
         AppText(
           text: label,
-          fontSize: 12.sp,
+          fontSize: 12,
           color: const Color(0xff3D5A80),
         )
       ],

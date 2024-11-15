@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 abstract class AppColors {
-  static const Color primary = Color(0xFF2769F2);
-  static const Color secondary = Color(0xFF64748B);
+  static const Color primary = Color(0xFF1F02E8);
+  static const Color secondary = Color(0xFF0077FF);
   static const Color white = Colors.white;
   static const Color black = Colors.black;
   static const Color grey = Color(0xFF9E9E9E);
@@ -22,7 +22,7 @@ abstract class AppColors {
   static const Color likeReaction = Color(0xFF2196F3);
 
   // Text Colors
-  static const Color textPrimary = Color(0xFF2C3E50);
+  static const Color textPrimary = Color(0xFF0F172A);
   static const Color textSecondary = Color(0xFF64748B);
   static const Color textHint = Color(0xFF9E9E9E);
 

@@ -73,8 +73,8 @@ class FileContainer extends StatelessWidget {
                   }
                 : null,
             child: Container(
-              height: 36.h,
-              width: 68.w,
+              height: 36,
+              width: 68,
               decoration: BoxDecoration(
                   color: _fromCreatePost()
                       ? Colors.white
@@ -121,9 +121,7 @@ class LoadingFile extends StatelessWidget {
         Text(
           '84%',
           style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-              color: Colors.black),
+              fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black),
         ),
       ],
     );
