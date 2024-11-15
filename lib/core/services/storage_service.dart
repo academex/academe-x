@@ -9,16 +9,12 @@ class StorageService {
     await Hive.initFlutter();
     _box = await Hive.openBox('academeX_box');
   }
-
   static Future<void> saveUser(AuthTokenModel user) async {
     if (kDebugMode) {
       print(user.toJson());
     }
-
-    // AppLogger.i( as String);
     await _box.put('user', user.toJson());
   }
-
   static AuthTokenModel? getUser() {
     final userData = _box.get('user');
     if (userData == null) return null;
@@ -28,6 +24,8 @@ class StorageService {
   static Future<void> clearUser() async {
     await _box.delete('user');
   }
+
+
 
   // static Future<void> saveTheme(bool isDark) async {
   //   await _box.put('isDark', isDark);
