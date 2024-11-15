@@ -21,7 +21,6 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
         providers: _getProviders(),
         child: AppLifecycleManager(
@@ -56,7 +55,6 @@ class Main extends StatelessWidget {
       BlocProvider<ConnectivityCubit>(
         create: (context) => getIt<ConnectivityCubit>(),
       ),
-
       BlocProvider<PostImageCubit>(
         create: (context) => getIt<PostImageCubit>(),
       ),
@@ -80,7 +78,7 @@ class Main extends StatelessWidget {
         ],
         debugShowCheckedModeBanner: false,
         theme: _buildTheme(),
-        initialRoute: '/login',
+        initialRoute: '/home_screen',
         onGenerateRoute: AppRouter.generateRoute,
         builder: _buildAppWithExtra,
       ),
@@ -109,7 +107,6 @@ class Main extends StatelessWidget {
         if (status == ConnectivityStatus.connected) {
           _showNoConnectionBanner(context, ConnectivityStatus.connected);
         }
-
       },
       child: child!,
     );
@@ -220,7 +217,6 @@ class _AppLifecycleManagerState extends State<AppLifecycleManager>
 
   void _onDetached(BuildContext context) {
     AppLogger.wtf('_onDetached');
-
   }
 
   @override
