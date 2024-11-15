@@ -6,7 +6,7 @@ class AuthenticationUseCase {
   AuthenticationRepository authenticationRepository;
   AuthenticationUseCase({required this.authenticationRepository});
 
-  Future<Either<Failure, AuthTokenEntity>> login(LoginRequsetModel user) async {
+  Future<Either<Failure, AuthTokenModel>> login(LoginRequsetModel user) async {
     return await authenticationRepository.login(user);
 
   }

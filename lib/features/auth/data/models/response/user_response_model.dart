@@ -3,6 +3,7 @@ import 'package:academe_x/lib.dart';
 
 class UserResponseModel extends UserResponseEntity {
 
+
   UserResponseModel({
     required super.id ,
   required super.username,
@@ -21,6 +22,9 @@ class UserResponseModel extends UserResponseEntity {
 
 
   factory UserResponseModel.fromJson(Map<String, dynamic> json) {
+    print('/*/*/*/');
+    print(json['createdAt']);
+    print(DateTime.parse(json['createdAt']));
     return UserResponseModel(
       id: json['id'],
       username: json['username'],
@@ -53,8 +57,8 @@ class UserResponseModel extends UserResponseEntity {
       'gender': gender,
       'phoneNum': phoneNum,
       'tagId': tagId,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt':  createdAt!.toIso8601String() ??'test',
+      'updatedA': updatedAt!.toIso8601String() ??'test',
     };
   }
 }

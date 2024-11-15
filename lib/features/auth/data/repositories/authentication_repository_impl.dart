@@ -18,8 +18,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
        return Left(WrongPasswordOrEmailFailure(message: e.errorMessage));
     }on OfflineException catch (e) {
       return Left(NoInternetConnectionFailure(message: e.errorMessage));
-    }on NoInternetConnectionFailure catch (e) {
-      return Left(TimeOutFailure(message: e.message));
+    }on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
     }
     on Exception catch (e) {
       return Left(ServerFailure(message: 'An error occurred: $e'));

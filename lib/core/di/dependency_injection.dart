@@ -9,6 +9,7 @@ import '../core.dart';
 final getIt = GetIt.instance;
 
 Future<void> init() async {
+
   // Cubits
   _initCubits();
 
@@ -85,5 +86,9 @@ void _initExternalDependencies() {
   getIt.registerLazySingleton(() => ApiController());
   getIt.registerFactory<InternetConnectionChecker>(
     () => InternetConnectionChecker(),
+  );
+
+  getIt.registerFactory<StorageService>(
+        () => StorageService(),
   );
 }

@@ -42,18 +42,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:academe_x/lib.dart';
 
-
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const _HomeScreenContent();
-  }
-}
-
-class _HomeScreenContent extends StatelessWidget {
-  const _HomeScreenContent();
+  const HomeScreen();
 
   @override
   Widget build(BuildContext context) {

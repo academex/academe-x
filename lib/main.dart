@@ -6,10 +6,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'lib.dart';
+import 'dart:io';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await init();
+  await StorageService.init();
+
   runApp(const Main());
 }
 
@@ -18,6 +21,7 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MultiBlocProvider(
         providers: _getProviders(),
         child: AppLifecycleManager(
@@ -52,6 +56,7 @@ class Main extends StatelessWidget {
       BlocProvider<ConnectivityCubit>(
         create: (context) => getIt<ConnectivityCubit>(),
       ),
+
       BlocProvider<PostImageCubit>(
         create: (context) => getIt<PostImageCubit>(),
       ),
@@ -94,6 +99,7 @@ class Main extends StatelessWidget {
 
   Widget _buildAppWithExtra(BuildContext context, Widget? child) {
     SizeConfig.init(context);
+
     return BlocListener<ConnectivityCubit, ConnectivityStatus>(
       listener: (context, status) {
         if (status == ConnectivityStatus.disconnected) {
@@ -103,6 +109,7 @@ class Main extends StatelessWidget {
         if (status == ConnectivityStatus.connected) {
           _showNoConnectionBanner(context, ConnectivityStatus.connected);
         }
+
       },
       child: child!,
     );
@@ -214,8 +221,6 @@ class _AppLifecycleManagerState extends State<AppLifecycleManager>
   void _onDetached(BuildContext context) {
     AppLogger.wtf('_onDetached');
 
-    // Clean up resources when app is being terminated
-    // context.read<AppStateCubit>().cleanup();
   }
 
   @override

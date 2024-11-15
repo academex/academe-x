@@ -81,6 +81,7 @@
 
 
 
+import 'package:academe_x/features/auth/presentation/widgets/selectionGrid.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -123,44 +124,18 @@ class CustomTextField extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
           12.ph(),
-         isGender? _buildGenderField() :_buildTextFormField(),
+          _buildTextFormField()
+         // isGender? _buildGenderField() :_buildTextFormField(),
         ],
       ),
     );
   }
 
-  Widget _buildGenderField (){
-    return  Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-
-          width: 154,
-          height: 56,
-          decoration: ShapeDecoration(
-            color: const Color(0xFFF9F9F9),
-            shape: RoundedRectangleBorder(
-              side: const BorderSide(width: 1, color: Color(0xFF3253FF)),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-        28.pw(),
-        Container(
-          width: 154,
-          height: 56,
-          decoration: ShapeDecoration(
-            color:const Color(0xFFF9F9F9),
-            shape: RoundedRectangleBorder(
-              side:const BorderSide(width: 1, color: Color(0xFF3253FF)),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-
-      ],
-    );
-  }
+  // Widget _buildGenderField (){
+  //   return SelectionGrid(title: 'الجنس', options: ['ذكر','انثى'], selectedOption: 'ذكر', onSelected: (p0) {
+  //
+  //   },);
+  // }
 
   TextFormField _buildTextFormField() {
     return TextFormField(

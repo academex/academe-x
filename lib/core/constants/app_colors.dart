@@ -30,4 +30,24 @@ abstract class AppColors {
   static const Color buttonPrimary = primary;
   static const Color buttonSecondary = Color(0xFF64748B);
   static const Color buttonDisabled = Color(0xFFBDBDBD);
+
+
+  static const darkestBlue = Color(0xFF0A0B17);
+  static const navyBlue = Color(0xFF0D1021);
+  static const midnightBlue = Color(0xFF12162B);
+  static const deepBlue = Color(0xFF161B35);
+  static const deepIndigoBlue = Color(0xFF1A1F3F);
+
+  // Gradient
+  static const backgroundGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      darkestBlue,
+      navyBlue,
+      midnightBlue,
+      deepBlue,
+      deepIndigoBlue,
+    ],
+  );
 }
