@@ -1,3 +1,4 @@
+import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/file_container.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:academe_x/lib.dart';
 
@@ -17,7 +18,7 @@ class PostMedia extends StatelessWidget {
       case PostType.textWithPoll:
         return _buildPoll(post.pollOptions!);
       case PostType.textWithFile:
-        return _buildFileAttachment();
+        return FileContainer(fileName: post.fileName, fileUrl: post.fileUrl);
       default:
         return const SizedBox.shrink();
     }
@@ -154,45 +155,6 @@ class PostMedia extends StatelessWidget {
           ),
         );
       }).toList(),
-    );
-  }
-
-  Widget _buildFileAttachment() {
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.file_present, size: 24),
-          8.pw(),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppText(
-                  text: post.fileName ?? 'File',
-                  fontSize: 14,
-                ),
-                4.ph(),
-                AppText(
-                  text: 'Tap to download',
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.download),
-            onPressed: () {
-              //   => _downloadFile(post.fileUrl!)
-            },
-          ),
-        ],
-      ),
     );
   }
 
