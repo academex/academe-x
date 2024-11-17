@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
-        android:label="academe_x"
+        android:label="AcademeX"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

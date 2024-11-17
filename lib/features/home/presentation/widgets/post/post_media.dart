@@ -158,7 +158,6 @@ class PostMedia extends StatelessWidget {
     );
   }
 
-// ... Include the _buildImageGrid, _buildPoll, and _buildFileAttachment methods
 }
 
 class _PollOption extends StatelessWidget {

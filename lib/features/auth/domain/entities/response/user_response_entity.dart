@@ -9,6 +9,7 @@ class UserResponseEntity {
   String? bio;
   int currentYear;
   String gender;
+
   String phoneNum;
   int tagId;
   DateTime? createdAt;

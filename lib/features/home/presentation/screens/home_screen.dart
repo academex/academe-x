@@ -47,6 +47,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    // StorageService.getUser()!.user.
     return BlocBuilder<BottomNavCubit, int>(
       builder: (context, currentIndex) {
         return Scaffold(
