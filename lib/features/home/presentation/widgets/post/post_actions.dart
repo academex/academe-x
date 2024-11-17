@@ -279,13 +279,117 @@ class PostActions extends StatelessWidget {
   }
 }
 
-class _ReactionPickerWidget extends StatelessWidget {
-  final Function(ReactionType) onReactionSelected;
-  late OverlayEntry overlayEntry;
+// class _ReactionPickerWidget extends StatelessWidget {
+//   final Function(ReactionType) onReactionSelected;
+//   double height=40;
+//   double width=40;
+//
+//   late OverlayEntry overlayEntry;
+//
+//   _ReactionPickerWidget({
+//     required this.onReactionSelected,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(8),
+//       decoration: BoxDecoration(
+//           color: Colors.white,
+//           border: Border.all(color: Colors.black, strokeAlign: 0.74),
+//           borderRadius: const BorderRadius.only(
+//             bottomLeft: Radius.circular(9.12),
+//             topLeft: Radius.circular(9.12),
+//             topRight: Radius.circular(9.12),
+//           )),
+//       child: Row(
+//         mainAxisSize: MainAxisSize.min,
+//         children: ReactionType.values.map((type) {
+//           return InkWell(
+//             onTap: () {
+//               onReactionSelected(type);
+//
+//               overlayEntry.remove();
+//             },
+//             onTapDown: (details) {
+//               height=60;
+//               width=60;
+//
+//               final RenderBox button = context.findRenderObject() as RenderBox;
+//               final Offset position = button.localToGlobal(Offset.zero);
+//               overlayEntry = OverlayEntry(
+//                 builder: (context) {
+//                   return Positioned(
+//                     top: position.dy - 30, // Position above the icon
+//                     left: details.globalPosition.dx - 20,
+//                     child: Material(
+//                       color: Colors.transparent,
+//                       child: Container(
+//                         width: 38.90,
+//                         height: 22.54,
+//                         padding: const EdgeInsets.symmetric(
+//                             horizontal: 5.45, vertical: 3.27),
+//                         decoration: ShapeDecoration(
+//                           color: type.reactionColor,
+//                           shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(7.78),
+//                           ),
+//                         ),
+//                         child: Center(
+//                           child: AppText(
+//                             text: type.reactionText,
+//                             color: type.reactionText != 'تصفيق'
+//                                 ? Colors.white
+//                                 : Colors.black,
+//                             fontSize: 8.72,
+//                             fontWeight: FontWeight.w500,
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   );
+//                 },
+//               );
+//
+//               // Show the overlay
+//               Overlay.of(context).insert(overlayEntry);
+//             },
+//             child: Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 4),
+//               child: Image.asset(
+//                 width: width,
+//                 height: height,
+//                 type.assetPath,
+//               ),
+//             ),
+//             onTapCancel: () {
+//               overlayEntry.remove();
+//             },
+//           );
+//         }).toList(),
+//       ),
+//     );
+//   }
+// }
 
-  _ReactionPickerWidget({
-    required this.onReactionSelected,
-  });
+class _ReactionPickerWidget extends StatefulWidget {
+   _ReactionPickerWidget({super.key,required this.onReactionSelected});
+
+
+  final Function(ReactionType) onReactionSelected;
+  double height=40;
+  double width=40;
+
+  late OverlayEntry overlayEntry;
+  @override
+  State<_ReactionPickerWidget> createState() => _ReactionPickerWidgetState();
+}
+
+class _ReactionPickerWidgetState extends State<_ReactionPickerWidget> {
+  Map<ReactionType, double> reactionIconSizes = {
+    for (final type in ReactionType.values) type: 35.0,
+  };
+
 
   @override
   Widget build(BuildContext context) {
@@ -304,13 +408,16 @@ class _ReactionPickerWidget extends StatelessWidget {
         children: ReactionType.values.map((type) {
           return InkWell(
             onTap: () {
-              onReactionSelected(type);
-              overlayEntry.remove();
+              widget.onReactionSelected(type);
+              widget.overlayEntry.remove();
             },
             onTapDown: (details) {
+              setState(() {
+                reactionIconSizes[type] = 55.0;
+              });
               final RenderBox button = context.findRenderObject() as RenderBox;
               final Offset position = button.localToGlobal(Offset.zero);
-              overlayEntry = OverlayEntry(
+              widget.overlayEntry = OverlayEntry(
                 builder: (context) {
                   return Positioned(
                     top: position.dy - 30, // Position above the icon
@@ -343,20 +450,23 @@ class _ReactionPickerWidget extends StatelessWidget {
                   );
                 },
               );
+              AppLogger.success(type.index.toString());
 
               // Show the overlay
-              Overlay.of(context).insert(overlayEntry);
+              Overlay.of(context).insert(widget.overlayEntry);
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Image.asset(
-                width: 40,
-                height: 40,
-                type.assetPath,
-              ),
-            ),
+            child:Padding(padding: EdgeInsets.symmetric(horizontal: 4),child: Image.asset(
+              fit: BoxFit.contain,
+              width:reactionIconSizes[type]!,
+              height:reactionIconSizes[type]!,
+              type.assetPath,
+            ),),
             onTapCancel: () {
-              overlayEntry.remove();
+              widget.overlayEntry.remove();
+              setState(() {
+                reactionIconSizes.updateAll((_, size) => 35.0);
+
+              });
             },
           );
         }).toList(),
@@ -364,6 +474,8 @@ class _ReactionPickerWidget extends StatelessWidget {
     );
   }
 }
+
+
 
 class SelectedReactionButton extends StatelessWidget {
   final ReactionType reaction;
@@ -392,7 +504,7 @@ class SelectedReactionButton extends StatelessWidget {
             4.pw(),
             Text(
               _getReactionText(reaction),
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,

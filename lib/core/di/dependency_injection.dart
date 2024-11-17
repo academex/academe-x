@@ -59,6 +59,10 @@ void _initCubits() {
   getIt.registerFactory<PostImageCubit>(
     () => PostImageCubit(),
   );
+
+  getIt.registerFactory<CollegeCubit>(
+    () => CollegeCubit(),
+  );
 }
 
 void _initUseCases() {

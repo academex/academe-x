@@ -37,7 +37,7 @@ class ApiController {
         // Logger().i( );
         if (timeToLive > 0) {
           cacheData[url.toString()] = data;
-          cacheData['mainCategory'] = data['data']['mainCategories'];
+          // cacheData['mainCategory'] = data['data']['mainCategories'];
           cacheData['${url}cacheTime'] = timeToLive;
           cacheData['${url}saveTime'] = DateTime.now();
         }
