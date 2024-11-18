@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:academe_x/lib.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShowGridViewItem extends StatelessWidget {
 
   final List<String> data;
   final Function(int)onTap;
-   int? selectedIndex;
+   int? selectedIndex=100;
    // int? selectedSemesterIndex;
 
    ShowGridViewItem({super.key,required this.data,required this.onTap, this.selectedIndex});
@@ -17,6 +16,7 @@ class ShowGridViewItem extends StatelessWidget {
     return GridView.builder(
       padding: EdgeInsets.zero,
       itemCount:data.length,
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: data.length ==2 ?2:4,
         mainAxisSpacing: 8,

@@ -14,4 +14,11 @@ Map<String, dynamic> toJson() {
   data['password'] = password;
   return data;
 }
+
+  factory LoginRequsetModel.fromEntity(LoginRequsetEntity entity) {
+    return LoginRequsetModel(
+      username: entity.username,
+      password: entity.password,
+    );
+  }
 }

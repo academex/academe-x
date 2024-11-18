@@ -19,7 +19,8 @@ class SignupCubit extends Cubit<SignupState> {
 
   void showEduInfo(bool showEducationInfo){
     emit(state.copyWith(
-      showEducationInfo: !showEducationInfo
+      showEducationInfo: !showEducationInfo,
+
     ));
   }
 

@@ -31,9 +31,21 @@ class CollegeState extends Equatable {
     this.collegesData = const {
       'كلية الطب': CollegeData(
         icon: '👨‍⚕️',
-        majors: ['طب عام', 'طب أسنان'],
+        majors: ['طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان','طب عام', 'طب أسنان'],
       ),
       'كلية الهندسة': CollegeData(
+        icon: '👷',
+        majors: ['صناعي', 'مدني', 'معماري', 'كهربائي','معماري', 'كهربائي'],
+      ),
+      'كلية الهندasdسة': CollegeData(
+        icon: '👷',
+        majors: ['صناعي', 'مدني', 'معماري', 'كهربائي'],
+      ),
+      'كلية الهنdsdدسة': CollegeData(
+        icon: '👷',
+        majors: ['صناعي', 'مدني', 'معماري', 'كهربائي'],
+      ),
+      'كلية الssهندسة': CollegeData(
         icon: '👷',
         majors: ['صناعي', 'مدني', 'معماري', 'كهربائي'],
       ),
@@ -53,7 +65,7 @@ class CollegeState extends Equatable {
       isExpanded: isExpanded ?? this.isExpanded,
       selectedCollege: selectedCollege ?? this.selectedCollege,
       collegeAndMajor: collegeAndMajor ?? this.collegeAndMajor,
-      selectedMajorIndex: selectedMajorIndex ?? this.selectedMajorIndex,
+      selectedMajorIndex: selectedMajorIndex ?? 100,
       selectedSemesterIndex: selectedSemesterIndex ?? this.selectedSemesterIndex,
       selectionType: selectionType ?? this.selectionType,
       collegesData: collegesData ?? this.collegesData,

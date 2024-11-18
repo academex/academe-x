@@ -18,16 +18,16 @@ class ProgressBarWithCloseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-         SizedBox(
+        Expanded(child:  SizedBox(
           width: 24,
           height: 24,
           child: GestureDetector(
             onTap: onTap,
             child: Icon( isBack ? Icons.arrow_back_ios: Icons.close, size: 24   , color: Colors.black),
           ),
-        ),
-        19.pw(),
-        Stack(
+        ),),
+        // 19.pw(),
+        Expanded(flex: 10,child: Stack(
           children: [
             Container(
               width: 350,
@@ -52,7 +52,7 @@ class ProgressBarWithCloseButton extends StatelessWidget {
               ),
             )
           ],
-        )
+        ),)
 
       ],
     );

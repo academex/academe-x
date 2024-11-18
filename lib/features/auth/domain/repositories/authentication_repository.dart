@@ -4,5 +4,5 @@ import 'package:dartz/dartz.dart';
 
 abstract class AuthenticationRepository {
   AuthenticationRepository();
-  Future<Either<Failure, AuthTokenModel>>login(LoginRequsetModel user);
+  Future<Either<Failure, AuthTokenEntity>>login(LoginRequsetEntity user);
 }
