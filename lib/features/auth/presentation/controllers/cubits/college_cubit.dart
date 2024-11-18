@@ -25,4 +25,15 @@ class CollegeCubit extends Cubit<CollegeState> {
       // isSelectedMajor: true
     ));
   }
+
+  void appendMajorToBaseVar(String major){
+    emit(state.copyWith(
+      collegeAndMajor:"${state.selectedCollege!} ($major) "
+    ));
+  }
+
+
+  // String getSelectedCollege(String college){
+  //   return
+  // }
 }
