@@ -18,6 +18,8 @@ class CollegeState extends Equatable {
   final int? selectedSemesterIndex;
   final Map<String, CollegeData> collegesData;
   final SelectionType? selectionType;
+  final String? collegeAndMajor;
+
 
   const CollegeState({
     this.isExpanded = false,
@@ -25,6 +27,7 @@ class CollegeState extends Equatable {
     this.selectedMajorIndex,
     this.selectedSemesterIndex,
     this.selectionType,
+    this.collegeAndMajor,
     this.collegesData = const {
       'كلية الطب': CollegeData(
         icon: '👨‍⚕️',
@@ -40,6 +43,7 @@ class CollegeState extends Equatable {
   CollegeState copyWith({
     bool? isExpanded,
     String? selectedCollege,
+    String? collegeAndMajor,
     int? selectedMajorIndex,
     int? selectedSemesterIndex,
     SelectionType? selectionType,
@@ -48,6 +52,7 @@ class CollegeState extends Equatable {
     return CollegeState(
       isExpanded: isExpanded ?? this.isExpanded,
       selectedCollege: selectedCollege ?? this.selectedCollege,
+      collegeAndMajor: collegeAndMajor ?? this.collegeAndMajor,
       selectedMajorIndex: selectedMajorIndex ?? this.selectedMajorIndex,
       selectedSemesterIndex: selectedSemesterIndex ?? this.selectedSemesterIndex,
       selectionType: selectionType ?? this.selectionType,
@@ -56,5 +61,5 @@ class CollegeState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [isExpanded, selectedCollege,selectedSemesterIndex, selectedMajorIndex, collegesData,selectionType];
+  List<Object?> get props => [isExpanded, selectedCollege,collegeAndMajor,selectedSemesterIndex, selectedMajorIndex, collegesData,selectionType];
 }

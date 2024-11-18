@@ -59,10 +59,14 @@ void _initCubits() {
   getIt.registerFactory<PostImageCubit>(
     () => PostImageCubit(),
   );
+  getIt.registerFactory<SignupCubit>(
+        () => SignupCubit(),
+  );
 
   getIt.registerFactory<CollegeCubit>(
     () => CollegeCubit(),
   );
+
 }
 
 void _initUseCases() {

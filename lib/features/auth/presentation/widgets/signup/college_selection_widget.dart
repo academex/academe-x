@@ -54,7 +54,7 @@ Widget _buildHeader(CollegeState state) {
       children: [
         Expanded(
           child: AppText(
-            text: state.selectedCollege ?? 'قم باختيار الكلية',
+            text: state.collegeAndMajor ?? 'قم باختيار الكلية',
             color: state.selectedCollege != null
                 ? const Color(0xFF565A62)
                 : const Color(0xFF949494),
