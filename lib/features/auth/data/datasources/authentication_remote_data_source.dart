@@ -14,7 +14,7 @@ class AuthenticationRemoteDataSource {
 
   AuthenticationRemoteDataSource({required this.apiController,required this.internetConnectionChecker});
 
-  Future<AuthTokenEntity> login(LoginRequsetModel user) async {
+  Future<AuthTokenModel> login(LoginRequsetModel user) async {
 
     if(await internetConnectionChecker.hasConnection){
       try {

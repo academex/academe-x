@@ -19,8 +19,9 @@ class AuthenticationCubit extends Cubit<AuthenticationStates> {
 
      },
      (r) async{
+       // r.
 
-     await  StorageService.saveUser(r.toModle());
+     await  StorageService.saveUser(r.fromEntity());
        // r.user
        emit(AuthenticationSuccessState());
      },

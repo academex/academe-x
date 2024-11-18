@@ -37,7 +37,10 @@ class CollegeItem extends StatelessWidget {
               if (isSelected) ...[
                 10.75.ph(),
                 _buildMajorsList(context),
+
+
               ],
+
             ],
           ),
         ),
@@ -67,11 +70,11 @@ class CollegeItem extends StatelessWidget {
 
   Widget _buildMajorsList(BuildContext context,) {
     return SizedBox(
-      height: 60,
+      height: (((collegeData.majors.length)/4).ceil() *(55)),
       child: ShowGridViewItem(data: collegeData.majors,onTap:  (index) {
 
         context.read<CollegeCubit>().appendMajorToBaseVar(collegeData.majors[index]);
-        context.read<CollegeCubit>().selectIndex(index,SelectionType.major);
+        context.read<CollegeCubit>().selectIndex(index: index,selectionType: SelectionType.major);
       },selectedIndex: context.read<CollegeCubit>().state.selectedMajorIndex,),
 
     );

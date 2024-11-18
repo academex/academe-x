@@ -11,7 +11,10 @@ class AuthTokenEntity {
   });
 
 
-  AuthTokenModel toModle() {
-    return AuthTokenModel(user: user, accessToken: accessToken);
+
+
+
+  AuthTokenModel fromEntity() {
+    return AuthTokenModel(user: user, accessToken:accessToken);
   }
 }

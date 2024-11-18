@@ -243,7 +243,7 @@ class SignUpScreen extends StatelessWidget {
                           onTap: (index) {
                             context
                                 .read<CollegeCubit>()
-                                .selectIndex(index, SelectionType.semester);
+                                .selectIndex(index: index,selectionType: SelectionType.semester);
                           },
                           selectedIndex: state.selectedSemesterIndex,
                         ))

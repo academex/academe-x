@@ -16,7 +16,7 @@ class CollegeCubit extends Cubit<CollegeState> {
 
   }
 
-  void selectIndex(int index,SelectionType selectionType) {
+  void selectIndex({int? index,required SelectionType selectionType}) {
     selectionType == SelectionType.major? emit(state.copyWith(
       selectedMajorIndex: index,
       // isSelectedMajor: true
