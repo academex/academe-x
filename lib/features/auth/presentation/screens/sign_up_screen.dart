@@ -4,14 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/signup/college_selection_widget.dart';
 
-class SignUpScreen extends StatefulWidget {
+// class SignUpScreen extends StatefulWidget {
+//   const SignUpScreen({super.key});
+//
+//   @override
+//   State<SignUpScreen> createState() => _SignUpScreenState();
+// }
+
+class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
-
-  @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
   void _handlePersonalInfoSubmit(SignupState state, BuildContext context) {
     // if (true) {
     //   if (state.passwordController!.text != state.confirmPasswordController!.text) {
@@ -26,21 +27,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
     context.read<SignupCubit>().showEduInfo(state.showEducationInfo!);
   }
 
-  void _handleEducationInfoSubmit() {
+  void _handleEducationInfoSubmit(BuildContext context) {
     Navigator.pushNamed(context, '/account_creation');
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignupCubit()..initData(),
+      create: (context) => getIt<SignupCubit>()..initData(),
       child: BlocBuilder<SignupCubit, SignupState>(
         builder: (ctx, state) => PopScope(
             canPop: state.showEducationInfo! ? false : true,
             onPopInvokedWithResult: (didPop, result) {
               if(state.showEducationInfo!){
-                AppLogger.success('in Pop');
-                AppLogger.success(state.showEducationInfo!.toString());
                 ctx
                     .read<SignupCubit>()
                     .showEduInfo(state.showEducationInfo!);
@@ -50,7 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               body: SafeArea(
                 child: SingleChildScrollView(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   child: Form(
                     key: state.formKey,
                     child: Column(
@@ -85,12 +84,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             text: context.localizations.collegeLabel,
                           ),
                           16.ph(),
-                        ] else ...[
+                        ]
+                        else ...[
                           _buildEducationInfoFields(),
                           20.ph(),
                           _buildSubmitButton(
                             context,
-                            onPressed: _handleEducationInfoSubmit,
+                            onPressed: () => _handleEducationInfoSubmit(context),
                             text: context.localizations.createAccountButton,
                           ),
                         ],
@@ -120,6 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 label: 'الاسم الأول',
                 hintText: 'أدخل اسمك الأول',
                 controller: state.nameController!,
+
               ),
             ),
             17.pw(), // Horizontal spacing between fields
@@ -128,7 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 label: 'الاسم الأخير',
                 hintText: 'أدخل اسمك الأخير',
                 controller:
-                    TextEditingController(), // Create new controller for last name
+                TextEditingController(), // Create new controller for last name
               ),
             ),
           ],
@@ -167,13 +168,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ))
           ],
         ),
-        // SelectionDropDown(
-        //   title: 'الجنس',
-        //   options: ['ذكر', 'انثى'],
-        //   selectedOption: 'ذكر',
-        //   onSelected: (value) => setState(() => selectedGender = value),
-        //   isTerm: true,
-        // ),
         16.ph(),
         _buildPasswordFields(state),
       ],
@@ -194,7 +188,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               isPasswordVisible: isPasswordVisible,
               togglePasswordVisibility: () {
                 (isPasswordVisible as ValueNotifier<bool>).value =
-                    !isPasswordVisible;
+                !isPasswordVisible;
               },
             );
           },
@@ -210,7 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               isPasswordVisible: isConfirmPasswordVisible,
               togglePasswordVisibility: () {
                 (isConfirmPasswordVisible as ValueNotifier<bool>).value =
-                    !isConfirmPasswordVisible;
+                !isConfirmPasswordVisible;
               },
             );
           },
@@ -262,10 +256,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _buildSubmitButton(
-    BuildContext context, {
-    required VoidCallback onPressed,
-    required String text,
-  }) {
+      BuildContext context, {
+        required VoidCallback onPressed,
+        required String text,
+      }) {
     return CustomButton(
       onPressed: onPressed,
       widget: AppText(
@@ -302,3 +296,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
+
+//
+// class _SignUpScreenState extends State<SignUpScreen> {
+//
+// }

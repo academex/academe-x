@@ -6,11 +6,11 @@ class SignupState extends Equatable {
   bool? showEducationInfo;
 
   // Controllers for text fields
-  TextEditingController? nameController = TextEditingController();
-  TextEditingController? emailController = TextEditingController();
-  TextEditingController? passwordController = TextEditingController();
-  TextEditingController? phoneController = TextEditingController();
-  TextEditingController? confirmPasswordController = TextEditingController();
+  TextEditingController? nameController ;
+  TextEditingController? emailController ;
+  TextEditingController? passwordController;
+  TextEditingController? phoneController;
+  TextEditingController? confirmPasswordController ;
 
   SignupState(
       {this.showEducationInfo,

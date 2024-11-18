@@ -10,7 +10,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   AuthenticationRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure,AuthTokenModel>> login(LoginRequsetModel user) async {
+  Future<Either<Failure,AuthTokenEntity>> login(LoginRequsetModel user) async {
     try {
       final result = await remoteDataSource.login(user);
       return Right(result);

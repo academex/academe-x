@@ -141,6 +141,7 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           obscureText: isPassword && !isPasswordVisible,
           validator: validator,
+      textInputAction: TextInputAction.next,
           keyboardType: isPhone ? TextInputType.phone : TextInputType.text,
           textDirection: isPhone ? TextDirection.ltr : TextDirection.rtl,
           inputFormatters: isPhone ? [

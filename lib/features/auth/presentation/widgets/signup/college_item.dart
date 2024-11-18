@@ -69,7 +69,7 @@ class CollegeItem extends StatelessWidget {
     return SizedBox(
       height: 60,
       child: ShowGridViewItem(data: collegeData.majors,onTap:  (index) {
-        AppLogger.success(collegeData.majors[index]);
+
         context.read<CollegeCubit>().appendMajorToBaseVar(collegeData.majors[index]);
         context.read<CollegeCubit>().selectIndex(index,SelectionType.major);
       },selectedIndex: context.read<CollegeCubit>().state.selectedMajorIndex,),
