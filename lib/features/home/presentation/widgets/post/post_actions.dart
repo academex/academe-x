@@ -184,7 +184,9 @@ class PostActions extends StatelessWidget {
     return ActionButton(
       iconPath: 'assets/icons/share.png',
       count: post.sharesCount.toString(),
-      onTap: () => showShareOptions(context),
+      onTap: (){
+
+      },
     );
   }
 

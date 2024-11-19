@@ -11,4 +11,9 @@ class AuthenticationUseCase {
 
   }
 
+  Future<Either<Failure, AuthTokenEntity>> signup(SignupRequestEntity userRegesteration) async {
+    return await authenticationRepository.signup(userRegesteration);
+
+  }
+
 }

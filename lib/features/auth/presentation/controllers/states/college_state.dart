@@ -2,7 +2,8 @@ import 'package:equatable/equatable.dart';
 
 enum SelectionType {
   semester,
-  major
+  major,
+  // gender
 }
 
 class CollegeData {
@@ -16,6 +17,7 @@ class CollegeState extends Equatable {
   final String? selectedCollege;
   final int? selectedMajorIndex;
   final int? selectedSemesterIndex;
+  // final int? selectedGenderIndex;
   final Map<String, CollegeData> collegesData;
   final SelectionType? selectionType;
   final String? collegeAndMajor;
@@ -26,6 +28,7 @@ class CollegeState extends Equatable {
     this.selectedCollege,
     this.selectedMajorIndex,
     this.selectedSemesterIndex,
+    // this.selectedGenderIndex,
     this.selectionType,
     this.collegeAndMajor,
     this.collegesData = const {
@@ -58,6 +61,7 @@ class CollegeState extends Equatable {
     String? collegeAndMajor,
     int? selectedMajorIndex,
     int? selectedSemesterIndex,
+    // int? selectedGenderIndex,
     SelectionType? selectionType,
     Map<String, CollegeData>? collegesData,
   }) {
@@ -67,6 +71,7 @@ class CollegeState extends Equatable {
       collegeAndMajor: collegeAndMajor ?? this.collegeAndMajor,
       selectedMajorIndex: selectedMajorIndex ?? 100,
       selectedSemesterIndex: selectedSemesterIndex ?? this.selectedSemesterIndex,
+      // selectedGenderIndex: selectedGenderIndex ?? this.selectedGenderIndex,
       selectionType: selectionType ?? this.selectionType,
       collegesData: collegesData ?? this.collegesData,
     );

@@ -20,7 +20,7 @@ class CollegeCubit extends Cubit<CollegeState> {
     selectionType == SelectionType.major? emit(state.copyWith(
       selectedMajorIndex: index,
       // isSelectedMajor: true
-    )) :emit(state.copyWith(
+    )) :  emit(state.copyWith(
       selectedSemesterIndex: index,
       // isSelectedMajor: true
     ));
