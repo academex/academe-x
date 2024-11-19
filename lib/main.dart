@@ -33,9 +33,6 @@ class Main extends StatelessWidget {
 
   List<BlocProvider> _getProviders() {
     return [
-      BlocProvider<AuthenticationCubit>(
-        create: (context) => getIt<AuthenticationCubit>(),
-      ),
       BlocProvider<AuthActionCubit>(
         create: (context) => getIt<AuthActionCubit>(),
       ),
@@ -79,7 +76,7 @@ class Main extends StatelessWidget {
         theme: _buildTheme(),
         initialRoute: '/login',
         onGenerateRoute: AppRouter.generateRoute,
-        builder: _buildAppWithExtra,
+        builder: (context, child) => _buildAppWithExtra(context, child),
       ),
     );
   }

@@ -10,20 +10,46 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   AuthenticationRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure,AuthTokenModel>> login(LoginRequsetEntity user) async {
+  Future<Either<Failure, AuthTokenModel>> login(LoginRequsetEntity user) async {
     try {
-      final result = await remoteDataSource.login(LoginRequsetModel.fromEntity(user));
+      final result = await remoteDataSource.login(
+        LoginRequsetModel.fromEntity(user),
+      );
       return Right(result);
-    }on WrongDataException catch (e) {
-       return Left(WrongPasswordOrEmailFailure(message: e.errorMessage));
-    }on OfflineException catch (e) {
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    } on OfflineException catch (e) {
       return Left(NoInternetConnectionFailure(message: e.errorMessage));
-    }on TimeOutExeption catch (e) {
+    } on TimeOutExeption catch (e) {
       return Left(TimeOutFailure(message: e.errorMessage));
+    } catch (e) {
+      return Left(ServerFailure(message: 'An error occurred: $e'));
     }
-    on Exception catch (e) {
+  }
+
+  @override
+  Future<Either<Failure, AuthTokenModel>> signup(SignupRequestEntity user) async {
+    try {
+      final result = await remoteDataSource.signup(
+        SignupRequestModel.fromEntity(user),
+      );
+      return Right(result);
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    } on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } catch (e) {
       return Left(ServerFailure(message: 'An error occurred: $e'));
     }
   }
 
 }
+
+
+

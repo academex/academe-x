@@ -25,53 +25,98 @@ class CollegeSelectionWidget extends StatelessWidget {
 }
 
 
-Widget _buildDropdown(BuildContext context,) {
+// Widget _buildDropdown(BuildContext context,) {
+//   return GestureDetector(
+//     onTap: () {
+//       context.read<CollegeCubit>().toggleExpanded();
+//     },
+//
+//     child: Container(
+//         decoration: _dropdownDecoration,
+//         width: double.infinity,
+//         child: Column(
+//           children: [
+//             _buildHeader(context.read<CollegeCubit>().state),
+//             if (context.read<CollegeCubit>().state.isExpanded) ...[
+//               _buildDivider(),
+//               _buildCollegesList(context.read<CollegeCubit>().state,context),
+//             ],
+//           ],
+//         )
+//     ),
+//   );
+// }
+Widget _buildDropdown(BuildContext context) {
   return GestureDetector(
-    onTap: () {
-      context.read<CollegeCubit>().toggleExpanded();
-    },
-
+    onTap: () => context.read<SignupCubit>().toggleExpanded(),
     child: Container(
-        decoration: _dropdownDecoration,
-        width: double.infinity,
-        child: Column(
-          children: [
-            _buildHeader(context.read<CollegeCubit>().state),
-            if (context.read<CollegeCubit>().state.isExpanded) ...[
-              _buildDivider(),
-              _buildCollegesList(context.read<CollegeCubit>().state,context),
-            ],
+      decoration: _dropdownDecoration,
+      width: double.infinity,
+      child: Column(
+        children: [
+          _buildHeader(context.read<SignupCubit>().state),
+          if (context.read<SignupCubit>().state.isExpanded) ...[
+            _buildDivider(),
+            _buildCollegesList(context.read<SignupCubit>().state, context),
           ],
-        )
+        ],
+      ),
     ),
   );
 }
-
-Widget _buildHeader(CollegeState state) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 12),
-    child: Row(
-      children: [
-        Expanded(
-          child: AppText(
-            text: state.collegeAndMajor ?? 'قم باختيار الكلية',
-            color: state.selectedCollege != null
-                ? const Color(0xFF565A62)
-                : const Color(0xFF949494),
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
+// Widget _buildHeader(CollegeState state) {
+//   return Padding(
+//     padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 12),
+//     child: Row(
+//       children: [
+//         Expanded(
+//           child: AppText(
+//             text: state.collegeAndMajor ?? 'قم باختيار الكلية',
+//             color: state.selectedCollege != null
+//                 ? const Color(0xFF565A62)
+//                 : const Color(0xFF949494),
+//             fontSize: 14,
+//             fontWeight: FontWeight.w400,
+//           ),
+//         ),
+//         Icon(
+//           state.isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+//           color: Colors.grey.shade600,
+//         ),
+//       ],
+//     ),
+//   );
+// }
+Widget _buildHeader(AuthState state) {
+  return Builder(
+    builder: (context) => Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: context.hp(2),
+        horizontal: context.wp(3),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: AppText(
+              text: state.collegeAndMajor ?? 'قم باختيار الكلية',
+              color: state.selectedCollege != null
+                  ? const Color(0xFF565A62)
+                  : const Color(0xFF949494),
+              fontSize: context.isTablet ? 16 : 14,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-        ),
-        Icon(
-          state.isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-          color: Colors.grey.shade600,
-        ),
-      ],
+          Icon(
+            state.isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            color: Colors.grey.shade600,
+            size: context.isTablet ? 28 : 24,
+          ),
+        ],
+      ),
     ),
   );
 }
-
-Widget _buildCollegesList(CollegeState state,BuildContext context) {
+Widget _buildCollegesList(AuthState state,BuildContext context) {
   return Column(
     children: state.collegesData.entries.map((entry) {
       final isSelected = state.selectedCollege == entry.key;
@@ -81,9 +126,9 @@ Widget _buildCollegesList(CollegeState state,BuildContext context) {
         isSelected: isSelected,
         selectedMajor: state.selectedCollege,
         onCollegeSelected: (college) {
-          AppLogger.success('mesdasssage');
-          context.read<CollegeCubit>().selectCollege(college);
-          // context.read<CollegeCubit>().selectIndex(null,SelectionType.semester);
+          // AppLogger.success('mesdasssage');
+          context.read<SignupCubit>().selectCollege(college);
+          // context.read<SignupCubit>().selectIndex(selectionType: selectionType);
         },
         // onMajorSelected: (index) {
         //   // context.read<CollegeCubit>().selectMajorIndex(index);

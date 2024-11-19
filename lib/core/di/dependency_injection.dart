@@ -27,8 +27,9 @@ Future<void> init() async {
 }
 
 void _initCubits() {
-  getIt.registerFactory<AuthenticationCubit>(
-    () => AuthenticationCubit(authUseCase: getIt()),
+
+  getIt.registerFactory<LoginCubit>(
+    () => LoginCubit(authUseCase: getIt()),
   );
 
   getIt.registerFactory<AuthActionCubit>(
@@ -60,7 +61,7 @@ void _initCubits() {
     () => PostImageCubit(),
   );
   getIt.registerFactory<SignupCubit>(
-        () => SignupCubit(),
+        () => SignupCubit(authUseCase: getIt(),),
   );
 
   getIt.registerFactory<CollegeCubit>(
