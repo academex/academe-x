@@ -30,6 +30,12 @@ void _initCubits() {
 
   getIt.registerFactory<LoginCubit>(
     () => LoginCubit(authUseCase: getIt()),
+  getIt.registerFactory<CreatePostCubit>(
+    () => CreatePostCubit(InitialState(), createPostUseCase: getIt()),
+  );
+
+  getIt.registerFactory<AuthenticationCubit>(
+    () => AuthenticationCubit(authUseCase: getIt()),
   );
 
   getIt.registerFactory<AuthActionCubit>(
@@ -74,17 +80,30 @@ void _initUseCases() {
   getIt.registerLazySingleton<AuthenticationUseCase>(
     () => AuthenticationUseCase(authenticationRepository: getIt()),
   );
+  getIt.registerLazySingleton<CreatePostUseCase>(
+    () => CreatePostUseCase(createPostRepository: getIt()),
+  );
 }
 
 void _initRepositories() {
   getIt.registerLazySingleton<AuthenticationRepository>(
     () => AuthenticationRepositoryImpl(remoteDataSource: getIt()),
   );
+  getIt.registerLazySingleton<CreatePostRepository>(
+    () => CreatePostRepositoryImp(createPostRemoteDataSourse: getIt()),
+  );
 }
 
 void _initDataSources() {
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
     () => AuthenticationRemoteDataSource(
+      apiController: getIt(),
+      internetConnectionChecker: getIt(),
+    ),
+  );
+
+  getIt.registerLazySingleton<CreatePostRemoteDataSource>(
+    () => CreatePostRemoteDataSource(
       apiController: getIt(),
       internetConnectionChecker: getIt(),
     ),
@@ -98,6 +117,6 @@ void _initExternalDependencies() {
   );
 
   getIt.registerFactory<StorageService>(
-        () => StorageService(),
+    () => StorageService(),
   );
 }

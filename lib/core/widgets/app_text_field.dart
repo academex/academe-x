@@ -32,6 +32,7 @@ class AppTextField extends StatelessWidget {
     this.fillColor,
     this.onFieldSubmitted,
     this.textInputAction,
+    this.validator,
   });
   final String hintText;
   final TextInputType keyboardType;
@@ -52,6 +53,7 @@ class AppTextField extends StatelessWidget {
   EdgeInsetsGeometry? contentPadding;
   TextStyle? hintStyle;
   ValueChanged<String>? onFieldSubmitted;
+  FormFieldValidator<String>? validator;
   TextInputAction? textInputAction;
 
   // final bool isOTP;
@@ -66,6 +68,7 @@ class AppTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+          validator: validator,
           enabled: enabled,
           autofocus: autofocus,
           maxLines: maxLine,
@@ -88,21 +91,28 @@ class AppTextField extends StatelessWidget {
             suffix: suffix,
             prefixText: prefixText,
             hintText: hintText,
-            hintStyle: hintStyle?? TextStyle(color: Colors.black26),
+            hintStyle: hintStyle ?? TextStyle(color: Colors.black26),
             hintMaxLines: 1,
             suffixIcon: suffixIcon,
-            enabledBorder:withBoarder? OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: enableBoarderColor?? Color(0xffD9D9D9)),
-            ):null,
+            enabledBorder: withBoarder
+                ? OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: enableBoarderColor ?? Color(0xffD9D9D9)),
+                  )
+                : null,
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: withBoarder?Color(0xff3253FF):Colors.transparent),
+              borderSide: BorderSide(
+                  color: withBoarder ? Color(0xff3253FF) : Colors.transparent),
             ),
-            disabledBorder:withBoarder? OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: enableBoarderColor?? Color(0xffD9D9D9)),
-            ):null,
+            disabledBorder: withBoarder
+                ? OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                        color: enableBoarderColor ?? Color(0xffD9D9D9)),
+                  )
+                : null,
             // enabledBorder: buildOutlineInputBorder(color:focusedBorderColor),
             // focusedBorder: buildOutlineInputBorder(color:focusedBorderColor),
           ),

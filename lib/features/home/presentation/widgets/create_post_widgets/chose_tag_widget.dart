@@ -1,7 +1,6 @@
 import 'package:academe_x/core/data/mock_posts.dart';
-import 'package:academe_x/core/extensions/sized_box_extension.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
-import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
+import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,7 +29,7 @@ class _SelectableButtonGridState extends State<SelectableButtonGrid> {
         shape: const StadiumBorder(),
         thickness: 6,
         scrollbarOrientation: ScrollbarOrientation.left,
-        padding: EdgeInsets.only(left: 0),
+        padding: const EdgeInsets.only(left: 0),
         //controller: PrimaryScrollController.of(context),
         ////controller: _wScrollController,
         minThumbLength: 100,
@@ -59,7 +58,7 @@ class _SelectableButtonGridState extends State<SelectableButtonGrid> {
                       border: Border.all(color: Colors.grey[300]!),
                     ),
                     child: Text(
-                      MockData.tags[index],
+                      MockData.tags[index].tagName,
                       style: TextStyle(
                         color: _isSelected[index] ? Colors.white : Colors.black,
                       ),

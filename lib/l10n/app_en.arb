@@ -54,5 +54,19 @@
   "accountCreationSuccessSubTitle": "Your account has been set up successfully.",
   "redirectIn": "Redirecting to the main page in ",
   "seconds": "seconds",
-  "goToMainPage": "Go to Main Page"
+  "goToMainPage": "Go to Main Page",
+
+  "skip": "Skip",
+  "onboarding_title_1": "Academy Chat: AI-powered assistant for students",
+  "onboarding_title_2": "A dedicated community for each college for questions and help",
+  "onboarding_title_3": "Comprehensive library of educational materials, summaries, and videos",
+  "onboarding_desc_1": "The Academy Chat answers all academic questions, summarizes files, and generates educational questions.",
+  "onboarding_desc_2": "A space for college students to discuss, ask questions, conduct polls, and share the latest university news.",
+  "onboarding_desc_3": "An electronic library containing study materials and summaries for all subjects.",
+  "previous": "Previous",
+  "next": "Next",
+  "start_now": "Start Now",
+  "terms_and_conditions": "Using the app implies agreement to our",
+  "privacy_policy": "Terms of Service and Privacy Policy",
+  "privacy_policy_suffix": "."
 }
