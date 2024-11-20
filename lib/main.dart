@@ -1,3 +1,4 @@
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,9 @@ class Main extends StatelessWidget {
       BlocProvider<PostImageCubit>(
         create: (context) => getIt<PostImageCubit>(),
       ),
+      BlocProvider<CreatePostCubit>(
+        create: (context) => getIt<CreatePostCubit>(),
+      ),
     ];
   }
 
@@ -68,7 +72,7 @@ class Main extends StatelessWidget {
       splitScreenMode: true,
       child: MaterialApp(
         title: 'AcademeX',
-        locale: const Locale('ar'),
+        locale: const Locale('en'),
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: const [
           AppLocalizations.delegate,

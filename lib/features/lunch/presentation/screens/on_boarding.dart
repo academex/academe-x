@@ -2,6 +2,7 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import l10n
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -16,16 +17,17 @@ class _OnBoardingState extends State<OnBoarding> {
 
   @override
   Widget build(BuildContext context) {
+    // Data localized through AppLocalizations
     Map<String, List<String>> data = {
       'titles': [
-        'شات أكاديمي مساعد للطالب يعمل بالذكاء الصناعي',
-        'مجتمع خاص بكل كلية للاستفسارات والمساعدة',
-        'مكتبة شاملة لجميع المواد التعليمية من ملخصات وفيديوهات',
+        context.localizations.onboarding_title_1,
+        context.localizations.onboarding_title_2,
+        context.localizations.onboarding_title_3,
       ],
       'descriptions': [
-        'الشات الأكاديمي يجيب على جميع استفسارات الطلاب الاكاديمية ويُلخص الملفات، وينشئ أسئلة تعليمية.',
-        'مساحة لطلاب الكلية للنقاش وطرح الاستفسارات والاستطلاعات وتبادل اخر الاخبار التي تخص الجامعة',
-        'مكتبة إلكترونية تحتوي على مواد دراسية وملخصات لجميع المواد الدراسية',
+        context.localizations.onboarding_desc_1,
+        context.localizations.onboarding_desc_2,
+        context.localizations.onboarding_desc_3,
       ],
       'images': [
         'assets/images/on_boarding_1.png',
@@ -49,9 +51,9 @@ class _OnBoardingState extends State<OnBoarding> {
                     Navigator.pushReplacementNamed(context, '/login');
                   },
                   child: Text(
-                    'تخطي',
+                    context.localizations.skip,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       color: const Color(0xffCBAEAE),
                     ),
                   ),
@@ -71,7 +73,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 },
                 itemBuilder: (context, indexPage) {
                   return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    padding: EdgeInsets.symmetric(horizontal: 25.w),
                     child: Column(
                       children: [
                         // Onboarding image with rounded corners
@@ -159,7 +161,7 @@ class _OnBoardingState extends State<OnBoarding> {
                           ),
                         ),
                         child: Text(
-                          'السابق',
+                          context.localizations.previous,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.black,
@@ -188,7 +190,9 @@ class _OnBoardingState extends State<OnBoarding> {
                         ),
                       ),
                       child: Text(
-                        _indexPage < 2 ? 'التالي' : 'ابدأ الآن',
+                        _indexPage < 2
+                            ? context.localizations.next
+                            : context.localizations.start_now,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white,
@@ -206,17 +210,17 @@ class _OnBoardingState extends State<OnBoarding> {
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  text: 'استخدامك للتطبيق يعتبر موافقة ضمنية على ',
+                  text: context.localizations.terms_and_conditions + " ",
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black, // اللون الافتراضي للنص
+                    color: Color.fromARGB(0, 0, 0, 22),
                   ),
                   children: [
                     TextSpan(
-                      text: 'شروط الخدمة وسياسة الخصوصية',
+                      text: context.localizations.privacy_policy,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         decoration: TextDecoration.underline,
                       ),
                       recognizer: TapGestureRecognizer()
@@ -224,8 +228,8 @@ class _OnBoardingState extends State<OnBoarding> {
                           Navigator.pushNamed(context, '/privacy_policy_page');
                         },
                     ),
-                    const TextSpan(
-                      text: ' الخاصة بنا.',
+                    TextSpan(
+                      text: context.localizations.privacy_policy_suffix,
                     ),
                   ],
                 ),

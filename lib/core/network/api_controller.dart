@@ -46,7 +46,6 @@ class ApiController {
         Logger().i(data);
         return data;
       }
-
     } catch (e) {
       Logger().e(e);
       rethrow;
@@ -59,14 +58,13 @@ class ApiController {
     return now.difference(timeExpires).inSeconds > 0;
   }
 
-
   Future<Map<String, dynamic>> post(
-      Uri url, {
-        Map<String, String>? headers,
-        Object? body,
-        Encoding? encoding,
-        required int timeAlive,
-      }) async {
+    Uri url, {
+    Map<String, String>? headers,
+    Object? body,
+    Encoding? encoding,
+    int? timeAlive,
+  }) async {
     try {
       Logger().w(url);
       Logger().w(body.toString());
@@ -74,20 +72,21 @@ class ApiController {
       http.Response response = await http
           .post(
         url,
-        // headers: headers ?? {'Content-Type': 'application/json'},
+        headers: headers ?? {'Content-Type': 'application/json'},
         body: body,
-      ).timeout(Duration(seconds: timeAlive), onTimeout: () {
+      )
+          .timeout(Duration(seconds: timeAlive ?? 120), onTimeout: () {
         // This block executes if the request times out
-        throw TimeOutExeption(errorMessage: 'Request took longer than $timeAlive seconds.');
+        throw TimeOutExeption(
+            errorMessage: 'Request took longer than $timeAlive seconds.');
       });
 
-      Logger().w(response.body);
-      if(response.statusCode == 401){
+      Logger().w('response: ${response.body}');
+      if (response.statusCode == 401) {
         throw WrongDataException(errorMessage: 'wrong username or password');
       }
       Map<String, dynamic> data = jsonDecode(response.body);
       return data;
-
     } on WrongDataException catch (e) {
       // Handle timeout exception
       throw WrongDataException(errorMessage: e.errorMessage);
@@ -99,7 +98,6 @@ class ApiController {
       throw Exception('Request failed: $e');
     }
   }
-
 
   Future<Map> patch(
     Uri url, {

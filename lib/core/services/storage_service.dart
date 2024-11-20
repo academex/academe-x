@@ -10,13 +10,13 @@ class StorageService {
     _box = await Hive.openBox('academeX_box');
   }
 
-  static Future<void> saveUser(AuthTokenModel user) async {
+  static Future<void> saveUser(AuthTokenEntity user) async {
     if (kDebugMode) {
-      print(user.toJson());
+      // print(user.toJson());
     }
 
     // AppLogger.i( as String);
-    await _box.put('user', user.toJson());
+    await _box.put('user', user.toModle().toJson());
   }
 
   static AuthTokenModel? getUser() {

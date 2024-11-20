@@ -1,3 +1,5 @@
+import 'package:academe_x/features/home/domain/entities/create_post/tag.dart';
+
 import '../core.dart';
 import '../../features/home/home.dart';
 
@@ -149,20 +151,8 @@ class MockData {
     {'حوسبة متنقلة': 'assets/images/image_test1.png'},
     {'وسائط متعددة': 'assets/images/image_test1.png'},
   ];
-  static final List<String> tags = [
-    "#تطوير برمجيات",
-    "#علم حاسوب",
-    "#حوسبة متنقلة ونطبيقات الأجهزة الذكية",
-    "#نظم تكنولوجيا المعلومات",
-    "#وسائط متعددة وتطوير الويب",
-    "#وسائط متعددة وتطوير الويب",
-    "#وسائط متعددة وتطوير الويب",
-    "#وسائط متعددة وتطوير الويب",
-    "#وسائط متعددة وتطوير الويب",
-    "#وسائط متعددة وتطوير الويب",
-    "#وسائط متعددة وتطوير الويب",
-    "#وسائط متعددة وتطوير الويب",
-    "#وسائط متعددة وتطوير الويب",
+  static final List<Tag> tags = [
+    Tag(id: 1, tagName: "#تطوير برمجيات"),
   ];
   static final List<Comment> comments = [
     Comment(

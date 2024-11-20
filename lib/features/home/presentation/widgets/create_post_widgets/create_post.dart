@@ -1,6 +1,6 @@
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
-import 'package:academe_x/features/home/presentation/controllers/states/create_post/tag_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/chose_tag_widget.dart';
 import 'package:academe_x/lib.dart';
 
@@ -13,7 +13,8 @@ import 'file_container.dart';
 
 class CreatePost {
   final TextEditingController _postController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+  late final PostReqEntity post = PostReqEntity();
+  final _formKey = GlobalKey<FormState>();
 
   void showCreatePostModal(BuildContext parContext) {
     showModalBottomSheet(
@@ -44,7 +45,7 @@ class CreatePost {
                         width: 56,
                         height: 5,
                         decoration: BoxDecoration(
-                          color: Color(0xffE7E8EA),
+                          color: const Color(0xffE7E8EA),
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
@@ -100,32 +101,44 @@ class CreatePost {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
+                    16.ph(),
                     AppTextField(
+                      key: _formKey,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
                       withBoarder: false,
                       maxLine: null,
                       controller: _postController,
                       hintText: 'قم بكتابة ما تريد الاستفسار عنه ..',
                       keyboardType: TextInputType.multiline,
-                      focusNode: _focusNode,
                       suffix: GestureDetector(
                         onTap: () {
                           _postController.clear();
                         },
-                        child: Icon(Icons.clear, color: Colors.grey),
+                        child: const Icon(Icons.clear, color: Colors.grey),
                       ),
                     ),
                     // need if statment as : if(textController.isNotEmpty) do the loop
                     // for loop for the hashes
                     BlocBuilder<TagCubit, TagState>(
                       builder: (context, state) {
+                        post.copyWith(
+                            tagsId: state.selectedTags
+                                .map(
+                                  (e) => e.id,
+                                )
+                                .toList());
                         return Wrap(
                           spacing: 3, // Space between buttons horizontally
                           runSpacing: 0,
                           children:
                               List.generate(state.selectedTags.length, (index) {
                             return AppText(
-                              text: state.selectedTags[index],
+                              text: state.selectedTags[index].tagName,
                               fontSize: 14.sp,
                               color: const Color(0xff0077FF),
                             );
@@ -133,13 +146,7 @@ class CreatePost {
                         );
                       },
                     ),
-                    // for (int i = 0; i < 1; i++)
-                    //   AppText(
-                    //     text: '   ' + '#تطوير برمجيات',
-                    //     fontSize: 14,
-                    //     color: const Color(0xff0077FF),
-                    //   ),
-                    SizedBox(height: 16),
+                    16.ph(),
                     BlocBuilder<PickerCubit, CreatePostIconsState>(
                       builder: (context, state) {
                         if (state is ImagePickerLoaded) {
@@ -155,8 +162,8 @@ class CreatePost {
                                     height: 178,
                                     width: state.images.length == 1 ? 300 : 178,
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(12)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(12)),
                                       image: DecorationImage(
                                         image: FileImage(state.images[index]),
                                         fit: BoxFit.cover,
@@ -196,7 +203,6 @@ class CreatePost {
                           icon: const ImageIcon(
                               AssetImage('assets/icons/menu.png')),
                           onPressed: () {
-                            AppLogger.success('hello');
                             context.read<PickerCubit>().createMulteChoice();
                           },
                         ),
@@ -233,26 +239,60 @@ class CreatePost {
                     ),
                     // const Spacer(),
                     10.ph(),
-                    GestureDetector(
-                      onTap: () {
-                        // Handle post submission
+                    BlocConsumer<CreatePostCubit, CreatePostState>(
+                      listener: (createPostContext, state) {
+                        AppLogger.d(state.toString());
+                        if (state is FailureState) {
+                          context.showSnackBar(
+                              message: state.errorMessage, error: true);
+                        } else if (state is SuccessState) {
+                          Navigator.pop(context);
+                          context.showSnackBar(
+                              message: 'تم نشر منشورك بنجاح', error: false);
+                        }
                       },
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: const Color(
-                              0xFF007AFF), // Blue color for the post button
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: AppText(
-                            text: 'نشر',
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                      builder: (context, state) {
+                        return GestureDetector(
+                          onTap: state is! SendingState
+                              ? () {
+                                  if (_formKey.currentState!.validate()) {
+                                    post.copyWith(
+                                        content: _postController.text);
+                                    context
+                                        .read<CreatePostCubit>()
+                                        .sendPost(post: post);
+                                  }
+                                }
+                              : null,
+                          child: Container(
+                            height: 50.h,
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                  0xFF007AFF), // Blue color for the post button
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: state is! SendingState
+                                  ? AppText(
+                                      text: 'نشر',
+                                      fontSize: 16.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    )
+                                  : SizedBox(
+                                      // height: 50,
+                                      // width: 50,
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: Colors.grey[200],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.blue),
+                                      ),
+                                    ),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                     20.ph(),
                   ],
