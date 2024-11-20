@@ -39,7 +39,7 @@ class UserResponseModel extends UserResponseEntity {
       phoneNum: json['phoneNum'],
       tagId: json['tagId'],
       createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedA']),
+      updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 

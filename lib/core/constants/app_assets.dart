@@ -36,6 +36,7 @@ abstract class AppAssets {
 
   // Images
   static const String logo = 'assets/images/Frame.png';
+  static const String appLogo = 'assets/icons/logo.png';
   static const String backgroundHome = 'assets/images/background_home_screen.png';
   static const String backgroundLibrary = 'assets/images/background_library.png';
   static const String imageTest = 'assets/images/image_test1.png';

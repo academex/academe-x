@@ -7,7 +7,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'lib.dart';
-import 'dart:io';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,9 +34,6 @@ class Main extends StatelessWidget {
 
   List<BlocProvider> _getProviders() {
     return [
-      BlocProvider<AuthenticationCubit>(
-        create: (context) => getIt<AuthenticationCubit>(),
-      ),
       BlocProvider<AuthActionCubit>(
         create: (context) => getIt<AuthActionCubit>(),
       ),
@@ -82,9 +78,9 @@ class Main extends StatelessWidget {
         ],
         debugShowCheckedModeBanner: false,
         theme: _buildTheme(),
-        initialRoute: '/home_screen',
+        initialRoute: '/login',
         onGenerateRoute: AppRouter.generateRoute,
-        builder: _buildAppWithExtra,
+        builder: (context, child) => _buildAppWithExtra(context, child),
       ),
     );
   }

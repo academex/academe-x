@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
+import '../utils/logger.dart';
+
 class ApiController {
   static ApiController instance = ApiController._internal();
 
@@ -37,7 +39,7 @@ class ApiController {
         // Logger().i( );
         if (timeToLive > 0) {
           cacheData[url.toString()] = data;
-          cacheData['mainCategory'] = data['data']['mainCategories'];
+          // cacheData['mainCategory'] = data['data']['mainCategories'];
           cacheData['${url}cacheTime'] = timeToLive;
           cacheData['${url}saveTime'] = DateTime.now();
         }
@@ -46,6 +48,7 @@ class ApiController {
         Logger().i(data);
         return data;
       }
+
     } catch (e) {
       Logger().e(e);
       rethrow;
@@ -58,46 +61,52 @@ class ApiController {
     return now.difference(timeExpires).inSeconds > 0;
   }
 
-  Future<Map<String, dynamic>> post(
-    Uri url, {
-    Map<String, String>? headers,
-    Object? body,
-    Encoding? encoding,
-    int? timeAlive,
-  }) async {
+
+  Future<http.Response> post(
+      Uri url, {
+        Map<String, String>? headers,
+        Object? body,
+        Encoding? encoding,
+        required int timeAlive,
+      }) async {
     try {
-      Logger().w(url);
-      Logger().w(body.toString());
-      // Use Future.timeout to set a time limit for the request
+
+      AppLogger.success(body.toString());
+
+      final Map<String, String> finalHeaders = {
+        'Content-Type': 'application/json',
+        ...?headers,
+      };
+
+      final dynamic finalBody = body is String ? body : jsonEncode(body);
+      AppLogger.success('Request URL: $url');
+      AppLogger.success('Request Headers: $finalHeaders');
+      AppLogger.success('Final request body: $finalBody');
+
       http.Response response = await http
           .post(
         url,
-        headers: headers ?? {'Content-Type': 'application/json'},
-        body: body,
-      )
-          .timeout(Duration(seconds: timeAlive ?? 120), onTimeout: () {
+        headers: finalHeaders,
+        body: jsonEncode(body),
+      ).timeout(Duration(seconds: timeAlive), onTimeout: () {
         // This block executes if the request times out
-        throw TimeOutExeption(
-            errorMessage: 'Request took longer than $timeAlive seconds.');
+        throw TimeOutExeption(errorMessage: 'Request took longer than $timeAlive seconds.');
       });
 
-      Logger().w('response: ${response.body}');
-      if (response.statusCode == 401) {
-        throw WrongDataException(errorMessage: 'wrong username or password');
-      }
-      Map<String, dynamic> data = jsonDecode(response.body);
-      return data;
-    } on WrongDataException catch (e) {
+
+      AppLogger.success(response.body.toString());
+      AppLogger.success(response.statusCode.toString());
+      return response;
+
+    }  on TimeOutExeption catch (e) {
       // Handle timeout exception
-      throw WrongDataException(errorMessage: e.errorMessage);
-    } on TimeOutExeption catch (e) {
-      // Handle timeout exception
-      throw TimeOutExeption(errorMessage: e.errorMessage);
+      rethrow;
     } catch (e) {
       // Handle other errors (such as parsing or HTTP errors)
       throw Exception('Request failed: $e');
     }
   }
+
 
   Future<Map> patch(
     Uri url, {

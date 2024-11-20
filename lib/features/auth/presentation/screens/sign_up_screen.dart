@@ -1,476 +1,418 @@
-// import 'package:academe_x/lib.dart';
-// import 'package:flutter/material.dart';
-//
-//
-// class SignUpScreen extends StatelessWidget {
-//   SignUpScreen({super.key});
-//
-//   final _formKey = GlobalKey<FormState>();
-//
-//   // Controllers for text fields
-//   final TextEditingController nameController = TextEditingController();
-//   final TextEditingController emailController = TextEditingController();
-//   final TextEditingController passwordController = TextEditingController();
-//   final TextEditingController phoneController = TextEditingController();
-//   final TextEditingController confirmPasswordController = TextEditingController();
-//   final TextEditingController genderController = TextEditingController();
-//
-//   void _handleSubmit(BuildContext context) {
-//     if (_formKey.currentState?.validate() ?? false) {
-//       if (passwordController.text != confirmPasswordController.text) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           const SnackBar(content: Text('كلمات المرور غير متطابقة')),
-//         );
-//         return;
-//       }
-//       //
-//       // var _formData = const StudentFormData();
-//       //
-//       // Navigator.push(context, MaterialPageRoute(builder: (context) {
-//       //   return StudentRegistrationForm(formData: _formData, onFormChanged: (value) {
-//       //
-//       //   }, onSubmit: () {
-//       //     // Handle form submission
-//       //   }, onSignInTap: () {
-//       //     // Handle form submission
-//       //   },);
-//       // },));
-//       Navigator.pushNamed(context, '/edu_info');
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: SafeArea(
-//         child: SingleChildScrollView(
-//           padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 16),
-//           child: Form(
-//             key: _formKey,
-//             child: Column(
-//               children: [
-//                 ProgressBarWithCloseButton(
-//                   onClose: () => Navigator.pop(context),
-//                   progressValue: 0.5,
-//                 ),
-//                 26.ph(),
-//                 const CreateAccountHeader(step: 1,),
-//                 30.ph(),
-//
-//                 _buildFormFields(context),
-//                 16.ph(),
-//                 _buildSubmitButton(context),
-//                 16.ph(),
-//                 _buildLoginOption(context),
-//                 20.ph(),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   // Widget _buildHeader() {
-//   //   return const Align(
-//   //     alignment: Alignment.centerRight,
-//   //     child: Text.rich(
-//   //       TextSpan(
-//   //         children: [
-//   //           TextSpan(
-//   //             text: 'انشاء حسابي',
-//   //             style: TextStyle(
-//   //               color: Color(0xFF001A27),
-//   //               fontSize: 20,
-//   //               fontWeight: FontWeight.w600,
-//   //             ),
-//   //           ),
-//   //           TextSpan(text: ' '),
-//   //           TextSpan(
-//   //             text: '(1- البيانات الشخصية)',
-//   //             style: TextStyle(
-//   //               color: Color(0xFF001A27),
-//   //               fontSize: 12,
-//   //               fontWeight: FontWeight.w400,
-//   //             ),
-//   //           ),
-//   //         ],
-//   //       ),
-//   //     ),
-//   //   );
-//   // }
-//
-//   Widget _buildFormFields(BuildContext context) {
-//     return Column(
-//       children: [
-//         CustomTextField(
-//           label: context.localizations.nameLabel,
-//           hintText: context.localizations.nameHint,
-//           controller: nameController,
-//           // validator: (value) {
-//           //   if (value == null || value.trim().isEmpty) {
-//           //     return 'الرجاء إدخال الاسم';
-//           //   }
-//           //   return null;
-//           // },
-//         ),
-//         CustomTextField(
-//           label: context.localizations.emailLabel,
-//           hintText: context.localizations.emailHint,
-//           controller: emailController,
-//           // validator: (value) {
-//           //   if (value == null || value.trim().isEmpty) {
-//           //     return 'الرجاء إدخال البريد الإلكتروني';
-//           //   }
-//           //   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-//           //     return 'البريد الإلكتروني غير صالح';
-//           //   }
-//           //   return null;
-//           // },
-//         ),
-//         CustomTextField(
-//           label: 'رقم الهاتف',
-//           hintText: '000000000',
-//           controller: phoneController,
-//           isPhone: true,
-//           // validator: (value) {
-//           //   if (value == null || value.isEmpty) {
-//           //     return 'الرجاء إدخال رقم الهاتف';
-//           //   }
-//           //   if (value.length != 9) {
-//           //     return 'رقم الهاتف يجب أن يتكون من 9 أرقام';
-//           //   }
-//           //   if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-//           //     return 'رقم الهاتف يجب أن يحتوي على أرقام فقط';
-//           //   }
-//           //   return null;
-//           // },
-//         ),
-//     SelectionGrid(title: 'الجنس', options: ['ذكر','انثى'], selectedOption: 'ذكر', onSelected: (p0) {},isTerm: true,),
-//        16.ph(),
-//         ValueListenableBuilder<bool>(
-//           valueListenable: ValueNotifier<bool>(false),
-//           builder: (context, isPasswordVisible, _) {
-//             return CustomTextField(
-//               label: context.localizations.passwordLabel,
-//               hintText: context.localizations.passwordHint,
-//               controller: passwordController,
-//               isPassword: true,
-//               isPasswordVisible: isPasswordVisible,
-//               togglePasswordVisibility: () {
-//                 (isPasswordVisible as ValueNotifier<bool>).value = !isPasswordVisible;
-//               },
-//               // validator: (value) {
-//               //   if (value == null || value.isEmpty) {
-//               //     return 'الرجاء إدخال كلمة المرور';
-//               //   }
-//               //   if (value.length < 8) {
-//               //     return 'كلمة المرور يجب أن تكون 8 أحرف على الأقل';
-//               //   }
-//               //   return null;
-//               // },
-//             );
-//           },
-//         ),
-//         ValueListenableBuilder<bool>(
-//           valueListenable: ValueNotifier<bool>(false),
-//           builder: (context, isConfirmPasswordVisible, _) {
-//             return CustomTextField(
-//               label: context.localizations.confirmPasswordLabel,
-//               hintText: context.localizations.passwordHint,
-//               controller: confirmPasswordController,
-//               isPassword: true,
-//               isPasswordVisible: isConfirmPasswordVisible,
-//               togglePasswordVisibility: () {
-//                 (isConfirmPasswordVisible as ValueNotifier<bool>).value = !isConfirmPasswordVisible;
-//               },
-//               // validator: (value) {
-//               //   if (value == null || value.isEmpty) {
-//               //     return 'الرجاء تأكيد كلمة المرور';
-//               //   }
-//               //   if (value != passwordController.text) {
-//               //     return 'كلمات المرور غير متطابقة';
-//               //   }
-//               //   return null;
-//               // },
-//             );
-//           },
-//         ),
-//
-//       ],
-//     );
-//   }
-//
-//   Widget _buildSubmitButton(BuildContext context) {
-//     return CustomButton(
-//       onPressed: () => _handleSubmit(context),
-//       widget: AppText(
-//         text: context.localizations.collegeLabel,
-//         fontSize: 14,
-//         color: Colors.white,
-//         fontWeight: FontWeight.bold,
-//       ),
-//       backgraoundColor: Theme.of(context).primaryColor,
-//     );
-//   }
-//
-//   Widget _buildLoginOption(BuildContext context) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         AppText(
-//           text: context.localizations.already_have_account,
-//           fontSize: 14,
-//           color: Colors.black,
-//         ),
-//         GestureDetector(
-//           onTap: () => Navigator.pushNamed(context, '/login'),
-//           child: Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: AppText(
-//               text: context.localizations.loginTitle,
-//               fontSize: 14,
-//               color: Theme.of(context).primaryColor,
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
-
-  @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  final _formKey = GlobalKey<FormState>();
-  bool showEducationInfo = false;
-
-  // Controllers for text fields
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-
-  // Education info selections
-  String? selectedCollege = "";
-  String? selectedYear;
-  String? selectedTerm;
-  String selectedGender = 'ذكر';
-
-  final List<String> colleges = [
-    "هندسة", "طب", "تجارة", "IT", "محاسبة", "صحافة",
-    "إنجليش", "شريعة", "صحافة", "إنجليش", "شريعة", "إنجليش",
-  ];
-
-  final List<String> studyYears = ["أولى", "ثانية", "ثالثة", "رابعة"];
-  final List<String> terms = ["الأول", "الثاني"];
-
-  void _handlePersonalInfoSubmit() {
-    if (_formKey.currentState?.validate() ?? false) {
-      if (passwordController.text != confirmPasswordController.text) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('كلمات المرور غير متطابقة')),
-        );
-        return;
-      }
-      setState(() {
-        showEducationInfo = true;
-      });
-    }
-  }
-
-  void _handleEducationInfoSubmit() {
-    Navigator.pushNamed(context, '/account_creation');
-  }
+class SignUpScreen extends StatelessWidget {
+   SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                ProgressBarWithCloseButton(
-                  onTap:() {
-                    AppLogger.success('message');
-                    if(showEducationInfo){
-                      setState(() {
-                        showEducationInfo=false;
-                      });
-                    }else{
-                      Navigator.pop(context);
-                    }
+    SizeConfig.init(context);
 
-                  },
-                  isBack: showEducationInfo? true:false,
-                  progressValue: showEducationInfo ? 1.0 : 0.5,
-                ),
-                26.ph(),
-                CreateAccountHeader(
-                  step: showEducationInfo ? 2 : 1,
-                ),
-                30.ph(),
-                if (!showEducationInfo) ...[
-                  _buildPersonalInfoFields(context),
-                  16.ph(),
-                  _buildSubmitButton(
-                    context,
-                    onPressed: _handlePersonalInfoSubmit,
-                    text: context.localizations.collegeLabel,
-                  ),
-                  16.ph(),
-
-                ]
-                else ...[
-                  _buildEducationInfoFields(),
-                  20.ph(),
-                  _buildSubmitButton(
-                    context,
-                    onPressed: _handleEducationInfoSubmit,
-                    text: context.localizations.createAccountButton,
-                  ),
-                ],
-                  if (showEducationInfo) ...[
-                   50.ph(),
-                  _buildLoginOption(context)
-                ] else ...[
-    _buildLoginOption(context)
-    ],
-
-
-              ],
+    return BlocProvider(
+      create: (context) => getIt<SignupCubit>(),
+      child: BlocBuilder<SignupCubit, AuthState>(
+        builder: (ctx, state) => PopScope(
+          canPop: state.showEducationInfo! ? false : true,
+          onPopInvokedWithResult: (didPop, result) {
+            if (state.showEducationInfo!) {
+              ctx.read<SignupCubit>().showEduInfo(state.showEducationInfo!);
+            }
+          },
+          child: Scaffold(
+            body: ResponsiveLayout(
+              mobile: _buildMobileLayout(context, state, ctx),
+              tablet: _buildTabletLayout(context, state, ctx),
             ),
+            // SafeArea(
+            //   child: SingleChildScrollView(
+            //     padding: EdgeInsets.symmetric(
+            //       horizontal: context.wp(6), // 6% of screen width
+            //       vertical: context.hp(2),   // 2% of screen height
+            //     ),
+            //     child: Form(
+            //       key: state.formKey,
+            //       child: ResponsiveLayout(
+            //         mobile: _buildMobileLayout(context, state, ctx),
+            //         tablet: _buildTabletLayout(context, state, ctx),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildPersonalInfoFields(BuildContext context) {
+  Widget _buildMobileLayout(
+      BuildContext context, AuthState state, BuildContext ctx) {
+    return SafeArea(
+        child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(
+        horizontal: context.wp(6), // 6% of screen width
+        vertical: context.hp(2), // 2% of screen height
+      ),
+      child: Form(
+          key: state.formKey,
+          child: Column(
+            children: [
+              ProgressBarWithCloseButton(
+                onTap: () {
+                  if (state.showEducationInfo!) {
+                    ctx
+                        .read<SignupCubit>()
+                        .showEduInfo(state.showEducationInfo!);
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                isBack: state.showEducationInfo!,
+                progressValue: state.showEducationInfo! ? 1.0 : 0.5,
+              ),
+              SizedBox(height: context.hp(3)),
+              CreateAccountHeader(step: state.showEducationInfo! ? 2 : 1),
+              SizedBox(height: context.hp(4)),
+              if (!state.showEducationInfo!) ...[
+                _buildPersonalInfoFields(ctx, state),
+                SizedBox(height: context.hp(2)),
+                _buildSubmitButton(
+                  context,
+                  onPressed: () => _handlePersonalInfoSubmit(state, ctx),
+                  text: context.localizations.collegeLabel,
+                ),
+              ]
+              else ...[
+                _buildEducationInfoFields(ctx,state),
+                SizedBox(height: context.hp(2.5)),
+                _buildSubmitButton(
+                  context,
+                  onPressed: () => _handleEducationInfoSubmit(ctx,state),
+                  text: context.localizations.createAccountButton,
+                ),
+              ],
+              SizedBox(height: context.hp(state.showEducationInfo! ? 6 : 2)),
+              _buildLoginOption(context),
+            ],
+          )),
+    ));
+  }
+
+  Widget _buildTabletLayout(
+      BuildContext context, AuthState state, BuildContext ctx) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 4,
+          child: SafeArea(child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: context.wp(4),    vertical: context.hp(4), ),
+            child: Column(
+              children: [
+                ProgressBarWithCloseButton(
+                  onTap: () {
+                    if (state.showEducationInfo!) {
+                      ctx
+                          .read<SignupCubit>()
+                          .showEduInfo(state.showEducationInfo!);
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                  isBack: state.showEducationInfo!,
+                  progressValue: state.showEducationInfo! ? 1.0 : 0.5,
+                ),
+                SizedBox(height: context.hp(4)),
+                CreateAccountHeader(step: state.showEducationInfo! ? 2 : 1),
+              ],
+            ),
+          ),)
+        ),
+        Expanded(
+          flex: 6,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: context.wp(4),    vertical: context.hp(4), ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  if (!state.showEducationInfo!) ...[
+                    _buildPersonalInfoFields(context, state),
+                    SizedBox(height: context.hp(3)),
+                    _buildSubmitButton(
+                      context,
+                      onPressed: () => _handlePersonalInfoSubmit(state, ctx),
+                      text: context.localizations.collegeLabel,
+                    ),
+                  ] else ...[
+                    _buildEducationInfoFields(context,state),
+                    SizedBox(height: context.hp(3)),
+                    _buildSubmitButton(
+                      context,
+                      onPressed: () => _handleEducationInfoSubmit(ctx,state),
+                      text: context.localizations.createAccountButton,
+                    ),
+                  ],
+                  SizedBox(height: context.hp(4)),
+                  _buildLoginOption(context),
+                ],
+              ),
+            )
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPersonalInfoFields(BuildContext context, AuthState state) {
     return Column(
       children: [
+        Row(
+          children: [
+            Expanded(
+              child: CustomTextField(
+                label: 'الاسم الأول',
+                hintText: 'أدخل اسمك الأول',
+                controller: state.firstNameController!,
+                validator: FormValidators.validateName,
+              ),
+            ),
+            17.pw(), // Horizontal spacing between fields
+            Expanded(
+              child: CustomTextField(
+                label: 'الاسم الأخير',
+                hintText: 'أدخل اسمك الأخير',
+                controller:state.lastNameController!,
+                validator: FormValidators.validateName,
+              ),
+            ),
+          ],
+        ),
         CustomTextField(
-          label: context.localizations.nameLabel,
-          hintText: context.localizations.nameHint,
-          controller: nameController,
+          label: 'اسم المستخدم',
+          hintText: 'اكتب اسم المستخدم',
+          controller: state.userNameController!,
+          validator: FormValidators.validateUsername,
         ),
         CustomTextField(
           label: context.localizations.emailLabel,
           hintText: context.localizations.emailHint,
-          controller: emailController,
+          controller: state.emailController!,
+          validator: FormValidators.validateEmail,
         ),
         CustomTextField(
           label: 'رقم الهاتف',
           hintText: '000000000',
-          controller: phoneController,
+          controller: state.phoneController!,
           isPhone: true,
+          validator: FormValidators.validatePhone,
         ),
-        SelectionGrid(
-          title: 'الجنس',
-          options: ['ذكر', 'انثى'],
-          selectedOption: selectedGender,
-          onSelected: (value) => setState(() => selectedGender = value),
-          isTerm: true,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppText(text: 'الجنس', fontSize: 14),
+            16.ph(),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                int crossAxisCount = SizeConfig().getCrossAxisCount(context,lengthOfList: 2);
+                double itemHeight = SizeConfig().getItemHeight(context);
+                int rowCount = ( [
+                        'ذكر',
+                        'أنثى',
+                      ].length / crossAxisCount).ceil();
+                double gridHeight = rowCount * itemHeight;
+
+                return SizedBox(
+                  height: gridHeight,
+                  child: ShowGridViewItem(
+                    crossAxisCount: 2,
+                    data:const [
+                            'ذكر',
+                            'أنثى',
+                          ],
+                    onTap: (index) {
+                      AppLogger.success(index.toString());
+                      context.read<SignupCubit>().selectGenderIndex(index: index);
+                      },
+                    selectedIndex:state.selectedGenderIndex,
+                  ),
+                );
+              },
+            )
+            // SizedBox(
+            //     height: 60,
+            //     child: ShowGridViewItem(
+            //
+            //       data: const [
+            //         'ذكر',
+            //         'أنثى',
+            //       ],
+            //       onTap: (index) {
+            //         // context.read<CollegeCubit>().selectIndex(index,SelectionType.semester);
+            //       },
+            //     ))
+          ],
         ),
         16.ph(),
-        _buildPasswordFields(),
+        _buildPasswordFields(state,context),
       ],
     );
   }
 
-  Widget _buildPasswordFields() {
+  Widget _buildPasswordFields(AuthState state,BuildContext context) {
     return Column(
       children: [
-        ValueListenableBuilder<bool>(
-          valueListenable: ValueNotifier<bool>(false),
-          builder: (context, isPasswordVisible, _) {
-            return CustomTextField(
-              label: context.localizations.passwordLabel,
-              hintText: context.localizations.passwordHint,
-              controller: passwordController,
-              isPassword: true,
-              isPasswordVisible: isPasswordVisible,
-              togglePasswordVisibility: () {
-                (isPasswordVisible as ValueNotifier<bool>).value = !isPasswordVisible;
-              },
-            );
+    CustomTextField(
+    label: context.localizations.passwordLabel,
+      hintText: context.localizations.passwordHint,
+      controller:state.passwordController!,
+      isPassword: true,
+      isPasswordVisible: state.isPasswordVisible,
+      togglePasswordVisibility: () {
+      context.read<SignupCubit>().togglePasswordVisibility();
+      },
+      validator: FormValidators.validatePassword,
+    ),
+        CustomTextField(
+          label: context.localizations.confirmPasswordLabel,
+          hintText: context.localizations.passwordHint,
+          controller:state.confirmPasswordController!,
+          isPassword: true,
+          isPasswordVisible: state.isPasswordVisible,
+          togglePasswordVisibility: () {
+            context.read<SignupCubit>().togglePasswordVisibility();
           },
-        ),
-        ValueListenableBuilder<bool>(
-          valueListenable: ValueNotifier<bool>(false),
-          builder: (context, isConfirmPasswordVisible, _) {
-            return CustomTextField(
-              label: context.localizations.confirmPasswordLabel,
-              hintText: context.localizations.passwordHint,
-              controller: confirmPasswordController,
-              isPassword: true,
-              isPasswordVisible: isConfirmPasswordVisible,
-              togglePasswordVisibility: () {
-                (isConfirmPasswordVisible as ValueNotifier<bool>).value = !isConfirmPasswordVisible;
-              },
-            );
-          },
+          validator: (p0) =>FormValidators.validateConfirmPassword(p0,  state.passwordController!.text)
+          ,
         ),
       ],
     );
   }
 
-  Widget _buildEducationInfoFields() {
-    return Column(
+  Widget _buildEducationInfoFields(BuildContext context,AuthState state) {
+    return  Column(
       children: [
-        SelectionGrid(
-          title: context.localizations.collegeLabel,
-          options: colleges,
-          selectedOption: selectedCollege,
-          onSelected: (value) => setState(() => selectedCollege = value),
+        CollegeSelectionWidget(
+          ctx: context,
         ),
-        20.ph(),
-        SelectionGrid(
-          title: context.localizations.currentYearLabel,
-          options: studyYears,
-          selectedOption: selectedYear,
-          onSelected: (value) => setState(() => selectedYear = value),
-          isYearVar: true,
-        ),
-        20.ph(),
-        SelectionGrid(
-          title: context.localizations.semesterLabel,
-          options: terms,
-          selectedOption: selectedTerm,
-          onSelected: (value) => setState(() => selectedTerm = value),
-          isTerm: true,
-        ),
+        16.ph(),
+        SizedBox(
+          height: 98,
+          // width: 326,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppText(text: 'سنة الدراسة الحالية ', fontSize: 14),
+              16.ph(),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  int crossAxisCount = SizeConfig().getCrossAxisCount(context);
+                  double itemHeight = SizeConfig().getItemHeight(context);
+                  int rowCount = ([
+                    'أولى',
+                    'ثانية',
+                    'ثالتة',
+                    'رابعة',
+                  ].length / crossAxisCount).ceil();
+                  double gridHeight = rowCount * itemHeight;
+                  return SizedBox(
+                    height: gridHeight,
+                    child: ShowGridViewItem(
+                      crossAxisCount: crossAxisCount,
+                      data:const [
+                        'أولى',
+                        'ثانية',
+                        'ثالتة',
+                        'رابعة',
+                      ],
+                      onTap: (index) {
+                        AppLogger.success(index.toString());
+
+                        context.read<SignupCubit>().selectIndex(
+                            index: index,
+                            selectionType: SelectionType.semester
+                        );
+                      },
+                      selectedIndex:state.selectedSemesterIndex,
+                    ),
+                  );
+                },
+              )
+              // SizedBox(
+              //     height: 60,
+              //     child: ShowGridViewItem(
+              //       data: const [
+              //         'أولى',
+              //         'ثانية',
+              //         'ثالتة',
+              //         'رابعة',
+              //       ],
+              //       onTap: (index) {
+              //         context
+              //             .read<CollegeCubit>()
+              //             .selectIndex(index: index,selectionType: SelectionType.semester);
+              //       },
+              //       selectedIndex: state.selectedSemesterIndex,
+              //     ))
+            ],
+          ),
+        )
       ],
     );
   }
 
-  Widget _buildSubmitButton(BuildContext context, {
+  Widget _buildSubmitButton(
+    BuildContext context, {
     required VoidCallback onPressed,
     required String text,
   }) {
-    return CustomButton(
-      onPressed: onPressed,
-      widget: AppText(
-        text: text,
-        fontSize: 14,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-      backgraoundColor: Theme.of(context).primaryColor,
+
+    // CustomButton(
+    //   onPressed: onPressed,
+    //   widget: AppText(
+    //     text: text,
+    //     fontSize: 14,
+    //     color: Colors.white,
+    //     fontWeight: FontWeight.bold,
+    //   ),
+    //   backgraoundColor: Theme.of(context).primaryColor,
+    // );
+
+    return BlocConsumer<SignupCubit, AuthState>(
+      listener: (context, state) {
+        if (state.errorMessage != null) {
+          context.showSnackBar(message: state.errorMessage![0], error: true,);
+        }else if(state.isAuthenticated){
+          Navigator.pushReplacementNamed(context, '/account_creation');
+        }
+      },
+      // listenWhen: (previous, current) => current.errorMessage !=previous.errorMessage,
+      builder: (context, state) {
+        Widget buttonChild;
+        if (state.isLoading) {
+          buttonChild = const CircularProgressIndicator(color: Colors.white);
+        } else {
+          buttonChild = AppText(
+            text: text,
+            fontSize: context.isTablet ? 18 : 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          );
+        }
+
+        return CustomButton(
+          onPressed: onPressed,
+          widget: buttonChild,
+          backgraoundColor: Theme.of(context).primaryColor,
+        );
+
+        // return CustomButton(
+        //   backgraoundColor: Colors.blueAccent,
+        //   widget: buttonChild,
+        //   onPressed: () => _handleLogin(context, state),
+        // );
+      },
     );
+
   }
 
   Widget _buildLoginOption(BuildContext context) {
@@ -496,4 +438,58 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ],
     );
   }
+
+  void _handlePersonalInfoSubmit(AuthState state, BuildContext context) {
+    if (state.formKey!.currentState!.validate()) {
+      if (state.selectedGenderIndex == null) {
+        context.showSnackBar(
+          message: 'الرجاء اختيار الجنس',
+          error: true,
+        );
+        return;
+      }
+    context.read<SignupCubit>().showEduInfo(state.showEducationInfo!);
+    }
+  }
+
+  void _handleEducationInfoSubmit(BuildContext context,AuthState state) async{
+    if (state.selectedCollege == null) {
+      context.showSnackBar(
+        message: 'الرجاء اختيار الكلية',
+        error: true,
+      );
+      return;
+    }
+
+    if (state.selectedMajorIndex == null) {
+      context.showSnackBar(
+        message: 'الرجاء اختيار التخصص',
+        error: true,
+      );
+      return;
+    }
+
+    if (state.selectedSemesterIndex == null) {
+      context.showSnackBar(
+        message: 'الرجاء اختيار السنة الدراسية',
+        error: true,
+      );
+      return;
+    }
+    SignupRequestEntity user = SignupRequestEntity(
+      firstName: state.firstNameController!.text.trim(),
+      lastName: state.lastNameController!.text.trim(),
+      username: state.userNameController!.text.trim(),
+      email: state.emailController!.text.trim(),
+      phoneNum: '+972${state.phoneController!.text.trim()}',
+      gender: state.selectedGenderIndex == 0 ? "MALE" : "FEMALE",
+      password: state.passwordController!.text,
+      currentYear: state.selectedSemesterIndex! + 1,
+      tagId: 1,
+    );
+
+    await context.read<SignupCubit>().signup(user);
+    // Navigator.pushNamed(context, '/account_creation');
+  }
 }
+

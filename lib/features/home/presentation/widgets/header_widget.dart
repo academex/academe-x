@@ -42,7 +42,7 @@ class HeaderWidget extends StatelessWidget {
       height: 50,
       decoration: const BoxDecoration(
         color: Color(0xff007BFF),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       child: Image.asset(
        image, //'assets/images/Frame.png'
@@ -67,7 +67,7 @@ class HeaderWidget extends StatelessWidget {
         if (!inScroll) ...[
           6.ph(),
           AppText(
-            text:subTitle, // 'مجتمع مخصص لكل تساؤلاتك'
+            text:subTitle,
             fontSize: 12,
             color: Colors.white,
           ),

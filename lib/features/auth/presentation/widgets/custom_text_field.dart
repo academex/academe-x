@@ -81,7 +81,6 @@
 
 
 
-import 'package:academe_x/features/auth/presentation/widgets/selectionGrid.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -132,7 +131,7 @@ class CustomTextField extends StatelessWidget {
   }
 
   // Widget _buildGenderField (){
-  //   return SelectionGrid(title: 'الجنس', options: ['ذكر','انثى'], selectedOption: 'ذكر', onSelected: (p0) {
+  //   return SelectionDropDown(title: 'الجنس', options: ['ذكر','انثى'], selectedOption: 'ذكر', onSelected: (p0) {
   //
   //   },);
   // }
@@ -142,6 +141,7 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           obscureText: isPassword && !isPasswordVisible,
           validator: validator,
+      textInputAction: TextInputAction.next,
           keyboardType: isPhone ? TextInputType.phone : TextInputType.text,
           textDirection: isPhone ? TextDirection.ltr : TextDirection.rtl,
           inputFormatters: isPhone ? [

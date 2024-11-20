@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'app_text.dart';
 
 class AppTextField extends StatelessWidget {
@@ -81,7 +82,7 @@ class AppTextField extends StatelessWidget {
           //   FilteringTextInputFormatter.digitsOnly
           // ] : null,
           onChanged: onChanged,
-          textInputAction: textInputAction,
+
           onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             fillColor: fillColor,
