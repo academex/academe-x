@@ -28,15 +28,15 @@ extension ReactionTypeExtension on ReactionType {
   String get assetPath {
     switch (this) {
       case ReactionType.heart:
-        return 'assets/icons/reactions/heart.png';
+        return 'assets/icons/reactions/heart.svg';
       case ReactionType.like:
-        return 'assets/icons/reactions/like.png';
+        return 'assets/icons/reactions/funny.svg';
       case ReactionType.question:
-        return 'assets/icons/reactions/question.png';
+        return 'assets/icons/reactions/question.svg';
       case ReactionType.insightful:
-        return 'assets/icons/reactions/insightful.png';
+        return 'assets/icons/reactions/insightful.svg';
       case ReactionType.celebrate:
-        return 'assets/icons/reactions/celebrate.png';
+        return 'assets/icons/reactions/celebrate.svg';
     }
   }
 

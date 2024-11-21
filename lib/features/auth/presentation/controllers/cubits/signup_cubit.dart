@@ -64,7 +64,7 @@ void showEduInfo(bool showEducationInfo){
     final result = await authenticationUseCase.signup(user);
     Future.delayed(
         const Duration(
-            seconds: 2
+            seconds: 0
         ),
             () {
           result.fold(
