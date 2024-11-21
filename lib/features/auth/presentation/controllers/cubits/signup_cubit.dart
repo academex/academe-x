@@ -10,43 +10,15 @@ class SignupCubit extends AuthCubit {
 
   );
 
-//
-//  Future<void> signup(SignupRequestEntity user) async {
-//
-//   emit(AuthenticationLoadingState() as SignupState);
-//   var test=    await authenticationUseCase.signup(user);
-//
-//   test.fold(
-//         (l) {
-//       // emit(AuthenticationErrorState(message: l.message,));
-//
-//     },
-//         (r) async{
-//       // r.
-//
-//       await  StorageService.saveUser(r.fromEntity());
-//       // r.user
-//       // emit(AuthenticationSuccessState());
-//     },
-//   );
-// }
-//
-// void initData() {
-//   emit(state.copyWith(
-//     showEducationInfo: false,
-//     confirmPasswordController: TextEditingController(),
-//     phoneController: TextEditingController(),
-//     emailController: TextEditingController(),
-//     passwordController: TextEditingController(),
-//     nameController: TextEditingController(),
-//     formKey:GlobalKey<FormState>(),
-//   ));
-// }
-//
 void showEduInfo(bool showEducationInfo){
+  AppLogger.d(showEducationInfo.toString());
   emit(state.copyWith(
     showEducationInfo: !showEducationInfo,
   ));
+
+  if (!showEducationInfo) {  // This means we're switching TO education info
+    getColleges();
+  }
 }
   Future<void> signup(SignupRequestEntity user) async {
     if (state.isLoading) return;
@@ -97,6 +69,59 @@ void showEduInfo(bool showEducationInfo){
       selectedGenderIndex: index,
       // isSelectedMajor: true
     ));
+  }
+
+
+  Future<void> getColleges() async {
+  AppLogger.success('in getColleges');
+    if (state.isLoadingForCollege) return;
+    emit(state.copyWith(isLoadingForCollege: true));
+
+    final result = await authenticationUseCase.getColleges();
+    Future.delayed(
+        const Duration(
+            seconds: 0
+        ),
+            () {
+          result.fold(
+                (failure) {
+              List<String>? errorMessage=[];
+              if (failure is ValidationFailure) {
+                errorMessage = failure.messages;
+              } else if (failure is UnauthorizedFailure) {
+                errorMessage.add(failure.message);
+              } else {
+                errorMessage.add(failure.message);
+              }
+              emit(state.copyWith(
+                errorMessage: errorMessage,
+                isLoadingForCollege: false,
+              ));
+              // emit(state.copyWith(
+              //   isLoading: false,
+              //   errorMessage: errorMessage,
+              //   isAuthenticated: false,
+              // ));
+            },
+                (colleges) async {
+                  emit(state.copyWith(
+                    colleges: colleges,
+                    isLoadingForCollege: false,
+                  ));
+              // state.collegesData = Map.fromEntries(
+              //     colleges?.map((college) => MapEntry(college.collegeAr!, CollegeData(icon: icon, majors: majors))) ?? {}
+              // );
+              // state.collegesData!.addEntries(colleges);
+              // emit(state)
+
+            },
+          );
+        }
+    );
+  }
+
+  Future<void> retry()async{
+  await getColleges();
   }
 
 

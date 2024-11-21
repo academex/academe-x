@@ -3,6 +3,7 @@ class ApiSetting {
 
   static const String login = "${baseUrl}auth/signin";
   static const String signup = "${baseUrl}auth/signup";
+  static const String colleges = "${baseUrl}tag/colleges";
 
   // create post
   static const String createPost = "${baseUrl}post";

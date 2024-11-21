@@ -12,7 +12,7 @@ import 'lib.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await init();
-  await StorageService.init();
+  // await StorageService.init();
 
   runApp(const Main());
 }
@@ -69,7 +69,7 @@ class Main extends StatelessWidget {
       splitScreenMode: true,
       child: MaterialApp(
         title: 'AcademeX',
-        locale: const Locale('en'),
+        locale: const Locale('ar'),
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -80,7 +80,7 @@ class Main extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // home: HomePage(),
         theme: _buildTheme(),
-        initialRoute: '/home_screen',
+        initialRoute: '/login',
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) => _buildAppWithExtra(context, child),
       ),

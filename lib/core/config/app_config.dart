@@ -1,3 +1,5 @@
+import '../network/network_cache.dart';
+
 enum Environment { dev, staging, prod }
 
 class AppConfig {
@@ -31,8 +33,7 @@ class AppConfig {
   }
 
   static Future<void> _initializeServices() async {
-    // await StorageService.init();
-    // await NetworkCache.init();
+    await NetworkCache.init();
     if (enableAnalytics) {
       // Initialize analytics
     }
