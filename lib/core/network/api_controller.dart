@@ -48,7 +48,6 @@ class ApiController {
         Logger().i(data);
         return data;
       }
-
     } catch (e) {
       Logger().e(e);
       rethrow;
@@ -61,16 +60,14 @@ class ApiController {
     return now.difference(timeExpires).inSeconds > 0;
   }
 
-
   Future<http.Response> post(
-      Uri url, {
-        Map<String, String>? headers,
-        Object? body,
-        Encoding? encoding,
-        required int timeAlive,
-      }) async {
+    Uri url, {
+    Map<String, String>? headers,
+    Object? body,
+    Encoding? encoding,
+    required int timeAlive,
+  }) async {
     try {
-
       AppLogger.success(body.toString());
 
       final Map<String, String> finalHeaders = {
@@ -88,17 +85,17 @@ class ApiController {
         url,
         headers: finalHeaders,
         body: jsonEncode(body),
-      ).timeout(Duration(seconds: timeAlive), onTimeout: () {
+      )
+          .timeout(Duration(seconds: timeAlive), onTimeout: () {
         // This block executes if the request times out
-        throw TimeOutExeption(errorMessage: 'Request took longer than $timeAlive seconds.');
+        throw TimeOutExeption(
+            errorMessage: 'Request took longer than $timeAlive seconds.');
       });
-
 
       AppLogger.success(response.body.toString());
       AppLogger.success(response.statusCode.toString());
       return response;
-
-    }  on TimeOutExeption catch (e) {
+    } on TimeOutExeption catch (e) {
       // Handle timeout exception
       rethrow;
     } catch (e) {
@@ -106,7 +103,6 @@ class ApiController {
       throw Exception('Request failed: $e');
     }
   }
-
 
   Future<Map> patch(
     Uri url, {

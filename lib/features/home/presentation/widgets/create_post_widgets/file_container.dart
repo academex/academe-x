@@ -39,6 +39,7 @@ class FileContainer extends StatelessWidget {
             child: AppText(
                 // text: basename(file.path),
                 // fontSize: 14.sp,
+                isUnderline: false,
                 text: fileName ?? basename(file!.path),
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,

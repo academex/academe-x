@@ -5,23 +5,40 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-class PickerCubit extends Cubit<CreatePostIconsState> {
+class PickerCubit extends Cubit<PickState> {
   PickerCubit(super.initialState);
   final ImagePicker _imagePicker = ImagePicker();
 
+  cancelState() {
+    emit(CreatePostIconsInit());
+  }
+
   pickImage() async {
+    if (getIt<ImagePickerLoaded>().images != null) {
+      getIt<ImagePickerLoaded>().images = null;
+      cancelState();
+      emit(getIt<ImagePickerLoaded>());
+      return;
+    }
     emit(CreatePostIconsLoading());
 
     final List<XFile>? pickedFile = await _imagePicker.pickMultiImage();
     if (pickedFile != null) {
-      emit(ImagePickerLoaded(
-          pickedFile.map((image) => File(image.path)).toList()));
+      getIt<ImagePickerLoaded>().images =
+          pickedFile.map((image) => File(image.path)).toList();
+      emit(getIt<ImagePickerLoaded>());
     } else {
-      emit(CreatePOstIconsError('no file selected'));
+      emit(CreatePostIconsError('no file selected'));
     }
   }
 
   pickFile() async {
+    if (getIt<FilePickerLoaded>().file != null) {
+      getIt<FilePickerLoaded>().file = null;
+      cancelState();
+      emit(getIt<FilePickerLoaded>());
+      return;
+    }
     emit(CreatePostIconsLoading());
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -31,14 +48,18 @@ class PickerCubit extends Cubit<CreatePostIconsState> {
     );
 
     if (result != null) {
-      File file = File(result.files.single.path!);
-      emit(FilePickerLoaded(file));
+      getIt<FilePickerLoaded>().file = File(result.files.single.path!);
+      emit(getIt<FilePickerLoaded>());
     } else {
-      emit(CreatePOstIconsError('no file selected'));
+      emit(CreatePostIconsError('no file selected'));
     }
   }
 
-  createMulteChoice() {
+  createMultiChoice() {
+    if (state is CreateMultiChoice) {
+      cancelState();
+      return;
+    }
     emit(CreateMultiChoice());
   }
 }

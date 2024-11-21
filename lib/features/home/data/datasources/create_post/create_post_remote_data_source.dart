@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/features/home/home.dart';
 import 'package:academe_x/features/home/presentation/model/post_req_model.dart';
+import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class CreatePostRemoteDataSource {
@@ -15,15 +18,38 @@ class CreatePostRemoteDataSource {
       func: () async {
         final response = await apiController.post(
             Uri.parse(ApiSetting.createPost),
-            body: post.toJson(),
+            timeAlive: 120,
+            body: jsonEncode(post.toJson()),
             headers: {
               "Content-Type": "application/json",
               'Authorization':
-                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhcmFhIiwiaWF0IjoxNzMyMDE1NDQyLCJleHAiOjE3MzIwMTkwNDJ9.Xbrmftv0sdmI2J-AFwASbQOnuofKly7t5tVGJ9zXYTM',
+                    'Bearer ${getIt<StorageService>().getUser()?.accessToken}',
             });
-        return PostReqModel.fromJson(response);
+        Map<String, dynamic> jsonResponse = await jsonDecode(response.body);
+        if (response.statusCode >= 400) {
+          final errorResponse = ErrorResponseModel.fromJson(
+              jsonResponse
+          );
+          
+
+          switch (errorResponse.statusCode) {
+            case 400:
+              final messages = errorResponse.messages ?? [errorResponse.message ?? ''];
+              throw ValidationException(messages: messages);
+            case 403:
+              throw AuthException(errorMessage: 'يرجى تسجيل الدخول');
+            default:
+              throw ServerException(
+                message: errorResponse.message ?? 'Server error',
+              );
+          }
+        }
+        AppLogger.d(jsonResponse.toString());
+        return PostReqModel.fromJson(jsonResponse);
       },
     );
+
+
   }
 
   Future<PostReqModel> postWithExceptions(
@@ -31,9 +57,6 @@ class CreatePostRemoteDataSource {
     if (await internetConnectionChecker.hasConnection) {
       try {
         return await func();
-      } on WrongDataException catch (e) {
-        // Handle timeout
-        throw WrongDataException(errorMessage: e.errorMessage);
       } on TimeOutExeption catch (e) {
         // Handle timeout
         AppLogger.e('Timeout: ${e.errorMessage}');

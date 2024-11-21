@@ -34,7 +34,7 @@ abstract class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> handleAuthSuccess(AuthTokenEntity user) async {
-    await StorageService.saveUser(user.fromEntity());
+    await getIt<StorageService>().saveUser(user.fromEntity());
     emit(state.copyWith(
       isLoading: false,
       isAuthenticated: true,

@@ -11,7 +11,7 @@ import 'lib.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await init();
-  await StorageService.init();
+  await getIt<StorageService>().init();
 
   runApp(const Main());
 }
@@ -78,7 +78,7 @@ class Main extends StatelessWidget {
         ],
         debugShowCheckedModeBanner: false,
         theme: _buildTheme(),
-        initialRoute: '/login',
+        initialRoute: '/home_screen',
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) => _buildAppWithExtra(context, child),
       ),

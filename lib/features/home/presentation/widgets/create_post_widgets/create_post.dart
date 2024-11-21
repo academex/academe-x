@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
@@ -15,6 +17,8 @@ class CreatePost {
   final TextEditingController _postController = TextEditingController();
   late final PostReqEntity post = PostReqEntity();
   final _formKey = GlobalKey<FormState>();
+  List<File>? images = null;
+  File? file = null;
 
   void showCreatePostModal(BuildContext parContext) {
     showModalBottomSheet(
@@ -102,24 +106,26 @@ class CreatePost {
                       ],
                     ),
                     16.ph(),
-                    AppTextField(
+                    Form(
                       key: _formKey,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      withBoarder: false,
-                      maxLine: null,
-                      controller: _postController,
-                      hintText: 'قم بكتابة ما تريد الاستفسار عنه ..',
-                      keyboardType: TextInputType.multiline,
-                      suffix: GestureDetector(
-                        onTap: () {
-                          _postController.clear();
+                      child: AppTextField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
                         },
-                        child: const Icon(Icons.clear, color: Colors.grey),
+                        withBoarder: false,
+                        maxLine: null,
+                        controller: _postController,
+                        hintText: 'قم بكتابة ما تريد الاستفسار عنه ..',
+                        keyboardType: TextInputType.multiline,
+                        suffix: GestureDetector(
+                          onTap: () {
+                            _postController.clear();
+                          },
+                          child: const Icon(Icons.clear, color: Colors.grey),
+                        ),
                       ),
                     ),
                     // need if statment as : if(textController.isNotEmpty) do the loop
@@ -147,35 +153,61 @@ class CreatePost {
                       },
                     ),
                     16.ph(),
-                    BlocBuilder<PickerCubit, CreatePostIconsState>(
+                    BlocBuilder<PickerCubit, PickState>(
                       builder: (context, state) {
-                        if (state is ImagePickerLoaded) {
+                        images = getIt<ImagePickerLoaded>().images;
+                        file = getIt<FilePickerLoaded>().file;
+                        if (state is ImagePickerLoaded ||
+                            state is FilePickerLoaded ||
+                            state is CreatePostIconsInit) {
                           return Expanded(
+                            flex: (images == null && file == null)
+                                ? 0
+                                : (images != null && file != null)
+                                    ? 13
+                                    : (images != null)
+                                        ? 7
+                                        : 2,
                             child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(children: [
-                                for (int index = 0;
-                                    index < state.images.length;
-                                    index++)
-                                  Container(
-                                    margin: EdgeInsets.symmetric(horizontal: 9),
-                                    height: 178,
-                                    width: state.images.length == 1 ? 300 : 178,
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(12)),
-                                      image: DecorationImage(
-                                        image: FileImage(state.images[index]),
-                                        fit: BoxFit.cover,
-                                      ),
+                              child: Column(
+                                children: [
+                                  if (images != null)
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(children: [
+                                        for (int index = 0;
+                                            index < images!.length;
+                                            index++)
+                                          Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 9),
+                                            height: 178,
+                                            width:
+                                                images!.length == 1 ? 300 : 178,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(12)),
+                                              image: DecorationImage(
+                                                image:
+                                                    FileImage(images![index]),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                      ]),
                                     ),
-                                  ),
-                              ]),
+                                  10.ph(),
+                                  if (file != null) FileContainer(file: file),
+                                ],
+                              ),
                             ),
                           );
-                        } else if (state is FilePickerLoaded) {
-                          return FileContainer(file: state.file);
-                        } else if (state is CreateMultiChoice) {
+                        }
+                        // else if (state is FilePickerLoaded) {
+                        //   return FileContainer(file: getIt<FilePickerLoaded>().file);
+                        // }
+                        else if (state is CreateMultiChoice) {
                           AppLogger.i(state.toString());
                           return CreateMultiChoiceWidget();
                         } else {
@@ -185,44 +217,66 @@ class CreatePost {
                     ),
                     Row(
                       children: [
-                        IconButton(
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/image.png')),
-                          onPressed: () {
-                            context.read<PickerCubit>().pickImage();
-                          },
-                        ),
-                        IconButton(
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/document.png')),
-                          onPressed: () {
-                            context.read<PickerCubit>().pickFile();
-                          },
-                        ),
-                        IconButton(
-                          icon: const ImageIcon(
-                              AssetImage('assets/icons/menu.png')),
-                          onPressed: () {
-                            context.read<PickerCubit>().createMulteChoice();
-                          },
+                        BlocBuilder<PickerCubit, PickState>(
+                          builder: (context, state) => Row(
+                            children: [
+                              IconButtomForCreatePost(
+                                selected:
+                                    getIt<ImagePickerLoaded>().images != null,
+                                imagePath: 'assets/icons/image.png',
+                                onPressed: () {
+                                  context.read<PickerCubit>().pickImage();
+                                },
+                              ),
+                              IconButtomForCreatePost(
+                                selected:
+                                    getIt<FilePickerLoaded>().file != null,
+                                imagePath: 'assets/icons/document.png',
+                                onPressed: () {
+                                  context.read<PickerCubit>().pickFile();
+                                },
+                              ),
+                              IconButtomForCreatePost(
+                                selected: state is CreateMultiChoice,
+                                imagePath: 'assets/icons/menu.png',
+                                onPressed: () {
+                                  context
+                                      .read<PickerCubit>()
+                                      .createMultiChoice();
+                                },
+                              ),
+                              // IconButton(
+                              //   icon: const ImageIcon(
+                              //       AssetImage('assets/icons/image.png')),
+                              //   onPressed: () {
+
+                              //   },
+                              // ),
+                              // IconButton(
+                              //   icon: const ImageIcon(
+                              //       AssetImage('assets/icons/document.png')),
+                              //   onPressed: () {
+
+                              //   },
+                              // ),
+                              // IconButton(
+                              //   icon: const ImageIcon(
+                              //       AssetImage('assets/icons/menu.png')),
+                              //   onPressed: () {
+                              //     context.read<PickerCubit>().createMultiChoice();
+                              //   },
+                              // ),
+                            ],
+                          ),
                         ),
                         BlocBuilder<ShowTagCubit, bool>(
                           builder: (context, state) {
-                            return CircleAvatar(
-                              backgroundColor:
-                                  state ? Colors.blue : Colors.transparent,
-                              child: IconButton(
-                                color: state ? Colors.white : Colors.black,
-                                icon: ImageIcon(
-                                  const AssetImage(
-                                    'assets/icons/hash.png',
-                                  ),
-                                  size: 17.r,
-                                ),
-                                onPressed: () {
-                                  context.read<ShowTagCubit>().changeState();
-                                },
-                              ),
+                            return IconButtomForCreatePost(
+                              selected: state,
+                              imagePath: 'assets/icons/hash.png',
+                              onPressed: () {
+                                context.read<ShowTagCubit>().changeState();
+                              },
                             );
                           },
                         ),
@@ -231,9 +285,14 @@ class CreatePost {
                     BlocBuilder<ShowTagCubit, bool>(
                       builder: (context, state) {
                         if (state) {
-                          return SelectableButtonGrid();
+                          return SizedBox(
+                            height: 100.h,
+                            child: Expanded(child: SelectableButtonGrid()),
+                          );
                         } else {
-                          return const Spacer();
+                          return const Spacer(
+                            flex: 5,
+                          );
                         }
                       },
                     ),
@@ -285,7 +344,7 @@ class CreatePost {
                                       child: CircularProgressIndicator(
                                         backgroundColor: Colors.grey[200],
                                         valueColor:
-                                            AlwaysStoppedAnimation<Color>(
+                                            const AlwaysStoppedAnimation<Color>(
                                                 Colors.blue),
                                       ),
                                     ),
@@ -302,6 +361,36 @@ class CreatePost {
           ),
         );
       },
+    );
+  }
+}
+
+class IconButtomForCreatePost extends StatelessWidget {
+  final bool selected;
+  final String imagePath;
+  final void Function()? onPressed;
+  const IconButtomForCreatePost(
+      {required this.selected,
+      required this.imagePath,
+      required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 2.w),
+      child: CircleAvatar(
+        backgroundColor: selected ? Colors.blue : Colors.transparent,
+        child: IconButton(
+          color: selected ? Colors.white : Colors.black,
+          icon: ImageIcon(
+            AssetImage(
+              imagePath,
+            ),
+            // size: 17.r,
+          ),
+          onPressed: onPressed,
+        ),
+      ),
     );
   }
 }

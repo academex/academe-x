@@ -58,7 +58,7 @@ class UserResponseModel extends UserResponseEntity {
       'phoneNum': phoneNum,
       'tagId': tagId,
       'createdAt':  createdAt!.toIso8601String() ??'test',
-      'updatedA': updatedAt!.toIso8601String() ??'test',
+      'updatedAt': updatedAt!.toIso8601String() ??'test',
     };
   }
 }

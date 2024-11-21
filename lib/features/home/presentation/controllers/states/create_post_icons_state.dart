@@ -1,24 +1,24 @@
 import 'dart:io';
 
-abstract class CreatePostIconsState{}
+abstract class PickState {}
 
-class CreatePostIconsInit extends CreatePostIconsState {}
+class CreatePostIconsInit extends PickState {}
 
-class CreatePostIconsLoading extends CreatePostIconsState {}
+class CreatePostIconsLoading extends PickState {}
 
-class ImagePickerLoaded extends CreatePostIconsState {
-  final List<File> images;
+class ImagePickerLoaded extends PickState {
+  List<File>? images;
   ImagePickerLoaded(this.images);
 }
-class FilePickerLoaded extends CreatePostIconsState {
-  final File file;
+
+class FilePickerLoaded extends PickState {
+  File? file;
   FilePickerLoaded(this.file);
 }
-class CreateMultiChoice extends CreatePostIconsState {}
-  
-class CreatePOstIconsError extends CreatePostIconsState {
+
+class CreateMultiChoice extends PickState {}
+
+class CreatePostIconsError extends PickState {
   final String message;
-  CreatePOstIconsError(this.message);
+  CreatePostIconsError(this.message);
 }
-
-

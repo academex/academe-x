@@ -28,3 +28,7 @@ class TimeOutExeption implements Exception {
   TimeOutExeption({required this.errorMessage});
 
 }
+class AuthException implements Exception {
+  final String errorMessage;
+  AuthException({required this.errorMessage});
+}

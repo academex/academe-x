@@ -1,4 +1,7 @@
 import 'package:academe_x/features/features.dart';
+import 'package:academe_x/features/home/data/repositories/create_post_repository_imp.dart';
+import 'package:academe_x/features/home/domain/usecases/create_post_use_case.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/tag_state.dart';
@@ -9,9 +12,11 @@ import '../core.dart';
 final getIt = GetIt.instance;
 
 Future<void> init() async {
-
   // Cubits
   _initCubits();
+
+  // State
+  _initState();
 
   // Use Cases
   _initUseCases();
@@ -27,15 +32,9 @@ Future<void> init() async {
 }
 
 void _initCubits() {
-
-  getIt.registerFactory<LoginCubit>(
-    () => LoginCubit(authUseCase: getIt()),
+  getIt.registerFactory<LoginCubit>(() => LoginCubit(authUseCase: getIt()));
   getIt.registerFactory<CreatePostCubit>(
     () => CreatePostCubit(InitialState(), createPostUseCase: getIt()),
-  );
-
-  getIt.registerFactory<AuthenticationCubit>(
-    () => AuthenticationCubit(authUseCase: getIt()),
   );
 
   getIt.registerFactory<AuthActionCubit>(
@@ -67,13 +66,19 @@ void _initCubits() {
     () => PostImageCubit(),
   );
   getIt.registerFactory<SignupCubit>(
-        () => SignupCubit(authUseCase: getIt(),),
+    () => SignupCubit(
+      authUseCase: getIt(),
+    ),
   );
 
   getIt.registerFactory<CollegeCubit>(
     () => CollegeCubit(),
   );
+}
 
+void _initState() {
+  getIt.registerSingleton(FilePickerLoaded(null));
+  getIt.registerSingleton(ImagePickerLoaded(null));
 }
 
 void _initUseCases() {
@@ -116,7 +121,5 @@ void _initExternalDependencies() {
     () => InternetConnectionChecker(),
   );
 
-  getIt.registerFactory<StorageService>(
-    () => StorageService(),
-  );
+  getIt.registerSingleton<StorageService>(StorageService());
 }

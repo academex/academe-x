@@ -11,8 +11,6 @@ class CreatePostRepositoryImp implements CreatePostRepository {
         post: post.fromEntity(),
       );
       return Right(result);
-    } on WrongDataException catch (e) {
-      return Left(WrongPasswordOrEmailFailure(message: e.errorMessage));
     } on OfflineException catch (e) {
       return Left(NoInternetConnectionFailure(message: e.errorMessage));
     } on TimeOutExeption catch (e) {
