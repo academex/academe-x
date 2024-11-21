@@ -1,5 +1,6 @@
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
+import 'package:academe_x/features/home/presentation/widgets/test_build_reactions/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -73,8 +74,9 @@ class Main extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         debugShowCheckedModeBanner: false,
+        // home: HomePage(),
         theme: _buildTheme(),
-        initialRoute: '/login',
+        initialRoute: '/home_screen',
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) => _buildAppWithExtra(context, child),
       ),

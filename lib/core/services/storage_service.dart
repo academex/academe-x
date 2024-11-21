@@ -15,7 +15,7 @@ class StorageService {
     }
     await _box.put('user', user.toJson());
   }
-  static AuthTokenModel? getUser() {
+   AuthTokenModel? getUser() {
     final userData = _box.get('user');
     if (userData == null) return null;
     return AuthTokenModel.fromJson(userData);
@@ -26,12 +26,19 @@ class StorageService {
   }
 
 
-
-  // static Future<void> saveTheme(bool isDark) async {
-  //   await _box.put('isDark', isDark);
-  // }
+  // Future<void> checkAuthStatus() async {
+  //   try {
+  //     // Get the stored user data using your existing method
+  //     final AuthTokenModel? userData = getUser();
   //
-  // static bool getTheme() {
-  //   return _box.get('isDark', defaultValue: false);
+  //     if (userData != null&& userData.accessToken.isNotEmpty) {
+  //       emit(AuthStatus.authenticated);
+  //     } else {
+  //       emit(AuthStatus.unauthenticated);
+  //     }
+  //   } catch (e) {
+  //     emit(AuthStatus.unauthenticated);
+  //   }
   // }
+
 }

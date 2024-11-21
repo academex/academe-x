@@ -1,12 +1,15 @@
 import 'package:academe_x/lib.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+enum AuthStatus { initial, authenticated, unauthenticated }
 
 abstract class AuthCubit extends Cubit<AuthState> {
   final AuthenticationUseCase authenticationUseCase;
+  // final StorageService storageService;
 
   AuthCubit({
     required this.authenticationUseCase,
     required AuthState initialState,
+    // required this.storageService
   }) : super(initialState);
 
   // Common methods
@@ -64,4 +67,35 @@ abstract class AuthCubit extends Cubit<AuthState> {
         collegeAndMajor: "${state.selectedCollege!} ($major) "
     ));
   }
+
+  // Future<void> checkAuthStatus() async {
+  //   try {
+  //     // Get the stored token or any auth data
+  //     final token = await storageService.getToken();
+  //
+  //     if (token != null && token.isNotEmpty) {
+  //       emit(AuthStatus.authenticated);
+  //     } else {
+  //       emit(AuthStatus.unauthenticated);
+  //     }
+  //   } catch (e) {
+  //     emit(AuthStatus.unauthenticated);
+  //   }
+  // }
+
+
+  // Future<void> checkAuthStatus() async {
+  //   try {
+  //     // Get the stored user data using your existing method
+  //     final AuthTokenModel? userData = storageService.getUser();
+  //
+  //     if (userData != null&& userData.accessToken.isNotEmpty) {
+  //       emit(AuthStatus.authenticated);
+  //     } else {
+  //       emit(AuthStatus.unauthenticated);
+  //     }
+  //   } catch (e) {
+  //     emit(AuthStatus.unauthenticated);
+  //   }
+  // }
 }
