@@ -1,20 +1,22 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:academe_x/core/constants/cache_keys.dart';
+import 'package:academe_x/core/storage/storage.dart';
 import 'package:academe_x/features/auth/data/models/response/college_model.dart';
 import 'package:academe_x/lib.dart';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-import '../../../../core/services/hive_cache_manager.dart';
 
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final AuthenticationRemoteDataSource remoteDataSource;
   final HiveCacheManager cacheManager;
+  final InternetConnectionChecker networkInfo;
   // static const String COLLEGES_CACHE_KEY = 'colleges';
 
-  AuthenticationRepositoryImpl({required this.remoteDataSource,required this.cacheManager});
+  AuthenticationRepositoryImpl({required this.remoteDataSource,required this.cacheManager,required this.networkInfo});
 
   @override
   Future<Either<Failure, AuthTokenModel>> login(LoginRequsetEntity user) async {
@@ -55,7 +57,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return Left(ServerFailure(message: 'An error occurred: $e'));
     }
   }
-
   @override
   Future<Either<Failure, List<CollegeModel>>> getColleges() async {
     try {
@@ -88,89 +89,40 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return Left(ServerFailure(message: 'An error occurred: $e'));
     }
   }
-  // Future<Either<Failure, List<CollegeModel>>> getColleges() async {
-  //   try {
-  //
-  //     // Try to get cached data first
-  //     var cached= await cacheManager.getCachedResponse<List<CollegeModel>>(
-  //       CacheKeys.COLLEGES,
-  //           (dynamic data) {
-  //             // AppLogger.database(data.toString());
-  //
-  //
-  //         return (data as List)
-  //             .map((item) {
-  //           AppLogger.e(' cache ${item.toString()}');
-  //               return CollegeModel.fromJson(item as Map<String, dynamic>);
-  //         })
-  //             .toList();
-  //           },
-  //     );
-  //
-  //     // AppLogger.database(cached.toString());
-  //
-  //
-  //     if (cached != null) {
-  //       return Right(cached);
-  //     }
-  //
-  //
-  //     AppLogger.e('not found in cache');
-  //
-  //     // If no cache, fetch from remote
-  //     final result = await remoteDataSource.getColleges();
-  //
-  //     // Cache the new data
-  //     await cacheManager.cacheResponse(CacheKeys.COLLEGES, result);
-  //
-  //     return Right(result);
-  //   } on UnauthorizedException catch (e) {
-  //     return Left(UnauthorizedFailure(message: e.message));
-  //   } on OfflineException catch (e) {
-  //     // Try to get cached data when offline
-  //     final cached = await cacheManager.getCachedResponse<List<CollegeModel>>(
-  //       CacheKeys.COLLEGES,
-  //           (dynamic data) => (data as List)
-  //           .map((item) => CollegeModel.fromJson(item as Map<String, dynamic>))
-  //           .toList(),
-  //           // (json) => CollegeModel.fromJson(json),
-  //
-  //     );
-  //
-  //     if (cached != null) {
-  //       return Right(cached);
-  //     }
-  //     return Left(NoInternetConnectionFailure(message: e.errorMessage));
-  //   } catch (e) {
-  //     return Left(ServerFailure(message: 'An error occurred: $e'));
-  //   }
-  // }
-  // Future<Either<Failure, List<CollegeModel>>> getColleges() async{
-  //   try {
-  //     final cached =await cacheManager.getCachedResponse(CacheKeys.COLLEGES);
-  //     AppLogger.success('int get college impl ${cached.toString()}');
-  //
-  //     if (cached != null) {
-  //       return Right(jsonDecode(cached) as List<CollegeModel>);
-  //     }
-  //     AppLogger.success('after cache');
-  //
-  //     final result = await remoteDataSource.getColleges();
-  //     return Right(result);
-  //   } on UnauthorizedException catch (e) {
-  //     return Left(UnauthorizedFailure(message: e.message));
-  //   } on OfflineException catch (e) {
-  //     return Left(NoInternetConnectionFailure(message: e.errorMessage));
-  //   } on NotFoundException catch (e) {
-  //     return Left(NotFoundFailure(message: e.message));
-  //   } on TooManyRequestsException catch (e) {
-  //     return Left(TooManyRequestsFailure(message: e.message));
-  //   } on TimeOutExeption catch (e) {
-  //     return Left(TimeOutFailure(message: e.errorMessage));
-  //   } catch (e) {
-  //     return Left(ServerFailure(message: 'An error occurred: $e'));
-  //   }
-  // }
+
+  Future<List<CollegeModel>> _fetchAndCacheColleges() async {
+    final collegesList = await remoteDataSource.getColleges();
+
+    await cacheManager.cacheResponse<List<CollegeModel>>(CacheKeys.COLLEGES,collegesList);
+
+    return collegesList;
+  }
+
+  // Method to force refresh colleges data
+  Future<Either<Failure, List<CollegeModel>>> refreshColleges() async {
+    try {
+      if (!await networkInfo.hasConnection) {
+        return Left(NoInternetConnectionFailure(
+            message: 'No internet connection available for refresh'
+        ));
+      }
+
+      final result = await _fetchAndCacheColleges();
+      return Right(result);
+    } catch (e, stackTrace) {
+      AppLogger.e('Error in refreshColleges: $e\n$stackTrace');
+      return Left(ServerFailure(message: 'Failed to refresh colleges: $e'));
+    }
+  }
+
+  // Method to clear colleges cache
+  Future<void> clearCollegesCache() async {
+    try {
+      await cacheManager.removeCacheItem(CacheKeys.COLLEGES);
+    } catch (e) {
+      AppLogger.e('Error clearing colleges cache: $e');
+    }
+  }
 
 }
 

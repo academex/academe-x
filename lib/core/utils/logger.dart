@@ -10,6 +10,7 @@ class AppLogger {
       colors: true,        // Colorful log messages
       printEmojis: true,   // Print an emoji for each log message
       printTime: true,     // Should each log print contain a timestamp
+      stackTraceBeginIndex: 0
     ),
     level: kDebugMode ? Level.debug : Level.nothing,
   );

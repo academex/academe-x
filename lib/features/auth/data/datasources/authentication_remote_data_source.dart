@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:academe_x/core/constants/cache_keys.dart';
+import 'package:academe_x/core/storage/storage.dart';
 import 'package:academe_x/features/auth/data/models/response/college_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:logger/web.dart';
@@ -12,11 +13,10 @@ import 'package:academe_x/lib.dart';
 class AuthenticationRemoteDataSource {
   final ApiController apiController;
   final InternetConnectionChecker internetConnectionChecker;
-  final HiveCacheManager cacheManager;
 
 
 
-  AuthenticationRemoteDataSource({required this.apiController,required this.internetConnectionChecker,required this.cacheManager});
+  AuthenticationRemoteDataSource({required this.apiController,required this.internetConnectionChecker});
 
 
 
@@ -26,7 +26,6 @@ class AuthenticationRemoteDataSource {
         final response = await apiController.post(
           Uri.parse(ApiSetting.login),
           body: user.toJson(),
-          timeAlive: 10,
         );
 
         if (response.statusCode >= 400) {
@@ -76,7 +75,6 @@ class AuthenticationRemoteDataSource {
             'Content-Type': 'application/json',
           },
           body:user.toJson(),
-          timeAlive: 20,
         );
 
 
@@ -162,38 +160,4 @@ class AuthenticationRemoteDataSource {
   }
 
 }
-
-  // Future<AuthTokenModel> signup(SignupRequestModel userRegistration) async {
-  //
-  //   if(await internetConnectionChecker.hasConnection){
-  //     try {
-  //       final response = await apiController.post(
-  //         Uri.parse(ApiSetting.signup),
-  //         body: userRegistration.toJson(),
-  //         timeAlive: 10,
-  //       );
-  //
-  //       AppLogger.e(response.toString());
-  //
-  //
-  //       return AuthTokenModel.fromJson(jsonDecode(response.body)); // Parse the response
-  //     }on WrongDataException catch (e) {
-  //       // Handle timeout
-  //       throw WrongDataException(errorMessage: e.errorMessage);
-  //     }on TimeOutExeption catch (e) {
-  //       // Handle timeout
-  //       Logger().e('Timeout: ${e.errorMessage}');
-  //       throw TimeOutExeption(errorMessage: e.errorMessage);
-  //     } on Exception catch (e) {
-  //       // Handle general exceptions
-  //       Logger().e('Error: $e');
-  //       throw Exception('Assdn error occurred: $e');
-  //     }
-  //   }
-  //   else{
-  //     throw OfflineException(errorMessage: 'No Internet Connection');
-  //   }
-  //
-  // }
-
 

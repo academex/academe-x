@@ -28,6 +28,9 @@ export 'di/di.dart';
 export 'services/services.dart';
 
 
+//Storage
+export 'storage/storage.dart';
+
 // Widgets
 export 'widgets/widgets.dart';
 
