@@ -19,5 +19,9 @@ class AuthenticationUseCase {
     return await authenticationRepository.getColleges();
   }
 
+  Future<Either<Failure, List<MajorEntity>>> getMajorsByCollege(String collegeName) async {
+    return await authenticationRepository.getMajorsByCollege(collegeName);
+  }
+
 
 }

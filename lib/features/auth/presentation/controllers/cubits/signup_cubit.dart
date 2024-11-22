@@ -97,23 +97,49 @@ void showEduInfo(bool showEducationInfo){
                 errorMessage: errorMessage,
                 isLoadingForCollege: false,
               ));
-              // emit(state.copyWith(
-              //   isLoading: false,
-              //   errorMessage: errorMessage,
-              //   isAuthenticated: false,
-              // ));
             },
                 (colleges) async {
                   emit(state.copyWith(
                     colleges: colleges,
                     isLoadingForCollege: false,
                   ));
-              // state.collegesData = Map.fromEntries(
-              //     colleges?.map((college) => MapEntry(college.collegeAr!, CollegeData(icon: icon, majors: majors))) ?? {}
-              // );
-              // state.collegesData!.addEntries(colleges);
-              // emit(state)
+            },
+          );
+        }
+    );
+  }
 
+
+  Future<void> getMajorsByCollege(String collegeName) async {
+    if (state.isLoadingForMajors) return;
+    emit(state.copyWith( isLoadingForMajors: true,));
+
+    final result = await authenticationUseCase.getMajorsByCollege(collegeName);
+    Future.delayed(
+        const Duration(
+            seconds: 0
+        ),
+            () {
+          result.fold(
+                (failure) {
+              List<String>? errorMessage=[];
+              if (failure is ValidationFailure) {
+                errorMessage = failure.messages;
+              } else if (failure is UnauthorizedFailure) {
+                errorMessage.add(failure.message);
+              } else {
+                errorMessage.add(failure.message);
+              }
+              emit(state.copyWith(
+                errorMessage: errorMessage,
+                isLoadingForMajors: false,
+              ));
+            },
+                (majors) async {
+              emit(state.copyWith(
+                majors: majors,
+                isLoadingForMajors: false,
+              ));
             },
           );
         }

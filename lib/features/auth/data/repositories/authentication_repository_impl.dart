@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:academe_x/core/constants/cache_keys.dart';
-import 'package:academe_x/core/storage/storage.dart';
-import 'package:academe_x/features/auth/data/models/response/college_model.dart';
 import 'package:academe_x/lib.dart';
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -84,7 +81,60 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
       await cacheManager.cacheResponse(CacheKeys.COLLEGES, result);
       return Right(result);
-    } catch (e, stackTrace) {
+    }on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    }on NotFoundException catch (e) {
+      return Left(NotFoundFailure(message: e.message));
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    } on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } catch (e,stackTrace) {
+      AppLogger.i('Error in getColleges: $e\n$stackTrace');
+      return Left(ServerFailure(message: 'An error occurred: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MajorModel>>> getMajorsByCollege(String collegeName) async {
+    try {
+      AppLogger.i('Getting majors from cache first');
+      final cached = await cacheManager.getCachedResponse<List<MajorModel>>(
+        CacheKeys.MAJORS,
+            (dynamic data) {
+          AppLogger.i('Parsing cached data: $data');
+          final List<dynamic> list = data as List;
+          return list.map((item) {
+            AppLogger.i('Parsing item: $item');
+            return MajorModel.fromJson(item as Map<String, dynamic>);
+          }).toList();
+        },
+      );
+
+      if (cached != null) {
+        AppLogger.i('Returning cached data: $cached');
+        return Right(cached);
+      }
+
+      AppLogger.i('No cache found, fetching from remote');
+      final majorsByName = await remoteDataSource.getMajorsByCollege(collegeName);
+      AppLogger.i('Got remote data: $majorsByName');
+
+      await cacheManager.cacheResponse(CacheKeys.COLLEGES, majorsByName);
+      return Right(majorsByName);
+    }on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    }on NotFoundException catch (e) {
+      return Left(NotFoundFailure(message: e.message));
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    } on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } catch (e,stackTrace) {
       AppLogger.i('Error in getColleges: $e\n$stackTrace');
       return Left(ServerFailure(message: 'An error occurred: $e'));
     }
@@ -123,6 +173,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       AppLogger.e('Error clearing colleges cache: $e');
     }
   }
+
 
 }
 

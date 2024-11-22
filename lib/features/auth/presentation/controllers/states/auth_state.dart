@@ -8,9 +8,11 @@ class AuthState extends Equatable {
   // Common fields for auth
   final bool isLoading;
   final bool isLoadingForCollege;
+  final bool isLoadingForMajors;
   final bool isRememberMe;
   final List<String>? errorMessage;
   final List<CollegeEntity>? colleges;
+  List<MajorEntity>? majors;
   final bool isAuthenticated;
 
   // College-related fields
@@ -38,6 +40,7 @@ class AuthState extends Equatable {
    AuthState({
     this.isLoading = false,
     this.isLoadingForCollege = false,
+    this.isLoadingForMajors = false,
     this.isRememberMe = false,
     this.errorMessage,
     this.isAuthenticated = false,
@@ -66,6 +69,8 @@ class AuthState extends Equatable {
     this.isPasswordVisible = false,
 
     this.colleges,
+    this.majors,
+
   }): collegesData = collegesData ?? const {
      'كلية الطب': CollegeData(
        icon: '👨‍⚕️',
@@ -106,9 +111,11 @@ class AuthState extends Equatable {
   AuthState copyWith({
     bool? isLoading,
     bool? isLoadingForCollege,
+    bool? isLoadingForMajors,
     bool? isRememberMe,
     List<String>? errorMessage,
     List<CollegeEntity>? colleges,
+    List<MajorEntity>? majors,
     bool? isAuthenticated,
     // College fields
     bool? isExpanded,
@@ -134,9 +141,11 @@ class AuthState extends Equatable {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       isLoadingForCollege: isLoadingForCollege ?? this.isLoadingForCollege,
+      isLoadingForMajors: isLoadingForMajors ?? this.isLoadingForMajors,
       isRememberMe: isRememberMe ?? this.isRememberMe,
       errorMessage: errorMessage,
       colleges: colleges ?? this.colleges,
+      majors: majors ?? this.majors,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       // College fields
       isExpanded: isExpanded ?? this.isExpanded,
@@ -165,6 +174,7 @@ class AuthState extends Equatable {
   List<Object?> get props => [
     isLoading,
     isLoadingForCollege,
+    isLoadingForMajors,
     isRememberMe,
     errorMessage,
     isAuthenticated,

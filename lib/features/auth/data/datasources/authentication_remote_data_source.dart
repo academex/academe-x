@@ -159,5 +159,58 @@ class AuthenticationRemoteDataSource {
     }
   }
 
+
+  Future<List<MajorModel>> getMajorsByCollege(String majorName) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        final response = await apiController.post(
+          Uri.parse(ApiSetting.colleges),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: {
+            "collegeEn":jsonEncode(majorName)
+          }
+        );
+
+
+        if (response.statusCode == 200) {
+          final List<dynamic> jsonData = jsonDecode(response.body);
+          return jsonData.map((major) => MajorModel.fromJson(major as Map<String, dynamic>)).toList();
+        }
+
+        // Handle error responses
+        final errorResponse = ErrorResponseModel.fromJson(jsonDecode(response.body));
+
+        switch (errorResponse.statusCode) {
+          case 400:
+            final messages = errorResponse.messages ?? [errorResponse.message ?? ''];
+            throw UnauthorizedException(message: messages[0]);
+          case 401:
+            throw UnauthorizedException(message: errorResponse.message ?? 'Unauthorized access');
+          case 404:
+            throw NotFoundException(message: errorResponse.message ?? 'Resource not found');
+          case 429:
+            throw TooManyRequestsException(message: errorResponse.message ?? 'Too many requests');
+          case 500:
+          case 502:
+          case 503:
+          case 504:
+            throw ServerException(
+              message: errorResponse.message ?? 'Server error (${response.statusCode})',
+            );
+          default:
+            throw ServerException(
+              message: errorResponse.message ?? 'Unexpected error (${response.statusCode})',
+            );
+        }
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
 }
 

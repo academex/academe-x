@@ -7,8 +7,9 @@ class ApiSetting {
   static String get login => '${AppConfig.authEndpoint}/signin';
   static String get signup => '${AppConfig.authEndpoint}/signup';
 
-  // College endpoints
+  // tags endpoints
   static String get colleges => '${AppConfig.tagsEndpoint}/colleges';
+  static String get majors => '${AppConfig.tagsEndpoint}/majors';
 
 
   //
