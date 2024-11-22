@@ -72,7 +72,8 @@ class ApiController {
 
       final Map<String, String> finalHeaders = {
         'Content-Type': 'application/json',
-        ...?headers,
+        'Authorization':
+            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhcmFhIiwiaWF0IjoxNzMyMjczODIxLCJleHAiOjE3MzIyNzc0MjF9.PgIp3RGvqB0iWfxhJa-1xh7AakXdDRx4cGdXJlhfLGo',
       };
 
       final dynamic finalBody = body is String ? body : jsonEncode(body);

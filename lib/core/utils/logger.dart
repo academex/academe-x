@@ -4,25 +4,24 @@ import 'package:flutter/foundation.dart';
 class AppLogger {
   static final Logger _logger = Logger(
     printer: PrettyPrinter(
-      methodCount: 1,      // Number of method calls to be displayed
+      methodCount: 1, // Number of method calls to be displayed
       errorMethodCount: 8, // Number of method calls if stacktrace is provided
-      lineLength: 120,     // Width of the output
-      colors: true,        // Colorful log messages
-      printEmojis: true,   // Print an emoji for each log message
-      printTime: true,     // Should each log print contain a timestamp
+      lineLength: 120, // Width of the output
+      colors: true, // Colorful log messages
+      printEmojis: true, // Print an emoji for each log message
+      printTime: true, // Should each log print contain a timestamp
     ),
     level: kDebugMode ? Level.debug : Level.nothing,
   );
 
   // For general debug messages
   static void d(String message) {
-    _logger.d('👀 DEBUG: $message');
+    _logger.d('👀 DEBUG: $message', stackTrace: StackTrace.current);
   }
 
   // For informational messages
   static void i(String message) {
     _logger.i('ℹ️ INFO: $message');
-
   }
 
   // For warning messages

@@ -14,16 +14,11 @@ class ErrorResponseModel {
 
   factory ErrorResponseModel.fromJson(Map<String, dynamic> json) {
     return ErrorResponseModel(
-      messages: json['message'] is List
-          ? List<String>.from(json['message'])
-          : null,
-      message: json['message'] is String
-          ? json['message']
-          : null,
+      messages:
+          json['message'] is List ? List<String>.from(json['message']) : null,
+      message: json['message'] is String ? json['message'] : null,
       error: json['error'],
       statusCode: json['statusCode'],
     );
   }
-
-
 }

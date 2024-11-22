@@ -40,7 +40,7 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 0.4.sh,
+      height: 0.3.sh,
       child: RawScrollbar(
         thumbVisibility: true,
         thumbColor: Colors.blue.shade100,

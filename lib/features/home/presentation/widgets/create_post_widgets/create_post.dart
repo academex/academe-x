@@ -311,45 +311,55 @@ class CreatePost {
                         }
                       },
                       builder: (context, state) {
-                        return GestureDetector(
-                          onTap: state is! SendingState
-                              ? () {
-                                  if (_formKey.currentState!.validate()) {
-                                    post.copyWith(
-                                        content: _postController.text);
-                                    context
-                                        .read<CreatePostCubit>()
-                                        .sendPost(post: post);
-                                  }
-                                }
-                              : null,
-                          child: Container(
-                            height: 50.h,
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                  0xFF007AFF), // Blue color for the post button
-                              borderRadius: BorderRadius.circular(10),
+                        return Column(
+                          children: [
+                            if (state is FailureState)
+                              AppText(
+                                text: state.errorMessage,
+                                fontSize: 12.sp,
+                                color: Colors.red,
+                              ),
+                            GestureDetector(
+                              onTap: state is! SendingState
+                                  ? () {
+                                      if (_formKey.currentState!.validate()) {
+                                        post.copyWith(
+                                            content: _postController.text);
+                                        context
+                                            .read<CreatePostCubit>()
+                                            .sendPost(post: post);
+                                      }
+                                    }
+                                  : null,
+                              child: Container(
+                                height: 50.h,
+                                decoration: BoxDecoration(
+                                  color: const Color(
+                                      0xFF007AFF), // Blue color for the post button
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Center(
+                                  child: state is! SendingState
+                                      ? AppText(
+                                          text: 'نشر',
+                                          fontSize: 16.sp,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        )
+                                      : SizedBox(
+                                          // height: 50,
+                                          // width: 50,
+                                          child: CircularProgressIndicator(
+                                            backgroundColor: Colors.grey[200],
+                                            valueColor:
+                                                const AlwaysStoppedAnimation<
+                                                    Color>(Colors.blue),
+                                          ),
+                                        ),
+                                ),
+                              ),
                             ),
-                            child: Center(
-                              child: state is! SendingState
-                                  ? AppText(
-                                      text: 'نشر',
-                                      fontSize: 16.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    )
-                                  : SizedBox(
-                                      // height: 50,
-                                      // width: 50,
-                                      child: CircularProgressIndicator(
-                                        backgroundColor: Colors.grey[200],
-                                        valueColor:
-                                            const AlwaysStoppedAnimation<Color>(
-                                                Colors.blue),
-                                      ),
-                                    ),
-                            ),
-                          ),
+                          ],
                         );
                       },
                     ),

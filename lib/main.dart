@@ -78,7 +78,7 @@ class Main extends StatelessWidget {
         ],
         debugShowCheckedModeBanner: false,
         theme: _buildTheme(),
-        initialRoute: '/home_screen',
+        initialRoute: '/login',
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) => _buildAppWithExtra(context, child),
       ),

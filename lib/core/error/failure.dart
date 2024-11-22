@@ -5,13 +5,11 @@ abstract class Failure extends Equatable {
   Failure({required this.message});
   @override
   List<Object?> get props => [message];
-
 }
 
 class ServerFailure extends Failure {
   ServerFailure({required super.message});
 }
-
 
 class ValidationFailure extends Failure {
   final List<String> messages;
@@ -30,8 +28,10 @@ class NoInternetConnectionFailure extends Failure {
   NoInternetConnectionFailure({required super.message});
 }
 
-
 class TimeOutFailure extends Failure {
   TimeOutFailure({required super.message});
 }
 
+class AuthFailure extends Failure {
+  AuthFailure({required super.message});
+}
