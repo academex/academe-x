@@ -1,69 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:academe_x/lib.dart';
 
-// class ShowGridViewItem extends StatelessWidget {
-//
-//   final List<String> data;
-//   final Function(int)onTap;
-//    int? selectedIndex=100;
-//    // int? selectedSemesterIndex;
-//
-//    ShowGridViewItem({super.key,required this.data,required this.onTap, this.selectedIndex});
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return GridView.builder(
-//       padding: EdgeInsets.zero,
-//       itemCount:data.length,
-//       physics: const NeverScrollableScrollPhysics(),
-//       gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
-//         crossAxisCount: data.length ==2 ?2:4,
-//         mainAxisSpacing: 8,
-//         crossAxisSpacing: 8,
-//         childAspectRatio: data.length ==2 ?4:2,
-//       ),
-//       itemBuilder: (context, index) {
-//         return InkWell(
-//           onTap:() => onTap(index),
-//           child: Container(
-//             decoration: ShapeDecoration(
-//               color:const Color(0xFFF9F9F9),
-//               shape: RoundedRectangleBorder(
-//                 side: BorderSide(width: 0.80, color:selectedIndex== index?const Color(0xFF0077FF): Color(0x38E1E1E1)),
-//                 borderRadius: BorderRadius.circular(8),
-//               ),
-//             ),
-//             height: 56,
-//             width: 80,
-//             child: Center(
-//               child: AppText(text: data[index], fontSize: 16),
-//             ),
-//           ),
-//         );
-//       },
-//       // gridDelegate: ,
-//     );
-//   }
-// }
-
-
-class ShowGridViewItem extends StatelessWidget {
-  final List<dynamic> data;
+class ShowGridViewItem<T> extends StatelessWidget {
+  final List<T> data;
   final Function(int) onTap;
   final int? selectedIndex;
   final int crossAxisCount;
+  final String Function(T) displayTextBuilder;
 
-  const ShowGridViewItem({
+   ShowGridViewItem({
     required this.data,
     required this.onTap,
     required this.selectedIndex,
     required this.crossAxisCount,
+     required this.displayTextBuilder,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -75,23 +31,25 @@ class ShowGridViewItem extends StatelessWidget {
         mainAxisSpacing: 8,
       ),
       itemCount: data.length,
-      itemBuilder: (context, index) =>    InkWell(
+      itemBuilder: (context, index) {
+        return  InkWell(
           onTap:() => onTap(index),
           child: Container(
             decoration: ShapeDecoration(
               color:const Color(0xFFF9F9F9),
               shape: RoundedRectangleBorder(
-                side: BorderSide(width: 0.80, color:selectedIndex== index?const Color(0xFF0077FF): Color(0x38E1E1E1)),
+                side: BorderSide(width: 0.80, color:selectedIndex== index?const Color(0xFF0077FF): const Color(0x38E1E1E1)),
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            height: 56,
-            width: 80,
+            // height: 56,
+            // width: 80,
             child:  Center(
-              child: AppText(text: data[index], fontSize: 16),
+              child: AppText(text:displayTextBuilder(data[index]) , fontSize: 16),
             ),
           ),
-        )
+        );
+      }
         // Your existing grid item implementation
     );
   }

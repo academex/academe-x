@@ -1,10 +1,18 @@
+import 'package:academe_x/core/config/app_config.dart';
+
 class ApiSetting {
-  static const String baseUrl = "https://academex-1.onrender.com/";
+  static String get baseUrl => AppConfig.apiUrl;
 
-  static const String login = "${baseUrl}auth/signin";
-  static const String signup = "${baseUrl}auth/signup";
-  static const String colleges = "${baseUrl}tag/colleges";
+  // Auth endpoints
+  static String get login => '${AppConfig.authEndpoint}/signin';
+  static String get signup => '${AppConfig.authEndpoint}/signup';
 
-  // create post
-  static const String createPost = "${baseUrl}post";
+  // tags endpoints
+  static String get colleges => '${AppConfig.tagsEndpoint}/colleges';
+  static String get majors => '${AppConfig.tagsEndpoint}/majors';
+
+
+  //
+  // // create post
+  static  String createPost = "${baseUrl}post";
 }

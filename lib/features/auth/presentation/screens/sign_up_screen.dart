@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpScreen extends StatelessWidget {
-   SignUpScreen({super.key});
+   const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +210,7 @@ class SignUpScreen extends StatelessWidget {
 
                 return SizedBox(
                   height: gridHeight,
-                  child: ShowGridViewItem(
+                  child: ShowGridViewItem<String>(
                     crossAxisCount: 2,
                     data:const [
                             'ذكر',
@@ -221,6 +221,7 @@ class SignUpScreen extends StatelessWidget {
                       context.read<SignupCubit>().selectGenderIndex(index: index);
                       },
                     selectedIndex:state.selectedGenderIndex,
+                    displayTextBuilder: (p0) => p0,
                   ),
                 );
               },
@@ -292,7 +293,7 @@ class SignUpScreen extends StatelessWidget {
                   double gridHeight = rowCount * itemHeight;
                   return SizedBox(
                     height: gridHeight,
-                    child: ShowGridViewItem(
+                    child: ShowGridViewItem<String>(
                       crossAxisCount: crossAxisCount,
                       data:const [
                         'أولى',
@@ -309,6 +310,7 @@ class SignUpScreen extends StatelessWidget {
                         );
                       },
                       selectedIndex:state.selectedSemesterIndex,
+                      displayTextBuilder: (p0) => p0,
                     ),
                   );
                 },

@@ -37,48 +37,48 @@ abstract class AuthCubit extends Cubit<AuthState> {
   //  return await authenticationUseCase.getColleges();
   // }
 
-  Future<void> getColleges() async {
-    if (state.isLoading) return;
-    setLoading();
-
-    final result = await authenticationUseCase.getColleges();
-    Future.delayed(
-        const Duration(
-            seconds: 0
-        ),
-            () {
-          result.fold(
-                (failure) {
-              List<String>? errorMessage=[];
-              if (failure is ValidationFailure) {
-                errorMessage = failure.messages;
-              } else if (failure is UnauthorizedFailure) {
-                errorMessage.add(failure.message);
-              } else {
-                errorMessage.add(failure.message);
-              }
-              setError(errorMessage[0]);
-              // emit(state.copyWith(
-              //   isLoading: false,
-              //   errorMessage: errorMessage,
-              //   isAuthenticated: false,
-              // ));
-            },
-                (colleges) async {
-                  emit(state.copyWith(
-                    colleges: colleges
-                  ));
-                  // state.collegesData = Map.fromEntries(
-                  //     colleges?.map((college) => MapEntry(college.collegeAr!, CollegeData(icon: icon, majors: majors))) ?? {}
-                  // );
-                  // state.collegesData!.addEntries(colleges);
-               // emit(state)
-
-            },
-          );
-        }
-    );
-  }
+  // // Future<void> getColleges() async {
+  // //   if (state.isLoading) return;
+  // //   setLoading();
+  // //
+  // //   final result = await authenticationUseCase.getColleges();
+  // //   Future.delayed(
+  // //       const Duration(
+  // //           seconds: 0
+  // //       ),
+  // //           () {
+  // //         result.fold(
+  // //               (failure) {
+  // //             List<String>? errorMessage=[];
+  // //             if (failure is ValidationFailure) {
+  // //               errorMessage = failure.messages;
+  // //             } else if (failure is UnauthorizedFailure) {
+  // //               errorMessage.add(failure.message);
+  // //             } else {
+  // //               errorMessage.add(failure.message);
+  // //             }
+  // //             setError(errorMessage[0]);
+  // //             // emit(state.copyWith(
+  // //             //   isLoading: false,
+  // //             //   errorMessage: errorMessage,
+  // //             //   isAuthenticated: false,
+  // //             // ));
+  // //           },
+  // //               (colleges) async {
+  // //                 emit(state.copyWith(
+  // //                   colleges: colleges
+  // //                 ));
+  // //                 // state.collegesData = Map.fromEntries(
+  // //                 //     colleges?.map((college) => MapEntry(college.collegeAr!, CollegeData(icon: icon, majors: majors))) ?? {}
+  // //                 // );
+  // //                 // state.collegesData!.addEntries(colleges);
+  // //              // emit(state)
+  // //
+  // //           },
+  // //         );
+  // //       }
+  //   );
+  // }
 
   void checkRememberMe() {
     emit(state.copyWith(isRememberMe: !state.isRememberMe));

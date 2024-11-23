@@ -75,24 +75,31 @@ Widget _buildHeader(AuthState state) {
 Widget _buildCollegesList(AuthState state,BuildContext context) {
   AppLogger.success(state.colleges.toString());
   if(state.errorMessage !=null){
-    return ErrorStateWidget(onRetry: () async{
-      await context.read<SignupCubit>().retry();
-
-    },);
+    // return ErrorStateWidget(onRetry: () async{
+    //   await context.read<SignupCubit>().retry();
+    //
+    // },message: 'خطأ في التحميل',);
+    return CompactErrorWidget(
+      message: 'خطأ في التحميل',
+      onRetry: () async{
+        await context.read<SignupCubit>().retry();
+      },
+    );
   }
   else if(!state.isLoadingForCollege && state.colleges!=null){
     return Column(
         children: state.colleges!.map((college) {
-          final isSelected = state.selectedCollege == college.collegeAr;
+          final isSelected = state.selectedCollege == college.collegeEn;
           return CollegeItem(
             state:state,
-            college:  college.collegeAr!,
+            college:  college.collegeEn!,
             collegeData:const CollegeData(icon: '', majors: []),
             isSelected: isSelected,
             selectedMajor: state.selectedCollege,
             onCollegeSelected: (college) {
               // AppLogger.success('mesdasssage');
               context.read<SignupCubit>().selectCollege(college);
+              context.read<SignupCubit>().getMajorsByCollege(college);
               // context.read<SignupCubit>().selectIndex(selectionType: selectionType);
             },
             // onMajorSelected: (index) {

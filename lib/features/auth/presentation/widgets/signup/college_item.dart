@@ -159,23 +159,6 @@ class CollegeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if(state.errorMessage !=null){
-    //   return ErrorStateWidget(onRetry: () {
-    //   },);
-    // }
-    // else if(!state.isLoadingForCollege && state.colleges!=null){
-    //   return
-    // }else if(state.isLoadingForCollege) {
-    //   return const CollegeSelectionShimmer();
-    // }else{
-    //   return CompactErrorWidget(
-    //     message: 'خطأ في التحميل',
-    //     onRetry: () async{
-    //       await context.read<SignupCubit>().retry();
-    //
-    //     },
-    //   );
-    // }
 
     return ResponsiveContainer(
       child: Padding(
@@ -270,21 +253,58 @@ class CollegeItem extends StatelessWidget {
   }
 
   Widget _buildMajorsList(BuildContext ctx) {
-    return LayoutBuilder(
+    return ctx.read<SignupCubit>().state.isLoadingForMajors || ctx.read<SignupCubit>().state.isLoadingForCollege?  LayoutBuilder(
       builder: (context, constraints) {
-        int crossAxisCount =SizeConfig().getCrossAxisCount(context) ;
+        int crossAxisCount = SizeConfig().getCrossAxisCount(context);
         double itemHeight = SizeConfig().getItemHeight(context);
-        int rowCount = (collegeData.majors.length / crossAxisCount).ceil();
+        int rowCount = (10 / crossAxisCount).ceil(); // Assuming 10 shimmer items
         double gridHeight = rowCount * itemHeight;
 
         return SizedBox(
           height: gridHeight,
-          child: ShowGridViewItem(
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              childAspectRatio: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? 2.5 : 3.0,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
+            itemCount: 10,
+            itemBuilder: (context, index) => Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                height: 56,
+                width: 80,
+              ),
+            ),
+          ),
+        );
+      },
+    )
+        : LayoutBuilder(
+      builder: (context, constraints) {
+        int crossAxisCount =SizeConfig().getCrossAxisCount(context) ;
+        double itemHeight = SizeConfig().getItemHeight(context);
+        int rowCount = (ctx.read<SignupCubit>().state.majors!.length / crossAxisCount).ceil();
+        double gridHeight = rowCount * itemHeight;
+
+        return SizedBox(
+          height: gridHeight,
+          child: ShowGridViewItem<MajorEntity>(
             crossAxisCount: crossAxisCount,
-            data: collegeData.majors,
+            data: ctx.read<SignupCubit>().state.majors!,
             onTap: (index) {
               ctx.read<SignupCubit>().appendMajorToBaseVar(
-                  collegeData.majors[index]
+                  ctx.read<SignupCubit>().state.majors![index].name!
               );
               ctx.read<SignupCubit>().selectIndex(
                   index: index,
@@ -292,6 +312,7 @@ class CollegeItem extends StatelessWidget {
               );
             },
             selectedIndex: ctx.read<SignupCubit>().state.selectedMajorIndex,
+            displayTextBuilder: (p0)=>p0.majorAr!
           ),
         );
       },
