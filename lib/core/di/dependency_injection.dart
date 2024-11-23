@@ -102,7 +102,7 @@ void _initUseCases() {
 void _initRepositories() {
   getIt.registerLazySingleton<AuthenticationRepository>(
     () => AuthenticationRepositoryImpl(
-        remoteDataSource: getIt(), cacheManager: getIt()),
+        remoteDataSource: getIt(), cacheManager: getIt(), networkInfo: InternetConnectionChecker()),
   );
   getIt.registerLazySingleton<CreatePostRepository>(
     () => CreatePostRepositoryImp(createPostRemoteDataSourse: getIt()),
@@ -114,7 +114,8 @@ void _initDataSources() {
     () => AuthenticationRemoteDataSource(
         apiController: getIt(),
         internetConnectionChecker: getIt(),
-        cacheManager: getIt()),
+        // cacheManager: getIt(),
+    ),
   );
 
   getIt.registerLazySingleton<CreatePostRemoteDataSource>(

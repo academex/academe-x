@@ -12,7 +12,7 @@ import 'lib.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await init();
-  // await getIt<StorageService>().init();
+  await getIt<StorageService>().init();
 
   runApp(const Main());
 }

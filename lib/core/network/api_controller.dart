@@ -71,7 +71,7 @@ class ApiController {
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
-    required int timeAlive,
+        int timeAlive = 120,
   }) async {
     try {
       AppLogger.success(body.toString());
