@@ -16,7 +16,9 @@ class AppLogger {
 
   // For general debug messages
   static void d(String message) {
-    _logger.d('👀 DEBUG: $message', stackTrace: StackTrace.current);
+    _logger.d(
+      '👀 DEBUG: $message',
+    );
   }
 
   // For informational messages

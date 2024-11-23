@@ -7,7 +7,11 @@ import 'package:academe_x/features/home/presentation/controllers/cubits/create_p
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/tag_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import '../../features/home/data/repositories/create_post_repository_imp.dart';
+import '../../features/home/domain/usecases/create_post_use_case.dart';
+import '../../features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import '../core.dart';
+import '../services/hive_cache_manager.dart';
 
 final getIt = GetIt.instance;
 
@@ -28,11 +32,12 @@ Future<void> init() async {
   _initDataSources();
 
   // External Dependencies
-  _initExternalDependencies();
+  await _initExternalDependencies();
 }
 
 void _initCubits() {
   getIt.registerFactory<LoginCubit>(() => LoginCubit(authUseCase: getIt()));
+
   getIt.registerFactory<CreatePostCubit>(
     () => CreatePostCubit(InitialState(), createPostUseCase: getIt()),
   );
@@ -92,7 +97,8 @@ void _initUseCases() {
 
 void _initRepositories() {
   getIt.registerLazySingleton<AuthenticationRepository>(
-    () => AuthenticationRepositoryImpl(remoteDataSource: getIt()),
+    () => AuthenticationRepositoryImpl(
+        remoteDataSource: getIt(), cacheManager: getIt()),
   );
   getIt.registerLazySingleton<CreatePostRepository>(
     () => CreatePostRepositoryImp(createPostRemoteDataSourse: getIt()),
@@ -102,9 +108,9 @@ void _initRepositories() {
 void _initDataSources() {
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
     () => AuthenticationRemoteDataSource(
-      apiController: getIt(),
-      internetConnectionChecker: getIt(),
-    ),
+        apiController: getIt(),
+        internetConnectionChecker: getIt(),
+        cacheManager: getIt()),
   );
 
   getIt.registerLazySingleton<CreatePostRemoteDataSource>(
@@ -115,11 +121,22 @@ void _initDataSources() {
   );
 }
 
-void _initExternalDependencies() {
-  getIt.registerLazySingleton(() => ApiController());
-  getIt.registerFactory<InternetConnectionChecker>(
-    () => InternetConnectionChecker(),
-  );
+Future<void> _initExternalDependencies() async {
+  final cacheManager = HiveCacheManager();
+  await cacheManager.init();
+  getIt.registerLazySingleton(() => cacheManager);
 
-  getIt.registerSingleton<StorageService>(StorageService());
+  getIt.registerLazySingleton(() => ApiController());
+  getIt.registerLazySingleton(() => InternetConnectionChecker());
 }
+
+// void _initExternalDependencies() {
+//   getIt.registerLazySingleton(() => ApiController());
+//   getIt.registerFactory<InternetConnectionChecker>(
+//     () => InternetConnectionChecker(),
+//   );
+//
+//   getIt.registerFactory<StorageService>(
+//     () => StorageService(),
+//   );
+// }

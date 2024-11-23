@@ -24,28 +24,6 @@ class CollegeSelectionWidget extends StatelessWidget {
   }
 }
 
-
-// Widget _buildDropdown(BuildContext context,) {
-//   return GestureDetector(
-//     onTap: () {
-//       context.read<CollegeCubit>().toggleExpanded();
-//     },
-//
-//     child: Container(
-//         decoration: _dropdownDecoration,
-//         width: double.infinity,
-//         child: Column(
-//           children: [
-//             _buildHeader(context.read<CollegeCubit>().state),
-//             if (context.read<CollegeCubit>().state.isExpanded) ...[
-//               _buildDivider(),
-//               _buildCollegesList(context.read<CollegeCubit>().state,context),
-//             ],
-//           ],
-//         )
-//     ),
-//   );
-// }
 Widget _buildDropdown(BuildContext context) {
   return GestureDetector(
     onTap: () => context.read<SignupCubit>().toggleExpanded(),
@@ -64,29 +42,7 @@ Widget _buildDropdown(BuildContext context) {
     ),
   );
 }
-// Widget _buildHeader(CollegeState state) {
-//   return Padding(
-//     padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 12),
-//     child: Row(
-//       children: [
-//         Expanded(
-//           child: AppText(
-//             text: state.collegeAndMajor ?? 'قم باختيار الكلية',
-//             color: state.selectedCollege != null
-//                 ? const Color(0xFF565A62)
-//                 : const Color(0xFF949494),
-//             fontSize: 14,
-//             fontWeight: FontWeight.w400,
-//           ),
-//         ),
-//         Icon(
-//           state.isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-//           color: Colors.grey.shade600,
-//         ),
-//       ],
-//     ),
-//   );
-// }
+
 Widget _buildHeader(AuthState state) {
   return Builder(
     builder: (context) => Padding(
@@ -117,25 +73,69 @@ Widget _buildHeader(AuthState state) {
   );
 }
 Widget _buildCollegesList(AuthState state,BuildContext context) {
-  return Column(
-    children: state.collegesData.entries.map((entry) {
-      final isSelected = state.selectedCollege == entry.key;
-      return CollegeItem(
-        college: entry.key,
-        collegeData: entry.value,
-        isSelected: isSelected,
-        selectedMajor: state.selectedCollege,
-        onCollegeSelected: (college) {
-          // AppLogger.success('mesdasssage');
-          context.read<SignupCubit>().selectCollege(college);
-          // context.read<SignupCubit>().selectIndex(selectionType: selectionType);
-        },
-        // onMajorSelected: (index) {
-        //   // context.read<CollegeCubit>().selectMajorIndex(index);
-        // },
-      );
-    }).toList(),
-  );
+  AppLogger.success(state.colleges.toString());
+  if(state.errorMessage !=null){
+    return ErrorStateWidget(onRetry: () async{
+      await context.read<SignupCubit>().retry();
+
+    },);
+  }
+  else if(!state.isLoadingForCollege && state.colleges!=null){
+    return Column(
+        children: state.colleges!.map((college) {
+          final isSelected = state.selectedCollege == college.collegeAr;
+          return CollegeItem(
+            state:state,
+            college:  college.collegeAr!,
+            collegeData:const CollegeData(icon: '', majors: []),
+            isSelected: isSelected,
+            selectedMajor: state.selectedCollege,
+            onCollegeSelected: (college) {
+              // AppLogger.success('mesdasssage');
+              context.read<SignupCubit>().selectCollege(college);
+              // context.read<SignupCubit>().selectIndex(selectionType: selectionType);
+            },
+            // onMajorSelected: (index) {
+            //   // context.read<CollegeCubit>().selectMajorIndex(index);
+            // },
+          );
+        }).toList()
+    );
+  }else if(state.isLoadingForCollege) {
+    return const CollegeSelectionShimmer();
+  }else{
+    return CompactErrorWidget(
+      message: 'خطأ في التحميل',
+      onRetry: () async{
+        await context.read<SignupCubit>().retry();
+
+      },
+    );
+  }
+
+
+  // var dummyListMajors= state.collegesData!.entries;
+  //
+  // return Column(
+  //   children: state.colleges!.map((college) {
+  //     final isSelected = state.selectedCollege == college.collegeAr;
+  //     return CollegeItem(
+  //       state:state,
+  //       college: college.collegeAr!,
+  //       collegeData: CollegeData(icon: 'icon', majors: []),
+  //       isSelected: isSelected,
+  //       selectedMajor: state.selectedCollege,
+  //       onCollegeSelected: (college) {
+  //         // AppLogger.success('mesdasssage');
+  //         context.read<SignupCubit>().selectCollege(college);
+  //         // context.read<SignupCubit>().selectIndex(selectionType: selectionType);
+  //       },
+  //       // onMajorSelected: (index) {
+  //       //   // context.read<CollegeCubit>().selectMajorIndex(index);
+  //       // },
+  //     );
+  //   }).toList(),
+  // );
 }
 
 Widget _buildDivider() {

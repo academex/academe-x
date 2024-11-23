@@ -18,7 +18,7 @@ class ApiController {
 
   static Map<String, dynamic> cacheData = {};
 
-  Future<Map> get(Uri url,
+  Future<http.Response> get(Uri url,
       {Map<String, String>? headers,
       int timeToLive = 0,
       bool isRefresh = false}) async {
@@ -31,23 +31,29 @@ class ApiController {
           return cacheData[url.toString()];
         }
       }
-      http.Response response = await http.get(url,
-          headers: headers ?? {"Content-Type": "application/json"});
+      http.Response response = await http
+          .get(url, headers: headers ?? {"Content-Type": "application/json"})
+          .timeout(Duration(seconds: 10), onTimeout: () {
+        // This block executes if the request times out
+        throw TimeOutExeption(
+            errorMessage: 'Request took longer than ${10} seconds.');
+      });
+      return response;
 
-      Map<String, dynamic> data = await jsonDecode(response.body);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Logger().i( );
-        if (timeToLive > 0) {
-          cacheData[url.toString()] = data;
-          // cacheData['mainCategory'] = data['data']['mainCategories'];
-          cacheData['${url}cacheTime'] = timeToLive;
-          cacheData['${url}saveTime'] = DateTime.now();
-        }
-        return data;
-      } else {
-        Logger().i(data);
-        return data;
-      }
+      // Map<String, dynamic> data = await jsonDecode(response.body);
+      // if (response.statusCode == 200 || response.statusCode == 201) {
+      //   // Logger().i( );
+      //   if (timeToLive > 0) {
+      //     cacheData[url.toString()] = data;
+      //     // cacheData['mainCategory'] = data['data']['mainCategories'];
+      //     cacheData['${url}cacheTime'] = timeToLive;
+      //     cacheData['${url}saveTime'] = DateTime.now();
+      //   }
+      //
+      // } else {
+      //   Logger().i(data);
+      //   return response;
+      // }
     } catch (e) {
       Logger().e(e);
       rethrow;

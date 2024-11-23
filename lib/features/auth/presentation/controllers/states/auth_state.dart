@@ -1,3 +1,4 @@
+import 'package:academe_x/features/auth/auth.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -6,8 +7,10 @@ import 'college_state.dart';
 class AuthState extends Equatable {
   // Common fields for auth
   final bool isLoading;
+  final bool isLoadingForCollege;
   final bool isRememberMe;
   final List<String>? errorMessage;
+  final List<CollegeEntity>? colleges;
   final bool isAuthenticated;
 
   // College-related fields
@@ -16,7 +19,7 @@ class AuthState extends Equatable {
   final int? selectedMajorIndex;
   final int? selectedSemesterIndex;
   final String? collegeAndMajor;
-  final Map<String, CollegeData> collegesData;
+  late Map<String, CollegeData>? collegesData;
   final SelectionType? selectionType;
 
   // Signup fields
@@ -32,8 +35,9 @@ class AuthState extends Equatable {
   final GlobalKey<FormState>? formKey;
   final bool isPasswordVisible;
 
-  const AuthState({
+   AuthState({
     this.isLoading = false,
+    this.isLoadingForCollege = false,
     this.isRememberMe = false,
     this.errorMessage,
     this.isAuthenticated = false,
@@ -44,7 +48,7 @@ class AuthState extends Equatable {
     this.selectedSemesterIndex,
     this.collegeAndMajor,
     this.selectionType,
-    Map<String, CollegeData>? collegesData,
+    // Map<String, CollegeData>? collegesData,
     // Signup fields
     this.selectedGenderIndex,
     this.firstNameController,
@@ -52,22 +56,27 @@ class AuthState extends Equatable {
     this.userNameController,
     this.emailController,
     this.phoneController,
-    this.passwordController,
+     Map<String, CollegeData>? collegesData,
+
+     this.passwordController,
     this.confirmPasswordController,
     this.showEducationInfo = false,
     this.formKey,
+
     this.isPasswordVisible = false,
-  }) : collegesData = collegesData ?? const {
-    'كلية الطب': CollegeData(
-      icon: '👨‍⚕️',
-      majors: ['طب عام', 'طب أسنان',],
-    ),
-    'كلية الهندسة': CollegeData(
-      icon: '👷',
-      majors: ['صناعي', 'مدني', 'معماري', 'كهربائي'],
-    ),
-    // ... other colleges
-  };
+
+    this.colleges,
+  }): collegesData = collegesData ?? const {
+     'كلية الطب': CollegeData(
+       icon: '👨‍⚕️',
+       majors: ['طب عام', 'طب أسنان',],
+     ),
+     'كلية الهندسة': CollegeData(
+       icon: '👷',
+       majors: ['صناعي', 'مدني', 'معماري', 'كهربائي'],
+     ),
+     // ... other colleges
+   };
 
   factory AuthState.initial() {
     return AuthState(
@@ -96,8 +105,10 @@ class AuthState extends Equatable {
 
   AuthState copyWith({
     bool? isLoading,
+    bool? isLoadingForCollege,
     bool? isRememberMe,
     List<String>? errorMessage,
+    List<CollegeEntity>? colleges,
     bool? isAuthenticated,
     // College fields
     bool? isExpanded,
@@ -122,8 +133,10 @@ class AuthState extends Equatable {
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
+      isLoadingForCollege: isLoadingForCollege ?? this.isLoadingForCollege,
       isRememberMe: isRememberMe ?? this.isRememberMe,
       errorMessage: errorMessage,
+      colleges: colleges ?? this.colleges,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       // College fields
       isExpanded: isExpanded ?? this.isExpanded,
@@ -151,6 +164,7 @@ class AuthState extends Equatable {
   @override
   List<Object?> get props => [
     isLoading,
+    isLoadingForCollege,
     isRememberMe,
     errorMessage,
     isAuthenticated,
@@ -161,6 +175,7 @@ class AuthState extends Equatable {
     selectedSemesterIndex,
     collegeAndMajor,
     selectionType,
+    colleges,
     collegesData,
     // Signup props
     selectedGenderIndex,

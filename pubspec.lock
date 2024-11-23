@@ -1050,6 +1050,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  reaction_button:
+    dependency: "direct main"
+    description:
+      name: reaction_button
+      sha256: "006d06423b816bafba2abe2dde574adb12f96987c23f7e1082b83cec66ab758c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   rxdart:
     dependency: transitive
     description:

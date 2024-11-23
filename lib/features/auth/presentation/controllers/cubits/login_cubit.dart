@@ -79,7 +79,7 @@ class LoginCubit extends AuthCubit {
     final result = await authenticationUseCase.login(user);
     Future.delayed(
         const Duration(
-            seconds: 2
+            seconds: 0
         ),
             () {
               result.fold(

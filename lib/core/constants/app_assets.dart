@@ -1,4 +1,25 @@
+enum ReactionEmoji {
+  heart,
+  celebrate,
+  question,
+  haha,
+  insightful,
+  nothing,
+}
+
+
+
+
 abstract class AppAssets {
+
+
+  // Reactions
+  static const String heart = 'assets/icons/reactions/heart.svg';
+  static const String celebrate = 'assets/icons/reactions/celebrate.svg';
+  static const String question = 'assets/icons/reactions/question.svg';
+  static const String insightful = 'assets/icons/reactions/insightful.svg';
+  static const String haha = 'assets/icons/reactions/funny.svg';
+  static const String defaultIcon = 'assets/icons/reactions/default_icon.svg';
   // Navigation Icons
   static const String communityInactive = 'assets/icons/community.png';
   // static const String communityInactive = 'assets/icons/community.png';
@@ -21,12 +42,7 @@ abstract class AppAssets {
   static const String bookmarkSelected = 'assets/icons/bookMark_selected.png';
   static const String visibilePassword = 'assets/icons/visibile_password.png';
 
-  // Reactions
-  static const String heart = 'assets/icons/reactions/heart.png';
-  static const String celebrate = 'assets/icons/reactions/celebrate.png';
-  static const String question = 'assets/icons/reactions/question.png';
-  static const String insightful = 'assets/icons/reactions/insightful.png';
-  static const String like = 'assets/icons/reactions/like.png';
+
 
   // Sharing Options
   static const String copyLink = 'assets/icons/copy_link.png';

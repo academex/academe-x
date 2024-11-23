@@ -15,6 +15,7 @@ class CommentCard extends StatelessWidget {
   final List<Comment>? replies;
   bool _showReplyVisibility = false;
   bool isEndReply;
+  bool useNewDesign = true;
 
   CommentCard({
     required this.commenter,
@@ -26,11 +27,13 @@ class CommentCard extends StatelessWidget {
     this.isReply = false,
     this.replies = const [],
     this.isEndReply = false,
+    this.useNewDesign = true,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (useNewDesign) isEndReply = false;
     return BlocProvider(
       create: (_) => FavoriteCubit(false),
       child: Padding(
@@ -52,15 +55,17 @@ class CommentCard extends StatelessWidget {
                 Container(
                   width: 15,
                   height: 20,
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.only(bottomRight: Radius.circular(15)),
-                    border: Border(
-                        bottom: const BorderSide(color: Colors.black26),
-                        right: isEndReply
-                            ? const BorderSide(color: Colors.black26)
-                            : BorderSide.none),
-                  ),
+                  decoration: useNewDesign
+                      ? null
+                      : BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(15)),
+                          border: Border(
+                              bottom: const BorderSide(color: Colors.black26),
+                              right: isEndReply
+                                  ? const BorderSide(color: Colors.black26)
+                                  : BorderSide.none),
+                        ),
                 ),
               Column(
                 children: [

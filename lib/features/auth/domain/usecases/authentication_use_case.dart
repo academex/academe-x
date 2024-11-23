@@ -13,7 +13,11 @@ class AuthenticationUseCase {
 
   Future<Either<Failure, AuthTokenEntity>> signup(SignupRequestEntity userRegesteration) async {
     return await authenticationRepository.signup(userRegesteration);
-
   }
+
+  Future<Either<Failure, List<CollegeEntity>>> getColleges() async {
+    return await authenticationRepository.getColleges();
+  }
+
 
 }

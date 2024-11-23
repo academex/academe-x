@@ -13,6 +13,7 @@ class UserResponseModel extends UserResponseEntity {
   required super.role,
   required super.photoUrl,
   required super.bio,
+  required super.isActive,
   required super.currentYear,
   required super.gender,
   required super.phoneNum,
@@ -22,9 +23,6 @@ class UserResponseModel extends UserResponseEntity {
 
 
   factory UserResponseModel.fromJson(Map<String, dynamic> json) {
-    print('/*/*/*/');
-    print(json['createdAt']);
-    print(DateTime.parse(json['createdAt']));
     return UserResponseModel(
       id: json['id'],
       username: json['username'],
@@ -34,6 +32,7 @@ class UserResponseModel extends UserResponseEntity {
       role: json['role'],
       photoUrl: json['photoUrl'],
       bio: json['bio'],
+      isActive: json['isActive'],
       currentYear: json['currentYear'],
       gender: json['gender'],
       phoneNum: json['phoneNum'],
@@ -57,8 +56,9 @@ class UserResponseModel extends UserResponseEntity {
       'gender': gender,
       'phoneNum': phoneNum,
       'tagId': tagId,
-      'createdAt':  createdAt!.toIso8601String() ??'test',
-      'updatedAt': updatedAt!.toIso8601String() ??'test',
+      'isActive': isActive,
+      'createdAt':  createdAt!.toIso8601String() ,
+      'updatedA': updatedAt!.toIso8601String(),
     };
   }
 }

@@ -21,6 +21,8 @@ dependencies:
   shimmer: ^3.0.0  # For loading effects
   cached_network_image: ^3.3.1  # For efficient image loading
   photo_view: ^0.14.0  # For image viewing
+#  flutter_reaction_button: ^3.0.0+3
+  reaction_button: ^0.0.7
 
   # State Management
   flutter_bloc: ^8.1.6

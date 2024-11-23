@@ -20,14 +20,14 @@ class _OnBoardingState extends State<OnBoarding> {
     // Data localized through AppLocalizations
     Map<String, List<String>> data = {
       'titles': [
-        context.localizations.onboarding_title_1,
-        context.localizations.onboarding_title_2,
-        context.localizations.onboarding_title_3,
+        // context.localizations.onboarding_title_1,
+        // context.localizations.onboarding_title_2,
+        // context.localizations.onboarding_title_3,
       ],
       'descriptions': [
-        context.localizations.onboarding_desc_1,
-        context.localizations.onboarding_desc_2,
-        context.localizations.onboarding_desc_3,
+        // context.localizations.onboarding_desc_1,
+        // context.localizations.onboarding_desc_2,
+        // context.localizations.onboarding_desc_3,
       ],
       'images': [
         'assets/images/on_boarding_1.png',
@@ -51,7 +51,7 @@ class _OnBoardingState extends State<OnBoarding> {
                     Navigator.pushReplacementNamed(context, '/login');
                   },
                   child: Text(
-                    context.localizations.skip,
+                    'context.localizations.skip',
                     style: TextStyle(
                       fontSize: 16.sp,
                       color: const Color(0xffCBAEAE),
@@ -161,7 +161,7 @@ class _OnBoardingState extends State<OnBoarding> {
                           ),
                         ),
                         child: Text(
-                          context.localizations.previous,
+                          'context.localizations.previous',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.black,
@@ -191,8 +191,8 @@ class _OnBoardingState extends State<OnBoarding> {
                       ),
                       child: Text(
                         _indexPage < 2
-                            ? context.localizations.next
-                            : context.localizations.start_now,
+                            ? 'context.localizations.next'
+                            : 'context.localizations.start_now,',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white,
@@ -210,7 +210,7 @@ class _OnBoardingState extends State<OnBoarding> {
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  text: context.localizations.terms_and_conditions + " ",
+                  text: 'context.localizations.terms_and_conditions' + " ",
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -218,7 +218,7 @@ class _OnBoardingState extends State<OnBoarding> {
                   ),
                   children: [
                     TextSpan(
-                      text: context.localizations.privacy_policy,
+                      text: 'context.localizations.privacy_policy',
                       style: TextStyle(
                         fontSize: 14.sp,
                         decoration: TextDecoration.underline,
@@ -229,7 +229,7 @@ class _OnBoardingState extends State<OnBoarding> {
                         },
                     ),
                     TextSpan(
-                      text: context.localizations.privacy_policy_suffix,
+                      text: 'context.localizations.privacy_policy_suffix',
                     ),
                   ],
                 ),

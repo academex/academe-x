@@ -9,9 +9,9 @@ class UserResponseEntity {
   String? bio;
   int currentYear;
   String gender;
-
   String phoneNum;
   int tagId;
+  bool isActive;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -28,6 +28,7 @@ class UserResponseEntity {
     required this.gender,
     required this.phoneNum,
     required this.tagId,
+    required this.isActive,
     required this.createdAt,
     required this.updatedAt,
   });
