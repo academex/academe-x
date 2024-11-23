@@ -89,10 +89,10 @@ Widget _buildCollegesList(AuthState state,BuildContext context) {
   else if(!state.isLoadingForCollege && state.colleges!=null){
     return Column(
         children: state.colleges!.map((college) {
-          final isSelected = state.selectedCollege == college.collegeAr;
+          final isSelected = state.selectedCollege == college.collegeEn;
           return CollegeItem(
             state:state,
-            college:  college.collegeAr!,
+            college:  college.collegeEn!,
             collegeData:const CollegeData(icon: '', majors: []),
             isSelected: isSelected,
             selectedMajor: state.selectedCollege,

@@ -1,3 +1,4 @@
+import 'package:academe_x/core/core.dart';
 import 'package:flutter/material.dart';
 
 class AppLifecycleManager extends StatefulWidget {
@@ -34,17 +35,23 @@ class _AppLifecycleManagerState extends State<AppLifecycleManager>
         break;
       case AppLifecycleState.paused:
         _onPaused();
-        break;
+      break;
+      case AppLifecycleState.detached:
+        _onPaused();
+    break;
       default:
         break;
     }
   }
 
   void _onResumed() {
-    // Refresh data, reconnect services etc.
+    AppLogger.i('_onResumed');
+    // Refresh data, reconnect services etc
+    // .
   }
 
   void _onPaused() {
+    AppLogger.i('_onPaused');
     // Save state, disconnect services etc.
   }
 

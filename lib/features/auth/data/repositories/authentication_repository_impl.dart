@@ -120,9 +120,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
       AppLogger.i('No cache found, fetching from remote');
       final majorsByName = await remoteDataSource.getMajorsByCollege(collegeName);
-      AppLogger.i('Got remote data: $majorsByName');
 
-      await cacheManager.cacheResponse(CacheKeys.COLLEGES, majorsByName);
+      await cacheManager.cacheResponse(CacheKeys.MAJORS, majorsByName);
       return Right(majorsByName);
     }on ValidationException catch (e) {
       return Left(ValidationFailure(messages: e.messages, message: ''));

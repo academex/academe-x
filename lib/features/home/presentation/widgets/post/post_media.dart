@@ -24,28 +24,6 @@ class PostMedia extends StatelessWidget {
     }
   }
 
-  // Widget _buildImageGrid(List<String> images) {
-  //   if (images.isEmpty) return const SizedBox.shrink();
-  //
-  //   return GridView.builder(
-  //     shrinkWrap: true,
-  //     physics: const NeverScrollableScrollPhysics(),
-  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisCount: images.length == 1 ? 1 : 2,
-  //       crossAxisSpacing: 8   ,
-  //       mainAxisSpacing: 8,
-  //       childAspectRatio: images.length == 1 ? 16/9 : 1,
-  //     ),
-  //     itemCount: images.length,
-  //     itemBuilder: (context, index) => ClipRRect(
-  //       borderRadius: BorderRadius.circular(8),
-  //       child: Image.network(
-  //         images[index],
-  //         fit: BoxFit.cover,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _buildPostImage(BuildContext ctx, List<String> images) {
     return Column(

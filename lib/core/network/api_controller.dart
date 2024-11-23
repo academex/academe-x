@@ -81,6 +81,7 @@ class ApiController {
         AppLogger.success(response.body.toString());
         AppLogger.success(response.statusCode.toString());
       }
+        AppLogger.success('hello world');
       return response;
     } on TimeOutExeption catch (e) {
       // Handle timeout exception

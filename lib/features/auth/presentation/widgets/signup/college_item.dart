@@ -253,7 +253,7 @@ class CollegeItem extends StatelessWidget {
   }
 
   Widget _buildMajorsList(BuildContext ctx) {
-    return ctx.read<SignupCubit>().state.isLoadingForMajors?  LayoutBuilder(
+    return ctx.read<SignupCubit>().state.isLoadingForMajors || ctx.read<SignupCubit>().state.isLoadingForCollege?  LayoutBuilder(
       builder: (context, constraints) {
         int crossAxisCount = SizeConfig().getCrossAxisCount(context);
         double itemHeight = SizeConfig().getItemHeight(context);
@@ -289,21 +289,22 @@ class CollegeItem extends StatelessWidget {
           ),
         );
       },
-    ) : LayoutBuilder(
+    )
+        : LayoutBuilder(
       builder: (context, constraints) {
         int crossAxisCount =SizeConfig().getCrossAxisCount(context) ;
         double itemHeight = SizeConfig().getItemHeight(context);
-        int rowCount = (collegeData.majors.length / crossAxisCount).ceil();
+        int rowCount = (ctx.read<SignupCubit>().state.majors!.length / crossAxisCount).ceil();
         double gridHeight = rowCount * itemHeight;
 
         return SizedBox(
           height: gridHeight,
-          child: ShowGridViewItem(
+          child: ShowGridViewItem<MajorEntity>(
             crossAxisCount: crossAxisCount,
-            data: collegeData.majors,
+            data: ctx.read<SignupCubit>().state.majors!,
             onTap: (index) {
               ctx.read<SignupCubit>().appendMajorToBaseVar(
-                  collegeData.majors[index]
+                  ctx.read<SignupCubit>().state.majors![index].name!
               );
               ctx.read<SignupCubit>().selectIndex(
                   index: index,
@@ -311,6 +312,7 @@ class CollegeItem extends StatelessWidget {
               );
             },
             selectedIndex: ctx.read<SignupCubit>().state.selectedMajorIndex,
+            displayTextBuilder: (p0)=>p0.majorAr!
           ),
         );
       },

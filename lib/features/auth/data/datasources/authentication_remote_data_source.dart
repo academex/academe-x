@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:academe_x/core/constants/cache_keys.dart';
-import 'package:academe_x/core/storage/storage.dart';
-import 'package:academe_x/features/auth/data/models/response/college_model.dart';
+import 'package:academe_x/core/network/base_response.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:logger/web.dart';
 
 import 'package:academe_x/lib.dart';
 
+typedef AuthResponse = BaseResponse<AuthTokenModel>;
+typedef CollegesResponse  = BaseResponse<List<CollegeModel>>;
+typedef MajorsResponse  = BaseResponse<List<MajorModel>>;
 
 class AuthenticationRemoteDataSource {
   final ApiController apiController;
@@ -27,29 +26,17 @@ class AuthenticationRemoteDataSource {
           Uri.parse(ApiSetting.login),
           body: user.toJson(),
         );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
         if (response.statusCode >= 400) {
-          final errorResponse = ErrorResponseModel.fromJson(
-            jsonDecode(response.body),
-          );
-
-          switch (errorResponse.statusCode) {
-            case 400:
-              final messages = errorResponse.messages ?? [errorResponse.message ?? ''];
-              throw ValidationException(messages: messages);
-            case 401:
-
-              throw UnauthorizedException(
-                message: errorResponse.message ?? 'Unauthorized',
-              );
-            default:
-              throw ServerException(
-                message: errorResponse.message ?? 'Server error',
-              );
-          }
+           _handleHttpError(responseBody);
         }
+        final AuthResponse baseResponse = AuthResponse.fromJson(
+          responseBody,
+              (json) => AuthTokenModel.fromJson(json),
+        );
 
-        return AuthTokenModel.fromJson(jsonDecode(response.body));
+        return baseResponse.data!;
       } on ValidationException {
         rethrow;
       } on UnauthorizedException {
@@ -61,6 +48,48 @@ class AuthenticationRemoteDataSource {
       }
     } else {
       throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
+  void _handleHttpError(Map<String,dynamic> json) {
+    // Handle error response format with statusCode field
+    if (json.containsKey('statusCode')) {
+      final errorResponse = ErrorResponseModel.fromJson(json);
+
+      switch (errorResponse.statusCode) {
+        case 400:
+          final messages = errorResponse.messages ??
+              [errorResponse.message ?? ''];
+          throw ValidationException(messages: messages);
+        case 401:
+          throw UnauthorizedException(
+            message: errorResponse.message ?? 'Unauthorized',
+          );
+        case 500:
+        case 502:
+        case 503:
+        case 504:
+          throw ServerException(
+            message: errorResponse.message ?? 'Server error (${errorResponse.statusCode})',
+          );
+        default:
+          throw ServerException(
+            message: errorResponse.message ?? 'Server error',
+          );
+      }
+    }else{
+      if (json['status'] =='error') {
+        AppLogger.e('Login Error: ${json['status']}');
+        if (json['message'] is List) {
+          final List<String> messages = (json['message'] as List)
+              .map((e) => e.toString())
+              .toList();
+          throw ValidationException(messages: messages);
+        }
+        throw ValidationException(
+          messages: [json['message'].toString() ?? 'Unknown error'],
+        );
+      }
     }
   }
 
@@ -76,26 +105,19 @@ class AuthenticationRemoteDataSource {
           },
           body:user.toJson(),
         );
-
-
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
         if (response.statusCode >= 400) {
-          final errorResponse = ErrorResponseModel.fromJson(
-            jsonDecode(response.body),
-          );
-
-          switch (errorResponse.statusCode) {
-            case 400:
-              final messages = errorResponse.messages ?? [errorResponse.message ?? ''];
-              throw ValidationException(messages: messages);
-            default:
-              throw ServerException(
-                message: errorResponse.message ?? 'Server error',
-              );
-          }
+          _handleHttpError(responseBody);
         }
 
-        return AuthTokenModel.fromJson(jsonDecode(response.body));
+
+        final AuthResponse baseResponse = AuthResponse.fromJson(
+          responseBody,
+              (json) => AuthTokenModel.fromJson(json),
+        );
+
+        return baseResponse.data!;
       } on ValidationException {
         rethrow;
       } on UnauthorizedException {
@@ -119,38 +141,21 @@ class AuthenticationRemoteDataSource {
             'Content-Type': 'application/json',
           },
         );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
-
-        if (response.statusCode == 200) {
-          final List<dynamic> jsonData = jsonDecode(response.body);
-          return jsonData.map((college) => CollegeModel.fromJson(college as Map<String, dynamic>)).toList();
+        if(response.statusCode>=400){
+          _handleHttpError(responseBody);
         }
 
-        // Handle error responses
-        final errorResponse = ErrorResponseModel.fromJson(jsonDecode(response.body));
+          final CollegesResponse baseResponse = CollegesResponse.fromJson(
+            responseBody,
+                (dynamic json) => (json as List)
+                .map((item) => CollegeModel.fromJson(item as Map<String, dynamic>))
+                .toList(),
+          );
+          return baseResponse.data!;
 
-        switch (errorResponse.statusCode) {
-          case 400:
-            final messages = errorResponse.messages ?? [errorResponse.message ?? ''];
-            throw UnauthorizedException(message: messages[0]);
-          case 401:
-            throw UnauthorizedException(message: errorResponse.message ?? 'Unauthorized access');
-              case 404:
-            throw NotFoundException(message: errorResponse.message ?? 'Resource not found');
-          case 429:
-            throw TooManyRequestsException(message: errorResponse.message ?? 'Too many requests');
-          case 500:
-          case 502:
-          case 503:
-          case 504:
-            throw ServerException(
-              message: errorResponse.message ?? 'Server error (${response.statusCode})',
-            );
-          default:
-            throw ServerException(
-              message: errorResponse.message ?? 'Unexpected error (${response.statusCode})',
-            );
-        }
+
       } on TimeOutExeption {
         rethrow;
       }
@@ -163,47 +168,57 @@ class AuthenticationRemoteDataSource {
   Future<List<MajorModel>> getMajorsByCollege(String majorName) async {
     if (await internetConnectionChecker.hasConnection) {
       try {
-        final response = await apiController.post(
-          Uri.parse(ApiSetting.colleges),
+        final response = await apiController.get(
+          Uri.parse('${ApiSetting.majors}?collegeEn=$majorName') ,
           headers: {
             'Content-Type': 'application/json',
           },
-          body: {
-            "collegeEn":jsonEncode(majorName)
-          }
         );
 
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
-        if (response.statusCode == 200) {
-          final List<dynamic> jsonData = jsonDecode(response.body);
-          return jsonData.map((major) => MajorModel.fromJson(major as Map<String, dynamic>)).toList();
+        if(response.statusCode>=400){
+          _handleHttpError(responseBody);
         }
 
-        // Handle error responses
-        final errorResponse = ErrorResponseModel.fromJson(jsonDecode(response.body));
-
-        switch (errorResponse.statusCode) {
-          case 400:
-            final messages = errorResponse.messages ?? [errorResponse.message ?? ''];
-            throw UnauthorizedException(message: messages[0]);
-          case 401:
-            throw UnauthorizedException(message: errorResponse.message ?? 'Unauthorized access');
-          case 404:
-            throw NotFoundException(message: errorResponse.message ?? 'Resource not found');
-          case 429:
-            throw TooManyRequestsException(message: errorResponse.message ?? 'Too many requests');
-          case 500:
-          case 502:
-          case 503:
-          case 504:
-            throw ServerException(
-              message: errorResponse.message ?? 'Server error (${response.statusCode})',
-            );
-          default:
-            throw ServerException(
-              message: errorResponse.message ?? 'Unexpected error (${response.statusCode})',
-            );
-        }
+        final MajorsResponse baseResponse = MajorsResponse.fromJson(
+          responseBody,
+              (dynamic json) => (json as List)
+              .map((item) => MajorModel.fromJson(item as Map<String, dynamic>))
+              .toList(),
+        );
+        return baseResponse.data!;
+        //
+        // if (response.statusCode == 200) {
+        //   final List<dynamic> jsonData = jsonDecode(response.body);
+        //   return jsonData.map((major) => MajorModel.fromJson(major as Map<String, dynamic>)).toList();
+        // }
+        //
+        // // Handle error responses
+        // final errorResponse = ErrorResponseModel.fromJson(jsonDecode(response.body));
+        //
+        // switch (errorResponse.statusCode) {
+        //   case 400:
+        //     final messages = errorResponse.messages ?? [errorResponse.message ?? ''];
+        //     throw ValidationException(messages: messages);
+        //   case 401:
+        //     throw UnauthorizedException(message: errorResponse.message ?? 'Unauthorized access');
+        //   case 404:
+        //     throw NotFoundException(message: errorResponse.message ?? 'Resource not found');
+        //   case 429:
+        //     throw TooManyRequestsException(message: errorResponse.message ?? 'Too many requests');
+        //   case 500:
+        //   case 502:
+        //   case 503:
+        //   case 504:
+        //     throw ServerException(
+        //       message: errorResponse.message ?? 'Server error (${response.statusCode})',
+        //     );
+        //   default:
+        //     throw ServerException(
+        //       message: errorResponse.message ?? 'Unexpected error (${response.statusCode})',
+        //     );
+        // }
       } on TimeOutExeption {
         rethrow;
       }

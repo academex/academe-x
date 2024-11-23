@@ -183,9 +183,8 @@ class HiveCacheManager implements BaseStorageManager {
       T data, {
         Duration duration = defaultCacheDuration,
       }) async {
-    AppLogger.e('Caching data for key: $key');
+    AppLogger.i('Caching data for key: $key');
     final expiryTime = DateTime.now().add(duration);
-
     final cacheData = {
       'data': data,
       'expiry': expiryTime.millisecondsSinceEpoch,

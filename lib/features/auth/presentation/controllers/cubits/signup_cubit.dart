@@ -136,6 +136,7 @@ void showEduInfo(bool showEducationInfo){
               ));
             },
                 (majors) async {
+                  AppLogger.success(majors.toString());
               emit(state.copyWith(
                 majors: majors,
                 isLoadingForMajors: false,
@@ -148,6 +149,7 @@ void showEduInfo(bool showEducationInfo){
 
   Future<void> retry()async{
   await getColleges();
+
   }
 
 
