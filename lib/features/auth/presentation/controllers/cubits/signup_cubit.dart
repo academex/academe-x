@@ -25,7 +25,6 @@ void showEduInfo(bool showEducationInfo){
 
     var finalUser=SignupRequestModel.fromEntity(user);
 
-    AppLogger.e((!finalUser.isValid()).toString());
 
     if (!finalUser.isValid()) {
       setError('Please check your input data');

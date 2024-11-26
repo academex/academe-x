@@ -75,10 +75,6 @@ Widget _buildHeader(AuthState state) {
 Widget _buildCollegesList(AuthState state,BuildContext context) {
   AppLogger.success(state.colleges.toString());
   if(state.errorMessage !=null){
-    // return ErrorStateWidget(onRetry: () async{
-    //   await context.read<SignupCubit>().retry();
-    //
-    // },message: 'خطأ في التحميل',);
     return CompactErrorWidget(
       message: 'خطأ في التحميل',
       onRetry: () async{
@@ -108,9 +104,11 @@ Widget _buildCollegesList(AuthState state,BuildContext context) {
           );
         }).toList()
     );
-  }else if(state.isLoadingForCollege) {
+  }
+  else if(state.isLoadingForCollege) {
     return const CollegeSelectionShimmer();
-  }else{
+  }
+  else{
     return CompactErrorWidget(
       message: 'خطأ في التحميل',
       onRetry: () async{

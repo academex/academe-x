@@ -19,6 +19,7 @@ class AuthState extends Equatable {
   final bool isExpanded;
   final String? selectedCollege;
   final int? selectedMajorIndex;
+  late final int? selectedTagId;
   final int? selectedSemesterIndex;
   final String? collegeAndMajor;
   late Map<String, CollegeData>? collegesData;
@@ -51,6 +52,8 @@ class AuthState extends Equatable {
     this.selectedSemesterIndex,
     this.collegeAndMajor,
     this.selectionType,
+    this.selectedTagId,
+
     // Map<String, CollegeData>? collegesData,
     // Signup fields
     this.selectedGenderIndex,
@@ -122,6 +125,7 @@ class AuthState extends Equatable {
     String? selectedCollege,
     int? selectedMajorIndex,
     int? selectedSemesterIndex,
+    int? selectedTagId,
     String? collegeAndMajor,
     SelectionType? selectionType,
     Map<String, CollegeData>? collegesData,
@@ -145,6 +149,7 @@ class AuthState extends Equatable {
       isRememberMe: isRememberMe ?? this.isRememberMe,
       errorMessage: errorMessage,
       colleges: colleges ?? this.colleges,
+      selectedTagId: selectedTagId ?? this.selectedTagId,
       majors: majors ?? this.majors,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       // College fields
@@ -181,6 +186,7 @@ class AuthState extends Equatable {
     // College props
     isExpanded,
     selectedCollege,
+    selectedTagId,
     selectedMajorIndex,
     selectedSemesterIndex,
     collegeAndMajor,

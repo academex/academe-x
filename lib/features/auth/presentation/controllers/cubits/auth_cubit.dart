@@ -110,6 +110,11 @@ abstract class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  void selectTagId({required int? tagId,}) {
+      emit(state.copyWith(selectedTagId: tagId));
+
+  }
+
   void appendMajorToBaseVar(String major) {
     emit(state.copyWith(
         collegeAndMajor: "${state.selectedCollege!} ($major) "

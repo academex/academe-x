@@ -3,7 +3,7 @@ import 'package:academe_x/lib.dart';
 
 class ShowGridViewItem<T> extends StatelessWidget {
   final List<T> data;
-  final Function(int) onTap;
+  final Function(int,T) onTap;
   final int? selectedIndex;
   final int crossAxisCount;
   final String Function(T) displayTextBuilder;
@@ -33,7 +33,7 @@ class ShowGridViewItem<T> extends StatelessWidget {
       itemCount: data.length,
       itemBuilder: (context, index) {
         return  InkWell(
-          onTap:() => onTap(index),
+          onTap:() => onTap(index,data[index]),
           child: Container(
             decoration: ShapeDecoration(
               color:const Color(0xFFF9F9F9),
