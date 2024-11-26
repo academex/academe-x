@@ -184,52 +184,7 @@ class CollegeItem extends StatelessWidget {
       ),
     );
 
-    // return ResponsiveContainer(
-    //   child: Padding(
-    //     padding: EdgeInsets.symmetric(vertical: context.hp(1.2)),
-    //     child: InkWell(
-    //       onTap: () => onCollegeSelected(college),
-    //       child: Container(
-    //         decoration: isSelected ? _selectedItemDecoration : null,
-    //         width: double.infinity,
-    //         padding: EdgeInsets.symmetric(horizontal: context.wp(3)),
-    //         child: Column(
-    //           children: [
-    //             SizedBox(height: context.hp(1.2)),
-    //             _buildCollegeRow(context),
-    //             if (isSelected) ...[
-    //               SizedBox(height: context.hp(1.3)),
-    //               _buildMajorsList(context),
-    //             ],
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
-    // return state.isLoading? const CollegeSelectionShimmer() : ResponsiveContainer(
-    //       child: Padding(
-    //         padding: EdgeInsets.symmetric(vertical: context.hp(1.2)),
-    //         child: InkWell(
-    //           onTap: () => onCollegeSelected(college),
-    //           child: Container(
-    //             decoration: isSelected ? _selectedItemDecoration : null,
-    //             width: double.infinity,
-    //             padding: EdgeInsets.symmetric(horizontal: context.wp(3)),
-    //             child: Column(
-    //               children: [
-    //                 SizedBox(height: context.hp(1.2)),
-    //                 _buildCollegeRow(context),
-    //                 if (isSelected) ...[
-    //                   SizedBox(height: context.hp(1.3)),
-    //                   _buildMajorsList(context),
-    //                 ],
-    //               ],
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     );
+
   }
 
   Widget _buildCollegeRow(BuildContext context) {
@@ -302,9 +257,13 @@ class CollegeItem extends StatelessWidget {
           child: ShowGridViewItem<MajorEntity>(
             crossAxisCount: crossAxisCount,
             data: ctx.read<SignupCubit>().state.majors!,
-            onTap: (index) {
+            onTap: (index,majorEntity) {
+              AppLogger.success( majorEntity.id!.toString());
               ctx.read<SignupCubit>().appendMajorToBaseVar(
                   ctx.read<SignupCubit>().state.majors![index].name!
+              );
+              ctx.read<SignupCubit>().selectTagId(
+                tagId: majorEntity.id!,
               );
               ctx.read<SignupCubit>().selectIndex(
                   index: index,

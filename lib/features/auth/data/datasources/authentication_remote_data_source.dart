@@ -95,6 +95,8 @@ class AuthenticationRemoteDataSource {
 
 
   Future<AuthTokenModel> signup(SignupRequestModel user) async {
+
+    AppLogger.success(user.toJson().toString());
     if (await internetConnectionChecker.hasConnection) {
       try {
         AppLogger.success(ApiSetting.signup);

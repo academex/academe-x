@@ -160,7 +160,7 @@ class SignUpScreen extends StatelessWidget {
                 label: 'الاسم الأول',
                 hintText: 'أدخل اسمك الأول',
                 controller: state.firstNameController!,
-                // validator: FormValidators.validateName,
+                validator: FormValidators.validateName,
               ),
             ),
             17.pw(), // Horizontal spacing between fields
@@ -169,7 +169,7 @@ class SignUpScreen extends StatelessWidget {
                 label: 'الاسم الأخير',
                 hintText: 'أدخل اسمك الأخير',
                 controller:state.lastNameController!,
-                // validator: FormValidators.validateName,
+                validator: FormValidators.validateName,
               ),
             ),
           ],
@@ -178,20 +178,20 @@ class SignUpScreen extends StatelessWidget {
           label: 'اسم المستخدم',
           hintText: 'اكتب اسم المستخدم',
           controller: state.userNameController!,
-          // validator: FormValidators.validateUsername,
+          validator: FormValidators.validateUsername,
         ),
         CustomTextField(
           label: context.localizations.emailLabel,
           hintText: context.localizations.emailHint,
           controller: state.emailController!,
-          // validator: FormValidators.validateEmail,
+          validator: FormValidators.validateEmail,
         ),
         CustomTextField(
           label: 'رقم الهاتف',
           hintText: '000000000',
           controller: state.phoneController!,
           isPhone: true,
-          // validator: FormValidators.validatePhone,
+          validator: FormValidators.validatePhone,
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,7 +216,7 @@ class SignUpScreen extends StatelessWidget {
                             'ذكر',
                             'أنثى',
                           ],
-                    onTap: (index) {
+                    onTap: (index,string) {
                       AppLogger.success(index.toString());
                       context.read<SignupCubit>().selectGenderIndex(index: index);
                       },
@@ -247,7 +247,7 @@ class SignUpScreen extends StatelessWidget {
       togglePasswordVisibility: () {
       context.read<SignupCubit>().togglePasswordVisibility();
       },
-      // validator: FormValidators.validatePassword,
+      validator: FormValidators.validatePassword,
     ),
         CustomTextField(
           label: context.localizations.confirmPasswordLabel,
@@ -258,7 +258,7 @@ class SignUpScreen extends StatelessWidget {
           togglePasswordVisibility: () {
             context.read<SignupCubit>().togglePasswordVisibility();
           },
-          // validator: (p0) =>FormValidators.validateConfirmPassword(p0,  state.passwordController!.text)
+          validator: (p0) =>FormValidators.validateConfirmPassword(p0,  state.passwordController!.text)
           // ,
         ),
       ],
@@ -301,7 +301,7 @@ class SignUpScreen extends StatelessWidget {
                         'ثالتة',
                         'رابعة',
                       ],
-                      onTap: (index) {
+                      onTap: (index,string) {
                         AppLogger.success(index.toString());
 
                         context.read<SignupCubit>().selectIndex(
@@ -315,22 +315,7 @@ class SignUpScreen extends StatelessWidget {
                   );
                 },
               )
-              // SizedBox(
-              //     height: 60,
-              //     child: ShowGridViewItem(
-              //       data: const [
-              //         'أولى',
-              //         'ثانية',
-              //         'ثالتة',
-              //         'رابعة',
-              //       ],
-              //       onTap: (index) {
-              //         context
-              //             .read<CollegeCubit>()
-              //             .selectIndex(index: index,selectionType: SelectionType.semester);
-              //       },
-              //       selectedIndex: state.selectedSemesterIndex,
-              //     ))
+
             ],
           ),
         )
@@ -343,18 +328,6 @@ class SignUpScreen extends StatelessWidget {
     required VoidCallback onPressed,
     required String text,
   }) {
-
-    // CustomButton(
-    //   onPressed: onPressed,
-    //   widget: AppText(
-    //     text: text,
-    //     fontSize: 14,
-    //     color: Colors.white,
-    //     fontWeight: FontWeight.bold,
-    //   ),
-    //   backgraoundColor: Theme.of(context).primaryColor,
-    // );
-
     return BlocConsumer<SignupCubit, AuthState>(
       listener: (context, state) {
         if (state.errorMessage != null) {
@@ -383,11 +356,7 @@ class SignUpScreen extends StatelessWidget {
           backgraoundColor: Theme.of(context).primaryColor,
         );
 
-        // return CustomButton(
-        //   backgraoundColor: Colors.blueAccent,
-        //   widget: buttonChild,
-        //   onPressed: () => _handleLogin(context, state),
-        // );
+
       },
     );
 
@@ -463,7 +432,7 @@ class SignUpScreen extends StatelessWidget {
       gender: state.selectedGenderIndex == 0 ? "MALE" : "FEMALE",
       password: state.passwordController!.text,
       currentYear: state.selectedSemesterIndex! + 1,
-      tagId: 1,
+      tagId: state.selectedTagId!,
     );
 
     await context.read<SignupCubit>().signup(user);
