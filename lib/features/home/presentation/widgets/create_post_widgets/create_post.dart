@@ -102,27 +102,24 @@ class CreatePost {
                       ],
                     ),
                     16.ph(),
-                    Form(
+                    AppTextField(
                       key: _formKey,
-                      child: AppTextField(
-
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                      withBoarder: false,
+                      maxLine: null,
+                      controller: _postController,
+                      hintText: 'قم بكتابة ما تريد الاستفسار عنه ..',
+                      keyboardType: TextInputType.multiline,
+                      suffix: GestureDetector(
+                        onTap: () {
+                          _postController.clear();
                         },
-                        withBoarder: false,
-                        maxLine: null,
-                        controller: _postController,
-                        hintText: 'قم بكتابة ما تريد الاستفسار عنه ..',
-                        keyboardType: TextInputType.multiline,
-                        suffix: GestureDetector(
-                          onTap: () {
-                            _postController.clear();
-                          },
-                          child: const Icon(Icons.clear, color: Colors.grey),
-                        ),
+                        child: const Icon(Icons.clear, color: Colors.grey),
                       ),
                     ),
                     // need if statment as : if(textController.isNotEmpty) do the loop
@@ -256,7 +253,7 @@ class CreatePost {
                       },
                       builder: (context, state) {
                         return GestureDetector(
-                          onTap: true
+                          onTap: state is! SendingState
                               ? () {
                                   if (_formKey.currentState!.validate()) {
                                     post.copyWith(
@@ -275,7 +272,7 @@ class CreatePost {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
-                              child: true
+                              child: state is! SendingState
                                   ? AppText(
                                       text: 'نشر',
                                       fontSize: 16.sp,
