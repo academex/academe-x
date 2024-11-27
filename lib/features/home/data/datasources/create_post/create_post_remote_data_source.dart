@@ -17,12 +17,11 @@ class CreatePostRemoteDataSource {
       func: () async {
         final response = await apiController.post(
             Uri.parse(ApiSetting.createPost),
-            body: post.toJson(),
+            body:post.toJson(),
             timeAlive: 100,
             headers: {
-              "Content-Type": "application/json",
               'Authorization':
-                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhcmFhIiwiaWF0IjoxNzMyMDE1NDQyLCJleHAiOjE3MzIwMTkwNDJ9.Xbrmftv0sdmI2J-AFwASbQOnuofKly7t5tVGJ9zXYTM',
+                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjcwMDI5MywiZXhwIjoxNzMyNzAzODkzfQ.EZCN395SRecNq_lvCmIuVhCywXw7Dao0SZaCQuUb88k',
             });
         return PostReqModel.fromJson({});
       },

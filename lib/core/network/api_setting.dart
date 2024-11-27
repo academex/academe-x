@@ -14,5 +14,5 @@ class ApiSetting {
 
   //
   // // create post
-  static  String createPost = "${baseUrl}post";
+  static  String createPost = AppConfig.postsEndpoint;
 }

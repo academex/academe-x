@@ -36,13 +36,7 @@ class BaseResponse<T> {
       message: json['message']?.toString() ?? '',
       data: fromJson(json['data']), // Directly pass the data to fromJson
     );
-    // return BaseResponse<T>(
-    //   status: json['status'] ?? 'error',
-    //   message: json['message'] ?? 'Unknown message',
-    //   data: json['data'] != null && fromJson != null
-    //       ? fromJson(json['data'] as Map<String, dynamic>)
-    //       : null,
-    // );
+
   }
     Map<String, dynamic> toJson([Map<String, dynamic> Function(T)? toJson]) {
       return {

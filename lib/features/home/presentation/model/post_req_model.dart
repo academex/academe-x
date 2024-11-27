@@ -15,11 +15,11 @@ class PostReqModel extends PostReqEntity {
     super.updatedAt,
     super.userId,
   });
-  toJson() {
-    return jsonEncode({
+   Map<String,dynamic> toJson() {
+    return {
       'content': content,
       'tagIds': tagsId,
-    });
+    };
   }
 
   factory PostReqModel.fromJson(Map<String, dynamic> json) {
