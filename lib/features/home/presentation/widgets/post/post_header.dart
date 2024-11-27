@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 
 class PostHeader extends StatelessWidget {
-  final PostEntity post;
+  final PostEntityS post;
 
   const PostHeader({required this.post, Key? key}) : super(key: key);
 

@@ -1,3 +1,5 @@
+import 'package:academe_x/features/home/data/models/post/post_model.dart';
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/lib.dart';
 import 'package:dartz/dartz.dart';
 
@@ -5,10 +7,10 @@ class CreatePostRepositoryImp implements CreatePostRepository {
   CreatePostRemoteDataSource createPostRemoteDataSourse;
   CreatePostRepositoryImp({required this.createPostRemoteDataSourse});
   @override
-  Future<Either<Failure, PostReqModel>> createPost(PostReqEntity post) async {
+  Future<Either<Failure, PostEntity>> createPost(PostEntity post) async {
     try {
       final result = await createPostRemoteDataSourse.createPost(
-        post: post.fromEntity(),
+        post: PostModel.fromEntity(post),
       );
       return Right(result);
     } on OfflineException catch (e) {

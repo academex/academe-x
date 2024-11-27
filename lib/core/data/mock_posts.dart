@@ -1,11 +1,12 @@
 import 'package:academe_x/features/home/domain/entities/create_post/tag.dart';
+import 'package:academe_x/features/home/domain/entities/post/tag_entity.dart';
 
 import '../core.dart';
 import '../../features/home/home.dart';
 
 class MockData {
-  static final List<PostEntity> posts = [
-    PostEntity(
+  static final List<PostEntityS> posts = [
+    PostEntityS(
       userId: '1',
       username: 'حسين غباين',
       userAvatar: AppAssets.defaultAvatar,
@@ -18,7 +19,7 @@ class MockData {
       commentsCount: 201,
       sharesCount: 150,
     ),
-    PostEntity(
+    PostEntityS(
       userId: '1',
       username: 'حسين غباين',
       userAvatar:
@@ -37,7 +38,7 @@ class MockData {
       commentsCount: 201,
       sharesCount: 150,
     ),
-    PostEntity(
+    PostEntityS(
         userId: '2',
         username: 'ابراهيم العكلوك',
         userAvatar:
@@ -74,7 +75,7 @@ class MockData {
                   'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
               reactionType: ReactionType.heart),
         ]),
-    PostEntity(
+    PostEntityS(
         userId: '3',
         username: 'خالد الخليلي',
         userAvatar:
@@ -105,7 +106,7 @@ class MockData {
                   'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?semt=ais_hybrid',
               reactionType: ReactionType.heart)
         ]),
-    PostEntity(
+    PostEntityS(
         userId: '4',
         username: 'براء مبارك',
         userAvatar:
@@ -151,8 +152,8 @@ class MockData {
     {'حوسبة متنقلة': 'assets/images/image_test1.png'},
     {'وسائط متعددة': 'assets/images/image_test1.png'},
   ];
-  static final List<Tag> tags = [
-    Tag(id: 1, tagName: "#تطوير برمجيات"),
+  static final List<TagEntity> tags = [
+    TagEntity(id: 1, name: "#تطوير برمجيات"),
   ];
   static final List<Comment> comments = [
     Comment(

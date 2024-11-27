@@ -1,10 +1,11 @@
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 import 'package:academe_x/lib.dart';
 
 class PostMedia extends StatelessWidget {
-  final PostEntity post;
+  final PostEntityS post;
 
   const PostMedia({required this.post, Key? key}) : super(key: key);
 

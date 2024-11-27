@@ -9,20 +9,37 @@ class PickerCubit extends Cubit<PickState> {
   PickerCubit(super.initialState);
   final ImagePicker _imagePicker = ImagePicker();
 
+  cancelState() {
+    emit(CreatePostIconsInit());
+  }
+
   pickImage() async {
-    // emit(CreatePostIconsLoading());
+    if (getIt<ImagePickerLoaded>().images != null) {
+      getIt<ImagePickerLoaded>().images = null;
+      cancelState();
+      emit(getIt<ImagePickerLoaded>());
+      return;
+    }
+    emit(CreatePostIconsLoading());
 
     final List<XFile>? pickedFile = await _imagePicker.pickMultiImage();
     if (pickedFile != null) {
-      emit(ImagePickerLoaded(
-          pickedFile.map((image) => File(image.path)).toList()));
+      getIt<ImagePickerLoaded>().images =
+          pickedFile.map((image) => File(image.path)).toList();
+      emit(getIt<ImagePickerLoaded>());
     } else {
       emit(CreatePostIconsError('no file selected'));
     }
   }
 
   pickFile() async {
-    // emit(CreatePostIconsLoading());
+    if (getIt<FilePickerLoaded>().file != null) {
+      getIt<FilePickerLoaded>().file = null;
+      cancelState();
+      emit(getIt<FilePickerLoaded>());
+      return;
+    }
+    emit(CreatePostIconsLoading());
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -31,14 +48,18 @@ class PickerCubit extends Cubit<PickState> {
     );
 
     if (result != null) {
-      File file = File(result.files.single.path!);
-      emit(FilePickerLoaded(file));
+      getIt<FilePickerLoaded>().file = File(result.files.single.path!);
+      emit(getIt<FilePickerLoaded>());
     } else {
       emit(CreatePostIconsError('no file selected'));
     }
   }
 
-  createMulteChoice() {
+  createMultiChoice() {
+    if (state is CreateMultiChoice) {
+      cancelState();
+      return;
+    }
     emit(CreateMultiChoice());
   }
 }

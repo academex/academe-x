@@ -3,7 +3,7 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 
 class PostWidget extends StatelessWidget {
-  final PostEntity post;
+  final PostEntityS post;
 
   const PostWidget({
     required this.post,

@@ -1,3 +1,4 @@
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academe_x/lib.dart';
@@ -9,7 +10,7 @@ import '../lib/flutter_reaction_button.dart';
 import '../test_build_reactions/fb_reaction_box.dart';
 
 class PostActions extends StatelessWidget {
-  final PostEntity post;
+  final PostEntityS post;
 
   const PostActions({required this.post, super.key});
 

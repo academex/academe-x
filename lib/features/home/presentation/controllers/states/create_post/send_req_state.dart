@@ -1,4 +1,5 @@
 import 'package:academe_x/features/features.dart';
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 
 abstract class CreatePostState {}
 
@@ -7,7 +8,7 @@ class InitialState extends CreatePostState {}
 class SendingState extends CreatePostState {}
 
 class SuccessState extends CreatePostState {
-  PostReqEntity postReqEntity;
+  PostEntity postReqEntity;
   SuccessState({required this.postReqEntity});
 }
 

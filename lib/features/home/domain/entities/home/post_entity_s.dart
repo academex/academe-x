@@ -7,7 +7,7 @@ enum PostType {
   textWithFile,
 }
 
-class PostEntity {
+class PostEntityS {
   final String userId;
   final String username;
   final String userAvatar;
@@ -23,7 +23,7 @@ class PostEntity {
   final int sharesCount;
   final List<ReactionUser>? reactionUsers;
 
-  PostEntity({
+  PostEntityS({
     required this.userId,
     required this.username,
     required this.userAvatar,

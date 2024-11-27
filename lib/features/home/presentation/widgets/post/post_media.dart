@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostMedia extends StatelessWidget {
-  final PostEntity post;
+  final PostEntityS post;
 
   const PostMedia({required this.post, Key? key}) : super(key: key);
 
