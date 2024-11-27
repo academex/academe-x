@@ -18,6 +18,7 @@ class AppConfig {
   // API endpoints
   static late String authEndpoint;
   static late String tagsEndpoint;
+  static late String postsEndpoint;
 
   // Feature flags
   static late bool enablePushNotifications;
@@ -55,6 +56,8 @@ class AppConfig {
         apiUrl = 'https://academex-1.onrender.com';
         authEndpoint = '$apiUrl/auth';
         tagsEndpoint = '$apiUrl/tag';
+        postsEndpoint = '$apiUrl/post';
+
         enableAnalytics = false;
         enableCrashlytics = false;
         enablePushNotifications = false;

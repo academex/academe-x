@@ -19,7 +19,8 @@ class UserResponseModel extends UserResponseEntity {
   required super.phoneNum,
   required super.tagId,
     required super.createdAt,
-  required super.updatedAt,});
+  required super.updatedAt,
+  });
 
 
   factory UserResponseModel.fromJson(Map<String, dynamic> json) {

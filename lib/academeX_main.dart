@@ -72,7 +72,7 @@ class AcademeXMain extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // home: HomePage(),
         theme: _buildTheme(),
-        initialRoute: '/login',
+        initialRoute: '/home_screen',
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) => _buildAppWithExtra(context, child),
       ),

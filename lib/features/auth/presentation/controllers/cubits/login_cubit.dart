@@ -10,48 +10,6 @@ class LoginCubit extends AuthCubit {
     authenticationUseCase: authUseCase,
     initialState: AuthState.initial(),
   );
-  // LoginCubit({required AuthenticationUseCase authUseCase }) :_authenticationUseCase=authUseCase, super(AuthenticationInitialState());
-  // Future<void> login(LoginRequsetModel user) async {
-  //   // AppLogger.success('in login cubit, test when internet off');
-  //
-  //   if (state.isLoading) return;
-  //   setLoading();
-  //   // emit(state.copyWith(
-  //   //   isLoading: true,
-  //   //   errorMessage: null,
-  //   // ));
-  //
-  //   // emit(AuthenticationLoadingState());
-  //  var test=    await authenticationUseCase.login(user);
-  //   Future.delayed(
-  //     Duration(
-  //       seconds: 2
-  //
-  //     ),
-  //     () {
-  //
-  //       test.fold(
-  //             (failure) {
-  //           emit(state.copyWith(
-  //             isLoading: false,
-  //             errorMessage: failure.message,
-  //           ));
-  //         },
-  //             (user) async{
-  //           await StorageService.saveUser(user.fromEntity());
-  //           emit(state.copyWith(
-  //             isLoading: false,
-  //             isAuthenticated: true,
-  //             errorMessage: null,
-  //           ));
-  //           // handleAuthSuccess(user.fromEntity());
-  //
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
 
   Future<void> login(LoginRequsetModel user) async {
     if (state.isLoading) return;
