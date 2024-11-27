@@ -6,6 +6,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../../features/home/data/repositories/create_post_repository_imp.dart';
 import '../../features/home/domain/usecases/create_post_use_case.dart';
 import '../../features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
+import '../../features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import '../core.dart';
 // import '../services/hive_cache_manager.dart';
 
@@ -48,6 +49,10 @@ void _initCubits() {
 
   getIt.registerFactory<AuthActionCubit>(
     () => AuthActionCubit(false),
+  );
+
+  getIt.registerFactory<PostsCubit>(
+    () => PostsCubit(getPosts: getIt()),
   );
 
   getIt.registerFactory<BottomNavCubit>(
@@ -97,6 +102,9 @@ void _initUseCases() {
   getIt.registerLazySingleton<CreatePostUseCase>(
     () => CreatePostUseCase(createPostRepository: getIt()),
   );
+  getIt.registerLazySingleton<PostUseCase>(
+    () => PostUseCase(postRepository:getIt()),
+  );
 }
 
 void _initRepositories() {
@@ -107,11 +115,22 @@ void _initRepositories() {
   getIt.registerLazySingleton<CreatePostRepository>(
     () => CreatePostRepositoryImp(createPostRemoteDataSourse: getIt()),
   );
+  getIt.registerLazySingleton<PostRepository>(
+    () => PostRepositoryImpl(remoteDataSource: getIt()),
+  );
 }
 
 void _initDataSources() {
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
     () => AuthenticationRemoteDataSource(
+        apiController: getIt(),
+        internetConnectionChecker: getIt(),
+        // cacheManager: getIt(),
+    ),
+  );
+
+ getIt.registerLazySingleton<PostRemoteDataSource>(
+    () => PostRemoteDataSource(
         apiController: getIt(),
         internetConnectionChecker: getIt(),
         // cacheManager: getIt(),

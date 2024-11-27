@@ -30,8 +30,9 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return Left(NoInternetConnectionFailure(message: e.errorMessage));
     } on TimeOutExeption catch (e) {
       return Left(TimeOutFailure(message: e.errorMessage));
-    } catch (e) {
-      return Left(ServerFailure(message: 'An error occurred: $e'));
+    } catch (e,stack) {
+      AppLogger.i('why did you make this error,$stack');
+      return Left(ServerFailure(message: 'Im here An error occurred: $e'));
     }
   }
 

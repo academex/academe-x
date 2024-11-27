@@ -1,22 +1,23 @@
-//
-// import 'package:academe_x/core/error/failure.dart';
-// import 'package:academe_x/features/home/presentaion/model/home_product_model.dart';
-// import 'package:dartz/dartz.dart';
-//
-// import '../repositories/home_repository.dart';
-//
-// class HomeProductUseCase {
-//   HomeProductRepository homeProductRepo;
-//   HomeProductUseCase({required this.homeProductRepo});
-//
-//   Future<Either<Failure, List<HomeProductModel>>> getHomeData() async {
-//     return await homeProductRepo.getProductHomeData();
-//
-//   }
-//
-//
-//
-//
-//
-//
-// }
+
+import 'package:academe_x/features/features.dart';
+import 'package:academe_x/features/home/data/models/post/post_model.dart';
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/error/failure.dart';
+import '../../../../core/pagination/paginated_response.dart';
+import '../../../../core/pagination/pagination_params.dart';
+
+class PostUseCase {
+  PostRepository postRepository;
+  PostUseCase({required this.postRepository});
+
+  Future<Either<Failure, PaginatedResponse<PostModel>>> getPosts(PaginationParams paginationParams) async {
+    return await postRepository.getPosts(paginationParams);
+  }
+
+
+
+
+
+
+}

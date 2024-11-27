@@ -59,7 +59,7 @@ class UserResponseModel extends UserResponseEntity {
       'tagId': tagId,
       'isActive': isActive,
       'createdAt':  createdAt!.toIso8601String() ,
-      'updatedA': updatedAt!.toIso8601String(),
+      'updatedAt': updatedAt!.toIso8601String(),
     };
   }
 }

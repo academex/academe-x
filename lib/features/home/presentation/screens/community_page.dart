@@ -1,3 +1,5 @@
+import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,27 +38,32 @@ class CommunityPage extends StatelessWidget {
         SliverToBoxAdapter(
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return PostWidget(post: MockData.posts[index]);
-                  },
-                  separatorBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        16.ph(),
-                        Divider(
-                          color: Colors.grey.shade300,
-                          endIndent: 25,
-                          indent: 25,
-                        ),
-                        16.ph()
-                      ],
+                child:  BlocBuilder<PostsCubit,PostsState>(
+                  builder: (context, state) {
+                    return state.isLoadingPosts? const Center(child: CircularProgressIndicator(),): ListView.separated(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return PostWidget(post:state.posts[index]);
+                      },
+                      separatorBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            16.ph(),
+                            Divider(
+                              color: Colors.grey.shade300,
+                              endIndent: 25,
+                              indent: 25,
+                            ),
+                            16.ph()
+                          ],
+                        );
+                      },
+                      itemCount: state.posts.length,
+                      physics: const BouncingScrollPhysics(),
                     );
                   },
-                  itemCount: MockData.posts.length,
-                  physics: const BouncingScrollPhysics(),
-                ))),
+                )))
+
       ],
     );
   }

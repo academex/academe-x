@@ -1,4 +1,6 @@
-import 'package:academe_x/lib.dart';
+// import 'package:academe_x/lib.dart';
+import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 
 import 'package:flutter/material.dart';
 
@@ -12,24 +14,24 @@ class PostHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CircleAvatar(
-          backgroundImage: NetworkImage(post.userAvatar),
-          radius: 20   ,
-        ),
+        // CircleAvatar(
+        //   backgroundImage: NetworkImage(post.user.photoUrl! ?? ''),
+        //   radius: 20   ,
+        // ),
         10.pw(),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                text: post.username,
+                text: post.user.username,
                 color: Color(0xFF0F172A),
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
               4.ph(),
               AppText(
-                text: post.timeAgo,
+                text: post.createdAt.hour.toString(),
                 fontSize: 12  ,
                 color: Color(0xFF64748B),
                 fontWeight: FontWeight.w400,

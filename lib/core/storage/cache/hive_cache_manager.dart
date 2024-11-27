@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:academe_x/core/config/app_config.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../base/base_storage_manager.dart';
 import '../config/storage_config.dart';
@@ -8,7 +9,7 @@ class HiveCacheManager implements BaseStorageManager {
   static final HiveCacheManager _instance = HiveCacheManager._internal();
   factory HiveCacheManager() => _instance;
   HiveCacheManager._internal();
-  static const Duration defaultCacheDuration = Duration(hours: 1);
+  // static const Duration defaultCacheDuration = Duration(hours: 1);
 
   late Box<String> _cacheBox;
   late Box<String> _userBox;
@@ -181,7 +182,7 @@ class HiveCacheManager implements BaseStorageManager {
   Future<void> cacheResponse<T>(
       String key,
       T data, {
-        Duration duration = defaultCacheDuration,
+        Duration duration = AppConfig.cacheMaxAge,
       }) async {
     AppLogger.i('Caching data for key: $key');
     final expiryTime = DateTime.now().add(duration);
@@ -226,12 +227,12 @@ class HiveCacheManager implements BaseStorageManager {
       String key,
       T Function(dynamic) fromJson,
       ) async {
-    final cachedString = await _cacheBox.get(key);
+    final cachedString = _cacheBox.get(key);
     if (cachedString == null) return null;
-
-    final cachedData = jsonDecode(cachedString as String);
+    final cachedData = jsonDecode(cachedString);
     final expiryTime = DateTime.fromMillisecondsSinceEpoch(cachedData['expiry']);
 
+    AppLogger.success('in getCachedResponse ${DateTime.now().isAfter(expiryTime)}');
     if (DateTime.now().isAfter(expiryTime)) {
       await _cacheBox.delete(key);
       return null;
@@ -239,8 +240,10 @@ class HiveCacheManager implements BaseStorageManager {
 
     try {
       return fromJson(cachedData['data']);
-    } catch (e) {
-      await _cacheBox.delete(key);
+    } catch (e,stackTrace) {
+
+    AppLogger.e('in getCachedResponse $e   $stackTrace');
+      // await _cacheBox.delete(key);
       return null;
     }
   }

@@ -1,3 +1,5 @@
+import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,6 +18,7 @@ class AcademeXMain extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: _getProviders(),
+
         child: AppLifecycleManager(
           child: _buildApp(),
         ));
@@ -29,6 +32,9 @@ class AcademeXMain extends StatelessWidget {
     return [
       BlocProvider<AuthActionCubit>(
         create: (context) => getIt<AuthActionCubit>(),
+      ),
+      BlocProvider<LoginCubit>(
+        create: (context) => getIt<LoginCubit>(),
       ),
       BlocProvider<BottomNavCubit>(
         create: (context) => getIt<BottomNavCubit>(),
@@ -51,6 +57,10 @@ class AcademeXMain extends StatelessWidget {
       BlocProvider<CreatePostCubit>(
         create: (context) => getIt<CreatePostCubit>(),
       ),
+
+      BlocProvider<PostsCubit>(
+        create: (context) => getIt<PostsCubit>()..loadPosts(),
+      ),
     ];
   }
 
@@ -72,7 +82,7 @@ class AcademeXMain extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // home: HomePage(),
         theme: _buildTheme(),
-        initialRoute: '/home_screen',
+        initialRoute: '/',
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) => _buildAppWithExtra(context, child),
       ),
@@ -92,18 +102,26 @@ class AcademeXMain extends StatelessWidget {
   Widget _buildAppWithExtra(BuildContext context, Widget? child) {
     SizeConfig.init(context);
 
-    return BlocListener<ConnectivityCubit, ConnectivityStatus>(
-      listener: (context, status) {
-        if (status == ConnectivityStatus.disconnected) {
-          _showNoConnectionBanner(context, ConnectivityStatus.disconnected);
-        }
 
-        if (status == ConnectivityStatus.connected) {
-          _showNoConnectionBanner(context, ConnectivityStatus.connected);
-        }
-      },
-      child: child!,
-    );
+
+    return MultiBlocListener(listeners: [
+
+        BlocListener<ConnectivityCubit, ConnectivityStatus>(
+        listener: (context, status) async{
+
+
+
+          if (status == ConnectivityStatus.disconnected) {
+
+            _showNoConnectionBanner(context, ConnectivityStatus.disconnected);
+          }
+
+          if (status == ConnectivityStatus.connected) {
+            _showNoConnectionBanner(context, ConnectivityStatus.connected);
+          }
+        },
+        ),
+    ], child: child!);
   }
 
   void _showNoConnectionBanner(

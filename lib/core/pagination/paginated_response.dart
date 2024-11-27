@@ -1,30 +1,27 @@
+import 'package:academe_x/core/pagination/paginated_meta.dart';
+
 class PaginatedResponse<T> {
   final List<T> items;
-  final int currentPage;
-  final int totalPages;
-  final int totalItems;
-  final bool hasNextPage;
+  final PaginatedMeta paginatedMeta;
 
   const PaginatedResponse({
     required this.items,
-    required this.currentPage,
-    required this.totalPages,
-    required this.totalItems,
-    required this.hasNextPage,
+    required this.paginatedMeta
   });
 
   factory PaginatedResponse.fromJson(
       Map<String, dynamic> json,
       T Function(Map<String, dynamic>) fromJson,
       ) {
-    final List<dynamic> data = json['data'] as List;
-
     return PaginatedResponse(
-      items: data.map((item) => fromJson(item as Map<String, dynamic>)).toList(),
-      currentPage: json['currentPage'] as int,
-      totalPages: json['totalPages'] as int,
-      totalItems: json['totalItems'] as int,
-      hasNextPage: json['hasNextPage'] as bool,
+      items: (json['data'] as List)
+          .map((item) => fromJson(item as Map<String, dynamic>))
+          .toList(),
+      paginatedMeta: PaginatedMeta.fromJson(json['meta'] as Map<String, dynamic>),
     );
   }
+
+  bool get hasNextPage => paginatedMeta.page < paginatedMeta.pagesCount;
+
 }
+
