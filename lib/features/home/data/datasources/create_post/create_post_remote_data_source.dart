@@ -3,10 +3,14 @@ import 'dart:convert';
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
-import 'package:academe_x/features/home/home.dart';
-import 'package:academe_x/features/home/presentation/model/post_req_model.dart';
+import 'package:academe_x/features/home/data/models/post/tag_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+
+
 typedef  PostBaseResponse = BaseResponse<PostModel>;
+typedef  TagBaseResponse = BaseResponse<List<TagModel>>;
+
+
 class CreatePostRemoteDataSource {
   final ApiController apiController;
   final InternetConnectionChecker internetConnectionChecker;
@@ -15,7 +19,7 @@ class CreatePostRemoteDataSource {
 
   Future<PostModel> createPost({required PostModel post}) async {
     if(post.tags == null) throw ValidationException(messages: ['يرجى اختيار tag']);
-    return await postWithExceptions(
+    return await _postWithExceptions(
       func: () async {
         final response = await apiController.post(
             Uri.parse(ApiSetting.createPost),
@@ -41,7 +45,25 @@ class CreatePostRemoteDataSource {
     );
   }
 
-  Future<PostModel> postWithExceptions({required Future<PostModel> Function() func}) async {
+  Future<List<TagModel>> getTags() async {
+    final response = await apiController.get(
+        Uri.parse(ApiSetting.createPost),
+        headers: {
+          'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhcmFhIiwiaWF0IjoxNzMyNzEwMzA0LCJleHAiOjE3MzI3MTM5MDR9.ysmrCh79qV9e8vcJR5_UWABN6vb0tqtVrHHL-vCYGm4',
+        });
+    final Map<String, dynamic> responseBody = jsonDecode(response.body);
+    if (response.statusCode >= 400) {
+      _handleHttpError(responseBody);
+    }
+    final TagBaseResponse baseResponse = TagBaseResponse.fromJson(
+      responseBody,
+          (json) => (json as List).map((e) => TagModel.fromJson(e),).toList(),
+    );
+    return baseResponse.data!;
+  }
+
+  Future<PostModel> _postWithExceptions({required Future<PostModel> Function() func}) async {
     if (await internetConnectionChecker.hasConnection) {
       return await func();
     } else {
