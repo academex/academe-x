@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'academeX_main.dart';
 import 'lib.dart';
 
 void main() async {
