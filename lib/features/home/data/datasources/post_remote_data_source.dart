@@ -29,7 +29,7 @@ class PostRemoteDataSource {
           Uri.parse('${ApiSetting.getPosts}?page=${paginationParams.page}'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjgwMjg3OSwiZXhwIjoxNzMyODA2NDc5fQ.yjKI0JrK7pcG7i92F7hZodw9blWuUJGEMNJxtfMRYR4'
+            'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjgwNjQ0NywiZXhwIjoxNzMyODEwMDQ3fQ.dwpPOk1Nfhvw4cWEKwPmc_U8u2qd_DdaL3pTlTHDkKM'
           },
         );
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
