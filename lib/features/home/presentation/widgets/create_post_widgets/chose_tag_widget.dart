@@ -58,7 +58,7 @@ class _SelectableButtonGridState extends State<SelectableButtonGrid> {
                       border: Border.all(color: Colors.grey[300]!),
                     ),
                     child: Text(
-                      MockData.tags[index].tagName,
+                      MockData.tags[index].name,
                       style: TextStyle(
                         color: _isSelected[index] ? Colors.white : Colors.black,
                       ),

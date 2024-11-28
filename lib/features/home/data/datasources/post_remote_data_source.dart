@@ -24,11 +24,12 @@ class PostRemoteDataSource {
   Future<PaginatedResponse<PostModel>> getPosts(PaginationParams paginationParams) async {
     if (await internetConnectionChecker.hasConnection) {
       try {
+        AppLogger.success('${ApiSetting.getPosts}?page=${paginationParams.page}');
         final response = await apiController.get(
-          Uri.parse(ApiSetting.getPosts),
+          Uri.parse('${ApiSetting.getPosts}?page=${paginationParams.page}'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjcxNjI0MCwiZXhwIjoxNzMyNzE5ODQwfQ.RBKVImRO6AiBu1DMfrqDByYNtzWaJdLWGoZXTpKgPXg'
+            'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjgwMjg3OSwiZXhwIjoxNzMyODA2NDc5fQ.yjKI0JrK7pcG7i92F7hZodw9blWuUJGEMNJxtfMRYR4'
           },
         );
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -39,10 +40,8 @@ class PostRemoteDataSource {
         final baseResponse = BaseResponse<PaginatedResponse<PostModel>>.fromJson(
           responseBody,
               (json) {
-            AppLogger.i(json.toString());
             return  PaginatedResponse<PostModel>.fromJson(
               json,(p0) {
-                AppLogger.e(p0.toString());
                 return PostModel.fromJson(p0);
             },
             );

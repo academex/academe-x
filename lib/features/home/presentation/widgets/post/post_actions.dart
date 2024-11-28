@@ -9,6 +9,8 @@ import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 
 import '../../controllers/cubits/post/action_post_cubit.dart';
 import '../../controllers/states/action_post_states.dart';
+import '../action_button.dart';
+import '../comment/comments_list.dart';
 import '../lib/flutter_reaction_button.dart';
 import '../test_build_reactions/fb_reaction_box.dart';
 
@@ -33,9 +35,9 @@ class PostActions extends StatelessWidget {
               children: [
               FbReactionBox(),
                 10.pw(),
-                // _buildCommentButton(context),
-                // 10.pw(),
-                // _buildShareButton(context),
+                _buildCommentButton(context),
+                10.pw(),
+                _buildShareButton(context),
                 const Spacer(),
                 _buildSaveButton(),
               ],
@@ -49,7 +51,7 @@ class PostActions extends StatelessWidget {
   // Widget _buildReactionsBar() {
   //   return BlocBuilder<ActionPostCubit, ActionPostState>(
   //     builder: (context, state) {
-  //       if (post.likesCount == 0 && post.commentsCount == 0)
+  //       if (post.reactions?.count == 0 && post.commentsCount == 0)
   //         return const SizedBox();
   //
   //       return Row(
@@ -100,34 +102,17 @@ class PostActions extends StatelessWidget {
   //   );
   // }
 
-  Widget _buildReactionsButton() {
-    return SizedBox(
-      width: 100,
-      child: FbReactionBox(
-        // onReactionSelected: (reaction) {
-        //   // context.read<ActionPostCubit>().selectReaction(reaction);
-        // },
-      ),
-    );
-  }
   // Widget _buildReactionsButton() {
-  //   return BlocBuilder<ActionPostCubit, ActionPostState>(
-  //     builder: (context, state) {
-  //       return Container(
-  //         width: 100, // Match FbReactionBox button width
-  //         child: Directionality(
-  //           textDirection: TextDirection.ltr,
-  //           child: FbReactionBox(
-  //             onReactionSelected: (reaction) {
-  //               // Handle reaction selection
-  //               // context.read<ActionPostCubit>().selectReaction(reaction);
-  //             },
-  //           ),
-  //         ),
-  //       );
-  //     },
+  //   return SizedBox(
+  //     width: 100,
+  //     child: FbReactionBox(
+  //       // onReactionSelected: (reaction) {
+  //       //   // context.read<ActionPostCubit>().selectReaction(reaction);
+  //       // },
+  //     ),
   //   );
   // }
+
 
   // void _showReactionPicker(BuildContext context, TapDownDetails details) {
   //   final RenderBox button = context.findRenderObject() as RenderBox;
@@ -156,23 +141,23 @@ class PostActions extends StatelessWidget {
   //   );
   // }
 
-  // Widget _buildCommentButton(BuildContext context) {
-  //   return ActionButton(
-  //     iconPath: 'assets/icons/comment.png',
-  //     count: post.commentsCount.toString(),
-  //     onTap: () => CommentsList(postId: post.userId, context: context),
-  //   );
-  // }
+  Widget _buildCommentButton(BuildContext context) {
+    return ActionButton(
+      iconPath: 'assets/icons/comment.png',
+      count: post.commentsCount.toString(),
+      onTap: () => CommentsList(postId: post.id, context: context),
+    );
+  }
 
 //
 //
-//   Widget _buildShareButton(BuildContext context) {
-//     return ActionButton(
-//       iconPath: 'assets/icons/share.png',
-//       count: post.sharesCount.toString(),
-//       onTap: () {},
-//     );
-//   }
+  Widget _buildShareButton(BuildContext context) {
+    return ActionButton(
+      iconPath: 'assets/icons/share.png',
+      count: '0',
+      onTap: () {},
+    );
+  }
 
   Widget _buildSaveButton() {
     return BlocBuilder<ActionPostCubit, ActionPostState>(

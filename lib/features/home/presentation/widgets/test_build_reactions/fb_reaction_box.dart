@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 
 
 class FbReactionBox extends StatefulWidget {
+
   @override
   createState() => FbReactionBoxState();
 }
@@ -72,6 +73,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   bool _isDragging = false;
   bool _isDraggingOutside = false;
   bool _isJustDragInside = true;
+
 
   @override
   void initState() {

@@ -1,6 +1,7 @@
 
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
@@ -11,7 +12,7 @@ class PostUseCase {
   PostRepository postRepository;
   PostUseCase({required this.postRepository});
 
-  Future<Either<Failure, PaginatedResponse<PostModel>>> getPosts(PaginationParams paginationParams) async {
+  Future<Either<Failure, PaginatedResponse<PostEntity>>> getPosts(PaginationParams paginationParams) async {
     return await postRepository.getPosts(paginationParams);
   }
 

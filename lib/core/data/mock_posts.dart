@@ -1,4 +1,4 @@
-import 'package:academe_x/features/home/domain/entities/create_post/tag.dart';
+import 'package:academe_x/features/home/domain/entities/post/tag_entity.dart';
 
 import '../core.dart';
 import '../../features/home/home.dart';
@@ -151,8 +151,8 @@ class MockData {
     {'حوسبة متنقلة': 'assets/images/image_test1.png'},
     {'وسائط متعددة': 'assets/images/image_test1.png'},
   ];
-  static final List<Tag> tags = [
-    Tag(id: 1, tagName: "#تطوير برمجيات"),
+  static final List<TagEntity> tags = [
+    TagEntity(id: 1, name: "#تطوير برمجيات"),
   ];
   static final List<Comment> comments = [
     Comment(

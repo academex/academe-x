@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:academe_x/core/config/app_config.dart';
 import 'package:academe_x/core/error/exception.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -32,28 +33,13 @@ class ApiController {
         }
       }
       http.Response response = await http
-          .get(url, headers: headers ?? {"Content-Type": "application/json"})
-          .timeout(Duration(seconds: 10), onTimeout: () {
+          .get(url, headers: headers ?? {"Content-Type": "application/json"},)
+          .timeout(AppConfig.connectionTimeout, onTimeout: () {
         // This block executes if the request times out
         throw TimeOutExeption(
             errorMessage: 'Request took longer than ${10} seconds.');
       });
       return response;
-
-      // Map<String, dynamic> data = await jsonDecode(response.body);
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   // Logger().i( );
-      //   if (timeToLive > 0) {
-      //     cacheData[url.toString()] = data;
-      //     // cacheData['mainCategory'] = data['data']['mainCategories'];
-      //     cacheData['${url}cacheTime'] = timeToLive;
-      //     cacheData['${url}saveTime'] = DateTime.now();
-      //   }
-      //
-      // } else {
-      //   Logger().i(data);
-      //   return response;
-      // }
     } catch (e) {
       Logger().e(e);
       rethrow;
@@ -78,8 +64,7 @@ class ApiController {
 
       final Map<String, String> finalHeaders = {
         'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhcmFhIiwiaWF0IjoxNzMyMjczODIxLCJleHAiOjE3MzIyNzc0MjF9.PgIp3RGvqB0iWfxhJa-1xh7AakXdDRx4cGdXJlhfLGo',
+        ...?headers,
       };
 
       final dynamic finalBody = body is String ? body : jsonEncode(body);

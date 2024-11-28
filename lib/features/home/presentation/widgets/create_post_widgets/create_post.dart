@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
@@ -9,13 +10,14 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:logger/logger.dart';
 
 import 'create_multi_choice_widget.dart';
 import 'file_container.dart';
 
 class CreatePost {
   final TextEditingController _postController = TextEditingController();
-  late final PostReqEntity post = PostReqEntity();
+  PostEntity post = const PostEntity();
   final _formKey = GlobalKey<FormState>();
   List<File>? images = null;
   File? file = null;
@@ -132,10 +134,10 @@ class CreatePost {
                     // for loop for the hashes
                     BlocBuilder<TagCubit, TagState>(
                       builder: (context, state) {
-                        post.copyWith(
-                            tagsId: state.selectedTags
+                        post = post.copyWith(
+                            tags: state.selectedTags
                                 .map(
-                                  (e) => e.id,
+                                  (e) => e,
                                 )
                                 .toList());
                         return Wrap(
@@ -144,7 +146,7 @@ class CreatePost {
                           children:
                               List.generate(state.selectedTags.length, (index) {
                             return AppText(
-                              text: state.selectedTags[index].tagName,
+                              text: state.selectedTags[index].name,
                               fontSize: 14.sp,
                               color: const Color(0xff0077FF),
                             );
@@ -208,7 +210,6 @@ class CreatePost {
                         //   return FileContainer(file: getIt<FilePickerLoaded>().file);
                         // }
                         else if (state is CreateMultiChoice) {
-                          AppLogger.i(state.toString());
                           return CreateMultiChoiceWidget();
                         } else {
                           return 0.ph();
@@ -323,11 +324,10 @@ class CreatePost {
                               onTap: state is! SendingState
                                   ? () {
                                       if (_formKey.currentState!.validate()) {
-                                        post.copyWith(
-                                            content: _postController.text);
                                         context
                                             .read<CreatePostCubit>()
-                                            .sendPost(post: post);
+                                            .sendPost(post: post.copyWith(
+                                            content: _postController.text));
                                       }
                                     }
                                   : null,

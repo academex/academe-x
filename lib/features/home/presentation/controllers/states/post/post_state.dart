@@ -10,24 +10,25 @@ class PostsState extends Equatable {
   final PostStatus status;
   final List<PostEntity> posts;
   final bool hasReachedMax;
-  late final bool isLoadingPosts;
-  final int currentPage;
+    int currentPage;
   final String? errorMessage;
+  final DateTime? lastUpdated;  // Add this to track cache freshness
 
-   PostsState({
+
+  PostsState({
     this.status = PostStatus.initial,
     this.posts = const <PostEntity>[],
     this.hasReachedMax = false,
-    this.isLoadingPosts = false,
     this.currentPage = 1,
     this.errorMessage,
+    this.lastUpdated,
+
   });
 
   PostsState copyWith({
     PostStatus? status,
     List<PostEntity>? posts,
     bool? hasReachedMax,
-    bool? isLoadingPosts,
     int? currentPage,
     String? errorMessage,
   }) {
@@ -35,7 +36,6 @@ class PostsState extends Equatable {
       status: status ?? this.status,
       posts: posts ?? this.posts,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-      isLoadingPosts: isLoadingPosts ?? this.isLoadingPosts,
       currentPage: currentPage ?? this.currentPage,
       errorMessage: errorMessage ?? this.errorMessage,
     );
@@ -46,7 +46,6 @@ class PostsState extends Equatable {
     status,
     posts,
     hasReachedMax,
-    isLoadingPosts,
     currentPage,
     errorMessage,
   ];

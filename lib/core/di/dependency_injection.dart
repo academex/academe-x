@@ -113,10 +113,10 @@ void _initRepositories() {
         remoteDataSource: getIt(), cacheManager: getIt(), networkInfo: InternetConnectionChecker()),
   );
   getIt.registerLazySingleton<CreatePostRepository>(
-    () => CreatePostRepositoryImp(createPostRemoteDataSourse: getIt()),
+    () => CreatePostRepositoryImp(createPostRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton<PostRepository>(
-    () => PostRepositoryImpl(remoteDataSource: getIt()),
+    () => PostRepositoryImpl(remoteDataSource: getIt(),cacheManager: getIt()),
   );
 }
 
