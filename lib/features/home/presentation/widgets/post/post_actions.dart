@@ -9,7 +9,9 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 
 import '../../controllers/cubits/post/action_post_cubit.dart';
+import '../../controllers/cubits/post/posts_cubit.dart';
 import '../../controllers/states/action_post_states.dart';
+import '../../controllers/states/post/post_state.dart';
 import '../action_button.dart';
 import '../comment/comments_list.dart';
 import '../lib/flutter_reaction_button.dart';
@@ -20,86 +22,112 @@ class PostActions extends StatelessWidget {
 
   const PostActions({required this.post, super.key});
 
+  void _handleReaction(String reactType, BuildContext context) async {
+    try {
+      await context.read<PostsCubit>().reactToPost(
+        context: context,
+        reactType: reactType.toUpperCase(),
+        postId: post.id!,
+      );
+    } catch (e) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update reaction')),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ActionPostCubit(),
-      child: Column(
-        children: [
-          _buildReactionsBar(),
-          8.ph(),
-          SizedBox(
-            // width: 326,
-            height: 50,
-            // child:
-            child: Row(
-              children: [
-              FbReactionBox(),
-                10.pw(),
-                _buildCommentButton(context),
-                10.pw(),
-                _buildShareButton(context),
-                const Spacer(),
-                _buildSaveButton(),
-              ],
-            ),
+    return Column(
+      children: [
+        BlocBuilder<PostsCubit, PostsState>(
+    // Add buildWhen to optimize rebuilds
+    // buildWhen: (previous, current) {
+    //   // Only rebuild if the posts that we care about have changed
+    //   final previousPost = previous.posts.where(
+    //         (p) => p.id == post.id,
+    //     // orElse: () => post,
+    //   ).first;
+    //   final currentPost = current.posts.where(
+    //         (p) => p.id == post.id,
+    //
+    //   ).first;
+    //   return previousPost != currentPost;
+    // },
+    builder: (context, state) {
+      // Find the updated post from state
+      final updatedPost = state.posts.firstWhere(
+            (p) => p.id == post.id,
+      );
+
+      return _buildReactionsBar(updatedPost);
+    },
+    ),
+        8.ph(),
+        SizedBox(
+          // width: 326,
+          height: 50,
+          // child:
+          child: Row(
+            children: [
+              FbReactionBox(post: post,onReact:(reactType) => _handleReaction(reactType, context),),
+              10.pw(),
+              _buildCommentButton(context),
+              10.pw(),
+              _buildShareButton(context),
+              const Spacer(),
+              _buildSaveButton(),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildReactionsBar() {
-    return BlocBuilder<ActionPostCubit, ActionPostState>(
-      builder: (context, state) {
-        if (post.reactions?.count == 0 && post.commentsCount == 0) {
-          return const SizedBox();
-        }
-
-        return Row(
-          children: [
-            if (post.reactions != null && post.reactions!.items.isNotEmpty)
-              SizedBox(
-                height: 24,
-                width: post.reactions!.items.length > 1 ? 40 : 24,
-                child: Stack(
-                  children: List.generate(
-                    post.reactions!.items.length > 3
-                        ? 3
-                        :post.reactions!.items.length,
+  Widget _buildReactionsBar(PostEntity currentPost) {
+    if (currentPost.reactions == null || currentPost.reactions!.items.isEmpty) {
+      return const SizedBox.shrink(); // Return empty widget if no reactions
+    }
+    return Row(
+      children: [
+        if (currentPost.reactions != null && currentPost.reactions!.items.isNotEmpty)
+          SizedBox(
+            height: 24,
+            width: currentPost.reactions!.items.length > 1 ? 40 : 24,
+            child: Stack(
+              children: List.generate(
+                currentPost.reactions!.items.length > 3
+                    ? 3
+                    : currentPost.reactions!.items.length,
                     (index) => Positioned(
-                      right: index * 15, // For RTL support
-                      child: _buildReactionAvatar(post.reactions!.items[index]),
-                    ),
-                  ).reversed.toList(),
+                  right: index * 15,
+                  child: _buildReactionAvatar(currentPost.reactions!.items[index]),
                 ),
-              ),
-            7.pw(),
-            Expanded(
-              child: GestureDetector(
-                // onTap: () => _showReactionsSheet(context),
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      if (post.reactions!.items != null &&
-                          post.reactions!.items.isNotEmpty)
-                        TextSpan(
-                          text:_getReactionsText(),
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 13,
-                          ),
-                        ),
-                    ],
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
+              ).reversed.toList(),
             ),
-          ],
-        );
-      },
+          ),
+        7.pw(),
+        Expanded(
+          child: GestureDetector(
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  if (currentPost.reactions!.items.isNotEmpty)
+                    TextSpan(
+                      text: _getReactionsText(currentPost),
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 13,
+                      ),
+                    ),
+                ],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -123,26 +151,23 @@ class PostActions extends StatelessWidget {
   }
 
   Widget _buildSaveButton() {
-    return BlocBuilder<ActionPostCubit, ActionPostState>(
-      builder: (context, state) {
-        return IconButton(
-          icon: Image.asset(
-            state.isSaved
-                ? 'assets/icons/bookMark_selected.png'
-                : 'assets/icons/Bookmark.png',
-            height: 17,
-            width: 19,
-          ),
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            context.read<ActionPostCubit>().performSaveAction(!state.isSaved);
-          },
-        );
+    return IconButton(
+      icon: Image.asset(
+        // state.isSaved
+        //     ? 'assets/icons/bookMark_selected.png'
+            'assets/icons/Bookmark.png',
+        height: 17,
+        width: 19,
+      ),
+      padding: EdgeInsets.zero,
+      onPressed: () {
+        // context.read<ActionPostCubit>().performSaveAction(!state.isSaved);
       },
-    );
+    );;
   }
 
   Widget _buildReactionAvatar(ReactionItemEntity reaction) {
+
     return SizedBox(
       height: 24,
       width: 24,
@@ -152,17 +177,12 @@ class PostActions extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Container(
-              height: 24,
-              width: 24,
-              color:_getReactionsColor(reaction.type),
-              child:Center(
-                child: Container(
-                  margin: const EdgeInsets.all(2),
-                  child: SvgPicture.asset(_getReactionsIcon(reaction.type)),
-                ),
-                ),
+            child: Center(
+              child: Container(
+                margin: const EdgeInsets.all(2),
+                child: SvgPicture.asset(_getReactionsIcon(reaction.type)),
               ),
+            ),
             ),
     ]
           ),
@@ -171,7 +191,8 @@ class PostActions extends StatelessWidget {
   }
 
   String _getReactionsIcon(String type) {
-    switch (type){
+    AppLogger.success(type.toUpperCase());
+    switch (type.toUpperCase()){
       case 'QUESTION':
         return 'assets/icons/reactions/question.svg';
       case 'HEART':
@@ -208,7 +229,7 @@ class PostActions extends StatelessWidget {
     }
   }
 
-  String _getReactionsText() {
+  String _getReactionsText(PostEntity post) {
     if (post.reactions == null || post.reactions!.items.isEmpty) return '';
 
     if (post.reactions!.items.length == 1) {

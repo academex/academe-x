@@ -232,7 +232,6 @@ class HiveCacheManager implements BaseStorageManager {
     final cachedData = jsonDecode(cachedString);
     final expiryTime = DateTime.fromMillisecondsSinceEpoch(cachedData['expiry']);
 
-    AppLogger.success('in getCachedResponse ${DateTime.now().isAfter(expiryTime)}');
     if (DateTime.now().isAfter(expiryTime)) {
       await _cacheBox.delete(key);
       return null;
@@ -242,7 +241,6 @@ class HiveCacheManager implements BaseStorageManager {
       return fromJson(cachedData['data']);
     } catch (e,stackTrace) {
 
-    AppLogger.e('in getCachedResponse $e   $stackTrace');
       // await _cacheBox.delete(key);
       return null;
     }

@@ -16,6 +16,8 @@ class PostRemoteDataSource {
   final ApiController apiController;
   final InternetConnectionChecker internetConnectionChecker;
 
+  String TOKEN='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjk3OTE5OSwiZXhwIjoxNzMyOTgyNzk5fQ.UzTUdyykMBZFkz9ysWfWcuRT-BJoRe0sjhZg9wgpkZ0';
+
 
 
   PostRemoteDataSource({required this.apiController,required this.internetConnectionChecker});
@@ -29,7 +31,7 @@ class PostRemoteDataSource {
           Uri.parse('${ApiSetting.getPosts}?page=${paginationParams.page}'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjgwNjQ0NywiZXhwIjoxNzMyODEwMDQ3fQ.dwpPOk1Nfhvw4cWEKwPmc_U8u2qd_DdaL3pTlTHDkKM'
+            'Authorization':'Bearer ${TOKEN}'
           },
         );
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -48,6 +50,42 @@ class PostRemoteDataSource {
               },
         );
         return baseResponse.data!;
+
+
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
+  Future<BaseResponse<void>> reactToPost(String reactionType,int postId) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        final response = await apiController.post(
+          Uri.parse('${ApiSetting.getPosts}/$postId/react'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ${TOKEN}'
+          },
+          body: {
+            "type":  reactionType.toUpperCase()
+          }
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          _handleHttpError(responseBody);
+        }
+
+        final baseResponse = BaseResponse<void>.fromJson(
+          responseBody,
+          (json) {
+
+          },
+        );
+
+        return baseResponse;
 
 
       } on TimeOutExeption {

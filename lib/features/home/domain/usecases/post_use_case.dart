@@ -17,6 +17,11 @@ class PostUseCase {
   }
 
 
+  Future<Either<Failure, void>> reactToPost(String reactionType,int postId) async {
+    return await postRepository.reactToPost(reactionType,postId);
+  }
+
+
 
 
 

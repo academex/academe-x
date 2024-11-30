@@ -8,5 +8,6 @@ import '../../../../core/pagination/pagination_params.dart';
 abstract class PostRepository {
   PostRepository();
   Future<Either<Failure, PaginatedResponse<PostModel>>>getPosts(PaginationParams paginationParams);
+  Future<Either<Failure, void>>reactToPost(String reactionType,int postId);
 
 }

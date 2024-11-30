@@ -52,7 +52,7 @@ void _initCubits() {
   );
 
   getIt.registerFactory<PostsCubit>(
-    () => PostsCubit(getPosts: getIt()),
+    () => PostsCubit(postUseCase: getIt()),
   );
 
   getIt.registerFactory<BottomNavCubit>(

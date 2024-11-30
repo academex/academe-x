@@ -8,6 +8,7 @@ class PostHeaderShimmer extends StatelessWidget {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
+      direction: ShimmerDirection.rtl,
       child: Row(
         children: [
           const CircleAvatar(

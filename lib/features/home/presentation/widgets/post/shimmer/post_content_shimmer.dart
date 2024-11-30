@@ -7,6 +7,7 @@ class PostContentShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
+      direction: ShimmerDirection.rtl,
       highlightColor: Colors.grey.shade100,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
