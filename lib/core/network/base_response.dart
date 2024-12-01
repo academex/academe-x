@@ -1,3 +1,5 @@
+import '../utils/logger.dart';
+
 class BaseResponse<T> {
   final String status;
   final dynamic message;  // Can be String or List<String>
@@ -23,6 +25,7 @@ class BaseResponse<T> {
       Map<String, dynamic> json,
       T Function(dynamic json) fromJson,
       ) {
+    AppLogger.success('in fromjson ${json}');
     // Handle error response format with statusCode
     if (json.containsKey('statusCode')) {
       return BaseResponse<T>(

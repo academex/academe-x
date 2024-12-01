@@ -19,6 +19,9 @@ class PostModel extends PostEntity {
     required super.user,
     required super.reactions,
     required super.commentsCount,
+    required super.isReacted,
+    required super.isSaved,
+    required super.reactionType,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +36,9 @@ class PostModel extends PostEntity {
       user: PostUserModel.fromJson(json['user']),
       reactions: json['reactions'] != null? ReactionsModel.fromJson(json['reactions']):const ReactionsEntity(count: 0, items: []),
       commentsCount: (json['comments']??0) as int,
+      isReacted: json['isReacted'],
+      isSaved:  json['isSaved'],
+      reactionType: json['reactionType'] as String?
     );
   }
 
@@ -48,6 +54,9 @@ class PostModel extends PostEntity {
       'user': user != null?(user as PostUserModel).toJson():null,
       'reactions': reactions != null?(reactions as ReactionsModel).toJson():null,
       'comments': commentsCount,
+      'isReacted': isReacted,
+      'isSaved': isSaved,
+      'reactionType': reactionType,
     };
   }
   factory PostModel.fromEntity(PostEntity entity) {
@@ -62,6 +71,9 @@ class PostModel extends PostEntity {
       user: (entity.user),
       reactions: (entity.reactions),
       commentsCount: entity.commentsCount,
+      isSaved: entity.isSaved,
+      isReacted:  entity.isReacted,
+      reactionType: entity.reactionType
     );
   }
 

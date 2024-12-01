@@ -115,14 +115,11 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
 
     AppLogger.success('hi I get the user loggenIn ${authTokenModel!.user.id}');
-    if (widget.post.reactions != null && widget.post.reactions!.items.isNotEmpty) {
-      final currentUserReaction = widget.post.reactions!.items
-          .where((reaction) => reaction.user.id == authTokenModel.user.id)
-          .firstOrNull;
-
+    if(widget.post.isReacted!){
+      final currentUserReaction = widget.post.reactionType;
       if (currentUserReaction != null) {
         setState(() {
-          _emojiUserChoose = _getReactionEmojiFromString(currentUserReaction.type);
+          _emojiUserChoose = _getReactionEmojiFromString(currentUserReaction);
           _currentEmojiFocus = _emojiUserChoose;
           _isLiked = _emojiUserChoose != ReactionEmoji.nothing;
         });
@@ -133,10 +130,31 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
           _isLiked = false;
         });
       }
+
+
     }
+    // if (widget.post.reactions != null && widget.post.reactions!.items.isNotEmpty) {
+    //   final currentUserReaction = widget.post.reactions!.items
+    //       .where((reaction) => reaction.user.id == authTokenModel.user.id)
+    //       .firstOrNull;
+    //
+    //   if (currentUserReaction != null) {
+    //     setState(() {
+    //       _emojiUserChoose = _getReactionEmojiFromString(currentUserReaction.type);
+    //       _currentEmojiFocus = _emojiUserChoose;
+    //       _isLiked = _emojiUserChoose != ReactionEmoji.nothing;
+    //     });
+    //   } else {
+    //     setState(() {
+    //       _emojiUserChoose = ReactionEmoji.nothing;
+    //       _currentEmojiFocus = ReactionEmoji.nothing;
+    //       _isLiked = false;
+    //     });
+    //   }
+    // }
   }
 
-  ReactionEmoji _getReactionEmojiFromString(String type) {
+   ReactionEmoji _getReactionEmojiFromString(String type) {
     switch (type.toUpperCase()) {
       case 'HEART':
         return ReactionEmoji.heart;

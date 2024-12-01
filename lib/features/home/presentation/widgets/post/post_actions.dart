@@ -8,6 +8,7 @@ import 'package:hive_flutter/adapters.dart';
 // import 'package:reaction_button/reaction_button.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 
+import '../../../domain/entities/home/reaction_user.dart';
 import '../../controllers/cubits/post/action_post_cubit.dart';
 import '../../controllers/cubits/post/posts_cubit.dart';
 import '../../controllers/states/action_post_states.dart';
@@ -41,26 +42,13 @@ class PostActions extends StatelessWidget {
     return Column(
       children: [
         BlocBuilder<PostsCubit, PostsState>(
-    // Add buildWhen to optimize rebuilds
-    // buildWhen: (previous, current) {
-    //   // Only rebuild if the posts that we care about have changed
-    //   final previousPost = previous.posts.where(
-    //         (p) => p.id == post.id,
-    //     // orElse: () => post,
-    //   ).first;
-    //   final currentPost = current.posts.where(
-    //         (p) => p.id == post.id,
-    //
-    //   ).first;
-    //   return previousPost != currentPost;
-    // },
     builder: (context, state) {
       // Find the updated post from state
       final updatedPost = state.posts.firstWhere(
             (p) => p.id == post.id,
       );
 
-      return _buildReactionsBar(updatedPost);
+      return _buildReactionsBar(updatedPost,context);
     },
     ),
         8.ph(),
@@ -84,7 +72,7 @@ class PostActions extends StatelessWidget {
     );
   }
 
-  Widget _buildReactionsBar(PostEntity currentPost) {
+  Widget _buildReactionsBar(PostEntity currentPost,BuildContext context) {
     if (currentPost.reactions == null || currentPost.reactions!.items.isEmpty) {
       return const SizedBox.shrink(); // Return empty widget if no reactions
     }
@@ -93,7 +81,7 @@ class PostActions extends StatelessWidget {
         if (currentPost.reactions != null && currentPost.reactions!.items.isNotEmpty)
           SizedBox(
             height: 24,
-            width: currentPost.reactions!.items.length > 1 ? 40 : 24,
+            width: currentPost.reactions!.items.length > 1 ? currentPost.reactions!.items.length > 2 ?56 :40 : 23,
             child: Stack(
               children: List.generate(
                 currentPost.reactions!.items.length > 3
@@ -109,6 +97,10 @@ class PostActions extends StatelessWidget {
         7.pw(),
         Expanded(
           child: GestureDetector(
+            onTap: () async{
+
+              return _showReactionsSheet(context);
+            },
             child: Text.rich(
               TextSpan(
                 children: [
@@ -140,8 +132,6 @@ class PostActions extends StatelessWidget {
     );
   }
 
-//
-//
   Widget _buildShareButton(BuildContext context) {
     return ActionButton(
       iconPath: 'assets/icons/share.png',
@@ -190,44 +180,9 @@ class PostActions extends StatelessWidget {
       );
   }
 
-  String _getReactionsIcon(String type) {
-    AppLogger.success(type.toUpperCase());
-    switch (type.toUpperCase()){
-      case 'QUESTION':
-        return 'assets/icons/reactions/question.svg';
-      case 'HEART':
-        return 'assets/icons/reactions/heart.svg';
-      case 'INSIGHTFUL':
-        return 'assets/icons/reactions/insightful.svg';
-      case 'FUNNY':
-        return 'assets/icons/reactions/funny.svg';
-      case 'CELEBRATE':
-        return 'assets/icons/reactions/celebrate.svg';
-      default:
-        return '';
 
 
-    }
-  }
 
-  Color _getReactionsColor(String type) {
-    switch (type){
-      case 'QUESTION':
-        return Colors.lightBlueAccent;
-      case 'HEART':
-        return Colors.redAccent;
-      case 'INSIGHTFUL':
-        return const Color(0xffFF7D99);
-      case 'FUNNY':
-        return Colors.lightBlueAccent;
-      case 'CELEBRATE':
-        return const Color(0xFFFFDCD4);
-      default:
-        return Colors.white;
-
-
-    }
-  }
 
   String _getReactionsText(PostEntity post) {
     if (post.reactions == null || post.reactions!.items.isEmpty) return '';
@@ -243,258 +198,101 @@ class PostActions extends StatelessWidget {
     return '${post.reactions!.items[0].user.username} و ${post.reactions!.items.length - 1} آخرين';
   }
 
-  // void _showReactionsSheet(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-  //     ),
-  //     builder: (context) =>
-  //         _ReactionsBottomSheet(reactions: post.reactionUsers ?? []),
-  //   );
-  // }
+  void _showReactionsSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) =>
+          _ReactionsBottomSheet(reactions: post.reactions!.items ?? []),
+    );
+  }
 }
 
-// class _ReactionPickerWidget extends StatefulWidget {
-//   _ReactionPickerWidget({super.key, required this.onReactionSelected});
-//
-//   final Function(ReactionType) onReactionSelected;
-//   double height = 40;
-//   double width = 40;
-//
-//   late OverlayEntry overlayEntry;
-//   @override
-//   State<_ReactionPickerWidget> createState() => _ReactionPickerWidgetState();
-// }
-//
-// class _ReactionPickerWidgetState extends State<_ReactionPickerWidget> {
-//   Map<ReactionType, double> reactionIconSizes = {
-//     for (final type in ReactionType.values) type: 35.0,
-//   };
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.all(8),
-//       decoration: BoxDecoration(
-//           color: Colors.white,
-//           border: Border.all(color: Colors.black, strokeAlign: 0.74),
-//           borderRadius: const BorderRadius.only(
-//             bottomLeft: Radius.circular(9.12),
-//             topLeft: Radius.circular(9.12),
-//             topRight: Radius.circular(9.12),
-//           )),
-//       child: Row(
-//         mainAxisSize: MainAxisSize.min,
-//         children: ReactionType.values.map((type) {
-//           return InkWell(
-//             onTap: () {
-//               widget.onReactionSelected(type);
-//               widget.overlayEntry.remove();
-//             },
-//             onTapDown: (details) {
-//               setState(() {
-//                 reactionIconSizes[type] = 55.0;
-//               });
-//               final RenderBox button = context.findRenderObject() as RenderBox;
-//               final Offset position = button.localToGlobal(Offset.zero);
-//               widget.overlayEntry = OverlayEntry(
-//                 builder: (context) {
-//                   return Positioned(
-//                     top: position.dy - 30, // Position above the icon
-//                     left: details.globalPosition.dx - 20,
-//                     child: Material(
-//                       color: Colors.transparent,
-//                       child: Container(
-//                         width: 38.90,
-//                         height: 22.54,
-//                         padding: const EdgeInsets.symmetric(
-//                             horizontal: 5.45, vertical: 3.27),
-//                         decoration: ShapeDecoration(
-//                           color: type.reactionColor,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(7.78),
-//                           ),
-//                         ),
-//                         child: Center(
-//                           child: AppText(
-//                             text: type.reactionText,
-//                             color: type.reactionText != 'تصفيق'
-//                                 ? Colors.white
-//                                 : Colors.black,
-//                             fontSize: 8.72,
-//                             fontWeight: FontWeight.w500,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   );
-//                 },
-//               );
-//               AppLogger.success(type.index.toString());
-//
-//               // Show the overlay
-//               Overlay.of(context).insert(widget.overlayEntry);
-//             },
-//             child: Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 4),
-//                 child: SvgPicture.asset(
-//                   fit: BoxFit.contain,
-//                   width: reactionIconSizes[type]!,
-//                   height: reactionIconSizes[type]!,
-//                   type.assetPath,
-//                 )),
-//             //   child: Image.asset(
-//             //   fit: BoxFit.contain,
-//             //   width:reactionIconSizes[type]!,
-//             //   height:reactionIconSizes[type]!,
-//             //   type.assetPath,
-//             // ),),
-//             onTapCancel: () {
-//               widget.overlayEntry.remove();
-//               setState(() {
-//                 reactionIconSizes.updateAll((_, size) => 35.0);
-//               });
-//             },
-//           );
-//         }).toList(),
-//       ),
-//     );
-//   }
-// }
+String _getReactionsIcon(String type) {
+  switch (type.toUpperCase()){
+    case 'QUESTION':
+      return 'assets/icons/reactions/question.svg';
+    case 'HEART':
+      return 'assets/icons/reactions/heart.svg';
+    case 'INSIGHTFUL':
+      return 'assets/icons/reactions/insightful.svg';
+    case 'FUNNY':
+      return 'assets/icons/reactions/funny.svg';
+    case 'CELEBRATE':
+      return 'assets/icons/reactions/celebrate.svg';
+    default:
+      return '';
 
-// class SelectedReactionButton extends StatelessWidget {
-//   final ReactionType reaction;
-//   final VoidCallback onTap;
-//
-//   const SelectedReactionButton({
-//     required this.reaction,
-//     required this.onTap,
-//     Key? key,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return InkWell(
-//       onTap: onTap,
-//       child: Container(
-//         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-//         decoration: BoxDecoration(
-//           color: _getReactionColor(reaction),
-//           borderRadius: BorderRadius.circular(16),
-//         ),
-//         child: Row(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Image.asset(reaction.assetPath, width: 16, height: 16),
-//             4.pw(),
-//             Text(
-//               _getReactionText(reaction),
-//               style: const TextStyle(
-//                 color: Colors.white,
-//                 fontSize: 12,
-//                 fontWeight: FontWeight.w500,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Color _getReactionColor(ReactionType type) {
-//     switch (type) {
-//       case ReactionType.heart:
-//         return const Color(0xFFFF597B); // Pink
-//       case ReactionType.celebrate:
-//         return const Color(0xFF37B4AA); // Teal
-//       case ReactionType.question:
-//         return const Color(0xFF6C5CE7); // Purple
-//       case ReactionType.insightful:
-//         return const Color(0xFFFF8F3C); // Orange
-//       case ReactionType.like:
-//         return const Color(0xFF2196F3); // Blue
-//     }
-//   }
-//
-//   String _getReactionText(ReactionType type) {
-//     switch (type) {
-//       case ReactionType.heart:
-//         return 'قلب';
-//       case ReactionType.celebrate:
-//         return 'ابتسامة';
-//       case ReactionType.question:
-//         return 'سؤال';
-//       case ReactionType.insightful:
-//         return 'قهوة';
-//       case ReactionType.like:
-//         return 'إعجاب';
-//     }
-//   }
-// }
 
-// class _ReactionsBottomSheet extends StatelessWidget {
-//   final List<ReactionUser> reactions;
-//
-//   const _ReactionsBottomSheet({
-//     required this.reactions,
-//     Key? key,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: 400,
-//       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Row(
-//             children: [
-//               AppText(
-//                 text: 'التفاعلات',
-//                 fontSize: 16,
-//                 fontWeight: FontWeight.w600,
-//               ),
-//               const Spacer(),
-//               IconButton(
-//                 icon: const Icon(Icons.close),
-//                 onPressed: () => Navigator.pop(context),
-//               ),
-//             ],
-//           ),
-//           12.ph(),
-//           Expanded(
-//             child: ListView.builder(
-//               itemCount: reactions.length,
-//               itemBuilder: (context, index) {
-//                 final user = reactions[index];
-//                 return ListTile(
-//                   leading: CircleAvatar(
-//                     backgroundImage: NetworkImage(user.avatarUrl),
-//                   ),
-//                   title: AppText(
-//                     text: user.name,
-//                     fontSize: 12,
-//                   ),
-//                   trailing: Container(
-//                     padding: EdgeInsets.all(8),
-//                     decoration: BoxDecoration(
-//                       color: user.reactionType.reactionColor.withOpacity(0.1),
-//                       borderRadius: BorderRadius.circular(8),
-//                     ),
-//                     child: Image.asset(
-//                       user.reactionType.assetPath,
-//                       height: 20,
-//                       width: 20,
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  }
+}
+
+class _ReactionsBottomSheet extends StatelessWidget {
+  final List<ReactionItemEntity> reactions;
+
+  const _ReactionsBottomSheet({
+    required this.reactions,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 400,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AppText(
+                text:'التفاعلات(${reactions.length})',
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+              // const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+          12.ph(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: reactions.length,
+              itemBuilder: (context, index) {
+                final reacton = reactions[index];
+                return ListTile(
+                  // leading: CircleAvatar(
+                  //   backgroundImage: NetworkImage(user.avatarUrl),
+                  // ),
+                  title: AppText(
+                    text: reacton.user.username,
+                    fontSize: 12,
+                  ),
+                  trailing: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      // color: user.reactionType.reactionColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: SvgPicture.asset(
+                      _getReactionsIcon(reacton.type),
+                      height: 20,
+                      width: 20,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+}

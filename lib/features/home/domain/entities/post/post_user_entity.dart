@@ -5,11 +5,15 @@ import '../../../../auth/domain/entities/response/user_response_entity.dart';
 class PostUserEntity extends Equatable {
   final int id;
   final String username;
+  final String? firstName;
+  final String? lastName;
   final String? photoUrl;
 
   const PostUserEntity({
     required this.id,
     required this.username,
+    required this.firstName,
+    required this.lastName,
     this.photoUrl,
   });
 
@@ -19,6 +23,9 @@ class PostUserEntity extends Equatable {
       id: user.id,
       username: user.username,
       photoUrl: user.photoUrl,
+      firstName: user.firstName,
+      lastName: user.lastName,
+
     );
   }
 

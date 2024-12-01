@@ -4,6 +4,8 @@ class PostUserModel extends PostUserEntity {
   const PostUserModel({
     required super.id,
     required super.username,
+    required super.firstName,
+    required super.lastName,
     super.photoUrl,
   });
 
@@ -12,6 +14,8 @@ class PostUserModel extends PostUserEntity {
       id: json['id'] as int,
       username: json['username'] as String,
       photoUrl: json['photoUrl'] as String?,
+      firstName: json['firstName'] as String,
+      lastName: json['lastName'] as String,
     );
   }
 
@@ -20,6 +24,8 @@ class PostUserModel extends PostUserEntity {
       'id': id,
       'username': username,
       'photoUrl': photoUrl,
+      'firstName': firstName,
+      'lastName': lastName,
     };
   }
 }

@@ -9,5 +9,6 @@ abstract class PostRepository {
   PostRepository();
   Future<Either<Failure, PaginatedResponse<PostModel>>>getPosts(PaginationParams paginationParams);
   Future<Either<Failure, void>>reactToPost(String reactionType,int postId);
+  // Future<Either<Failure, void>>getReaction(String reactionType,int postId);
 
 }

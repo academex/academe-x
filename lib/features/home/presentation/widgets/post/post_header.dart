@@ -31,12 +31,17 @@ class PostHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                text: post.user!.username,
+                text: '${post.user!.firstName}  ${post.user!.lastName}' ,
                 color: Color(0xFF0F172A),
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
-              4.ph(),
+              AppText(
+                text: '@${post.user!.username}',
+                fontSize: 12  ,
+                color: Color(0xFF64748B),
+                fontWeight: FontWeight.w400,
+              ),
               AppText(
                 text: getTimeAgo(post.createdAt!),
                 fontSize: 12  ,

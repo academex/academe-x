@@ -37,7 +37,7 @@ class ApiController {
           .timeout(AppConfig.connectionTimeout, onTimeout: () {
         // This block executes if the request times out
         throw TimeOutExeption(
-            errorMessage: 'Request took longer than ${10} seconds.');
+            errorMessage: 'Request took longer than ${AppConfig.connectionTimeout.inSeconds} seconds.');
       });
       return response;
     } catch (e) {

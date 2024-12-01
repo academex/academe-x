@@ -269,7 +269,9 @@ class PostsCubit extends Cubit<PostsState> {
             type: reactType,
             user: PostUserEntity(
                 id: currentUser.user.id,
-                username: currentUser.user.username
+                username: currentUser.user.username,
+                firstName: currentUser.user.firstName,
+                lastName: currentUser.user.lastName
             ),
           );
           AppLogger.success('Changed reaction from ${existingReaction.type} to $reactType');
@@ -282,10 +284,11 @@ class PostsCubit extends Cubit<PostsState> {
             type: reactType,
             user: PostUserEntity(
                 id: currentUser.user.id,
-                username: currentUser.user.username
-            ),
+                username: currentUser.user.username,
+              firstName:  currentUser.user.firstName,
+                lastName:  currentUser.user.lastName
           ),
-        );
+        ));
         AppLogger.success('Added new reaction: $reactType');
       }
       AppLogger.success('Current reactions count: ${currentReactions.length}');  // Debug log
