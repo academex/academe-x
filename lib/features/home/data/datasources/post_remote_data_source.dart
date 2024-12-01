@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/core/pagination/paginated_meta.dart';
-import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 

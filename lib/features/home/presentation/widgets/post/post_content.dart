@@ -11,10 +11,6 @@ class PostContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  //   return ExpandableText(
-  //     text: content,
-  //   );
-
     return BlocProvider(
       create: (context) => HomeCubit(),
       child: BlocBuilder<HomeCubit,bool>(
@@ -35,6 +31,9 @@ class PostContent extends StatelessWidget {
                   style: const TextStyle(color: Colors.blue),
                 ),
               ) : 0.ph(),
+
+              // AppText(text: , fontSize: fontSize)
+
             ],
           );
         },

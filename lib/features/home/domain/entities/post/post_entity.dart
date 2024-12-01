@@ -6,6 +6,53 @@ import 'package:equatable/equatable.dart';
 import 'file_info_entity.dart';
 
 class PostEntity extends Equatable {
+  /**
+   *
+
+      {
+      "id": 52,
+      "content": "admin posting",
+      "createdAt": "2024-11-28T15:57:05.558Z",
+      "updatedAt": "2024-11-28T15:57:05.558Z",
+      "file": {
+      "url": null,
+      "name": null
+      },
+      "images": [],
+      "tags": [
+      {
+      "id": 1,
+      "name": "it-sd"
+      }
+      ],
+      "user": {
+      "username": "admin",
+      "id": 24,
+      "photoUrl": null,
+      "firstName": "admin",
+      "lastName": "string"
+      },
+      "reactions": {
+      "count": 1,
+      "items": [
+      {
+      "id": 37,
+      "type": "HEART",
+      "user": {
+      "id": 15,
+      "username": "hussen",
+      "photoUrl": null
+      }
+      }
+      ]
+      },
+      "comments": 0,
+      "isSaved": false,
+      "isReacted": true,
+      "reactionType": "HEART"
+      "reactionType": "HEART"
+      }
+   */
   final int? id;
   final String? content;
   final DateTime? createdAt;
@@ -16,6 +63,9 @@ class PostEntity extends Equatable {
   final PostUserEntity? user;
   final ReactionsEntity? reactions;
   final int? commentsCount;
+  final bool? isSaved;
+  final bool? isReacted;
+  final String? reactionType;
 
   const PostEntity({
     this.id,
@@ -28,6 +78,9 @@ class PostEntity extends Equatable {
     this.user,
     this.reactions,
     this.commentsCount,
+    this.isSaved,
+    this.isReacted,
+    this.reactionType,
   });
 
   PostEntity copyWith({
@@ -41,6 +94,10 @@ class PostEntity extends Equatable {
     PostUserEntity? user,
     ReactionsEntity? reactions,
     int? commentsCount,
+    bool? isSaved,
+    bool? isReacted,
+    String? reactionType
+
   }) {
     return PostEntity(
       id: id ?? this.id,
@@ -53,6 +110,8 @@ class PostEntity extends Equatable {
       user: user ?? this.user,
       reactions: reactions ?? this.reactions,
       commentsCount: commentsCount ?? this.commentsCount,
+      isSaved: isSaved ?? this.isSaved,
+      isReacted: isReacted?? this.isReacted
     );
   }
 
@@ -69,5 +128,7 @@ class PostEntity extends Equatable {
     user,
     reactions,
     commentsCount,
+    isSaved,
+    isReacted,
   ];
 }
