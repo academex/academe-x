@@ -14,8 +14,9 @@ class ApiSetting {
 
   //
   // // create post
+  static String createPost = AppConfig.postsEndpoint;
+  static String getTags = AppConfig.getTagsEndpoint;
 
   static String get getPosts => AppConfig.postsEndpoint;
   static String get reactionToPost => AppConfig.postsEndpoint;
-  static  String createPost = AppConfig.postsEndpoint;
 }

@@ -246,27 +246,6 @@ class CreatePost {
                                       .createMultiChoice();
                                 },
                               ),
-                              // IconButton(
-                              //   icon: const ImageIcon(
-                              //       AssetImage('assets/icons/image.png')),
-                              //   onPressed: () {
-
-                              //   },
-                              // ),
-                              // IconButton(
-                              //   icon: const ImageIcon(
-                              //       AssetImage('assets/icons/document.png')),
-                              //   onPressed: () {
-
-                              //   },
-                              // ),
-                              // IconButton(
-                              //   icon: const ImageIcon(
-                              //       AssetImage('assets/icons/menu.png')),
-                              //   onPressed: () {
-                              //     context.read<PickerCubit>().createMultiChoice();
-                              //   },
-                              // ),
                             ],
                           ),
                         ),
@@ -286,10 +265,7 @@ class CreatePost {
                     BlocBuilder<ShowTagCubit, bool>(
                       builder: (context, state) {
                         if (state) {
-                          return SizedBox(
-                            height: 100.h,
-                            child: Expanded(child: SelectableButtonGrid()),
-                          );
+                          return Expanded(child: SelectableButtonGrid());
                         } else {
                           return const Spacer(
                             flex: 5,
@@ -299,76 +275,91 @@ class CreatePost {
                     ),
                     // const Spacer(),
                     10.ph(),
-                    BlocConsumer<CreatePostCubit, CreatePostState>(
-                      listener: (createPostContext, state) {
-                        AppLogger.d(state.toString());
-                        if (state is FailureState) {
-                          context.showSnackBar(
-                              message: state.errorMessage, error: true);
-                        } else if (state is SuccessState) {
-                          Navigator.pop(context);
-                          context.showSnackBar(
-                              message: 'تم نشر منشورك بنجاح', error: false);
-                        }
-                      },
-                      builder: (context, state) {
-                        return Column(
-                          children: [
-                            if (state is FailureState)
-                              AppText(
-                                text: state.errorMessage,
-                                fontSize: 12.sp,
-                                color: Colors.red,
-                              ),
-                            GestureDetector(
-                              onTap: state is! SendingState
-                                  ? () {
-                                      if (_formKey.currentState!.validate()) {
-                                        context
-                                            .read<CreatePostCubit>()
-                                            .sendPost(post: post.copyWith(
-                                            content: _postController.text));
-                                      }
-                                    }
-                                  : null,
-                              child: Container(
-                                height: 50.h,
-                                decoration: BoxDecoration(
-                                  color: const Color(
-                                      0xFF007AFF), // Blue color for the post button
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Center(
-                                  child: state is! SendingState
-                                      ? AppText(
-                                          text: 'نشر',
-                                          fontSize: 16.sp,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        )
-                                      : SizedBox(
-                                          // height: 50,
-                                          // width: 50,
-                                          child: CircularProgressIndicator(
-                                            backgroundColor: Colors.grey[200],
-                                            valueColor:
-                                                const AlwaysStoppedAnimation<
-                                                    Color>(Colors.blue),
-                                          ),
-                                        ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                    SubmitButton(
+                        formKey: _formKey,
+                        post: post,
+                        textController: _postController),
                     20.ph(),
                   ],
                 ),
               ),
             ),
           ),
+        );
+      },
+    );
+  }
+}
+
+class SubmitButton extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final PostEntity post;
+  final TextEditingController textController;
+  const SubmitButton({
+    required this.formKey,
+    required this.post,
+    required this.textController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<CreatePostCubit, CreatePostState>(
+      listener: (createPostContext, state) {
+        AppLogger.d(state.toString());
+        if (state is FailureState) {
+          context.showSnackBar(message: state.errorMessage, error: true);
+        } else if (state is SuccessState) {
+          Navigator.pop(context);
+          context.showSnackBar(message: 'تم نشر منشورك بنجاح', error: false);
+        }
+      },
+      builder: (context, state) {
+        return Column(
+          children: [
+            if (state is FailureState)
+              AppText(
+                text: state.errorMessage,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w300,
+                color: Colors.red,
+              ),
+            GestureDetector(
+              onTap: state is! SendingState
+                  ? () {
+                      if (formKey.currentState!.validate()) {
+                        context.read<CreatePostCubit>().sendPost(
+                            post: post.copyWith(content: textController.text));
+                      }
+                    }
+                  : null,
+              child: Container(
+                height: 50.h,
+                decoration: BoxDecoration(
+                  color:
+                      const Color(0xFF007AFF), // Blue color for the post button
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: state is! SendingState
+                      ? AppText(
+                          text: 'نشر',
+                          fontSize: 16.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        )
+                      : SizedBox(
+                          // height: 50,
+                          // width: 50,
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.grey[200],
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.blue),
+                          ),
+                        ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

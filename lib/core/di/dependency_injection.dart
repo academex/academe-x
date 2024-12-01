@@ -1,6 +1,9 @@
 import 'package:academe_x/features/features.dart';
+import 'package:academe_x/features/home/domain/usecases/get_tags_use_case.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/get_tags_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/create_post/get_tags_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../../features/home/data/repositories/create_post_repository_imp.dart';
@@ -45,7 +48,9 @@ void _initCubits() {
     () => CreatePostCubit(InitialState(), createPostUseCase: getIt()),
   );
 
-
+  getIt.registerFactory<GetTagsCubit>(
+    () => GetTagsCubit(GetTagsInit(), getTagsUseCase: getIt()),
+  );
 
   getIt.registerFactory<AuthActionCubit>(
     () => AuthActionCubit(false),
@@ -105,12 +110,18 @@ void _initUseCases() {
   getIt.registerLazySingleton<PostUseCase>(
     () => PostUseCase(postRepository:getIt()),
   );
+
+  getIt.registerLazySingleton<GetTagsUseCase>(
+    () => GetTagsUseCase(createPostRepository: getIt()),
+  );
 }
 
 void _initRepositories() {
   getIt.registerLazySingleton<AuthenticationRepository>(
     () => AuthenticationRepositoryImpl(
-        remoteDataSource: getIt(), cacheManager: getIt(), networkInfo: InternetConnectionChecker()),
+        remoteDataSource: getIt(),
+        cacheManager: getIt(),
+        networkInfo: InternetConnectionChecker()),
   );
   getIt.registerLazySingleton<CreatePostRepository>(
     () => CreatePostRepositoryImp(createPostRemoteDataSource: getIt()),
@@ -123,9 +134,9 @@ void _initRepositories() {
 void _initDataSources() {
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
     () => AuthenticationRemoteDataSource(
-        apiController: getIt(),
-        internetConnectionChecker: getIt(),
-        // cacheManager: getIt(),
+      apiController: getIt(),
+      internetConnectionChecker: getIt(),
+      // cacheManager: getIt(),
     ),
   );
 
