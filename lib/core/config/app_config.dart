@@ -19,6 +19,7 @@ class AppConfig {
   static late String authEndpoint;
   static late String tagsEndpoint;
   static late String postsEndpoint;
+  static late String getTagsEndpoint;
 
   // Feature flags
   static late bool enablePushNotifications;
@@ -42,7 +43,6 @@ class AppConfig {
     cacheManager = HiveCacheManager();
     await _initializeCache();
 
-
     await _initializeServices();
   }
 
@@ -57,6 +57,7 @@ class AppConfig {
         authEndpoint = '$apiUrl/auth';
         tagsEndpoint = '$apiUrl/tag';
         postsEndpoint = '$apiUrl/post';
+        getTagsEndpoint = '$apiUrl/tag';
 
         enableAnalytics = false;
         enableCrashlytics = false;
@@ -125,14 +126,14 @@ class AppConfig {
       debugPrint('Initializing cache...');
 
       // Initialize Hive
-     await cacheManager.init();
+      await cacheManager.init();
 
       // Log cache initialization success in debug mode
       if (enableDebugMode) {
         debugPrint('Cache initialized successfully');
-        debugPrint('Cache size: ${await cacheManager.getAllStorageSizes()}bytes');
+        debugPrint(
+            'Cache size: ${await cacheManager.getAllStorageSizes()}bytes');
       }
-
     } catch (e, stackTrace) {
       debugPrint('Failed to initialize cache: $e');
       debugPrint('Stack trace: $stackTrace');
@@ -142,14 +143,8 @@ class AppConfig {
       rethrow;
 
       // Try to handle corruption
-
     }
-
-
-
   }
-
-
 
   static Future<void> _initializeLogging() async {
     if (enableDebugMode) {
@@ -188,4 +183,3 @@ class AppConfig {
     });
   }
 }
-
