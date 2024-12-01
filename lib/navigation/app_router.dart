@@ -1,3 +1,4 @@
+import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:academe_x/lib.dart';
 
@@ -5,8 +6,16 @@ import 'package:academe_x/lib.dart';
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // case '/lunch':
-      // return MaterialPageRoute(builder: (_) => const LunchScreen());
+      case '/':
+      return MaterialPageRoute(builder: (_) => FutureBuilder<bool>(
+        future: getIt<HiveCacheManager>().isAuthenticated(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data == true) {
+            return const HomeScreen();
+          }
+          return  LoginScreen();
+        },
+      ),);
       case '/on_boarding':
         return MaterialPageRoute(builder: (_) => const OnBoarding());
 

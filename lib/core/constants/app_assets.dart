@@ -2,7 +2,7 @@ enum ReactionEmoji {
   heart,
   celebrate,
   question,
-  haha,
+  funny,
   insightful,
   nothing,
 }
@@ -18,7 +18,7 @@ abstract class AppAssets {
   static const String celebrate = 'assets/icons/reactions/celebrate.svg';
   static const String question = 'assets/icons/reactions/question.svg';
   static const String insightful = 'assets/icons/reactions/insightful.svg';
-  static const String haha = 'assets/icons/reactions/funny.svg';
+  static const String funny = 'assets/icons/reactions/funny.svg';
   static const String defaultIcon = 'assets/icons/reactions/default_icon.svg';
   // Navigation Icons
   static const String communityInactive = 'assets/icons/community.png';

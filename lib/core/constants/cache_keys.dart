@@ -1,7 +1,8 @@
 class CacheKeys {
   static const String COLLEGES = 'colleges';
   static const String MAJORS = 'major';
-  static const String USER_PROFILE = 'user_profile';
+  static const String USER = 'user';
+  static const String POSTS = 'posts_cache';
   // static const String POSTS = 'posts';
 
   // Cache durations

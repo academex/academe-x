@@ -210,7 +210,6 @@ class CreatePost {
                         //   return FileContainer(file: getIt<FilePickerLoaded>().file);
                         // }
                         else if (state is CreateMultiChoice) {
-                          AppLogger.i(state.toString());
                           return CreateMultiChoiceWidget();
                         } else {
                           return 0.ph();

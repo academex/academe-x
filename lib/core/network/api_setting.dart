@@ -11,8 +11,12 @@ class ApiSetting {
   static String get colleges => '${AppConfig.tagsEndpoint}/colleges';
   static String get majors => '${AppConfig.tagsEndpoint}/majors';
 
+
   //
   // // create post
   static String createPost = AppConfig.postsEndpoint;
   static String getTags = AppConfig.getTagsEndpoint;
+
+  static String get getPosts => AppConfig.postsEndpoint;
+  static String get reactionToPost => AppConfig.postsEndpoint;
 }

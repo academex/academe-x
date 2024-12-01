@@ -5,23 +5,33 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entities/post/post_entity.dart';
+
 class PostMedia extends StatelessWidget {
-  final PostEntityS post;
+  final PostEntity post;
 
   const PostMedia({required this.post, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    switch (post.type) {
-      case PostType.textWithImage:
-        return _buildPostImage(context, post.images!);
-      case PostType.textWithPoll:
-        return _buildPoll(post.pollOptions!);
-      case PostType.textWithFile:
-        return FileContainer(fileName: post.fileName, fileUrl: post.fileUrl);
-      default:
-        return const SizedBox.shrink();
+
+    if(post.images!=null && post.images!.isNotEmpty){
+      return _buildPostImage(context, post.images!);
+    }else if(post.file!=null && post.file!.url!=null){
+      return FileContainer(fileName: post.file!.name, fileUrl: post.file!.url);
+    }else{
+          return const SizedBox.shrink();
     }
+    // switch (post.type) {
+    //   case PostType.textWithImage:
+    //     return _buildPostImage(context, post.images!);
+    //   case PostType.textWithPoll:
+    //     return _buildPoll(post.pollOptions!);
+    //   case PostType.textWithFile:
+    //
+    //   default:
+    //     return const SizedBox.shrink();
+    // }
   }
 
 

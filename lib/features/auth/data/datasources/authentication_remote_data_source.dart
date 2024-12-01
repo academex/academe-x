@@ -43,8 +43,9 @@ class AuthenticationRemoteDataSource {
         rethrow;
       } on TimeOutExeption {
         rethrow;
-      } catch (e) {
-        throw ServerException(message: 'An error occurred: $e');
+      } catch (e,stack) {
+        AppLogger.e('An error occurred: $e  ${stack}');
+        throw ServerException(message: 'An error occurred: $e  ${stack}');
       }
     } else {
       throw OfflineException(errorMessage: 'No Internet Connection');

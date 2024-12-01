@@ -9,12 +9,17 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../../features/home/data/repositories/create_post_repository_imp.dart';
 import '../../features/home/domain/usecases/create_post_use_case.dart';
 import '../../features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
+import '../../features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import '../core.dart';
 // import '../services/hive_cache_manager.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> init() async {
+
+
+
+
   // Cubits
   _initCubits();
 
@@ -34,6 +39,8 @@ Future<void> init() async {
   await _initExternalDependencies();
 }
 
+
+
 void _initCubits() {
   getIt.registerFactory<LoginCubit>(() => LoginCubit(authUseCase: getIt()));
 
@@ -47,6 +54,10 @@ void _initCubits() {
 
   getIt.registerFactory<AuthActionCubit>(
     () => AuthActionCubit(false),
+  );
+
+  getIt.registerFactory<PostsCubit>(
+    () => PostsCubit(postUseCase: getIt()),
   );
 
   getIt.registerFactory<BottomNavCubit>(
@@ -96,6 +107,9 @@ void _initUseCases() {
   getIt.registerLazySingleton<CreatePostUseCase>(
     () => CreatePostUseCase(createPostRepository: getIt()),
   );
+  getIt.registerLazySingleton<PostUseCase>(
+    () => PostUseCase(postRepository:getIt()),
+  );
 
   getIt.registerLazySingleton<GetTagsUseCase>(
     () => GetTagsUseCase(createPostRepository: getIt()),
@@ -112,6 +126,9 @@ void _initRepositories() {
   getIt.registerLazySingleton<CreatePostRepository>(
     () => CreatePostRepositoryImp(createPostRemoteDataSource: getIt()),
   );
+  getIt.registerLazySingleton<PostRepository>(
+    () => PostRepositoryImpl(remoteDataSource: getIt(),cacheManager: getIt()),
+  );
 }
 
 void _initDataSources() {
@@ -120,6 +137,14 @@ void _initDataSources() {
       apiController: getIt(),
       internetConnectionChecker: getIt(),
       // cacheManager: getIt(),
+    ),
+  );
+
+ getIt.registerLazySingleton<PostRemoteDataSource>(
+    () => PostRemoteDataSource(
+        apiController: getIt(),
+        internetConnectionChecker: getIt(),
+        // cacheManager: getIt(),
     ),
   );
 

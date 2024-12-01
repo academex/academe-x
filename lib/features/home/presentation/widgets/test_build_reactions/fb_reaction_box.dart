@@ -1,13 +1,29 @@
 import 'dart:async';
 
 import 'package:academe_x/core/constants/app_assets.dart';
+import 'package:academe_x/core/constants/cache_keys.dart';
 import 'package:academe_x/core/core.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
+import 'package:academe_x/features/auth/auth.dart';
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 
 
 class FbReactionBox extends StatefulWidget {
+  final PostEntity post;
+  final Function(String reactType) onReact;
+  const FbReactionBox({
+    Key? key,
+    required this.post,
+    required this.onReact,
+  }) : super(key: key);
+
+  // late PostEntity post;
+  // FbReactionBox(post);
+
   @override
   createState() => FbReactionBoxState();
 }
@@ -15,89 +31,172 @@ class FbReactionBox extends StatefulWidget {
 class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMixin {
   // final _audioPlayer = AudioPlayer();
 
+
+
+
   static const double _boxHeight = 50.0;
   static const double _emojiSize = 40.0;
 
+  // Animation durations
   final int _durationAnimationBox = 500;
   final int _durationAnimationBtnLongPress = 150;
   final int _durationAnimationBtnShortPress = 500;
   final int _durationAnimationEmojiWhenDrag = 150;
   final int _durationAnimationEmojiWhenRelease = 1000;
+  final _durationLongPress = Duration(milliseconds: 250);
 
-  // For long press btn
-  late AnimationController _animControlBtnLongPress, _animControlBox;
-  late Animation _zoomEmojiLikeInBtn, _tiltEmojiLikeInBtn, _zoomTextLikeInBtn;
-  late Animation _fadeInBox;
-  late Animation _moveRightGroupEmoji;
-  late Animation _pushEmojiHeartUp,
-      _pushEmojiCelebrateUp,
-      _pushEmojiHahaUp,
-      _pushEmojiQuestionUp,
-      _pushEmojiIghtfulUp;
-  late Animation _zoomEmojiCelebrate, _zoomEmojiHeart, _zoomEmojiHaha, _zoomEmojiQuestion, _zoomEmojiIghtful;
-
-  // For short press btn
+  // Animation controllers
+  late AnimationController _animControlBtnLongPress;
+  late AnimationController _animControlBox;
   late AnimationController _animControlBtnShortPress;
-  late Animation _zoomEmojiLikeInBtn2, _tiltEmojiLikeInBtn2;
-
-  // For zoom emoji when drag
   late AnimationController _animControlEmojiWhenDrag;
   late AnimationController _animControlEmojiWhenDragInside;
   late AnimationController _animControlEmojiWhenDragOutside;
   late AnimationController _animControlBoxWhenDragOutside;
-  late Animation _zoomEmojiChosen, _zoomEmojiNotChosen;
+  late AnimationController _animControlEmojiWhenRelease;
+
+  // Animations
+  late Animation _zoomEmojiLikeInBtn;
+  late Animation _tiltEmojiLikeInBtn;
+  late Animation _zoomTextLikeInBtn;
+  late Animation _fadeInBox;
+  late Animation _moveRightGroupEmoji;
+
+  // Emoji animations
+  late Animation _pushEmojiHeartUp;
+  late Animation _pushEmojiCelebrateUp;
+  late Animation _pushEmojiHahaUp;
+  late Animation _pushEmojiQuestionUp;
+  late Animation _pushEmojiIghtfulUp;
+
+  late Animation _zoomEmojiCelebrate;
+  late Animation _zoomEmojiHeart;
+  late Animation _zoomEmojiHaha;
+  late Animation _zoomEmojiQuestion;
+  late Animation _zoomEmojiIghtful;
+
+// Drag animations
+  late Animation _zoomEmojiChosen;
+  late Animation _zoomEmojiNotChosen;
   late Animation _zoomEmojiWhenDragOutside;
   late Animation _zoomEmojiWhenDragInside;
   late Animation _zoomBoxWhenDragOutside;
   late Animation _zoomBoxEmoji;
 
-  // For jump emoji when release
-  late AnimationController _animControlEmojiWhenRelease;
-  late Animation _zoomEmojiWhenRelease, _moveUpEmojiWhenRelease;
-  late Animation _moveLeftEmojiLikeWhenRelease,
-      _moveLeftEmojiLoveWhenRelease,
-      _moveLeftEmojiHahaWhenRelease,
-      _moveLeftEmojiWowWhenRelease,
-      _moveLeftEmojiSadWhenRelease,
-      _moveLeftEmojiAngryWhenRelease;
+  // Release animations
+  late Animation _zoomEmojiWhenRelease;
+  late Animation _moveUpEmojiWhenRelease;
 
-  final _durationLongPress = Duration(milliseconds: 250);
-  late Timer _holdTimer;
-  bool _isLongPress = false;
-  bool _isLiked = false;
-
+  // State variables
   ReactionEmoji _emojiUserChoose = ReactionEmoji.nothing;
   ReactionEmoji _currentEmojiFocus = ReactionEmoji.nothing;
   ReactionEmoji _previousEmojiFocus = ReactionEmoji.nothing;
+
+  bool _isLongPress = false;
+  bool _isLiked = false;
   bool _isDragging = false;
   bool _isDraggingOutside = false;
   bool _isJustDragInside = true;
+  late Timer _holdTimer;
+
+
 
   @override
   void initState() {
     super.initState();
 
-    // Button Like
-    _initAnimationBtnLike();
+    _initializeUserReaction();
+    _initializeAnimations();
 
-    // Box and Emojis
-    _initAnimationBoxAndEmojis();
-
-    // Emoji when drag
-    _initAnimationEmojiWhenDrag();
-
-    // Emoji when drag outside
-    _initAnimationEmojiWhenDragOutside();
-
-    // Box when drag outside
-    _initAnimationBoxWhenDragOutside();
-
-    // Emoji when first drag
-    _initAnimationEmojiWhenDragInside();
-
-    // Emoji when release
-    _initAnimationEmojiWhenRelease();
   }
+
+  void _initializeUserReaction() async{
+    AuthTokenModel? authTokenModel =await context.cachedUser;
+
+
+    AppLogger.success('hi I get the user loggenIn ${authTokenModel!.user.id}');
+    if (widget.post.reactions != null && widget.post.reactions!.items.isNotEmpty) {
+      final currentUserReaction = widget.post.reactions!.items
+          .where((reaction) => reaction.user.id == authTokenModel.user.id)
+          .firstOrNull;
+
+      if (currentUserReaction != null) {
+        setState(() {
+          _emojiUserChoose = _getReactionEmojiFromString(currentUserReaction.type);
+          _currentEmojiFocus = _emojiUserChoose;
+          _isLiked = _emojiUserChoose != ReactionEmoji.nothing;
+        });
+      } else {
+        setState(() {
+          _emojiUserChoose = ReactionEmoji.nothing;
+          _currentEmojiFocus = ReactionEmoji.nothing;
+          _isLiked = false;
+        });
+      }
+    }
+  }
+
+  ReactionEmoji _getReactionEmojiFromString(String type) {
+    switch (type.toUpperCase()) {
+      case 'HEART':
+        return ReactionEmoji.heart;
+      case 'FUNNY':
+        return ReactionEmoji.funny;
+      case 'CELEBRATE':
+        return ReactionEmoji.celebrate;
+      case 'QUESTION':
+        return ReactionEmoji.question;
+      case 'INSIGHTFUL':
+        return ReactionEmoji.insightful;
+      default:
+        return ReactionEmoji.nothing;
+    }
+  }
+
+  void _hideBox() {
+    setState(() {
+      _isLongPress = false;
+      _isDragging = false;
+      _isDraggingOutside = false;
+      _isJustDragInside = true;
+      // _currentEmojiFocus = ReactionEmoji.nothing;
+      // _previousEmojiFocus = ReactionEmoji.nothing;
+    });
+
+    // Reverse all animations
+    _animControlBtnLongPress.reverse();
+    _animControlBox.reverse();
+    _animControlEmojiWhenRelease.reset();
+    _animControlEmojiWhenRelease.forward();
+  }
+  void _handleReaction(ReactionEmoji reaction) async {
+    // If clicking the same reaction that's already selected, remove it
+    if (reaction == _emojiUserChoose) {
+      AppLogger.success('same reaction');
+      widget.onReact(reaction.name);
+
+      setState(() {
+        // _emojiUserChoose = ReactionEmoji.nothing;
+        _currentEmojiFocus = ReactionEmoji.nothing;
+        _isLiked = false;
+      });
+    }
+    // If selecting a new reaction
+    else {
+      widget.onReact(reaction.name);
+
+      setState(() {
+        _emojiUserChoose = reaction;
+        _currentEmojiFocus = reaction;
+        _isLiked = true;
+      });
+
+      _hideBox();
+    }
+  }
+
+
+
 
   void _initAnimationBtnLike() {
     // long press
@@ -120,13 +219,12 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
     // short press
     _animControlBtnShortPress =
         AnimationController(vsync: this, duration: Duration(milliseconds: _durationAnimationBtnShortPress));
-    _zoomEmojiLikeInBtn2 = Tween(begin: 1.0, end: 0.2).animate(_animControlBtnShortPress);
-    _tiltEmojiLikeInBtn2 = Tween(begin: 0.0, end: 0.8).animate(_animControlBtnShortPress);
-
-    _zoomEmojiLikeInBtn2.addListener(() {
+    _zoomEmojiLikeInBtn = Tween(begin: 1.0, end: 0.2).animate(_animControlBtnShortPress);
+    _tiltEmojiLikeInBtn = Tween(begin: 0.0, end: 0.8).animate(_animControlBtnShortPress);
+    _zoomEmojiLikeInBtn.addListener(() {
       setState(() {});
     });
-    _tiltEmojiLikeInBtn2.addListener(() {
+    _tiltEmojiLikeInBtn.addListener(() {
       setState(() {});
     });
   }
@@ -292,18 +390,18 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
     _moveUpEmojiWhenRelease = Tween(begin: 180.0, end: 0.0)
         .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
 
-    _moveLeftEmojiLikeWhenRelease = Tween(begin: 20.0, end: 10.0)
-        .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
-    _moveLeftEmojiLoveWhenRelease = Tween(begin: 68.0, end: 10.0)
-        .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
-    _moveLeftEmojiHahaWhenRelease = Tween(begin: 116.0, end: 10.0)
-        .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
-    _moveLeftEmojiWowWhenRelease = Tween(begin: 164.0, end: 10.0)
-        .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
-    _moveLeftEmojiSadWhenRelease = Tween(begin: 212.0, end: 10.0)
-        .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
-    _moveLeftEmojiAngryWhenRelease = Tween(begin: 260.0, end: 10.0)
-        .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
+    // _moveLeftEmojiLikeWhenRelease = Tween(begin: 20.0, end: 10.0)
+    //     .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
+    // _moveLeftEmojiLoveWhenRelease = Tween(begin: 68.0, end: 10.0)
+    //     .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
+    // _moveLeftEmojiHahaWhenRelease = Tween(begin: 116.0, end: 10.0)
+    //     .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
+    // _moveLeftEmojiWowWhenRelease = Tween(begin: 164.0, end: 10.0)
+    //     .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
+    // _moveLeftEmojiSadWhenRelease = Tween(begin: 212.0, end: 10.0)
+    //     .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
+    // _moveLeftEmojiAngryWhenRelease = Tween(begin: 260.0, end: 10.0)
+    //     .animate(CurvedAnimation(parent: _animControlEmojiWhenRelease, curve: Curves.decelerate));
 
     _zoomEmojiWhenRelease.addListener(() {
       setState(() {});
@@ -311,37 +409,48 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
     _moveUpEmojiWhenRelease.addListener(() {
       setState(() {});
     });
-
-    _moveLeftEmojiLikeWhenRelease.addListener(() {
-      setState(() {});
-    });
-    _moveLeftEmojiLoveWhenRelease.addListener(() {
-      setState(() {});
-    });
-    _moveLeftEmojiHahaWhenRelease.addListener(() {
-      setState(() {});
-    });
-    _moveLeftEmojiWowWhenRelease.addListener(() {
-      setState(() {});
-    });
-    _moveLeftEmojiSadWhenRelease.addListener(() {
-      setState(() {});
-    });
-    _moveLeftEmojiAngryWhenRelease.addListener(() {
-      setState(() {});
-    });
+    //
+    // _moveLeftEmojiLikeWhenRelease.addListener(() {
+    //   setState(() {});
+    // });
+    // _moveLeftEmojiLoveWhenRelease.addListener(() {
+    //   setState(() {});
+    // });
+    // _moveLeftEmojiHahaWhenRelease.addListener(() {
+    //   setState(() {});
+    // });
+    // _moveLeftEmojiWowWhenRelease.addListener(() {
+    //   setState(() {});
+    // });
+    // _moveLeftEmojiSadWhenRelease.addListener(() {
+    //   setState(() {});
+    // });
+    // _moveLeftEmojiAngryWhenRelease.addListener(() {
+    //   setState(() {});
+    // });
   }
 
   @override
   void dispose() {
-    super.dispose();
     _animControlBtnLongPress.dispose();
     _animControlBox.dispose();
+    _animControlBtnShortPress.dispose();
     _animControlEmojiWhenDrag.dispose();
     _animControlEmojiWhenDragInside.dispose();
     _animControlEmojiWhenDragOutside.dispose();
     _animControlBoxWhenDragOutside.dispose();
     _animControlEmojiWhenRelease.dispose();
+    super.dispose();
+  }
+
+  void _initializeAnimations() {
+    _initAnimationBtnLike();
+    _initAnimationBoxAndEmojis();
+    _initAnimationEmojiWhenDrag();
+    _initAnimationEmojiWhenDragOutside();
+    _initAnimationBoxWhenDragOutside();
+    _initAnimationEmojiWhenDragInside();
+    _initAnimationEmojiWhenRelease();
   }
 
   @override
@@ -356,140 +465,13 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
           _buildReactionBox(),
           _buildEmojiRow(),
           _buildLikeButton(),
-          // if (_emojiUserChoose != ReactionEmoji.nothing && !_isDragging)
-          // _buildSelectedEmoji(),
         ],
       ),
     );
-    // return Container(
-    // // height: 350,
-    //   child:  GestureDetector(
-    //   onHorizontalDragEnd: _onHorizontalDragEndBoxEmoji,
-    //   onHorizontalDragUpdate: _onHorizontalDragUpdateBoxEmoji,
-    //   child: Column(
-    //     children: [
-    //       // Just a top space
-    //       // Container(
-    //       //   width: double.infinity,
-    //       //   color: Colors.amber,
-    //       //   height: 100.0,
-    //       // ),
-    //
-    //       // main content
-    //       Container(
-    //         color: Colors.amber,
-    //         // margin: EdgeInsets.only(left: 20.0, right: 20.0),
-    //         // Area of the content can drag
-    //         // decoration:  BoxDecoration(border: Border.all(color: Colors.grey)),
-    //         width: double.infinity,
-    //         // height: 350.0,
-    //         child: Stack(
-    //           children: [
-    //             Stack(
-    //               alignment: Alignment.bottomCenter,
-    //               children: [
-    //                 // // Box
-    //                 _renderBox(),
-    //                 //
-    //                 // // Emojis
-    //                 _renderEmoji(),
-    //               ],
-    //             ),
-    //
-    //             // Button like
-    //             _renderBtnLike(),
-    //
-    //             // Emojis when jump
-    //             // Emoji like
-    //             _emojiUserChoose == ReactionEmoji.like && !_isDragging
-    //                 ? Container(
-    //               child: Transform.scale(
-    //                 child:SvgPicture.asset(AppAssets.like),
-    //                 scale: this._zoomEmojiWhenRelease.value,
-    //               ),
-    //               margin: EdgeInsets.only(
-    //                 top: _processTopPosition(this._moveUpEmojiWhenRelease.value),
-    //                 left: this._moveLeftEmojiLikeWhenRelease.value,
-    //               ),
-    //             )
-    //                 : Container(),
-    //
-    //             // Emoji love
-    //             _emojiUserChoose == ReactionEmoji.love && !_isDragging
-    //                 ? Container(
-    //               child: Transform.scale(
-    //                 child: SvgPicture.asset(AppAssets.like),
-    //                 scale: this._zoomEmojiWhenRelease.value,
-    //               ),
-    //               margin: EdgeInsets.only(
-    //                 top: _processTopPosition(this._moveUpEmojiWhenRelease.value),
-    //                 left: this._moveLeftEmojiLoveWhenRelease.value,
-    //               ),
-    //             )
-    //                 : Container(),
-    //
-    //             // Emoji haha
-    //             _emojiUserChoose == ReactionEmoji.haha && !_isDragging
-    //                 ? Container(
-    //               margin: EdgeInsets.only(
-    //                 top: _processTopPosition(this._moveUpEmojiWhenRelease.value),
-    //                 left: this._moveLeftEmojiHahaWhenRelease.value,
-    //               ),
-    //               child: Transform.scale(
-    //                 child:SvgPicture.asset(AppAssets.like),
-    //                 scale: _zoomEmojiWhenRelease.value,
-    //               ),
-    //             )
-    //                 : Container(),
-    //
-    //             // Emoji Wow
-    //             _emojiUserChoose == ReactionEmoji.wow && !_isDragging
-    //                 ? Container(
-    //               margin: EdgeInsets.only(
-    //                 top: _processTopPosition(this._moveUpEmojiWhenRelease.value),
-    //                 left: this._moveLeftEmojiWowWhenRelease.value,
-    //               ),
-    //               child: Transform.scale(
-    //                 scale: this._zoomEmojiWhenRelease.value,
-    //                 child: SvgPicture.asset(AppAssets.like),
-    //               ),
-    //             )
-    //                 : Container(),
-    //
-    //             // Emoji sad
-    //             _emojiUserChoose == ReactionEmoji.sad && !_isDragging
-    //                 ? Container(
-    //               margin: EdgeInsets.only(
-    //                 top: _processTopPosition(this._moveUpEmojiWhenRelease.value),
-    //                 left: this._moveLeftEmojiSadWhenRelease.value,
-    //               ),
-    //               child: Transform.scale(
-    //                 scale: this._zoomEmojiWhenRelease.value,
-    //                 child: SvgPicture.asset(AppAssets.like),
-    //               ),
-    //             )
-    //                 : Container(),
-    //
-    //             // Emoji angry
-    //             _emojiUserChoose == ReactionEmoji.angry && !_isDragging
-    //                 ? Container(
-    //               margin: EdgeInsets.only(
-    //                 top: _processTopPosition(this._moveUpEmojiWhenRelease.value),
-    //                 left: this._moveLeftEmojiAngryWhenRelease.value,
-    //               ),
-    //               child: Transform.scale(
-    //                 child:SvgPicture.asset(AppAssets.like),
-    //                 scale: this._zoomEmojiWhenRelease.value,
-    //               ),
-    //             )
-    //                 : Container(),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // ));
+
+
   }
+
 
 
   Widget _buildEmojiItem(ReactionEmoji emoji, double pushUp, double height, double scale) {
@@ -535,7 +517,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
         return 'مذهل';
       case ReactionEmoji.question:
         return 'سؤال';
-      case ReactionEmoji.haha:
+      case ReactionEmoji.funny:
         return 'اضحكني';
       case ReactionEmoji.heart:
         return 'قلب';
@@ -545,15 +527,14 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
         return '';
     }
   }
-
   String _getEmojiIcon(ReactionEmoji emoji) {
     switch (emoji) {
       case ReactionEmoji.insightful:
         return AppAssets.insightful;
       case ReactionEmoji.question:
         return AppAssets.question;
-      case ReactionEmoji.haha:
-        return AppAssets.haha;
+      case ReactionEmoji.funny:
+        return AppAssets.funny;
       case ReactionEmoji.heart:
         return AppAssets.heart;
       case ReactionEmoji.celebrate:
@@ -659,10 +640,10 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
               _getEmojiScale(ReactionEmoji.question),
             ),
             _buildEmojiItem(
-              ReactionEmoji.haha,
+              ReactionEmoji.funny,
               _pushEmojiHahaUp.value,
-              _currentEmojiFocus == ReactionEmoji.haha ? 70.0 : 40.0,
-              _getEmojiScale(ReactionEmoji.haha),
+              _currentEmojiFocus == ReactionEmoji.funny ? 70.0 : 40.0,
+              _getEmojiScale(ReactionEmoji.funny),
             ),
             _buildEmojiItem(
               ReactionEmoji.heart,
@@ -694,7 +675,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
           return _zoomEmojiCelebrate.value;
         case ReactionEmoji.insightful:
           return _zoomEmojiIghtful.value;
-        case ReactionEmoji.haha:
+        case ReactionEmoji.funny:
           return _zoomEmojiHaha.value;
         case ReactionEmoji.question:
           return _zoomEmojiQuestion.value;
@@ -716,7 +697,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
         height: 42,
         // constraints: BoxConstraints(maxWidth: 120),
         decoration: ShapeDecoration(
-          color:_getColorBtn(),
+          color: _getColorBtn(),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -753,7 +734,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
         return 'قلب';
       case ReactionEmoji.question:
         return 'سؤال';
-      case ReactionEmoji.haha:
+      case ReactionEmoji.funny:
         return 'اضحكني';
       case ReactionEmoji.insightful:
         return 'مذهل';
@@ -775,8 +756,8 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
           return AppAssets.insightful;
         case ReactionEmoji.question:
           return AppAssets.question;
-        case ReactionEmoji.haha:
-          return AppAssets.haha;
+        case ReactionEmoji.funny:
+          return AppAssets.funny;
         case ReactionEmoji.heart:
           return AppAssets.heart;
         case ReactionEmoji.celebrate:
@@ -788,29 +769,8 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   }
 
   Color _getColorBtn() {
-    // if ((!_isLongPress && _isLiked)) {
-    //   return Color(0xff3b5998);
-    // } else if (!_isDragging) {
-    //   switch (_emojiUserChoose) {
-    //     case ReactionEmoji.nothing:
-    //       return Colors.grey;
-    //     case ReactionEmoji.like:
-    //       return Color(0xff3b5998);
-    //     case ReactionEmoji.love:
-    //       return Color(0xffED5167);
-    //     case ReactionEmoji.haha:
-    //     case ReactionEmoji.wow:
-    //     case ReactionEmoji.sad:
-    //       return Color(0xffFFD96A);
-    //     case ReactionEmoji.angry:
-    //       return Color(0xffF6876B);
-    //   }
-    // } else {
-    //   return Colors.grey.shade400;
-    // }
-    if ((!_isLongPress && _isLiked)) {
-      return const Color(0xff3b5998);
-    } else if (!_isDragging) {
+
+    if (!_isDragging) {
       switch (_emojiUserChoose) {
         case ReactionEmoji.celebrate:
           return Color(0xffFFDCD4);
@@ -822,17 +782,8 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
           return Color(0xffFF7D99);
         case ReactionEmoji.nothing:
           return Color(0xFFF7F7F8);
-        // case ReactionEmoji.celebrate:
-        //   return Color(0xffFFDCD4);
-        // case ReactionEmoji.haha:
-        //   return Color(0xffED5167);
-        // case ReactionEmoji.insightful:
-        //   return Color(0xff7D99);
-        // case ReactionEmoji.question:
-        //   return Color(0xffFCFC1);
-        // case ReactionEmoji.heart:
-        //   return Color(0xffFFD96A);
-        case ReactionEmoji.haha:
+
+        case ReactionEmoji.funny:
           return Color(0xff0EC2B4);
           // TODO: Handle this case.
       }
@@ -841,18 +792,40 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
     }
   }
 
-  void _onHorizontalDragEndBoxEmoji(DragEndDetails dragEndDetail) {
-    _isDragging = false;
-    _isDraggingOutside = false;
-    _isJustDragInside = true;
-    _previousEmojiFocus = ReactionEmoji.nothing;
-    _currentEmojiFocus = ReactionEmoji.nothing;
+  // void _onHorizontalDragEndBoxEmoji(DragEndDetails dragEndDetail) {
+  //   _isDragging = false;
+  //   _isDraggingOutside = false;
+  //   _isJustDragInside = true;
+  //   _previousEmojiFocus = ReactionEmoji.nothing;
+  //   _currentEmojiFocus = ReactionEmoji.nothing;
+  //
+  //   _onTapUpBtn(null);
+  // }
 
-    _onTapUpBtn(null);
+  void _onHorizontalDragEndBoxEmoji(DragEndDetails dragEndDetail) {
+    if (_currentEmojiFocus != ReactionEmoji.nothing) {
+      // If dragging to the same emoji that's already selected, remove it
+      if (_currentEmojiFocus == _emojiUserChoose) {
+        _handleReaction(_emojiUserChoose); // Will remove the reaction
+      } else {
+        _handleReaction(_currentEmojiFocus); // Will change to new reaction
+      }
+    }
+
+    setState(() {
+      _isDragging = false;
+      _isDraggingOutside = false;
+      _isJustDragInside = true;
+      _previousEmojiFocus = ReactionEmoji.nothing;
+      _currentEmojiFocus = ReactionEmoji.nothing;
+    });
+
+    _hideBox();
+
   }
 
-
   void _onHorizontalDragUpdateBoxEmoji(DragUpdateDetails dragUpdateDetail) {
+
     if (!_isLongPress) return;
 
     // Adjust these values based on your actual box position
@@ -889,7 +862,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
             break;
           case 1:
-            targetEmoji = ReactionEmoji.haha;
+            targetEmoji = ReactionEmoji.funny;
 
             break;
           case 2:
@@ -900,6 +873,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
             break;
           case 4:
             targetEmoji = ReactionEmoji.celebrate;
+
             break;
         }
 
@@ -926,6 +900,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   }
 
   void _handleWhenDragBetweenEmoji(ReactionEmoji currentEmoji) {
+
     // _playSound(AssetSounds.focus);
     _emojiUserChoose = currentEmoji;
     _previousEmojiFocus = _currentEmojiFocus;
@@ -935,49 +910,47 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   }
 
   void _onTapDownBtn(TapDownDetails tapDownDetail) {
+
     _holdTimer = Timer(_durationLongPress, _showBox);
   }
 
   void _onTapUpBtn(TapUpDetails? tapUpDetail) {
-    if (_isLongPress) {
-      if (_emojiUserChoose == ReactionEmoji.nothing) {
-        // _playSound(AssetSounds.boxDown);
-      } else {
-        // _playSound(AssetSounds.pick);
-      }
+    if (_isLongPress && _currentEmojiFocus != ReactionEmoji.nothing) {
+      _handleReaction(_currentEmojiFocus);
     }
 
     Timer(Duration(milliseconds: _durationAnimationBox), () {
-      _isLongPress = false;
+      setState(() {
+        _isLongPress = false;
+      });
     });
 
     _holdTimer.cancel();
+    _hideBox();
 
     _animControlBtnLongPress.reverse();
-
     setReverseValue();
     _animControlBox.reverse();
-
     _animControlEmojiWhenRelease.reset();
     _animControlEmojiWhenRelease.forward();
   }
 
+
+
   // when user short press the button
+
   void _onTapBtn() {
     if (!_isLongPress) {
       if (_emojiUserChoose == ReactionEmoji.nothing) {
-        _isLiked = !_isLiked;
+        _handleReaction(ReactionEmoji.heart); // Default reaction
       } else {
-        _emojiUserChoose = ReactionEmoji.nothing;
-      }
-      if (_isLiked) {
-        // _playSound(AssetSounds.shortPressLike);
-        _animControlBtnShortPress.forward();
-      } else {
-        _animControlBtnShortPress.reverse();
+        _handleReaction(_emojiUserChoose); // Will remove the current reaction
       }
     }
   }
+
+
+
 
 
   void _showBox() {
