@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/core/pagination/paginated_meta.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -16,7 +17,7 @@ class PostRemoteDataSource {
   final ApiController apiController;
   final InternetConnectionChecker internetConnectionChecker;
 
-  String TOKEN='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjk3OTE5OSwiZXhwIjoxNzMyOTgyNzk5fQ.UzTUdyykMBZFkz9ysWfWcuRT-BJoRe0sjhZg9wgpkZ0';
+  // String TOKEN='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjk3OTE5OSwiZXhwIjoxNzMyOTgyNzk5fQ.UzTUdyykMBZFkz9ysWfWcuRT-BJoRe0sjhZg9wgpkZ0';
 
 
 
@@ -31,7 +32,7 @@ class PostRemoteDataSource {
           Uri.parse('${ApiSetting.getPosts}?page=${paginationParams.page}'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization':'Bearer ${TOKEN}'
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
           },
         );
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -67,7 +68,7 @@ class PostRemoteDataSource {
           Uri.parse('${ApiSetting.getPosts}/$postId/react'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization':'Bearer ${TOKEN}'
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
           },
           body: {
             "type":  reactionType.toUpperCase()

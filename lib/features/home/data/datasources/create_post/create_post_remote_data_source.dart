@@ -1,10 +1,14 @@
 import 'dart:convert';
 
+import 'package:academe_x/academeX_main.dart';
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/core/network/base_response.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/tag_model.dart';
+import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:logger/logger.dart';
 
 typedef PostBaseResponse = BaseResponse<PostModel>;
 typedef TagBaseResponse = BaseResponse<List<TagModel>>;
@@ -15,7 +19,7 @@ class CreatePostRemoteDataSource {
   CreatePostRemoteDataSource(
       {required this.apiController, required this.internetConnectionChecker});
 
-  Future<PostModel> createPost({required PostModel post}) async {
+  Future<PostModel> createPost({required PostModel post,BuildContext? context}) async {
     if (post.tags == null)
       throw ValidationException(messages: ['يرجى اختيار tag']);
     return await _postWithExceptions(
@@ -33,7 +37,7 @@ class CreatePostRemoteDataSource {
                 timeAlive: 100,
                 headers: {
                   'Authorization':
-                      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhcmFhIiwiaWF0IjoxNzMyNzEwMzA0LCJleHAiOjE3MzI3MTM5MDR9.ysmrCh79qV9e8vcJR5_UWABN6vb0tqtVrHHL-vCYGm4',
+                      'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
                 });
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
         if (response.statusCode >= 400) {

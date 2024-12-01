@@ -1,3 +1,4 @@
+import 'package:academe_x/features/auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -12,6 +13,12 @@ extension CachedUserExtension on BuildContext {
     return await getIt<HiveCacheManager>().getCachedResponse(
       CacheKeys.USER,
           (json) => AuthTokenModel.fromJson(json),
+    );
+  }
+  Future<MajorModel?> get major async {
+    return await getIt<HiveCacheManager>().getCachedResponse(
+      CacheKeys.MAJORS,
+          (json) => MajorModel.fromJson(json),
     );
   }
 }

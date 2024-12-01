@@ -70,6 +70,7 @@ class AcademeXMain extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: MaterialApp(
+        navigatorKey: NavigationService.navigatorKey,
         title: 'AcademeX',
         locale: const Locale('ar'),
         supportedLocales: AppLocalizations.supportedLocales,
@@ -140,4 +141,8 @@ class AcademeXMain extends StatelessWidget {
         break;
     }
   }
+}
+class NavigationService {
+  static GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
 }
