@@ -1,3 +1,4 @@
+import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/file_container.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:academe_x/lib.dart';
@@ -35,7 +36,9 @@ class PostMedia extends StatelessWidget {
   }
 
 
-  Widget _buildPostImage(BuildContext ctx, List<String> images) {
+  Widget _buildPostImage(BuildContext ctx, List<ImageEntity> images) {
+    AppLogger.success('hi Im in post ${images.toString()}');
+
     return Column(
       children: [
         Stack(
@@ -52,7 +55,7 @@ class PostMedia extends StatelessWidget {
                       // width: 326,
                       decoration: ShapeDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(images[index]),
+                          image: NetworkImage(images[index].url!),
                           fit: BoxFit.fill,
                         ),
                         shape: RoundedRectangleBorder(
@@ -76,7 +79,7 @@ class PostMedia extends StatelessWidget {
     );
   }
 
-  Widget _buildImageCounter(List<String> images) {
+  Widget _buildImageCounter(List<dynamic> images) {
     if (images.length > 1) {
       return BlocBuilder<PostImageCubit, int>(
         builder: (context, currentIndex) {
@@ -102,7 +105,7 @@ class PostMedia extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
-  Widget _buildDotsIndicator(List<String> images) {
+  Widget _buildDotsIndicator(List<dynamic> images) {
     if (images.length > 1) {
       return BlocBuilder<PostImageCubit, int>(
         builder: (context, currentIndex) {

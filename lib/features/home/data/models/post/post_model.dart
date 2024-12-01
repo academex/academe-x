@@ -1,4 +1,7 @@
 
+import 'dart:ui';
+
+import 'package:academe_x/features/home/data/models/post/image_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_user_model.dart';
 import 'package:academe_x/features/home/data/models/post/reactions_model.dart';
 import 'package:academe_x/features/home/data/models/post/tag_model.dart';
@@ -31,7 +34,13 @@ class PostModel extends PostEntity {
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       file: json['file'] != null ? FileInfoModel.fromJson(json['file']) : null,
-      images: List<String>.from(json['images'] == null ? [] : json['images'] == 0?[]:json['images']),
+        images: List.of(json['images']).map(
+          (json) {
+           return ImageModel.fromJson(json);
+          },
+        ).toList(),
+        // images: json['images'] != null ? ImageModel.fromJson(json['images']) : null,
+      // images: json['images']['url'],
       tags: json['tags']!=null?(json['tags'] as List).map((tag) => TagModel.fromJson(tag)).toList():[],
       user: PostUserModel.fromJson(json['user']),
       reactions: json['reactions'] != null? ReactionsModel.fromJson(json['reactions']):const ReactionsEntity(count: 0, items: []),
