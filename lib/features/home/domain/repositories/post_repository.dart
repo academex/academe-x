@@ -5,6 +5,7 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/network/base_response.dart';
 import '../../../../core/pagination/paginated_response.dart';
 import '../../../../core/pagination/pagination_params.dart';
+import '../entities/post/reaction_item_entity.dart';
 import '../entities/post/save_response_entity.dart';
 
 abstract class PostRepository {
@@ -12,6 +13,6 @@ abstract class PostRepository {
   Future<Either<Failure, PaginatedResponse<PostModel>>>getPosts(PaginationParams paginationParams);
   Future<Either<Failure, void>>reactToPost(String reactionType,int postId);
   Future<Either<Failure, BaseResponse<SaveResponseEntity>>>savePost(int postId);
-  // Future<Either<Failure, void>>getReaction(String reactionType,int postId);
+  Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>>getUsersByReactionType(PaginationParams paginationParams,String reactionType,int postId);
 
 }

@@ -105,7 +105,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       final cached = await cacheManager.getCachedResponse<List<MajorModel>>(
         CacheKeys.MAJORS,
             (dynamic data) {
-          AppLogger.i('Parsing cached data: $data');
           final List<dynamic> list = data as List;
           return list.map((item) {
             AppLogger.i('Parsing item: $item');

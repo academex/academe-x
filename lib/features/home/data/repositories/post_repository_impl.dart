@@ -1,6 +1,7 @@
 import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/save_response_model.dart';
+import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/constants/cache_keys.dart';
@@ -216,6 +217,38 @@ class PostRepositoryImpl implements PostRepository {
       // On timeout, try cache
 
       return Left(TimeOutFailure(message: e.errorMessage));
+    } catch (e, stack) {
+      AppLogger.e('Unexpected error: $e\n$stack');
+      return Left(ServerFailure(message: 'An unexpected error occurred: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>> getUsersByReactionType(PaginationParams paginationParams,String reactionType,int postId) async{
+    try {
+      // First try to get from network
+      final result = await remoteDataSource.getUsersByReactionType(paginationParams,reactionType,postId);
+
+      // Cache successful network response
+      // _cacheResults(result.items, paginationParams.page);
+
+      return Right(result);
+    } on OfflineException catch (e) {
+      // Handle offline case by trying cache
+      // return _handleOfflineCase(e, paginationParams);
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    } on ServerException catch (e) {
+      // On server error, try cache first
+      return Left(ServerFailure( message:e.message));
+      // return _handleServerError(e, paginationParams);
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    } on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
+      // On timeout, try cache
+      // return _handleTimeoutError(e, paginationParams);
     } catch (e, stack) {
       AppLogger.e('Unexpected error: $e\n$stack');
       return Left(ServerFailure(message: 'An unexpected error occurred: $e'));

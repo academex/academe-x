@@ -5,12 +5,14 @@ import 'package:academe_x/core/pagination/paginated_meta.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/home/data/datasources/create_post/create_post_remote_data_source.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
+import 'package:academe_x/features/home/data/models/post/reaction_item_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import 'package:academe_x/lib.dart';
 
 import '../../../../core/pagination/paginated_response.dart';
 import '../../../../core/pagination/pagination_params.dart';
+import '../../domain/entities/post/reaction_item_entity.dart';
 import '../models/post/save_response_model.dart';
 
 typedef PostsResponse  = BaseResponse<PaginatedResponse<List<PostModel>>>;
@@ -60,6 +62,43 @@ class PostRemoteDataSource {
     }
   }
 
+
+  Future<PaginatedResponse<ReactionItemModel>> getUsersByReactionType(PaginationParams paginationParams,String reactType,int postId) async {
+    if (await internetConnectionChecker.hasConnection) {
+      AppLogger.success(Uri.parse('${ApiSetting.getUserReactionByType}/$postId/reactions?page=${paginationParams.page}&type=$reactType').toString());
+      try {
+        final response = await apiController.get(
+        Uri.parse('${ApiSetting.getUserReactionByType}/$postId/reactions?page=${paginationParams.page}&type=$reactType'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
+          },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          _handleHttpError(responseBody);
+        }
+
+        final baseResponse = BaseResponse<PaginatedResponse<ReactionItemModel>>.fromJson(
+          responseBody,
+              (json) {
+            return  PaginatedResponse<ReactionItemModel>.fromJson(
+              json,(p0) {
+              return ReactionItemModel.fromJson(p0);
+            },
+            );
+          },
+        );
+        return baseResponse.data!;
+
+
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
   Future<BaseResponse<void>> reactToPost(String reactionType,int postId) async {
     if (await internetConnectionChecker.hasConnection) {
       try {

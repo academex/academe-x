@@ -45,28 +45,6 @@ class FileContainer extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: const Color(0xff193648)),
           ),
-          // Container(
-          //   height: 36.h,
-          //   width: 68.w,
-          //   decoration: BoxDecoration(
-          //       color: Colors.white, borderRadius: BorderRadius.circular(10.r)),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       Text(
-          //         'قيد الرفع ',
-          //         style: TextStyle(fontSize: 7.5.sp, color: Colors.grey[600]),
-          //       ),
-          //       Text(
-          //         '84%',
-          //         style: TextStyle(
-          //             fontSize: 12.sp,
-          //             fontWeight: FontWeight.w600,
-          //             color: Colors.black),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           InkWell(
             onTap: !_fromCreatePost()
                 ? () {

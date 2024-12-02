@@ -1,5 +1,6 @@
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/file_container.dart';
+import 'package:academe_x/features/home/presentation/widgets/post/post_media/post_image_with_file.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:academe_x/lib.dart';
 
@@ -16,28 +17,29 @@ class PostMedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if(post.images!=null && post.images!.isNotEmpty){
+    if (post.images?.isNotEmpty ?? false) {
+      if (post.file?.url != null) {
+        return _buildPostImageWithFile(
+            fileName: post.file!.name!,
+            fileUrl: post.file!.url!
+        );
+      }
       return _buildPostImage(context, post.images!);
-    }else if(post.file!=null && post.file!.url!=null){
-      return FileContainer(fileName: post.file!.name, fileUrl: post.file!.url);
-    }else{
-          return const SizedBox.shrink();
     }
-    // switch (post.type) {
-    //   case PostType.textWithImage:
-    //     return _buildPostImage(context, post.images!);
-    //   case PostType.textWithPoll:
-    //     return _buildPoll(post.pollOptions!);
-    //   case PostType.textWithFile:
-    //
-    //   default:
-    //     return const SizedBox.shrink();
-    // }
+
+    if (post.file?.url != null) {
+      return FileContainer(
+          fileName: post.file!.name,
+          fileUrl: post.file!.url
+      );
+    }
+
+    return const SizedBox.shrink();
+
   }
 
 
   Widget _buildPostImage(BuildContext ctx, List<ImageEntity> images) {
-    AppLogger.success('hi Im in post ${images.toString()}');
 
     return Column(
       children: [
@@ -146,6 +148,15 @@ class PostMedia extends StatelessWidget {
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildPostImageWithFile({required String fileName, required String fileUrl}) {
+
+    return PostImageWithFile(
+      fileName: fileName,
+      fileUrl: fileUrl,
+      images: post.images!,
     );
   }
 
