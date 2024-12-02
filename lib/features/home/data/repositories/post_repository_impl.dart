@@ -1,5 +1,6 @@
 import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
+import 'package:academe_x/features/home/data/models/post/save_response_model.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/constants/cache_keys.dart';
@@ -189,5 +190,35 @@ class PostRepositoryImpl implements PostRepository {
       ),
       items: paginatedPosts,
     );
+  }
+
+  @override
+  Future<Either<Failure, BaseResponse<SaveResponseModel>>> savePost(int postId) async{
+    try {
+      // First try to get from network
+      final result = await remoteDataSource.savePost(postId);
+      // result
+
+      return  Right(result);
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message:  e.errorMessage));
+      // Handle offline case by trying cache
+      // return _handleOfflineCase(e);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message:  e.message));
+      // On server error, try cache first
+      // return _handleServerError(e, paginationParams);
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    } on TimeOutExeption catch (e) {
+      // On timeout, try cache
+
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } catch (e, stack) {
+      AppLogger.e('Unexpected error: $e\n$stack');
+      return Left(ServerFailure(message: 'An unexpected error occurred: $e'));
+    }
   }
 }

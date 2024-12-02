@@ -1,7 +1,9 @@
 
+import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
+import 'package:academe_x/features/home/domain/entities/post/save_response_entity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
@@ -19,6 +21,12 @@ class PostUseCase {
 
   Future<Either<Failure, void>> reactToPost(String reactionType,int postId) async {
     return await postRepository.reactToPost(reactionType,postId);
+  }
+
+
+
+  Future<Either<Failure, BaseResponse<SaveResponseEntity>>> savePost(int postId) async {
+    return await postRepository.savePost(postId);
   }
 
 

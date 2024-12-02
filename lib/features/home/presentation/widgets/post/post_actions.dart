@@ -64,7 +64,7 @@ class PostActions extends StatelessWidget {
               10.pw(),
               _buildShareButton(context),
               const Spacer(),
-              _buildSaveButton(),
+              _buildSaveButton(context,post.id!),
             ],
           ),
         ),
@@ -140,20 +140,23 @@ class PostActions extends StatelessWidget {
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(BuildContext context,int postId) {
+    final isSaved =context.read<PostsCubit>().state.savedPostIds.contains(postId);
+
     return IconButton(
       icon: Image.asset(
-        // state.isSaved
-        //     ? 'assets/icons/bookMark_selected.png'
-            'assets/icons/Bookmark.png',
+      post.isSaved!
+            ? 'assets/icons/bookMark_selected.png'
+            :'assets/icons/Bookmark.png',
         height: 17,
         width: 19,
       ),
       padding: EdgeInsets.zero,
       onPressed: () {
-        // context.read<ActionPostCubit>().performSaveAction(!state.isSaved);
+
+        context.read<PostsCubit>().savePost(postId: postId,isSaved:post.isSaved!);
       },
-    );;
+    );
   }
 
   Widget _buildReactionAvatar(ReactionItemEntity reaction) {

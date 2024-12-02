@@ -11,17 +11,21 @@ class PostsState extends Equatable {
   final List<PostEntity> posts;
   final bool hasReachedMax;
     int currentPage;
+    bool isSaved;
   final String? errorMessage;
   final DateTime? lastUpdated;  // Add this to track cache freshness
+  final Set<int> savedPostIds;
 
 
   PostsState({
     this.status = PostStatus.initial,
     this.posts = const <PostEntity>[],
     this.hasReachedMax = false,
+    this.isSaved = false,
     this.currentPage = 1,
     this.errorMessage,
     this.lastUpdated,
+    this.savedPostIds = const {},
 
   });
 
@@ -29,15 +33,21 @@ class PostsState extends Equatable {
     PostStatus? status,
     List<PostEntity>? posts,
     bool? hasReachedMax,
+    bool? isSaved,
     int? currentPage,
     String? errorMessage,
+    Set<int>? savedPostIds,
+
   }) {
     return PostsState(
       status: status ?? this.status,
       posts: posts ?? this.posts,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      isSaved: isSaved ?? this.isSaved,
       currentPage: currentPage ?? this.currentPage,
       errorMessage: errorMessage ?? this.errorMessage,
+      savedPostIds: savedPostIds ?? this.savedPostIds,
+
     );
   }
 
@@ -48,5 +58,7 @@ class PostsState extends Equatable {
     hasReachedMax,
     currentPage,
     errorMessage,
+    isSaved,
+    savedPostIds
   ];
 }

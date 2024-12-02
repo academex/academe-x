@@ -118,90 +118,11 @@ class PostsCubit extends Cubit<PostsState> {
     }
   }
 
-  // Future<void> reactToPost({required String reactType,required int postId,required BuildContext context}) async {
-  //   AppLogger.success('Reacting to post: ${reactType} ${postId.toString()}');
-  //   AppLogger.success('Current posts count: ${state.posts.length}');  // Debug log
-  //
-  //   final currentPosts = List<PostEntity>.from(state.posts);
-  //
-  //   AppLogger.success('hi ${currentPosts.length.toString()}');
-  //   AppLogger.success('hi ${state.posts.length.toString()}');
-  //   final postIndex = currentPosts.indexWhere((post) => post.id == postId);
-  //
-  //   AppLogger.success('hi ${postIndex.toString()}');
-  //   AppLogger.success('hi ${postId.toString()}');
-  //   if (postIndex == -1) return;
-  //   try {
-  //
-  //     final currentPost = currentPosts[postIndex];
-  //
-  //     final currentUser = await context.cachedUser;
-  //     if (currentUser == null) return;
-  //
-  //
-  //     final currentReactions = List<ReactionItemEntity>.from(currentPost.reactions?.items ?? []);
-  //
-  //
-  //     currentReactions.removeWhere((reaction) => reaction.user.id == currentUser.user.id);
-  //
-  //     if (reactType != 'none') {
-  //       currentReactions.add(
-  //         ReactionItemEntity(
-  //           id: DateTime.now().millisecondsSinceEpoch, // Temporary ID
-  //           type: reactType,
-  //           user: PostUserEntity(id: currentUser.user.id, username: currentUser.user.username),
-  //         ),
-  //       );
-  //     }
-  //
-  //     final updatedPost = currentPost.copyWith(
-  //       reactions: ReactionsEntity(
-  //         count: currentReactions.length,
-  //         items: currentReactions,
-  //       ),
-  //     );
-  //
-  //     currentPosts[postIndex] = updatedPost;
-  //
-  //
-  //     emit(state.copyWith(
-  //       posts: currentPosts,
-  //       status: PostStatus.success,
-  //     ));
-  //     final result = await postUseCase.reactToPost(reactType,postId);
-  //
-  //
-  //     result.fold(
-  //           (failure)async  {
-  //             emit(state.copyWith(
-  //               posts: state.posts,
-  //               errorMessage: failure.message,
-  //             ));
-  //       },
-  //           (data) {
-  //
-  //       },
-  //     );
-  //   } catch (e) {
-  //     final cachedPosts = await _getCachedPosts();
-  //
-  //     if (cachedPosts != null && cachedPosts.isNotEmpty) {
-  //       emit(state.copyWith(
-  //         status: PostStatus.success,
-  //         posts: cachedPosts,
-  //         errorMessage: 'Using cached data: $e',
-  //         hasReachedMax: true, // Prevent pagination in offline mode
-  //       ));
-  //     } else {
-  //       emit(state.copyWith(
-  //         status: PostStatus.failure,
-  //         errorMessage: e.toString(),
-  //       ));
-  //     }
-  //   }finally {
-  //     _isLoading = false;
-  //   }
-  // }
+
+
+
+
+
 
 
 
@@ -291,22 +212,7 @@ class PostsCubit extends Cubit<PostsState> {
         ));
         AppLogger.success('Added new reaction: $reactType');
       }
-      AppLogger.success('Current reactions count: ${currentReactions.length}');  // Debug log
-
-      // Remove existing reaction from the same user if it exists
-      // currentReactions.removeWhere((reaction) => reaction.user.id == currentUser.user.id);
-      //
-      // // // Add new reaction if it's not 'none'
-      // // if (reactType != 'none') {
-      // //   currentReactions.add(
-      // //     ReactionItemEntity(
-      // //       id: DateTime.now().millisecondsSinceEpoch,
-      // //       type: reactType,
-      // //       user: PostUserEntity(id: currentUser.user.id, username: currentUser.user.username),
-      // //     ),
-      // //   );
-      // // }
-
+      AppLogger.success('Current reactions count: ${currentReactions.length}');  // Debu
       AppLogger.success('New reactions count: ${currentReactions.length}');  // Debug log
 
       // Create updated post with new reactions
@@ -315,6 +221,7 @@ class PostsCubit extends Cubit<PostsState> {
           count:currentReactions.length ,
           items: currentReactions,
         ),
+
       );
 
       // Update posts list
@@ -325,7 +232,7 @@ class PostsCubit extends Cubit<PostsState> {
         posts: currentPosts,
         status: PostStatus.success,
       ));
-      AppLogger.success('reaction in updated post: ${currentPosts[postIndex].reactions!.items[0].type}');  // Debug log
+      // AppLogger.success('reaction in updated post: ${currentPosts[postIndex].reactions!.items[0].type}');  // Debug log
 
       AppLogger.success('Updated state with new posts count: ${currentPosts.length}');  // Debug log
 
@@ -348,6 +255,100 @@ class PostsCubit extends Cubit<PostsState> {
       );
     } catch (e) {
       AppLogger.e('Error in reactToPost: $e');  // Debug log
+      final cachedPosts = await _getCachedPosts();
+
+      if (cachedPosts != null && cachedPosts.isNotEmpty) {
+        emit(state.copyWith(
+          status: PostStatus.success,
+          posts: cachedPosts,
+          errorMessage: 'Using cached data: $e',
+          hasReachedMax: true,
+        ));
+      } else {
+        emit(state.copyWith(
+          status: PostStatus.failure,
+          errorMessage: e.toString(),
+        ));
+      }
+    } finally {
+      _isLoading = false;
+    }
+  }
+
+
+
+  Future<void> savePost({required int postId,required bool isSaved}) async {
+  //   final currentPosts= List<PostEntity>.from(state.posts);
+  //
+  // final indexOfCurrentPost=  currentPosts.indexWhere(
+  //     (element) => element.id==postId,
+  //   );
+  // if(indexOfCurrentPost !=-1){
+  //   currentPosts[indexOfCurrentPost].copyWith(
+  //     isSaved: isSaved
+  //   );
+  // }
+  //   final newSavedPostIds = Set<int>.from(state.savedPostIds);
+  //   if (newSavedPostIds.contains(postId)) {
+  //     newSavedPostIds.remove(postId);
+  //   } else {
+  //     newSavedPostIds.add(postId);
+  //   }
+  //
+  //   // Emit new state with updated saved posts
+  //   emit(state.copyWith(savedPostIds: newSavedPostIds,posts: currentPosts));
+
+    try {
+      // Store the previous state for rollback if needed
+      final previousState = state;
+
+      // Create a deep copy of current posts
+      final updatedPosts = List<PostEntity>.from(state.posts);
+      final updatedSavedPostIds = Set<int>.from(state.savedPostIds);
+
+      // Update post in the list
+      final postIndex = updatedPosts.indexWhere((post) => post.id == postId);
+      if (postIndex != -1) {
+        updatedPosts[postIndex] = updatedPosts[postIndex].copyWith(
+            isSaved: !isSaved
+        );
+      }
+
+      // Update saved post IDs set
+      if (isSaved) {
+        updatedSavedPostIds.remove(postId);
+      } else {
+        updatedSavedPostIds.add(postId);
+      }
+
+      // Emit optimistic update immediately
+      emit(state.copyWith(
+        posts: updatedPosts,
+        savedPostIds: updatedSavedPostIds,
+        status: PostStatus.success,
+      ));
+      final result = await postUseCase.savePost(postId);
+
+      result.fold(
+            (failure) async {
+          AppLogger.e('API call failed: ${failure.message}');
+          // Revert changes in case of failure
+          emit(state.copyWith(
+            savedPostIds: state.savedPostIds,
+            errorMessage: failure.message,
+          ));
+        },
+            (paginatedData) {
+              // emit(state.copyWith(
+              //   status: PostStatus.success,
+              //   hasReachedMax: !paginatedData.hasNextPage,
+              //   currentPage: 2,
+              //   errorMessage: null,
+              // ));
+        },
+      );
+    } catch (e) {
+      AppLogger.e('Error in savePost: $e');
       final cachedPosts = await _getCachedPosts();
 
       if (cachedPosts != null && cachedPosts.isNotEmpty) {

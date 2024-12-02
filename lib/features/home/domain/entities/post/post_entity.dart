@@ -9,6 +9,7 @@ import 'file_info_entity.dart';
 class PostEntity extends Equatable {
 
   final int? id;
+  final int? savedPostId;
   final String? content;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -24,6 +25,7 @@ class PostEntity extends Equatable {
 
   const PostEntity({
     this.id,
+    this.savedPostId,
     this.content,
     this.createdAt,
     this.updatedAt,
@@ -40,6 +42,7 @@ class PostEntity extends Equatable {
 
   PostEntity copyWith({
     int? id,
+    int? savedPostId,
     String? content,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -56,6 +59,7 @@ class PostEntity extends Equatable {
   }) {
     return PostEntity(
       id: id ?? this.id,
+        savedPostId: id ?? this.savedPostId,
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -74,6 +78,7 @@ class PostEntity extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    savedPostId,
     content,
     createdAt,
     updatedAt,

@@ -11,15 +11,14 @@ import 'package:academe_x/lib.dart';
 
 import '../../../../core/pagination/paginated_response.dart';
 import '../../../../core/pagination/pagination_params.dart';
+import '../models/post/save_response_model.dart';
 
 typedef PostsResponse  = BaseResponse<PaginatedResponse<List<PostModel>>>;
+typedef SaveResponse  = BaseResponse<SaveResponseModel>;
 
 class PostRemoteDataSource {
   final ApiController apiController;
   final InternetConnectionChecker internetConnectionChecker;
-
-  // String TOKEN='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imh1c3NlbiIsImlhdCI6MTczMjk3OTE5OSwiZXhwIjoxNzMyOTgyNzk5fQ.UzTUdyykMBZFkz9ysWfWcuRT-BJoRe0sjhZg9wgpkZ0';
-
 
 
   PostRemoteDataSource({required this.apiController,required this.internetConnectionChecker});
@@ -28,7 +27,6 @@ class PostRemoteDataSource {
   Future<PaginatedResponse<PostModel>> getPosts(PaginationParams paginationParams) async {
     if (await internetConnectionChecker.hasConnection) {
       try {
-        AppLogger.success('${ApiSetting.getPosts}?page=${paginationParams.page}');
         final response = await apiController.get(
           Uri.parse('${ApiSetting.getPosts}?page=${paginationParams.page}'),
           headers: {
@@ -84,6 +82,41 @@ class PostRemoteDataSource {
           responseBody,
           (json) {
 
+          },
+        );
+
+        return baseResponse;
+
+
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
+  Future<BaseResponse<SaveResponseModel>> savePost(int postId) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        AppLogger.success(Uri.parse('${ApiSetting.getPosts}/$postId/save').toString());
+        final response = await apiController.get(
+            Uri.parse('${ApiSetting.getPosts}/$postId/save'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
+            },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          _handleHttpError(responseBody);
+        }
+        if(response.statusCode ==200 || responseBody['data'] == null){
+        }
+        final baseResponse = SaveResponse.fromJson(
+          responseBody,
+              (json) {
+            return SaveResponseModel.fromJson(json as Map<String, dynamic>?);
           },
         );
 

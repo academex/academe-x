@@ -2,13 +2,16 @@ import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../../../core/network/base_response.dart';
 import '../../../../core/pagination/paginated_response.dart';
 import '../../../../core/pagination/pagination_params.dart';
+import '../entities/post/save_response_entity.dart';
 
 abstract class PostRepository {
   PostRepository();
   Future<Either<Failure, PaginatedResponse<PostModel>>>getPosts(PaginationParams paginationParams);
   Future<Either<Failure, void>>reactToPost(String reactionType,int postId);
+  Future<Either<Failure, BaseResponse<SaveResponseEntity>>>savePost(int postId);
   // Future<Either<Failure, void>>getReaction(String reactionType,int postId);
 
 }
