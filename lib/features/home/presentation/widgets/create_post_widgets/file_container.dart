@@ -4,6 +4,7 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path/path.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FileContainer extends StatelessWidget {
   final File? file;
@@ -17,7 +18,12 @@ class FileContainer extends StatelessWidget {
       return false;
     }
   }
-
+  Future<void> _launchURL() async {
+    final Uri url = Uri.parse(fileUrl!);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,33 +51,9 @@ class FileContainer extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: const Color(0xff193648)),
           ),
-          // Container(
-          //   height: 36.h,
-          //   width: 68.w,
-          //   decoration: BoxDecoration(
-          //       color: Colors.white, borderRadius: BorderRadius.circular(10.r)),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       Text(
-          //         'قيد الرفع ',
-          //         style: TextStyle(fontSize: 7.5.sp, color: Colors.grey[600]),
-          //       ),
-          //       Text(
-          //         '84%',
-          //         style: TextStyle(
-          //             fontSize: 12.sp,
-          //             fontWeight: FontWeight.w600,
-          //             color: Colors.black),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           InkWell(
             onTap: !_fromCreatePost()
-                ? () {
-                    AppLogger.i('On Click Download');
-                  }
+                ? _launchURL
                 : null,
             child: Container(
               height: 36,

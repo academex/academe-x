@@ -8,7 +8,6 @@ class AuthTokenModel extends AuthTokenEntity{
   AuthTokenModel({required super.user,required  super.accessToken});
 
   factory AuthTokenModel.fromJson(Map<String, dynamic> json) {
-    AppLogger.i(json.toString());
     return AuthTokenModel(
       user: UserResponseModel.fromJson(json['user']),
       accessToken:json['accessToken'],

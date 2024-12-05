@@ -8,7 +8,6 @@ import 'package:academe_x/features/home/presentation/widgets/post/post_header.da
 import 'package:academe_x/features/home/presentation/widgets/post/post_media.dart';
 import 'package:flutter/material.dart';
 
-import '../post_media.dart';
 
 class PostWidget extends StatelessWidget {
   final PostEntity post;

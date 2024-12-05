@@ -16,7 +16,7 @@ class PaginatedMeta {
       page: json['page'] as int,
       limit: json['limit'] as int,
       pagesCount: json['PagesCount'] as int,
-      totalPosts: json['totalPosts'] as int,
+      totalPosts: json['total'] as int,
     );
   }
 }

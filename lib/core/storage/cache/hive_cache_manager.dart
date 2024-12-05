@@ -219,7 +219,6 @@ class HiveCacheManager implements BaseStorageManager {
     final stats = await getDiagnostics();
     AppLogger.i('Storage Statistics:');
     stats.forEach((key, value) {
-      AppLogger.i('$key: $value');
     });
   }
 

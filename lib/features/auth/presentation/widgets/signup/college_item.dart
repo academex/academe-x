@@ -258,7 +258,6 @@ class CollegeItem extends StatelessWidget {
             crossAxisCount: crossAxisCount,
             data: ctx.read<SignupCubit>().state.majors!,
             onTap: (index,majorEntity) {
-              AppLogger.success( majorEntity.id!.toString());
               ctx.read<SignupCubit>().appendMajorToBaseVar(
                   ctx.read<SignupCubit>().state.majors![index].name!
               );

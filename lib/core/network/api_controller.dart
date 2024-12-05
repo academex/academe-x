@@ -60,7 +60,6 @@ class ApiController {
         int timeAlive = 120,
   }) async {
     try {
-      AppLogger.success(body.toString());
 
       final Map<String, String> finalHeaders = {
         'Content-Type': 'application/json',
@@ -84,8 +83,6 @@ class ApiController {
             errorMessage: 'Request took longer than $timeAlive seconds.');
       });
 
-      AppLogger.success(response.body.toString());
-      AppLogger.success(response.statusCode.toString());
       return response;
     } on TimeOutExeption catch (e) {
       // Handle timeout exception

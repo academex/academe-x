@@ -1,10 +1,13 @@
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/file_container.dart';
+import 'package:academe_x/features/home/presentation/widgets/post/post_media/post_image_with_file.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:academe_x/lib.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_view/photo_view.dart';
 
 import '../../../domain/entities/post/post_entity.dart';
 
@@ -16,28 +19,29 @@ class PostMedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if(post.images!=null && post.images!.isNotEmpty){
+    if (post.images?.isNotEmpty ?? false) {
+      if (post.file?.url != null) {
+        return _buildPostImageWithFile(
+            fileName: post.file!.name!,
+            fileUrl: post.file!.url!
+        );
+      }
       return _buildPostImage(context, post.images!);
-    }else if(post.file!=null && post.file!.url!=null){
-      return FileContainer(fileName: post.file!.name, fileUrl: post.file!.url);
-    }else{
-          return const SizedBox.shrink();
     }
-    // switch (post.type) {
-    //   case PostType.textWithImage:
-    //     return _buildPostImage(context, post.images!);
-    //   case PostType.textWithPoll:
-    //     return _buildPoll(post.pollOptions!);
-    //   case PostType.textWithFile:
-    //
-    //   default:
-    //     return const SizedBox.shrink();
-    // }
+
+    if (post.file?.url != null) {
+      return FileContainer(
+          fileName: post.file!.name,
+          fileUrl: post.file!.url
+      );
+    }
+
+    return const SizedBox.shrink();
+
   }
 
 
   Widget _buildPostImage(BuildContext ctx, List<ImageEntity> images) {
-    AppLogger.success('hi Im in post ${images.toString()}');
 
     return Column(
       children: [
@@ -51,18 +55,41 @@ class PostMedia extends StatelessWidget {
                 children: List.generate(
                   images.length,
                   (index) {
-                    return Container(
-                      // width: 326,
-                      decoration: ShapeDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(images[index].url!),
-                          fit: BoxFit.fill,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(11.54),
+                    return CachedNetworkImage(
+                      imageUrl: images[index].url!,
+                      imageBuilder: (context, imageProvider) => PhotoView(
+                        imageProvider: NetworkImage(images[index].url!),
+                        filterQuality: FilterQuality.high,
+
+
+                      ),
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xff0077ff),
                         ),
                       ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                     );
+                    // return PhotoView(
+                    //   imageProvider: NetworkImage(images[index].url!),
+                    //   filterQuality: FilterQuality.high,
+                    //
+                    // );
+
+                    // return Container(
+                    //     child: ;
+                    // return Container(
+                    //   // width: 326,
+                    //   decoration: ShapeDecoration(
+                    //     image: DecorationImage(
+                    //       image: NetworkImage(images[index].url!),
+                    //       fit: BoxFit.contain,
+                    //     ),
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(11.54),
+                    //     ),
+                    //   ),
+                    // );
                   },
                 ),
                 onPageChanged: (value) {
@@ -146,6 +173,15 @@ class PostMedia extends StatelessWidget {
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildPostImageWithFile({required String fileName, required String fileUrl}) {
+
+    return PostImageWithFile(
+      fileName: fileName,
+      fileUrl: fileUrl,
+      images: post.images!,
     );
   }
 

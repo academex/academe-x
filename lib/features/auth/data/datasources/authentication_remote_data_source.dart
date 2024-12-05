@@ -80,7 +80,6 @@ class AuthenticationRemoteDataSource {
       }
     }else{
       if (json['status'] =='error') {
-        AppLogger.e('Login Error: ${json['status']}');
         if (json['message'] is List) {
           final List<String> messages = (json['message'] as List)
               .map((e) => e.toString())
@@ -97,10 +96,8 @@ class AuthenticationRemoteDataSource {
 
   Future<AuthTokenModel> signup(SignupRequestModel user) async {
 
-    AppLogger.success(user.toJson().toString());
     if (await internetConnectionChecker.hasConnection) {
       try {
-        AppLogger.success(ApiSetting.signup);
         final response = await apiController.post(
           Uri.parse(ApiSetting.signup),
           headers: {

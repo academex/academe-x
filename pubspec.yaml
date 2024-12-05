@@ -29,6 +29,10 @@ dependencies:
   equatable: ^2.0.5
   get_it: ^8.0.1
 
+
+  collection: ^1.17.0
+
+
   # Network
   dio: ^5.4.0  # HTTP client
   connectivity_plus: ^5.0.2

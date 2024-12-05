@@ -217,7 +217,6 @@ class SignUpScreen extends StatelessWidget {
                             'أنثى',
                           ],
                     onTap: (index,string) {
-                      AppLogger.success(index.toString());
                       context.read<SignupCubit>().selectGenderIndex(index: index);
                       },
                     selectedIndex:state.selectedGenderIndex,
@@ -302,7 +301,6 @@ class SignUpScreen extends StatelessWidget {
                         'رابعة',
                       ],
                       onTap: (index,string) {
-                        AppLogger.success(index.toString());
 
                         context.read<SignupCubit>().selectIndex(
                             index: index,

@@ -114,7 +114,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
     AuthTokenModel? authTokenModel =await context.cachedUser;
 
 
-    AppLogger.success('hi I get the user loggenIn ${authTokenModel!.user.id}');
     if(widget.post.isReacted!){
       final currentUserReaction = widget.post.reactionType;
       if (currentUserReaction != null) {
@@ -190,7 +189,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   void _handleReaction(ReactionEmoji reaction) async {
     // If clicking the same reaction that's already selected, remove it
     if (reaction == _emojiUserChoose) {
-      AppLogger.success('same reaction');
       widget.onReact(reaction.name);
 
       setState(() {
@@ -743,11 +741,11 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
   String _getTextBtn() {
     if (_isDragging) {
-      return '224';
+      return widget.post.reactions!.count.toString();
     }
     switch (_emojiUserChoose) {
       case ReactionEmoji.nothing:
-        return '224';
+        return widget.post.reactions!.count.toString();
       case ReactionEmoji.heart:
         return 'قلب';
       case ReactionEmoji.question:

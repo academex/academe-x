@@ -1,5 +1,8 @@
 import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
+import 'package:academe_x/features/home/data/models/post/reaction_item_model.dart';
+import 'package:academe_x/features/home/data/models/post/save_response_model.dart';
+import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/constants/cache_keys.dart';
@@ -30,7 +33,7 @@ class PostRepositoryImpl implements PostRepository {
       final result = await remoteDataSource.getPosts(paginationParams);
 
       // Cache successful network response
-      _cacheResults(result.items, paginationParams.page);
+      _cachePostsResults(result.items, paginationParams.page);
 
       return Right(result);
     } on OfflineException catch (e) {
@@ -82,7 +85,7 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-  Future<void> _cacheResults(List<PostModel> posts, int page) async {
+  Future<void> _cachePostsResults(List<PostModel> posts, int page) async {
     try {
       if (page == 1) {
         // For first page, replace cache
@@ -92,7 +95,7 @@ class PostRepositoryImpl implements PostRepository {
         );
       } else {
         // For pagination, merge with existing cache
-        final existingCache = await _getFromCache();
+        final existingCache = await _getPostsFromCache();
         if (existingCache != null) {
           final mergedPosts = _mergePosts(existingCache, posts);
           await cacheManager.cacheResponse(
@@ -107,7 +110,7 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-  Future<List<PostModel>?> _getFromCache() async {
+  Future<List<PostModel>?> _getPostsFromCache() async {
     try {
       return await cacheManager.getCachedResponse<List<PostModel>>(
         CacheKeys.POSTS,
@@ -136,7 +139,7 @@ class PostRepositoryImpl implements PostRepository {
       PaginationParams params,
       ) async {
     // Try to get from cache
-    final cachedPosts = await _getFromCache();
+    final cachedPosts = await _getPostsFromCache();
     if (cachedPosts != null) {
       return Right(_createPaginatedResponse(cachedPosts, params));
     }
@@ -148,7 +151,7 @@ class PostRepositoryImpl implements PostRepository {
       PaginationParams params,
       ) async {
     // Try to get from cache
-    final cachedPosts = await _getFromCache();
+    final cachedPosts = await _getPostsFromCache();
     if (cachedPosts != null) {
       return Right(_createPaginatedResponse(cachedPosts, params));
     }
@@ -160,7 +163,7 @@ class PostRepositoryImpl implements PostRepository {
       PaginationParams params,
       ) async {
     // Try to get from cache
-    final cachedPosts = await _getFromCache();
+    final cachedPosts = await _getPostsFromCache();
     if (cachedPosts != null) {
       return Right(_createPaginatedResponse(cachedPosts, params));
     }
@@ -188,6 +191,120 @@ class PostRepositoryImpl implements PostRepository {
         totalPosts: cachedPosts.length ,
       ),
       items: paginatedPosts,
+      statisticsModel: null
     );
   }
+
+  @override
+  Future<Either<Failure, BaseResponse<SaveResponseModel>>> savePost(int postId) async{
+    try {
+      // First try to get from network
+      final result = await remoteDataSource.savePost(postId);
+      // result
+
+      return  Right(result);
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message:  e.errorMessage));
+      // Handle offline case by trying cache
+      // return _handleOfflineCase(e);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message:  e.message));
+      // On server error, try cache first
+      // return _handleServerError(e, paginationParams);
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    } on TimeOutExeption catch (e) {
+      // On timeout, try cache
+
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } catch (e, stack) {
+      AppLogger.e('Unexpected error: $e\n$stack');
+      return Left(ServerFailure(message: 'An unexpected error occurred: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>> getReactions(PaginationParams paginationParams,String reactionType,int postId) async{
+    try {
+      // First try to get from network
+      final result = await remoteDataSource.getReactions(paginationParams,reactionType,postId);
+
+      // Cache successful network response
+      // _cacheResults(result.items, paginationParams.page);
+
+      return Right(result);
+    } on OfflineException catch (e) {
+      // Handle offline case by trying cache
+      // return _handleOfflineCase(e, paginationParams);
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    } on ServerException catch (e) {
+      // On server error, try cache first
+      return Left(ServerFailure( message:e.message));
+      // return _handleServerError(e, paginationParams);
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    } on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
+      // On timeout, try cache
+      // return _handleTimeoutError(e, paginationParams);
+    } catch (e, stack) {
+      AppLogger.e('Unexpected error: $e\n$stack');
+      return Left(ServerFailure(message: 'An unexpected error occurred: $e'));
+    }
+  }
+
+
+
+  // Future<void> _cacheReactionsResults(List<ReactionItemModel> reactions, int page) async {
+  //   try {
+  //     if (page == 1) {
+  //       // For first page, replace cache
+  //       await cacheManager.cacheResponse(
+  //         CacheKeys.REACTIONS,
+  //         reactions.map((reaction) => reaction.toJson()).toList(),
+  //       );
+  //     } else {
+  //       // For pagination, merge with existing cache
+  //       final existingCache = await _getReactionsFromCache();
+  //       if (existingCache != null) {
+  //         final mergedReactions = _mergeReactions(existingCache, reactions);
+  //         await cacheManager.cacheResponse(
+  //           CacheKeys.POSTS,
+  //           mergedReactions.map((post) => post.toJson()).toList(),
+  //         );
+  //       }
+  //     }
+  //   } catch (e) {
+  //     AppLogger.w('Cache operation failed: $e');
+  //     // Don't throw - caching errors shouldn't affect the main flow
+  //   }
+  // }
+
+  // Future<List<ReactionItemModel>?> _getReactionsFromCache() async {
+  //   try {
+  //     return await cacheManager.getCachedResponse<List<ReactionItemModel>>(
+  //       CacheKeys.REACTIONS,
+  //           (json) => (json as List)
+  //           .map((item) => ReactionItemModel.fromJson(item as Map<String, dynamic>))
+  //           .toList(),
+  //     );
+  //   } catch (e) {
+  //     AppLogger.w('Failed to get from cache: $e');
+  //     return null;
+  //   }
+  // }
+
+  // List<ReactionItemModel> _mergeReactions(List<ReactionItemModel> existing, List<ReactionItemModel> new_) {
+  //   final merged = [...existing];
+  //   for (var post in new_) {
+  //     if (!merged.any((p) => p.id == post.id)) {
+  //       merged.add(post);
+  //     }
+  //   }
+  //   return merged;
+  // }
 }
