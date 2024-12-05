@@ -8,7 +8,7 @@ import '../../../../domain/entities/post/reaction_item_entity.dart';
 import '../../../controllers/cubits/post/posts_cubit.dart';
 
 class ReactionTypesList extends StatelessWidget {
-  final List<ReactionItemEntity> reactions;
+  final Map<String,int> reactions;
   final int postId;
   final String? selectedType;
 
@@ -21,8 +21,10 @@ class ReactionTypesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupedReactions = _groupReactionsByType();
-
+    // final groupedReactions = _groupReactionsByType();
+    reactions.removeWhere(
+          (key, value) => value==0,
+    );
     return Container(
       height: 48,
       decoration: ShapeDecoration(
@@ -39,29 +41,35 @@ class ReactionTypesList extends StatelessWidget {
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         scrollDirection: Axis.horizontal,
-        itemCount: groupedReactions.length,
+        itemCount: reactions.length,
         separatorBuilder: (_, __) => 8.pw(),
         itemBuilder: (context, index) {
-          final type = groupedReactions.keys.elementAt(index);
-          final count = groupedReactions[type]!.length;
+         // final reactionsHaveZeroCont= reactions.values.where(
+         //    (element) => element==0,
+         //  ).toList();
+
+
+
+          final type = reactions.keys.elementAt(index);
+          final count = reactions[type]!;
 
           return ReactionTypeItem(
             type: type,
             count: count,
             isSelected: type == selectedType,
-            onTap: () => _handleTypeSelection(context, type),
+            onTap: ()async =>await _handleTypeSelection(context, type),
           );
         },
       ),
     );
   }
 
-  Map<String, List<ReactionItemEntity>> _groupReactionsByType() {
-    return groupBy(reactions, (reaction) => reaction.type);
-  }
+  // Map<String, List<ReactionItemEntity>> _groupReactionsByType() {
+  //   return groupBy(reactions, (reaction) => reaction.type);
+  // }
 
   Future<void> _handleTypeSelection(BuildContext context, String type) async {
-    await context.read<PostsCubit>().getUsersByReactionType(
+    await context.read<PostsCubit>().getReactions(
       reactType: type,
       postId: postId,
     );

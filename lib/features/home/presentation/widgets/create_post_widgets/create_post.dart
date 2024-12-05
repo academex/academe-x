@@ -65,7 +65,6 @@ class CreatePost {
                           fontSize: 14,
                           color: Colors.green,
                           onPressed: () {
-                            AppLogger.i('message');
                             Navigator.pop(context);
                           },
                         ),
@@ -305,7 +304,6 @@ class SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CreatePostCubit, CreatePostState>(
       listener: (createPostContext, state) {
-        AppLogger.d(state.toString());
         if (state is FailureState) {
           context.showSnackBar(message: state.errorMessage, error: true);
         } else if (state is SuccessState) {

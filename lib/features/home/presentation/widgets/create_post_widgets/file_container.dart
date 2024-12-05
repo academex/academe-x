@@ -4,6 +4,7 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path/path.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FileContainer extends StatelessWidget {
   final File? file;
@@ -17,7 +18,12 @@ class FileContainer extends StatelessWidget {
       return false;
     }
   }
-
+  Future<void> _launchURL() async {
+    final Uri url = Uri.parse(fileUrl!);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,9 +53,7 @@ class FileContainer extends StatelessWidget {
           ),
           InkWell(
             onTap: !_fromCreatePost()
-                ? () {
-                    AppLogger.i('On Click Download');
-                  }
+                ? _launchURL
                 : null,
             child: Container(
               height: 36,

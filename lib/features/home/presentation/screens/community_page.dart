@@ -137,7 +137,7 @@ class _CommunityPageState extends State<CommunityPage> {
                   (context, index) {
                 if (index >= state.posts.length) {
 
-                  if (state.hasReachedMax) {
+                  if (state.hasPostsReachedMax) {
                     return null;
                   }
                   return const PostWidgetShimmer();
@@ -159,7 +159,7 @@ class _CommunityPageState extends State<CommunityPage> {
                     ],
                   ],
                 );},
-              childCount: state.hasReachedMax
+              childCount: state.hasPostsReachedMax
                   ? state.posts.length
                   : state.posts.length + 1,
             ),

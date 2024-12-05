@@ -30,8 +30,8 @@ class PostUseCase {
     return await postRepository.savePost(postId);
   }
 
-  Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>> getUsersByReactionType(PaginationParams paginationParams,String reactionType,int postId) async {
-    return await postRepository.getUsersByReactionType(paginationParams,reactionType,postId);
+  Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>> getReactions(PaginationParams paginationParams,String reactionType,int postId) async {
+    return await postRepository.getReactions(paginationParams,reactionType,postId);
   }
 
 

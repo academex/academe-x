@@ -16,6 +16,7 @@ class ReactionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     if (post.reactions == null || post.reactions!.items.isEmpty) {
       return const SizedBox.shrink();
     }

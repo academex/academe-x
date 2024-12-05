@@ -11,7 +11,6 @@ class SignupCubit extends AuthCubit {
   );
 
 void showEduInfo(bool showEducationInfo){
-  AppLogger.d(showEducationInfo.toString());
   emit(state.copyWith(
     showEducationInfo: !showEducationInfo,
   ));
@@ -72,7 +71,6 @@ void showEduInfo(bool showEducationInfo){
 
 
   Future<void> getColleges() async {
-  AppLogger.success('in getColleges');
     if (state.isLoadingForCollege) return;
     emit(state.copyWith(isLoadingForCollege: true));
 
@@ -135,7 +133,6 @@ void showEduInfo(bool showEducationInfo){
               ));
             },
                 (majors) async {
-                  AppLogger.success(majors.toString());
               emit(state.copyWith(
                 majors: majors,
                 isLoadingForMajors: false,

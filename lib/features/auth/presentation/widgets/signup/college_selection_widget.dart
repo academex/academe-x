@@ -73,7 +73,6 @@ Widget _buildHeader(AuthState state) {
   );
 }
 Widget _buildCollegesList(AuthState state,BuildContext context) {
-  AppLogger.success(state.colleges.toString());
   if(state.errorMessage !=null){
     return CompactErrorWidget(
       message: 'خطأ في التحميل',

@@ -1,5 +1,6 @@
 
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
+import 'package:academe_x/features/home/domain/entities/post/statistics_entity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../domain/entities/home/post_entity_s.dart';
@@ -11,15 +12,18 @@ enum ReactionStatus { initial, loading, success, failure }
 class PostsState extends Equatable {
   final PostStatus status;
   final ReactionStatus reactionStatus;
+  final StatisticsEntity? statisticsEntity;
   final List<PostEntity> posts;
   List<ReactionItemEntity>? reactionItems;
-  final bool hasReachedMax;
-    int currentPage;
-    bool isSaved;
+  final bool hasPostsReachedMax;
+  int postsCurrentPage;
+  final bool hasReactionsReachedMax;
+  int reactionsCurrentPage;
+  bool isSaved;
   final String? errorMessage;
   final String? selectedType;
   final DateTime? lastUpdated;  // Add this to track cache freshness
-  final Set<int> savedPostIds;
+
 
 
 
@@ -28,14 +32,16 @@ class PostsState extends Equatable {
     this.status = PostStatus.initial,
     this.posts = const <PostEntity>[],
     this.reactionItems = const <ReactionItemEntity>[],
-    this.hasReachedMax = false,
+    this.statisticsEntity,
     this.reactionStatus = ReactionStatus.initial,
     this.isSaved = false,
-    this.currentPage = 1,
+    this.hasPostsReachedMax = false,
+    this.postsCurrentPage = 1,
+    this.hasReactionsReachedMax=false,
+    this.reactionsCurrentPage= 1,
     this.errorMessage,
     this.selectedType,
     this.lastUpdated,
-    this.savedPostIds = const {},
 
   });
 
@@ -43,26 +49,32 @@ class PostsState extends Equatable {
     PostStatus? status,
     ReactionStatus? reactionStatus,
     List<PostEntity>? posts,
+     StatisticsEntity? statisticsEntity,
     List<ReactionItemEntity>? reactionItems,
-    bool? hasReachedMax,
+    bool? hasPostsReachedMax,
+     bool? hasReactionsReachedMax,
+    int? reactionsCurrentPage,
     bool? isSaved,
-    int? currentPage,
+    int? postsCurrentPage,
     String? errorMessage,
     String? selectedType,
-    Set<int>? savedPostIds,
 
   }) {
     return PostsState(
       status: status ?? this.status,
       reactionStatus: reactionStatus ?? this.reactionStatus,
       posts: posts ?? this.posts,
+      statisticsEntity: statisticsEntity ?? this.statisticsEntity,
+      // posts: posts ?? this.posts,
+      hasReactionsReachedMax: hasReactionsReachedMax ?? this.hasReactionsReachedMax,
+      reactionsCurrentPage: reactionsCurrentPage ?? this.reactionsCurrentPage,
+
       reactionItems: reactionItems ?? this.reactionItems,
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      hasPostsReachedMax: hasPostsReachedMax ?? this.hasPostsReachedMax,
       isSaved: isSaved ?? this.isSaved,
-      currentPage: currentPage ?? this.currentPage,
+      postsCurrentPage: postsCurrentPage ?? this.postsCurrentPage,
       errorMessage: errorMessage ?? this.errorMessage,
       selectedType: selectedType ?? this.selectedType,
-      savedPostIds: savedPostIds ?? this.savedPostIds,
 
     );
   }
@@ -72,12 +84,14 @@ class PostsState extends Equatable {
     status,
     reactionStatus,
     posts,
+    statisticsEntity,
     reactionItems,
-    hasReachedMax,
-    currentPage,
+    hasPostsReachedMax,
+    hasReactionsReachedMax,
+    reactionsCurrentPage,
+    postsCurrentPage,
     errorMessage,
     selectedType,
     isSaved,
-    savedPostIds
   ];
 }

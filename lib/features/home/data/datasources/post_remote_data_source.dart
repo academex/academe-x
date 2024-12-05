@@ -63,9 +63,9 @@ class PostRemoteDataSource {
   }
 
 
-  Future<PaginatedResponse<ReactionItemModel>> getUsersByReactionType(PaginationParams paginationParams,String reactType,int postId) async {
+  Future<PaginatedResponse<ReactionItemModel>> getReactions(PaginationParams paginationParams,String reactType,int postId) async {
+    AppLogger.success( Uri.parse('${ApiSetting.getUserReactionByType}/$postId/reactions?page=${paginationParams.page}&type=$reactType').toString());
     if (await internetConnectionChecker.hasConnection) {
-      AppLogger.success(Uri.parse('${ApiSetting.getUserReactionByType}/$postId/reactions?page=${paginationParams.page}&type=$reactType').toString());
       try {
         final response = await apiController.get(
         Uri.parse('${ApiSetting.getUserReactionByType}/$postId/reactions?page=${paginationParams.page}&type=$reactType'),
@@ -138,7 +138,6 @@ class PostRemoteDataSource {
   Future<BaseResponse<SaveResponseModel>> savePost(int postId) async {
     if (await internetConnectionChecker.hasConnection) {
       try {
-        AppLogger.success(Uri.parse('${ApiSetting.getPosts}/$postId/save').toString());
         final response = await apiController.get(
             Uri.parse('${ApiSetting.getPosts}/$postId/save'),
             headers: {
