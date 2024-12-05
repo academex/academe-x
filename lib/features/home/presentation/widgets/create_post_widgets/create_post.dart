@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
+import 'package:academe_x/features/home/domain/entities/post/file_info_entity.dart';
+import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
@@ -22,7 +25,9 @@ class CreatePost {
   List<File>? images = null;
   File? file = null;
 
-  void showCreatePostModal(BuildContext parContext) {
+  void showCreatePostModal(BuildContext parContext) async {
+    UserResponseEntity user = (await parContext.cachedUser)!.user;
+    String userName = '${user.firstName} ${user.lastName}';
     showModalBottomSheet(
       context: parContext,
       isScrollControlled: true,
@@ -83,18 +88,20 @@ class CreatePost {
                       children: [
                         CircleAvatar(
                           radius: 20,
-                          child: AppText(
-                            text: 'إ',
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
+                          child: user.photoUrl == null
+                              ? AppText(
+                                  text: user.firstName[0],
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                )
+                              : Image.network(user.photoUrl!),
                         ),
-                        8.ph(),
+                        8.pw(),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             AppText(
-                              text: 'إبراهيم',
+                              text: userName,
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
@@ -134,24 +141,31 @@ class CreatePost {
                     // for loop for the hashes
                     BlocBuilder<TagCubit, TagState>(
                       builder: (context, state) {
-                        post = post.copyWith(
-                            tags: state.selectedTags
-                                .map(
-                                  (e) => e,
-                                )
-                                .toList());
-                        return Wrap(
-                          spacing: 3, // Space between buttons horizontally
-                          runSpacing: 0,
-                          children:
-                              List.generate(state.selectedTags.length, (index) {
-                            return AppText(
-                              text: state.selectedTags[index].name,
-                              fontSize: 14.sp,
-                              color: const Color(0xff0077FF),
-                            );
-                          }),
-                        );
+                        if (state is SucsessTagState) {
+                          post = post.copyWith(
+                              tags: state.selectedTags
+                                  .map(
+                                    (e) => e,
+                                  )
+                                  .toList());
+                          return Wrap(
+                            spacing: 3, // Space between buttons horizontally
+                            runSpacing: 0,
+                            children: List.generate(state.selectedTags.length,
+                                (index) {
+                              return AppText(
+                                text: state.selectedTags[index].collegeEn !=
+                                        null
+                                    ? '${state.selectedTags[index].majorEn!}#'
+                                        .replaceAll(' ', '_')
+                                    : '',
+                                fontSize: 14.sp,
+                                color: const Color(0xff0077FF),
+                              );
+                            }),
+                          );
+                        }
+                        return const SizedBox();
                       },
                     ),
                     16.ph(),
@@ -293,9 +307,10 @@ class CreatePost {
 
 class SubmitButton extends StatelessWidget {
   final GlobalKey<FormState> formKey;
-  final PostEntity post;
+  PostEntity post;
   final TextEditingController textController;
-  const SubmitButton({
+  SubmitButton({
+    super.key,
     required this.formKey,
     required this.post,
     required this.textController,
@@ -314,6 +329,7 @@ class SubmitButton extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        if (state is FailureState) Logger().e(state.errorMessage);
         return Column(
           children: [
             if (state is FailureState)
@@ -327,6 +343,18 @@ class SubmitButton extends StatelessWidget {
               onTap: state is! SendingState
                   ? () {
                       if (formKey.currentState!.validate()) {
+                        post = post.copyWith(
+                            images: getIt<ImagePickerLoaded>()
+                                .images
+                                ?.map(
+                                  (e) => ImageEntity(id: 0, url: e.path),
+                                )
+                                .toList(),
+                            file: getIt<FilePickerLoaded>().file == null
+                                ? null
+                                : FileInfo(
+                                    url: getIt<FilePickerLoaded>().file!.path,
+                                  ));
                         context.read<CreatePostCubit>().sendPost(
                             post: post.copyWith(content: textController.text));
                       }

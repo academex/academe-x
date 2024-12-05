@@ -16,10 +16,6 @@ import '../core.dart';
 final getIt = GetIt.instance;
 
 Future<void> init() async {
-
-
-
-
   // Cubits
   _initCubits();
 
@@ -38,8 +34,6 @@ Future<void> init() async {
   // External Dependencies
   await _initExternalDependencies();
 }
-
-
 
 void _initCubits() {
   getIt.registerFactory<LoginCubit>(() => LoginCubit(authUseCase: getIt()));
@@ -72,7 +66,7 @@ void _initCubits() {
     () => PickerCubit(CreatePostIconsInit()),
   );
   getIt.registerFactory<TagCubit>(
-    () => TagCubit(TagState(selectedTags: [MockData.tags.first])),
+    () => TagCubit(InitTagState()),
   );
   getIt.registerFactory<ShowTagCubit>(
     () => ShowTagCubit(false),
@@ -108,7 +102,7 @@ void _initUseCases() {
     () => CreatePostUseCase(createPostRepository: getIt()),
   );
   getIt.registerLazySingleton<PostUseCase>(
-    () => PostUseCase(postRepository:getIt()),
+    () => PostUseCase(postRepository: getIt()),
   );
 
   getIt.registerLazySingleton<GetTagsUseCase>(
@@ -127,7 +121,7 @@ void _initRepositories() {
     () => CreatePostRepositoryImp(createPostRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton<PostRepository>(
-    () => PostRepositoryImpl(remoteDataSource: getIt(),cacheManager: getIt()),
+    () => PostRepositoryImpl(remoteDataSource: getIt(), cacheManager: getIt()),
   );
 }
 
@@ -140,11 +134,11 @@ void _initDataSources() {
     ),
   );
 
- getIt.registerLazySingleton<PostRemoteDataSource>(
+  getIt.registerLazySingleton<PostRemoteDataSource>(
     () => PostRemoteDataSource(
-        apiController: getIt(),
-        internetConnectionChecker: getIt(),
-        // cacheManager: getIt(),
+      apiController: getIt(),
+      internetConnectionChecker: getIt(),
+      // cacheManager: getIt(),
     ),
   );
 

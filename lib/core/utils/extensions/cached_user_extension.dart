@@ -12,13 +12,18 @@ extension CachedUserExtension on BuildContext {
   Future<AuthTokenModel?> get cachedUser async {
     return await getIt<HiveCacheManager>().getCachedResponse(
       CacheKeys.USER,
-          (json) => AuthTokenModel.fromJson(json),
+      (json) => AuthTokenModel.fromJson(json),
     );
   }
-  Future<MajorModel?> get major async {
-    return await getIt<HiveCacheManager>().getCachedResponse(
-      CacheKeys.MAJORS,
-          (json) => MajorModel.fromJson(json),
-    );
+
+  Future<List<MajorModel>?> get cachMajor async {
+    return await getIt<HiveCacheManager>().getCachedResponse(CacheKeys.MAJORS,
+        (json) {
+      return (json as List)
+          .map(
+            (e) => MajorModel.fromJson(e),
+          )
+          .toList();
+    });
   }
 }

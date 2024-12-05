@@ -59,6 +59,7 @@ dependencies:
   firebase_analytics: ^11.3.5
   firebase_messaging: ^15.1.5
   firebase_crashlytics: ^4.1.5
+  http: ^1.2.2
 
   # Social (Uncomment as needed)
   # google_sign_in: ^6.2.1
