@@ -1,5 +1,8 @@
+import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 class AccountCreationScreen extends StatefulWidget {
   const AccountCreationScreen({super.key});
@@ -17,7 +20,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(); // Loop
+    )..repeat();
+
+    context.read<CollegeMajorsCubit>().loadMajors();
+    context.read<PostsCubit>().loadPosts();
 
     Future.delayed(const Duration(seconds: 4), () {
       Navigator.pushReplacementNamed(context, '/account_creation_success');

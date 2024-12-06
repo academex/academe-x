@@ -1,4 +1,5 @@
 import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
+import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,6 +61,10 @@ class AcademeXMain extends StatelessWidget {
 
       BlocProvider<PostsCubit>(
         create: (context) => getIt<PostsCubit>()..loadPosts(),
+      ),
+
+      BlocProvider<CollegeMajorsCubit>(
+        create: (context) => getIt<CollegeMajorsCubit>()..getColleges(),
       ),
     ];
   }

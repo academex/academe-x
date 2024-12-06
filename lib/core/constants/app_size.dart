@@ -102,9 +102,9 @@ class SizeConfig {
   int getCrossAxisCount(BuildContext context,{int? lengthOfList}) {
     if (context.isDesktop) return 8;
     if (context.isTablet) return 6;
-    // if(lengthOfList !=null && lengthOfList <4){
-    //   return context.isLandscape ? 6 : 2;
-    // }
+    if(lengthOfList !=null && lengthOfList <4){
+      return context.isLandscape ? 6 : 2;
+    }
     return context.isLandscape ? 6 : 4;
   }
 

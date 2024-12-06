@@ -1,8 +1,10 @@
 
+import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../college_major/controller/cubit/college_majors_state.dart';
 import 'college_item.dart';
 import 'dropown_label.dart';
 
@@ -13,29 +15,34 @@ class CollegeSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-         const DropdownLabel(),
-        12.ph(),
-        _buildDropdown(ctx),
-      ],
+    return BlocBuilder<CollegeMajorsCubit,CollegeMajorsState>(
+      buildWhen: (previous, current) => previous!=current,
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const DropdownLabel(),
+            12.ph(),
+            _buildDropdown(context,state),
+          ],
+        );
+      },
     );
   }
 }
 
-Widget _buildDropdown(BuildContext context) {
+Widget _buildDropdown(BuildContext context,CollegeMajorsState state) {
   return GestureDetector(
-    onTap: () => context.read<SignupCubit>().toggleExpanded(),
+    onTap: () => context.read<CollegeMajorsCubit>().toggleExpanded(),
     child: Container(
       decoration: _dropdownDecoration,
       width: double.infinity,
       child: Column(
         children: [
-          _buildHeader(context.read<SignupCubit>().state),
-          if (context.read<SignupCubit>().state.isExpanded) ...[
+          _buildHeader(state),
+          if (state.isExpanded) ...[
             _buildDivider(),
-            _buildCollegesList(context.read<SignupCubit>().state, context),
+            _buildCollegesList(state, context),
           ],
         ],
       ),
@@ -43,7 +50,7 @@ Widget _buildDropdown(BuildContext context) {
   );
 }
 
-Widget _buildHeader(AuthState state) {
+Widget _buildHeader(CollegeMajorsState state) {
   return Builder(
     builder: (context) => Padding(
       padding: EdgeInsets.symmetric(
@@ -72,12 +79,14 @@ Widget _buildHeader(AuthState state) {
     ),
   );
 }
-Widget _buildCollegesList(AuthState state,BuildContext context) {
+Widget _buildCollegesList(CollegeMajorsState state,BuildContext context) {
+  AppLogger.success('there is error ${state.errorMessage}');
+  AppLogger.success('there is error ${state.colleges}');
   if(state.errorMessage !=null){
     return CompactErrorWidget(
       message: 'خطأ في التحميل',
       onRetry: () async{
-        await context.read<SignupCubit>().retry();
+        await context.read<CollegeMajorsCubit>().retry();
       },
     );
   }
@@ -91,15 +100,10 @@ Widget _buildCollegesList(AuthState state,BuildContext context) {
             collegeData:const CollegeData(icon: '', majors: []),
             isSelected: isSelected,
             selectedMajor: state.selectedCollege,
-            onCollegeSelected: (college) {
-              // AppLogger.success('mesdasssage');
-              context.read<SignupCubit>().selectCollege(college);
-              context.read<SignupCubit>().getMajorsByCollege(college);
-              // context.read<SignupCubit>().selectIndex(selectionType: selectionType);
+            onCollegeSelected: (college) async{
+              context.read<CollegeMajorsCubit>().selectCollege(college);
+             await context.read<CollegeMajorsCubit>().loadMajors(collegeName: college);
             },
-            // onMajorSelected: (index) {
-            //   // context.read<CollegeCubit>().selectMajorIndex(index);
-            // },
           );
         }).toList()
     );
@@ -111,36 +115,14 @@ Widget _buildCollegesList(AuthState state,BuildContext context) {
     return CompactErrorWidget(
       message: 'خطأ في التحميل',
       onRetry: () async{
-        await context.read<SignupCubit>().retry();
+        await context.read<CollegeMajorsCubit>().retry();
 
       },
     );
   }
 
 
-  // var dummyListMajors= state.collegesData!.entries;
-  //
-  // return Column(
-  //   children: state.colleges!.map((college) {
-  //     final isSelected = state.selectedCollege == college.collegeAr;
-  //     return CollegeItem(
-  //       state:state,
-  //       college: college.collegeAr!,
-  //       collegeData: CollegeData(icon: 'icon', majors: []),
-  //       isSelected: isSelected,
-  //       selectedMajor: state.selectedCollege,
-  //       onCollegeSelected: (college) {
-  //         // AppLogger.success('mesdasssage');
-  //         context.read<SignupCubit>().selectCollege(college);
-  //         // context.read<SignupCubit>().selectIndex(selectionType: selectionType);
-  //       },
-  //       // onMajorSelected: (index) {
-  //       //   // context.read<CollegeCubit>().selectMajorIndex(index);
-  //       // },
-  //     );
-  //   }).toList(),
-  // );
-}
+ }
 
 Widget _buildDivider() {
   return const Divider(

@@ -6,6 +6,6 @@ abstract class AuthenticationRepository {
   AuthenticationRepository();
   Future<Either<Failure, AuthTokenEntity>>login(LoginRequsetEntity user);
   Future<Either<Failure, AuthTokenEntity>>signup(SignupRequestEntity userRegesteration);
-  Future<Either<Failure, List<CollegeEntity>>>getColleges();
-  Future<Either<Failure, List<MajorEntity>>>getMajorsByCollege(String collegeName);
+  // Future<Either<Failure, List<CollegeEntity>>>getColleges();
+  // Future<Either<Failure, List<MajorEntity>>>getMajorsByCollege(String collegeName);
 }
