@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:http_parser/http_parser.dart'; // Import this for MediaType
 
 import 'package:academe_x/academeX_main.dart';
 import 'package:academe_x/core/constants/cache_keys.dart';
@@ -10,6 +11,7 @@ import 'package:academe_x/features/auth/auth.dart';
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/tag_model.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:logger/logger.dart';
@@ -73,69 +75,58 @@ class CreatePostRemoteDataSource {
     return await _postWithExceptions(
       func: () async {
         File? file = getIt<FilePickerLoaded>().file;
-        late String base64File;
-        if (file != null) {
-          Logger().d(file!.exists().toString());
+        List<File>? images = getIt<ImagePickerLoaded>().images;
 
-          List<int> fileBytes = await file.readAsBytes();
-          base64File = base64Encode(fileBytes);
-        }
-        // Encode the file to base64 (if required by the server)
-        Logger().d(ApiSetting.createPost);
-        var url = Uri.parse('https://academex-1.onrender.com/post/');
+        var url = Uri.parse(ApiSetting.createPost);
         var request = http.MultipartRequest('POST', url);
 
-        // Add fields
         request.fields['content'] = post.content!;
-        request.fields['tagIds[0]'] ='1'; // Add more tagIds as needed
-        var file1;
+        for(int i = 0; i<post.tags!.length;i++) {
+          request.fields['tagIds[$i]'] = post.tags![i].id.toString();
+        }
+
         // Add file
         if(file != null) {
-           file1 = await http.MultipartFile.fromPath(
+           var file1 = await http.MultipartFile.fromPath(
             'file',
             file.path,
-            // contentType:
-            //     MediaType('application', 'pdf'), // Change based on your file type
-          );
+             filename: file.path.split('/').last,
+             contentType: MediaType('application', 'pdf'),
+                      );
+           request.files.add(file1);
         }
-        if(file != null) {
-          request.files.add(file1);
+        // Add images
+        for (File image in images??[]) {
+          request.files.add(await http.MultipartFile.fromPath(
+            'images',
+            image.path,
+            filename: image.path.split('/').last,
+            contentType: MediaType('image', 'jpeg'), // Adjust as needed
+          ));
         }
+
         // Add headers
         request.headers.addAll({
           'Authorization':
               'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
+          'Accept': 'application/json',
         });
 
         // Send request
         var response = await request.send();
 
+        Logger().d(response);
         if (response.statusCode == 200) {
           var responseData = await http.Response.fromStream(response);
           print('Response: ${responseData.body}');
         } else {
           print('Error: ${response.statusCode}');
         }
-        // final response = await apiController.post(
-        //     Uri.parse('https://academex-1.onrender.com/post/'),
-        //     body: {
-        //       'file': base64File,
-        //       'content': post.content,
-        //       'tagIds': post.tags!
-        //           .map(
-        //             (e) => e.id,
-        //           )
-        //           .toList(),
-        //     },
-        //     timeAlive: 100,
-        //     headers: {
-        //       // 'Content-Type': 'application/json',
-        //       'Authorization':
-        //           'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
-        //     });
-        getIt<ImagePickerLoaded>().images = null;
-        getIt<FilePickerLoaded>().file = null;
+
+        // getIt<ImagePickerLoaded>().images = null;
+        // getIt<FilePickerLoaded>().file = null;
         final Map<String, dynamic> responseBody = jsonDecode(await response.stream.bytesToString());
+        Logger().f(responseBody.toString());
         if (response.statusCode >= 400) {
           _handleHttpError(responseBody);
         }

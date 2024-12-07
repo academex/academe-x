@@ -7,6 +7,8 @@ import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/chose_tag_widget.dart';
 import 'package:academe_x/lib.dart';
 
@@ -317,10 +319,10 @@ class SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CreatePostCubit, CreatePostState>(
+    return BlocConsumer<PostsCubit, PostsState>(
       listener: (createPostContext, state) {
         if (state is FailureState) {
-          context.showSnackBar(message: state.errorMessage, error: true);
+          context.showSnackBar(message: state.errorMessage!, error: true);
         } else if (state is SuccessState) {
           Navigator.pop(context);
           context.showSnackBar(message: 'تم نشر منشورك بنجاح', error: false);
@@ -332,7 +334,7 @@ class SubmitButton extends StatelessWidget {
           children: [
             if (state is FailureState)
               AppText(
-                text: state.errorMessage,
+                text: state.errorMessage!,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w300,
                 color: Colors.red,
@@ -353,7 +355,7 @@ class SubmitButton extends StatelessWidget {
                                 : FileInfo(
                                     url: getIt<FilePickerLoaded>().file!.path,
                                   ));
-                        context.read<CreatePostCubit>().sendPost(
+                        context.read<PostsCubit>().sendPost(
                             post: post.copyWith(content: textController.text));
                       }
                     }

@@ -7,6 +7,7 @@ import 'package:academe_x/features/home/domain/entities/post/reaction_item_entit
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import '../../../../../../core/pagination/pagination_params.dart';
 import '../../../../data/models/post/post_model.dart';
 import '../../../../domain/entities/post/post_entity.dart';
@@ -399,6 +400,7 @@ class PostsCubit extends Cubit<PostsState> {
     AppLogger.success(state.toString());
     super.emit(state);
   }
+
   Future<List<PostEntity>?> _getCachedPosts() async {
     try {
       return await _cacheManager.getCachedResponse<List<PostEntity>>(
@@ -431,4 +433,27 @@ class PostsCubit extends Cubit<PostsState> {
     await clearCache();
     await loadPosts(refresh: true);
   }
+
+  sendPost({required PostEntity post}) async {
+    Logger().d(post);
+    emit(state.copyWith(
+      creationStatus: CreationStatus.loading
+    ));
+    var createPostRes = await postUseCase.createPost(post);
+    createPostRes.fold(
+          (l) {
+        emit(state.copyWith(
+          creationStatus: CreationStatus.failure,
+          errorMessage: l.message,
+        ));
+      },
+          (r) {
+        emit(state.copyWith(
+          creationStatus: CreationStatus.success,
+          posts: [r,...state.posts]
+        ));
+      },
+    );
+  }
+
 }

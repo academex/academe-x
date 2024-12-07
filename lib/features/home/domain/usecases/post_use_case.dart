@@ -35,7 +35,9 @@ class PostUseCase {
   }
 
 
-
+  Future<Either<Failure, PostEntity>> createPost(PostEntity post) async {
+    return await postRepository.createPost(post);
+  }
 
 
 

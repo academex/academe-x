@@ -1,8 +1,11 @@
 import 'package:academe_x/core/network/base_response.dart';
+import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/reaction_item_model.dart';
 import 'package:academe_x/features/home/data/models/post/save_response_model.dart';
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
+import 'package:academe_x/features/home/domain/entities/post/tag_entity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/constants/cache_keys.dart';
@@ -19,9 +22,11 @@ import '../datasources/post_remote_data_source.dart';
 
 class PostRepositoryImpl implements PostRepository {
   final PostRemoteDataSource remoteDataSource;
+  final CreatePostRemoteDataSource createPostRemoteDataSource;
   final HiveCacheManager cacheManager;
 
   PostRepositoryImpl({
+    required this.createPostRemoteDataSource,
     required this.remoteDataSource,
     required this.cacheManager,
   });
@@ -254,6 +259,50 @@ class PostRepositoryImpl implements PostRepository {
     } catch (e, stack) {
       AppLogger.e('Unexpected error: $e\n$stack');
       return Left(ServerFailure(message: 'An unexpected error occurred: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PostEntity>> createPost(PostEntity post) async {
+    try {
+      final result = await createPostRemoteDataSource.createPost(
+        post: PostModel.fromEntity(post),
+      );
+      return Right(result);
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    } on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(
+          message: e.messages.first, messages: [e.messages.first]));
+    } on AuthException catch (e) {
+      return Left(AuthFailure(message: e.errorMessage));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on Exception catch (e) {
+      return Left(ServerFailure(message: 'Server Failure : $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TagEntity>>> getTags() async {
+    try {
+      final result = await createPostRemoteDataSource.getTags();
+      return Right(result);
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    } on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(
+          message: e.messages.first, messages: [e.messages.first]));
+    } on AuthException catch (e) {
+      return Left(AuthFailure(message: e.errorMessage));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on Exception catch (e) {
+      return Left(ServerFailure(message: 'Server Failure : $e'));
     }
   }
 

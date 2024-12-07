@@ -8,10 +8,12 @@ import '../../../../domain/entities/post/post_entity.dart';
 
 enum PostStatus { initial, loading, success, failure }
 enum ReactionStatus { initial, loading, success, failure }
+enum CreationStatus { initial, loading, success, failure }
 
 class PostsState extends Equatable {
   final PostStatus status;
   final ReactionStatus reactionStatus;
+  final CreationStatus creationState;
   final StatisticsEntity? statisticsEntity;
   final List<PostEntity> posts;
   List<ReactionItemEntity>? reactionItems;
@@ -30,6 +32,7 @@ class PostsState extends Equatable {
 
   PostsState({
     this.status = PostStatus.initial,
+    this.creationState = CreationStatus.initial,
     this.posts = const <PostEntity>[],
     this.reactionItems = const <ReactionItemEntity>[],
     this.statisticsEntity,
@@ -47,6 +50,7 @@ class PostsState extends Equatable {
 
   PostsState copyWith({
     PostStatus? status,
+    CreationStatus? creationStatus,
     ReactionStatus? reactionStatus,
     List<PostEntity>? posts,
      StatisticsEntity? statisticsEntity,
@@ -62,6 +66,7 @@ class PostsState extends Equatable {
   }) {
     return PostsState(
       status: status ?? this.status,
+      creationState: creationStatus ?? this.creationState,
       reactionStatus: reactionStatus ?? this.reactionStatus,
       posts: posts ?? this.posts,
       statisticsEntity: statisticsEntity ?? this.statisticsEntity,

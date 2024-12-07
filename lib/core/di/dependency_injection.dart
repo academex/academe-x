@@ -121,7 +121,7 @@ void _initRepositories() {
     () => CreatePostRepositoryImp(createPostRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton<PostRepository>(
-    () => PostRepositoryImpl(remoteDataSource: getIt(), cacheManager: getIt()),
+    () => PostRepositoryImpl(remoteDataSource: getIt(), cacheManager: getIt(),createPostRemoteDataSource: getIt()),
   );
 }
 
