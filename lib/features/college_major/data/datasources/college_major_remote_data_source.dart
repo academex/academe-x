@@ -2,15 +2,22 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:academe_x/core/network/api_controller.dart';
 import 'package:academe_x/core/network/base_response.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/college_major/data/models/college_model.dart';
 import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../../../../academeX_main.dart';
+import '../../../../core/constants/cache_keys.dart';
+import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/network/api_setting.dart';
+import '../../../../core/storage/cache/hive_cache_manager.dart';
 import '../../../../core/utils/handle_http_error.dart';
+import '../../../../core/utils/logger.dart';
 typedef CollegesResponse  = BaseResponse<List<CollegeModel>>;
 typedef MajorsResponse  = BaseResponse<List<MajorModel>>;
+typedef TagBaseResponse = BaseResponse<List<MajorModel>>;
 
 
 
@@ -54,6 +61,48 @@ class CollegeMajorRemoteDataSource {
     }
   }
 
+
+  Future<List<MajorModel>> getTags() async {
+    List<MajorModel>? majorCached =
+    await (NavigationService.navigatorKey.currentContext!.cachMajor);
+    if (majorCached == null) {
+      final response =
+      await apiController.get(Uri.parse(ApiSetting.getTags), headers: {
+        'Authorization':
+        'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
+      });
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if (response.statusCode >= 400) {
+        HandleHttpError.handleHttpError(responseBody);
+      }
+      final TagBaseResponse baseResponse = TagBaseResponse.fromJson(
+        responseBody,
+            (json) => (json as List)
+            .map(
+              (e) => MajorModel.fromJson(e),
+        )
+            .toList(),
+      );
+      try {
+        // AppLogger.success('in cacheAuthUser ${user.toString()}');
+        await getIt<HiveCacheManager>()
+            .cacheResponse(CacheKeys.MAJORS, baseResponse.data);
+
+        AppLogger.success('Major cached successfully');
+      } catch (e) {
+        AppLogger.e('Failed to cache Major: $e');
+        rethrow;
+      }
+      return baseResponse.data!;
+    } else {
+      List<MajorModel> tags = majorCached!
+          .map(
+            (e) => MajorModel.fromJson(e.toJson()),
+      )
+          .toList();
+      return tags;
+    }
+  }
 
   Future<List<MajorModel>> getMajorsByCollege(String majorName) async {
     if (await internetConnectionChecker.hasConnection) {

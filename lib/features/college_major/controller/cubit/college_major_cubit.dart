@@ -79,20 +79,6 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
     try {
       emit(state.copyWith(status: MajorsStatus.loading));
 
-      // First try to get cached data
-      // final cachedMajors = await _getCachedMajors();
-      // if (cachedMajors != null) {
-      //   final filteredMajors = collegeName != null
-      //       ? cachedMajors.where((major) => major.collegeEn == collegeName).toList()
-      //       : cachedMajors;
-      //
-      //   emit(state.copyWith(
-      //     status: MajorsStatus.success,
-      //     majors: filteredMajors,
-      //     selectedCollege: collegeName,
-      //     isCached: true,
-      //   ));
-      // }
 
       // Then fetch fresh data
       final result = await _collegeMajorsUseCase.getMajorsByCollege(collegeName!);
@@ -177,5 +163,22 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
   Future<void> retry()async{
      await getColleges();
 
+  }
+
+  getTags() async {
+    emit(state.copyWith(
+        status: MajorsStatus.loading
+    ));
+    var createPostRes = await _collegeMajorsUseCase.getTags();
+    createPostRes.fold(
+          (l) {
+        emit(state.copyWith(status: MajorsStatus.failure,
+            errorMessage: l.message));
+      },
+          (r) {
+        emit(state.copyWith(status: MajorsStatus.success,
+            majors: r));
+      },
+    );
   }
 }

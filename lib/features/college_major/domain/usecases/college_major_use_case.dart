@@ -9,7 +9,9 @@ import '../repositories/college_major_repository.dart';
 class CollegeMajorUseCase {
   CollegeMajorRepository collegeMajorRepository;
   CollegeMajorUseCase({required this.collegeMajorRepository});
-
+  Future<Either<Failure, List<MajorEntity>>> getTags() async {
+    return await collegeMajorRepository.getTags();
+  }
   // Future<Either<Failure, PaginatedResponse<PostEntity>>> getPosts(PaginationParams paginationParams) async {
   //   return await postRepository.getPosts(paginationParams);
   // }

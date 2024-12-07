@@ -1,4 +1,6 @@
 import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
+import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +24,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
       duration: const Duration(seconds: 2),
     )..repeat();
 
-    context.read<CollegeMajorsCubit>().loadMajors();
-    context.read<PostsCubit>().loadPosts();
+
+    context.read<GetTagsCubit>().getTags();
+
+    // context.read<CollegeMajorsCubit>().loadMajors();
 
     Future.delayed(const Duration(seconds: 4), () {
       Navigator.pushReplacementNamed(context, '/account_creation_success');

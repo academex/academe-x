@@ -23,6 +23,7 @@ class PostsState extends Equatable {
   int reactionsCurrentPage;
   bool isSaved;
   final String? errorMessage;
+  final String? creationPostErrorMessage;
   final String? selectedType;
   final DateTime? lastUpdated;  // Add this to track cache freshness
 
@@ -45,6 +46,7 @@ class PostsState extends Equatable {
     this.errorMessage,
     this.selectedType,
     this.lastUpdated,
+    this.creationPostErrorMessage,
 
   });
 
@@ -62,6 +64,7 @@ class PostsState extends Equatable {
     int? postsCurrentPage,
     String? errorMessage,
     String? selectedType,
+    String? creationPostErrorMessage,
 
   }) {
     return PostsState(
@@ -79,6 +82,7 @@ class PostsState extends Equatable {
       isSaved: isSaved ?? this.isSaved,
       postsCurrentPage: postsCurrentPage ?? this.postsCurrentPage,
       errorMessage: errorMessage ?? this.errorMessage,
+      creationPostErrorMessage: creationPostErrorMessage ?? this.creationPostErrorMessage,
       selectedType: selectedType ?? this.selectedType,
 
     );
@@ -86,6 +90,7 @@ class PostsState extends Equatable {
 
   @override
   List<Object?> get props => [
+    creationState,
     status,
     reactionStatus,
     posts,
@@ -98,5 +103,7 @@ class PostsState extends Equatable {
     errorMessage,
     selectedType,
     isSaved,
+    creationPostErrorMessage,
+
   ];
 }

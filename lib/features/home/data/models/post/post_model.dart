@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:academe_x/features/home/data/models/post/image_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_user_model.dart';
 import 'package:academe_x/features/home/data/models/post/reactions_model.dart';
@@ -34,7 +35,8 @@ class PostModel extends PostEntity {
       content: json['content'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
-      file: json['file'] != null ? FileInfoModel.fromJson(json['file']) : null,
+
+        file: json['file'] != null ? FileInfoModel.fromJson(json['file']) : null,
         images: List.of(json['images']).map(
           (json) {
            return ImageModel.fromJson(json);
@@ -42,7 +44,7 @@ class PostModel extends PostEntity {
         ).toList(),
         // images: json['images'] != null ? ImageModel.fromJson(json['images']) : null,
       // images: json['images']['url'],
-      tags: json['tags']!=null?(json['tags'] as List).map((tag) => TagModel.fromJson(tag)).toList():[],
+      tags: json['tags']!=null?(json['tags'] as List).map((tag) => MajorModel.fromJson(tag)).toList():[],
       user: PostUserModel.fromJson(json['user']),
       reactions: json['reactions'] != null? ReactionsModel.fromJson(json['reactions']):const ReactionsEntity(count: 0, items: []),
       commentsCount: (json['comments']??0) as int,
@@ -61,7 +63,7 @@ class PostModel extends PostEntity {
       'updatedAt': updatedAt?.toIso8601String(),
       'file': file != null ? (file as FileInfoModel).toJson() : null,
       'images': images,
-      'tags': tags?.map((tag) => (tag as TagModel).toJson()).toList(),
+      'tags': tags?.map((tag) => (tag as MajorModel).toJson()).toList(),
       'user': user != null?(user as PostUserModel).toJson():null,
       'reactions': reactions != null?(reactions as ReactionsModel).toJson():null,
       'comments': commentsCount,

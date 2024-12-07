@@ -4,7 +4,6 @@ import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/home/domain/entities/post/file_info_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
-import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
@@ -236,7 +235,7 @@ class CreatePost {
                         BlocBuilder<PickerCubit, PickState>(
                           builder: (context, state) => Row(
                             children: [
-                              IconButtomForCreatePost(
+                              IconBottomForCreatePost(
                                 selected:
                                     getIt<ImagePickerLoaded>().images != null,
                                 imagePath: 'assets/icons/image.png',
@@ -244,7 +243,7 @@ class CreatePost {
                                   context.read<PickerCubit>().pickImage();
                                 },
                               ),
-                              IconButtomForCreatePost(
+                              IconBottomForCreatePost(
                                 selected:
                                     getIt<FilePickerLoaded>().file != null,
                                 imagePath: 'assets/icons/document.png',
@@ -252,7 +251,7 @@ class CreatePost {
                                   context.read<PickerCubit>().pickFile();
                                 },
                               ),
-                              IconButtomForCreatePost(
+                              IconBottomForCreatePost(
                                 selected: state is CreateMultiChoice,
                                 imagePath: 'assets/icons/menu.png',
                                 onPressed: () {
@@ -266,7 +265,7 @@ class CreatePost {
                         ),
                         BlocBuilder<ShowTagCubit, bool>(
                           builder: (context, state) {
-                            return IconButtomForCreatePost(
+                            return IconBottomForCreatePost(
                               selected: state,
                               imagePath: 'assets/icons/hash.png',
                               onPressed: () {
@@ -321,26 +320,26 @@ class SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<PostsCubit, PostsState>(
       listener: (createPostContext, state) {
-        if (state is FailureState) {
-          context.showSnackBar(message: state.errorMessage!, error: true);
-        } else if (state is SuccessState) {
+        if (state.creationState == CreationStatus.failure) {
+          context.showSnackBar(message: state.creationPostErrorMessage!, error: true);
+        } else if (state.creationState == CreationStatus.success) {
           Navigator.pop(context);
           context.showSnackBar(message: 'تم نشر منشورك بنجاح', error: false);
         }
       },
       builder: (context, state) {
-        if (state is FailureState) Logger().e(state.errorMessage);
+        if (state.creationState == CreationStatus.failure) Logger().e(state.creationPostErrorMessage);
         return Column(
           children: [
-            if (state is FailureState)
+            if (state.creationState == CreationStatus.failure)
               AppText(
-                text: state.errorMessage!,
+                text: state.creationPostErrorMessage!,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w300,
                 color: Colors.red,
               ),
             GestureDetector(
-              onTap: state is! SendingState
+              onTap: state.creationState != CreationStatus.loading
                   ? () {
                       if (formKey.currentState!.validate()) {
                         post = post.copyWith(
@@ -356,7 +355,7 @@ class SubmitButton extends StatelessWidget {
                                     url: getIt<FilePickerLoaded>().file!.path,
                                   ));
                         context.read<PostsCubit>().sendPost(
-                            post: post.copyWith(content: textController.text));
+                            post: post.copyWith(content: textController.text,isSaved: true));
                       }
                     }
                   : null,
@@ -368,7 +367,7 @@ class SubmitButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
-                  child: state is! SendingState
+                  child: state.creationState != CreationStatus.loading
                       ? AppText(
                           text: 'نشر',
                           fontSize: 16.sp,
@@ -394,11 +393,11 @@ class SubmitButton extends StatelessWidget {
   }
 }
 
-class IconButtomForCreatePost extends StatelessWidget {
+class IconBottomForCreatePost extends StatelessWidget {
   final bool selected;
   final String imagePath;
   final void Function()? onPressed;
-  const IconButtomForCreatePost(
+  const IconBottomForCreatePost(
       {required this.selected,
       required this.imagePath,
       required this.onPressed});

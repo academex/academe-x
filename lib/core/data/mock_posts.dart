@@ -151,9 +151,9 @@ class MockData {
     {'حوسبة متنقلة': 'assets/images/image_test1.png'},
     {'وسائط متعددة': 'assets/images/image_test1.png'},
   ];
-  static final List<TagEntity> tags = [
-    TagEntity(id: 1, name: "#تطوير برمجيات"),
-  ];
+  // static final List<MajorEntity> tags = [
+  //   MajorEntity(id: 1, name: "#تطوير برمجيات"),
+  // ];
   static final List<Comment> comments = [
     Comment(
       commenter: 'Baraa',

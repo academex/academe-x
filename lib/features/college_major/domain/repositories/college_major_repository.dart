@@ -8,6 +8,7 @@ abstract class CollegeMajorRepository {
   CollegeMajorRepository();
   Future<Either<Failure, List<CollegeEntity>>>getColleges();
   Future<Either<Failure, List<MajorEntity>>>getMajorsByCollege(String collegeName);
+  Future<Either<Failure, List<MajorEntity>>> getTags();
   // Future<Either<Failure, PaginatedResponse<PostModel>>>getPosts(PaginationParams paginationParams);
   // Future<Either<Failure, void>>reactToPost(String reactionType,int postId);
   // Future<Either<Failure, BaseResponse<SaveResponseEntity>>>savePost(int postId);

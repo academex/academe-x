@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:http_parser/http_parser.dart'; // Import this for MediaType
 
 import 'package:academe_x/academeX_main.dart';
@@ -7,8 +8,6 @@ import 'package:academe_x/core/constants/cache_keys.dart';
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
-import 'package:academe_x/features/auth/auth.dart';
-import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/tag_model.dart';
 import 'package:dio/dio.dart';
@@ -19,8 +18,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../../../presentation/controllers/states/create_post/create_post_icons_state.dart';
+
 typedef PostBaseResponse = BaseResponse<PostModel>;
-typedef TagBaseResponse = BaseResponse<List<TagModel>>;
+typedef TagBaseResponse = BaseResponse<List<MajorModel>>;
 
 class CreatePostRemoteDataSource {
   final ApiController apiController;
@@ -139,7 +140,7 @@ class CreatePostRemoteDataSource {
     );
   }
 
-  Future<List<TagModel>> getTags() async {
+  Future<List<MajorModel>> getTags() async {
     List<MajorModel>? majorCached =
         await (NavigationService.navigatorKey.currentContext!.cachMajor);
     if (majorCached == null) {
@@ -156,7 +157,7 @@ class CreatePostRemoteDataSource {
         responseBody,
         (json) => (json as List)
             .map(
-              (e) => TagModel.fromJson(e),
+              (e) => MajorModel.fromJson(e),
             )
             .toList(),
       );
@@ -172,9 +173,9 @@ class CreatePostRemoteDataSource {
       }
       return baseResponse.data!;
     } else {
-      List<TagModel> tags = majorCached!
+      List<MajorModel> tags = majorCached!
           .map(
-            (e) => TagModel.fromJson(e.toJson()),
+            (e) => MajorModel.fromJson(e.toJson()),
           )
           .toList();
       return tags;

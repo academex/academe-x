@@ -1,8 +1,12 @@
+import 'package:academe_x/features/college_major/domain/entities/major_entity.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
-import 'package:academe_x/features/home/domain/entities/post/tag_entity.dart';
-import 'package:academe_x/lib.dart';
 import 'package:dartz/dartz.dart';
+
+import '../../../../core/error/exception.dart';
+import '../../../../core/error/failure.dart';
+import '../../domain/repositories/create_post_repository.dart';
+import '../datasources/create_post/create_post_remote_data_source.dart';
 
 class CreatePostRepositoryImp implements CreatePostRepository {
   CreatePostRemoteDataSource createPostRemoteDataSource;
@@ -31,7 +35,7 @@ class CreatePostRepositoryImp implements CreatePostRepository {
   }
 
   @override
-  Future<Either<Failure, List<TagEntity>>> getTags() async {
+  Future<Either<Failure, List<MajorEntity>>> getTags() async {
     try {
       final result = await createPostRemoteDataSource.getTags();
       return Right(result);

@@ -1,4 +1,5 @@
-import 'package:academe_x/features/home/domain/entities/post/tag_entity.dart';
+import 'package:academe_x/features/college_major/domain/entities/major_entity.dart';
+
 
 abstract class GetTagsState {}
 
@@ -10,7 +11,7 @@ class GetTagsError extends GetTagsState {
 }
 
 class GetTagsSuccessful extends GetTagsState {
-  final List<TagEntity> tags;
+  final List<MajorEntity> tags;
   GetTagsSuccessful({required this.tags});
 }
 

@@ -1,6 +1,5 @@
-import 'package:academe_x/features/auth/auth.dart';
+import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 import '../../../features/auth/data/models/response/auth_token_model.dart';
 import '../../constants/cache_keys.dart';

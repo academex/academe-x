@@ -302,7 +302,7 @@ class _CommunityPageState extends State<CommunityPage> {
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      String? title = majors[index].majorAr;
+                      String? title = state.majors[index].majorAr;
                       String image = 'assets/images/image_test1.png';
                       return Column(
                         children: [
@@ -338,7 +338,7 @@ class _CommunityPageState extends State<CommunityPage> {
                     separatorBuilder: (context, index) {
                       return 10.pw();
                     },
-                    itemCount: majors.length),
+                    itemCount: state.majors.length),
               )
             ],
           );

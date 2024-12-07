@@ -402,6 +402,7 @@ class PostsCubit extends Cubit<PostsState> {
 // Also add this to your PostsCubit class:
   @override
   void emit(PostsState state) {
+    Logger().d(state);
     super.emit(state);
   }
 
@@ -448,10 +449,11 @@ class PostsCubit extends Cubit<PostsState> {
           (l) {
         emit(state.copyWith(
           creationStatus: CreationStatus.failure,
-          errorMessage: l.message,
+          creationPostErrorMessage: l.message,
         ));
       },
           (r) {
+            Logger().d(r.toString());
         emit(state.copyWith(
           creationStatus: CreationStatus.success,
           posts: [r,...state.posts]

@@ -1,11 +1,9 @@
 import 'package:academe_x/core/network/base_response.dart';
-import 'package:academe_x/features/features.dart';
+import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
-import 'package:academe_x/features/home/data/models/post/reaction_item_model.dart';
 import 'package:academe_x/features/home/data/models/post/save_response_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
-import 'package:academe_x/features/home/domain/entities/post/tag_entity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/constants/cache_keys.dart';
@@ -17,6 +15,7 @@ import '../../../../core/pagination/pagination_params.dart';
 import '../../../../core/storage/cache/hive_cache_manager.dart';
 import '../../../../core/utils/logger.dart';
 import '../../domain/repositories/post_repository.dart';
+import '../datasources/create_post/create_post_remote_data_source.dart';
 import '../datasources/post_remote_data_source.dart';
 
 
@@ -287,7 +286,7 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, List<TagEntity>>> getTags() async {
+  Future<Either<Failure, List<MajorModel>>> getTags() async {
     try {
       final result = await createPostRemoteDataSource.getTags();
       return Right(result);

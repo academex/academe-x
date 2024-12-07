@@ -1,7 +1,7 @@
 import 'package:academe_x/features/college_major/data/data.dart';
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/domain/usecases/get_tags_use_case.dart';
-import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/get_tags_cubit.dart';
+import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/get_tags_state.dart';
@@ -47,7 +47,7 @@ void _initCubits() {
   );
 
   getIt.registerFactory<GetTagsCubit>(
-    () => GetTagsCubit(GetTagsInit(), getTagsUseCase: getIt()),
+    () => GetTagsCubit(getTagsUseCase: getIt()),
   );
 
   getIt.registerFactory<AuthActionCubit>(

@@ -1,3 +1,4 @@
+import 'package:academe_x/features/college_major/domain/entities/major_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reactions_entity.dart';
@@ -15,7 +16,7 @@ class PostEntity extends Equatable {
   final DateTime? updatedAt;
   final FileInfo? file;
   final List<ImageEntity>? images;
-  final List<TagEntity>? tags;
+  final List<MajorEntity>? tags;
   final PostUserEntity? user;
   final ReactionsEntity? reactions;
   final int? commentsCount;
@@ -48,7 +49,7 @@ class PostEntity extends Equatable {
     DateTime? updatedAt,
     FileInfo? file,
     List<ImageEntity>? images,
-    List<TagEntity>? tags,
+    List<MajorEntity>? tags,
     PostUserEntity? user,
     ReactionsEntity? reactions,
     int? commentsCount,

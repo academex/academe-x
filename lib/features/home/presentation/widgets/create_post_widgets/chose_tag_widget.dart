@@ -1,4 +1,5 @@
-import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/get_tags_cubit.dart';
+import 'package:academe_x/features/college_major/controller/cubit/college_majors_state.dart';
+import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/get_tags_state.dart';
 import 'package:academe_x/lib.dart';
@@ -15,19 +16,19 @@ class SelectableButtonGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<GetTagsCubit>(
       create: (context) => getIt<GetTagsCubit>()..getTags(),
-      child: BlocBuilder<GetTagsCubit, GetTagsState>(builder: (context, state) {
+      child: BlocBuilder<GetTagsCubit, CollegeMajorsState>(builder: (context, state) {
         if (state is GetTagsLoading) {
           return LoadingShimmerWidget();
         } else if (state is GetTagsSuccessful) {
-          context.read<TagCubit>().init(state.tags.first);
+          context.read<TagCubit>().init(state.majors.first);
           _isSelected = List.generate(
-            state.tags.length,
+            state.majors.length,
             (index) {
               if (index == 0) return true;
               return false;
             },
           );
-          Logger().d(state.tags.toString());
+          Logger().d(state.majors.toString());
           return Expanded(
             child: RawScrollbar(
               thumbVisibility: true,
@@ -45,18 +46,18 @@ class SelectableButtonGrid extends StatelessWidget {
                   child: Wrap(
                     spacing: 8.0, // Space between buttons horizontally
                     runSpacing: 8.0, // Space between buttons vertically
-                    children: List.generate(state.tags.length, (index) {
+                    children: List.generate(state.majors.length, (index) {
                       return GestureDetector(
                         onTap: () {
                           // setState(() {
                           _isSelected[index] =
                               !_isSelected[index]; // Toggle selection
                           if (_isSelected[index]) {
-                            context.read<TagCubit>().addTag(state.tags[index]);
+                            context.read<TagCubit>().addTag(state.majors[index]);
                           } else {
                             context
                                 .read<TagCubit>()
-                                .removeTag(state.tags[index]);
+                                .removeTag(state.majors[index]);
                           }
                           // context.read<TagCubit>().changeTagesSelected(_isSelected);
                           // });
@@ -74,7 +75,7 @@ class SelectableButtonGrid extends StatelessWidget {
                                 border: Border.all(color: Colors.grey[300]!),
                               ),
                               child: Text(
-                                '${state.tags[index].majorEn!}#'
+                                '${state.majors[index].majorEn!}#'
                                     .replaceAll(' ', '_'),
                                 style: TextStyle(
                                   color: _isSelected[index]
@@ -94,7 +95,7 @@ class SelectableButtonGrid extends StatelessWidget {
           );
         } else if (state is GetTagsError) {
           return AppText(
-            text: state.errorMessage,
+            text: state.errorMessage!,
             fontSize: 12.sp,
             color: Colors.red,
           );

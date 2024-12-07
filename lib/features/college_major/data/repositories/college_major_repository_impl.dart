@@ -72,6 +72,26 @@ class CollegeMajorRepositoryImpl implements CollegeMajorRepository {
     }
   }
 
+  Future<Either<Failure, List<MajorModel>>> getTags() async {
+    try {
+      final result = await remoteDataSource.getTags();
+      return Right(result);
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    } on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(
+          message: e.messages.first, messages: [e.messages.first]));
+    } on AuthException catch (e) {
+      return Left(AuthFailure(message: e.errorMessage));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on Exception catch (e) {
+      return Left(ServerFailure(message: 'Server Failure : $e'));
+    }
+  }
+
   @override
   Future<Either<Failure, List<MajorModel>>> getMajorsByCollege(String collegeName) async {
     try {
