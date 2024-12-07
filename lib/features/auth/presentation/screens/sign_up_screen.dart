@@ -1,6 +1,9 @@
+import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../college_major/controller/cubit/college_majors_state.dart';
 
 class SignUpScreen extends StatelessWidget {
    const SignUpScreen({super.key});
@@ -74,7 +77,7 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(height: context.hp(2.5)),
                 _buildSubmitButton(
                   context,
-                  onPressed: () => _handleEducationInfoSubmit(ctx,state),
+                  onPressed: () => _handleEducationInfoSubmit(ctx,state,collegeMajorState: ctx.read<CollegeMajorsCubit>().state),
                   text: context.localizations.createAccountButton,
                 ),
               ],
@@ -135,7 +138,7 @@ class SignUpScreen extends StatelessWidget {
                     SizedBox(height: context.hp(3)),
                     _buildSubmitButton(
                       context,
-                      onPressed: () => _handleEducationInfoSubmit(ctx,state),
+                      onPressed: () => _handleEducationInfoSubmit(ctx,state,collegeMajorState: ctx.read<CollegeMajorsCubit>().state),
                       text: context.localizations.createAccountButton,
                     ),
                   ],
@@ -205,7 +208,7 @@ class SignUpScreen extends StatelessWidget {
                 int rowCount = ( [
                         'ذكر',
                         'أنثى',
-                      ].length / crossAxisCount).ceil();
+                      ].length ).ceil();
                 double gridHeight = rowCount * itemHeight;
 
                 return SizedBox(
@@ -397,8 +400,8 @@ class SignUpScreen extends StatelessWidget {
     }
   }
 
-  void _handleEducationInfoSubmit(BuildContext context,AuthState state) async{
-    if (state.selectedCollege == null) {
+  void _handleEducationInfoSubmit(BuildContext context,AuthState state,{CollegeMajorsState? collegeMajorState}) async{
+    if (collegeMajorState?.selectedCollege == null) {
       context.showSnackBar(
         message: 'الرجاء اختيار الكلية',
         error: true,
@@ -406,7 +409,7 @@ class SignUpScreen extends StatelessWidget {
       return;
     }
 
-    if (state.selectedMajorIndex == null) {
+    if (collegeMajorState?.selectedMajorIndex == null) {
       context.showSnackBar(
         message: 'الرجاء اختيار التخصص',
         error: true,

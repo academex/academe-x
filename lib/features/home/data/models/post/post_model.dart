@@ -1,6 +1,7 @@
 
 import 'dart:ui';
 
+import 'package:academe_x/core/core.dart';
 import 'package:academe_x/features/home/data/models/post/image_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_user_model.dart';
 import 'package:academe_x/features/home/data/models/post/reactions_model.dart';
@@ -52,6 +53,7 @@ class PostModel extends PostEntity {
   }
 
   Map<String, dynamic> toJson() {
+    AppLogger.success('in post model ${tags}');
     return {
       'id': id,
       'content': content,

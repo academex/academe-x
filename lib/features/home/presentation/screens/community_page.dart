@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:academe_x/core/constants/cache_keys.dart';
+import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
+import 'package:academe_x/features/college_major/controller/cubit/college_majors_state.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/post/shimmer/post_widget_shimmer.dart';
@@ -18,11 +21,19 @@ class CommunityPage extends StatefulWidget {
 class _CommunityPageState extends State<CommunityPage> {
   final _scrollController = ScrollController();
   Timer? _debounce;
+  List<MajorModel> majors=[];
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+  // ( HiveCacheManager().getCachedResponse(CacheKeys.MAJORS,
+  //   (p0) => (p0 as List)
+  //       .map((item) => MajorModel.fromJson(item as Map<String, dynamic>))
+  //       .toList())).then(
+  //     (value) => majors =value!
+  //   );
+  //   context.read<CollegeMajorsCubit>().loadMajors();
   }
 
   @override
@@ -48,6 +59,7 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   Widget _buildSliverAppBar() {
+    AppLogger.success(majors.toString());
     return SliverAppBar(
       automaticallyImplyLeading: true,
       expandedHeight: 260,
@@ -201,137 +213,139 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   Widget _buildHeaderContent(bool inScroll) {
-    List<Map<String, String>> list = [
-      {
-        'عام': 'assets/images/image_test1.png',
-      },
-      {
-        'تطوير برمجيات': 'assets/images/image_test1.png',
-      },
-      {
-        'علم حاسوب': 'assets/images/image_test1.png',
-      },
-      {
-        'حوسبة متنقلة': 'assets/images/image_test1.png',
-      },
-      {
-        'وسائط متعددة': 'assets/images/image_test1.png',
-      },
-    ];
 
-    return inScroll
-        ? SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SizedBox(
-                  width: 327,
-                  // 327.w,
-                  height: 45  ,
-                  child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-              ),
-            ),
-            inScroll ? 0.ph() : 15.ph(),
-            inScroll ? 0.ph() : _buildCategoryTabs(),
-          ],
-        ))
-        : BlocProvider(
-        create: (context) => CategoryCubit(),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+    return BlocBuilder<CollegeMajorsCubit, CollegeMajorsState>(
+        builder: (context, state) {
+          if (state.status == MajorsStatus.loading && state.majors.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.status == MajorsStatus.failure && state.majors.isEmpty) {
+            return Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  inScroll ? 0.ph() : 60.ph(),
-                  HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-                  // Row(
-                  //   children: [
-                  //     _buildLogoContainer(),
-                  //     8.pw(),
-                  //     _buildTitleAndSubtitle(inScroll),
-                  //     const Spacer(),
-                  //     _buildIconButton('assets/icons/search.png', inScroll),
-                  //     _buildIconButton(
-                  //         'assets/icons/notification.png', inScroll),
-                  //   ],
-                  // ),
-                  ,18.ph(),
-                  Row(
-                    children: [
-                      AppText(
-                        text: 'التخصصات',
-                        fontSize: 16  ,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                      const Spacer(),
-                      AppText(
-                        text: 'عرض المزيد',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12  ,
-                        color: Colors.white.withOpacity(0.66),
-                      ),
-                    ],
+                  Text(state.errorMessage ?? 'Failed to load majors'),
+                  ElevatedButton(
+                    onPressed: () =>
+                        context.read<CollegeMajorsCubit>().refreshMajors(),
+                    child: const Text('Retry'),
                   ),
-                  12.ph(),
                 ],
               ),
-            ),
-            BlocBuilder<CategoryCubit, int>(
-              builder: (BuildContext context, selectedIndex) {
-                return Container(
-                  padding: const EdgeInsets.only(right: 24),
-                  height: 100,
-                  // width: 327.w,
-                  child: ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        String title = list[index].keys.first;
-                        String image = list[index].values.first;
-                        return Column(
-                          children: [
-                            GestureDetector(
-                              child: Container(
-                                width: 56,
-                                height: 56,
-                                decoration: BoxDecoration(
-                                    color: selectedIndex == index
-                                        ? Colors.white
-                                        : const Color(0x0F000000),
-                                    borderRadius:
-                                    BorderRadius.circular(10)),
-                                child: Image.asset(image),
-                              ),
-                              onTap: () {
-                                context
-                                    .read<CategoryCubit>()
-                                    .selectCategory(index);
-                              },
+            );
+          }
+          return inScroll
+              ? SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                        width: 327,
+                        // 327.w,
+                        height: 45  ,
+                        child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
+                    ),
+                  ),
+                  inScroll ? 0.ph() : 15.ph(),
+                  inScroll ? 0.ph() : _buildCategoryTabs(),
+                ],
+              ))
+              :  Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    inScroll ? 0.ph() : 60.ph(),
+                    HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
+                    // Row(
+                    //   children: [
+                    //     _buildLogoContainer(),
+                    //     8.pw(),
+                    //     _buildTitleAndSubtitle(inScroll),
+                    //     const Spacer(),
+                    //     _buildIconButton('assets/icons/search.png', inScroll),
+                    //     _buildIconButton(
+                    //         'assets/icons/notification.png', inScroll),
+                    //   ],
+                    // ),
+                    ,18.ph(),
+                    Row(
+                      children: [
+                        AppText(
+                          text: 'التخصصات',
+                          fontSize: 16  ,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                        const Spacer(),
+                        AppText(
+                          text: 'عرض المزيد',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12  ,
+                          color: Colors.white.withOpacity(0.66),
+                        ),
+                      ],
+                    ),
+                    12.ph(),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(right: 24),
+                height: 100,
+                // width: 327.w,
+                child: ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      String? title = majors[index].majorAr;
+                      String image = 'assets/images/image_test1.png';
+                      return Column(
+                        children: [
+                          GestureDetector(
+                            child: Container(
+                              width: 56,
+                              height: 56,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                      // : const Color(0x0F000000),
+                                  borderRadius:
+                                  BorderRadius.circular(10)),
+                              child: Image.asset(image),
                             ),
-                            12.ph(),
-                            AppText(
-                              text: title,
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
+                            onTap: () {
+                              context
+                                  .read<CategoryCubit>()
+                                  .selectCategory(index);
+                            },
+                          ),
+                          12.ph(),
+                          AppText(
+                            text: title!,
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight:FontWeight.bold ,
+                            // fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
 
-                            )
-                          ],
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return 10.pw();
-                      },
-                      itemCount: list.length),
-                );
-              },
-            )
-          ],
-        ));
+                          )
+                        ],
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return 10.pw();
+                    },
+                    itemCount: majors.length),
+              )
+            ],
+          );
+        });
+
+
+
   }
 
 

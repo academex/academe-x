@@ -109,8 +109,8 @@ class PostRepositoryImpl implements PostRepository {
           );
         }
       }
-    } catch (e) {
-      AppLogger.w('Cache operation failed: $e');
+    } catch (e,stack) {
+      AppLogger.w('Cache operation failed: $e  ${stack}');
       // Don't throw - caching errors shouldn't affect the main flow
     }
   }
@@ -145,6 +145,7 @@ class PostRepositoryImpl implements PostRepository {
       ) async {
     // Try to get from cache
     final cachedPosts = await _getPostsFromCache();
+    AppLogger.success('message ${cachedPosts}');
     if (cachedPosts != null) {
       return Right(_createPaginatedResponse(cachedPosts, params));
     }

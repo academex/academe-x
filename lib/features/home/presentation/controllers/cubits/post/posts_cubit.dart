@@ -86,6 +86,9 @@ class PostsCubit extends Cubit<PostsState> {
                   newPosts.add(newPost);
                 }
               }
+
+              // newPosts.shuffle();
+
               final nextPage = state.postsCurrentPage + 1;
           emit(state.copyWith(
             status: PostStatus.success,
@@ -100,9 +103,11 @@ class PostsCubit extends Cubit<PostsState> {
       final cachedPosts = await _getCachedPosts();
 
       if (cachedPosts != null && cachedPosts.isNotEmpty) {
+        final postsToShow = refresh ? cachedPosts : List<PostEntity>.from(cachedPosts)..shuffle();
+
         emit(state.copyWith(
           status: PostStatus.success,
-          posts: cachedPosts,
+          posts: postsToShow,
           errorMessage: 'Using cached data: $e',
           hasPostsReachedMax: true, // Prevent pagination in offline mode
         ));
@@ -397,7 +402,6 @@ class PostsCubit extends Cubit<PostsState> {
 // Also add this to your PostsCubit class:
   @override
   void emit(PostsState state) {
-    AppLogger.success(state.toString());
     super.emit(state);
   }
 
@@ -430,7 +434,7 @@ class PostsCubit extends Cubit<PostsState> {
       hasPostsReachedMax: false,
       postsCurrentPage: 1,
     ));
-    await clearCache();
+    // await clearCache();
     await loadPosts(refresh: true);
   }
 

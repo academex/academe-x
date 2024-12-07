@@ -15,13 +15,13 @@ class AuthenticationUseCase {
     return await authenticationRepository.signup(userRegesteration);
   }
 
-  Future<Either<Failure, List<CollegeEntity>>> getColleges() async {
-    return await authenticationRepository.getColleges();
-  }
-
-  Future<Either<Failure, List<MajorEntity>>> getMajorsByCollege(String collegeName) async {
-    return await authenticationRepository.getMajorsByCollege(collegeName);
-  }
+  // Future<Either<Failure, List<CollegeEntity>>> getColleges() async {
+  //   return await authenticationRepository.getColleges();
+  // }
+  //
+  // Future<Either<Failure, List<MajorEntity>>> getMajorsByCollege(String collegeName) async {
+  //   return await authenticationRepository.getMajorsByCollege(collegeName);
+  // }
 
 
 }

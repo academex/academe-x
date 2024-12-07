@@ -1,149 +1,23 @@
+import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/auth/presentation/widgets/signup/show_grid_view_item.dart';
+import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
+import 'package:academe_x/features/college_major/controller/cubit/college_majors_state.dart';
+import 'package:academe_x/features/college_major/domain/entities/major_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:academe_x/lib.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../core/utils/extensions/responsive_container.dart';
+import '../../controllers/cubits/signup_cubit.dart';
+import '../../controllers/states/college_state.dart';
 import 'college_selection_widget.dart';
-//
-// class CollegeItem extends StatelessWidget {
-//   final String college;
-//   final CollegeData collegeData;
-//   final bool isSelected;
-//   final String? selectedMajor;
-//   final Function(String) onCollegeSelected;
-//
-//   const CollegeItem({
-//     required this.college,
-//     required this.collegeData,
-//     required this.isSelected,
-//     required this.selectedMajor,
-//     required this.onCollegeSelected,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 10),
-//       child: InkWell(
-//         onTap: () => onCollegeSelected(college),
-//         child: Container(
-//           decoration: isSelected ? _selectedItemDecoration : null,
-//           width: double.infinity,
-//           // height: isSelected ? 98 : 45,
-//           padding: const EdgeInsets.symmetric(horizontal: 12),
-//           child: Column(
-//             children: [
-//               10.ph(),
-//               _buildCollegeRow(),
-//               if (isSelected) ...[
-//                 10.75.ph(),
-//                 _buildMajorsList(context),
-//
-//
-//               ],
-//
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildCollegeRow() {
-//     return Row(
-//       children: [
-//         AppText(
-//           text: collegeData.icon,
-//           color: const Color(0xFF565A62),
-//           fontSize: 16,
-//           fontWeight: FontWeight.w500,
-//         ),
-//         6.pw(),
-//         AppText(
-//           text: college,
-//           color: const Color(0xFF565A62),
-//           fontSize: 14,
-//           fontWeight: FontWeight.w500,
-//         ),
-//       ],
-//     );
-//   }
-//
-//   // Widget _buildMajorsList(BuildContext context,) {
-//   //
-//   //   return SizedBox(
-//   //     height: (((collegeData.majors.length)/4).ceil() *(52)),
-//   //     child: ShowGridViewItem(data: collegeData.majors,onTap:  (index) {
-//   //
-//   //       context.read<CollegeCubit>().appendMajorToBaseVar(collegeData.majors[index]);
-//   //       context.read<CollegeCubit>().selectIndex(index: index,selectionType: SelectionType.major);
-//   //     },selectedIndex: context.read<CollegeCubit>().state.selectedMajorIndex,),
-//   //
-//   //   );
-//   // }
-//
-//   Widget _buildMajorsList(BuildContext context) {
-//     // Calculate number of columns based on orientation and screen width
-//     int crossAxisCount = MediaQuery.of(context).orientation == Orientation.portrait
-//         ? 4  // Portrait: 4 columns
-//         : 6; // Landscape: 6 columns
-//
-//     // Calculate item height based on orientation
-//     double itemHeight = MediaQuery.of(context).orientation == Orientation.portrait
-//         ? 44.0
-//         : 55.0;
-//
-//     return LayoutBuilder(
-//       builder: (context, constraints) {
-//         int rowCount = (collegeData.majors.length / crossAxisCount).ceil();
-//         double gridHeight = rowCount * itemHeight;
-//
-//         return SizedBox(
-//           height: gridHeight,
-//           child: ShowGridViewItem(
-//             crossAxisCount: crossAxisCount, // Add this parameter to your ShowGridViewItem
-//             data: collegeData.majors,
-//             onTap: (index) {
-//               context.read<CollegeCubit>().appendMajorToBaseVar(collegeData.majors[index]);
-//               context.read<CollegeCubit>().selectIndex(
-//                   index: index,
-//                   selectionType: SelectionType.major
-//               );
-//             },
-//             selectedIndex: context.read<CollegeCubit>().state.selectedMajorIndex!,
-//           ),
-//         );
-//       },
-//     );
-//   }
-//
-//   ShapeDecoration get _selectedItemDecoration => ShapeDecoration(
-//     color: const Color(0xffFFFFFF),
-//     shape: RoundedRectangleBorder(
-//       side: const BorderSide(
-//         width: 0.50,
-//         strokeAlign: BorderSide.strokeAlignCenter,
-//         color: Color(0xFFE1E1E1),
-//       ),
-//       borderRadius: BorderRadius.circular(6),
-//     ),
-//     shadows: const [
-//       BoxShadow(
-//         color: Color(0x0A000000),
-//         blurRadius: 16,
-//         offset: Offset(0, 4),
-//         spreadRadius: 0,
-//       )
-//     ],
-//   );
-// }
 
 
 class CollegeItem extends StatelessWidget {
   final String college;
   final CollegeData collegeData;
   final bool isSelected;
-  final AuthState state;
+  final CollegeMajorsState state;
   final String? selectedMajor;
 
   final Function(String) onCollegeSelected;
@@ -175,7 +49,7 @@ class CollegeItem extends StatelessWidget {
                 _buildCollegeRow(context),
                 if (isSelected) ...[
                   SizedBox(height: context.hp(1.3)),
-                  _buildMajorsList(context),
+                  _buildMajorsList(context,state),
                 ],
               ],
             ),
@@ -207,12 +81,12 @@ class CollegeItem extends StatelessWidget {
     );
   }
 
-  Widget _buildMajorsList(BuildContext ctx) {
-    return ctx.read<SignupCubit>().state.isLoadingForMajors || ctx.read<SignupCubit>().state.isLoadingForCollege?  LayoutBuilder(
+  Widget _buildMajorsList(BuildContext ctx,CollegeMajorsState state) {
+    return state.status == MajorsStatus.loading || state.isLoadingForCollege?  LayoutBuilder(
       builder: (context, constraints) {
         int crossAxisCount = SizeConfig().getCrossAxisCount(context);
         double itemHeight = SizeConfig().getItemHeight(context);
-        int rowCount = (10 / crossAxisCount).ceil(); // Assuming 10 shimmer items
+        int rowCount = (10 ).ceil(); // Assuming 10 shimmer items
         double gridHeight = rowCount * itemHeight;
 
         return SizedBox(
@@ -228,6 +102,7 @@ class CollegeItem extends StatelessWidget {
             ),
             itemCount: 10,
             itemBuilder: (context, index) => Shimmer.fromColors(
+              direction: ShimmerDirection.rtl,
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: Container(
@@ -249,28 +124,27 @@ class CollegeItem extends StatelessWidget {
       builder: (context, constraints) {
         int crossAxisCount =SizeConfig().getCrossAxisCount(context) ;
         double itemHeight = SizeConfig().getItemHeight(context);
-        int rowCount = (ctx.read<SignupCubit>().state.majors!.length / crossAxisCount).ceil();
+        int rowCount = (state.majors.length/crossAxisCount).ceil();
         double gridHeight = rowCount * itemHeight;
 
         return SizedBox(
           height: gridHeight,
           child: ShowGridViewItem<MajorEntity>(
             crossAxisCount: crossAxisCount,
-            data: ctx.read<SignupCubit>().state.majors!,
+            data: state.majors,
             onTap: (index,majorEntity) {
-              ctx.read<SignupCubit>().appendMajorToBaseVar(
-                  ctx.read<SignupCubit>().state.majors![index].name!
+              ctx.read<CollegeMajorsCubit>().appendMajorToBaseVar(
+                  ctx.read<CollegeMajorsCubit>().state.majors[index].name!
               );
               ctx.read<SignupCubit>().selectTagId(
                 tagId: majorEntity.id!,
               );
-              ctx.read<SignupCubit>().selectIndex(
+              ctx.read<CollegeMajorsCubit>().selectIndex(
                   index: index,
-                  selectionType: SelectionType.major
               );
             },
-            selectedIndex: ctx.read<SignupCubit>().state.selectedMajorIndex,
-            displayTextBuilder: (p0)=>p0.majorAr!
+            selectedIndex: state.selectedMajorIndex,
+            displayTextBuilder: (p0)=>p0.name!
           ),
         );
       },

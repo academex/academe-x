@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:academe_x/lib.dart';
+
+import '../../../../../core/widgets/app_text.dart';
 
 class ShowGridViewItem<T> extends StatelessWidget {
   final List<T> data;
@@ -35,6 +36,7 @@ class ShowGridViewItem<T> extends StatelessWidget {
         return  InkWell(
           onTap:() => onTap(index,data[index]),
           child: Container(
+            // padding: EdgeInsets.all(8),
             decoration: ShapeDecoration(
               color:const Color(0xFFF9F9F9),
               shape: RoundedRectangleBorder(

@@ -1,0 +1,1 @@
+export 'college_major_use_case.dart';

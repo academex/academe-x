@@ -1,3 +1,4 @@
+import 'package:academe_x/features/college_major/data/data.dart';
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/domain/usecases/get_tags_use_case.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/get_tags_cubit.dart';
@@ -6,6 +7,9 @@ import 'package:academe_x/features/home/presentation/controllers/cubits/create_p
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/get_tags_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import '../../features/college_major/controller/cubit/college_major_cubit.dart';
+import '../../features/college_major/domain/repositories/college_major_repository.dart';
+import '../../features/college_major/domain/usecases/college_major_use_case.dart';
 import '../../features/home/data/repositories/create_post_repository_imp.dart';
 import '../../features/home/domain/usecases/create_post_use_case.dart';
 import '../../features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
@@ -87,6 +91,9 @@ void _initCubits() {
   getIt.registerFactory<CollegeCubit>(
     () => CollegeCubit(),
   );
+  getIt.registerFactory<CollegeMajorsCubit>(
+    () => CollegeMajorsCubit(cacheManager: getIt(), getMajorsUseCase: getIt()),
+  );
 }
 
 void _initState() {
@@ -108,6 +115,9 @@ void _initUseCases() {
   getIt.registerLazySingleton<GetTagsUseCase>(
     () => GetTagsUseCase(createPostRepository: getIt()),
   );
+  getIt.registerLazySingleton<CollegeMajorUseCase>(
+    () => CollegeMajorUseCase(collegeMajorRepository: getIt()),
+  );
 }
 
 void _initRepositories() {
@@ -122,6 +132,9 @@ void _initRepositories() {
   );
   getIt.registerLazySingleton<PostRepository>(
     () => PostRepositoryImpl(remoteDataSource: getIt(), cacheManager: getIt(),createPostRemoteDataSource: getIt()),
+  );
+  getIt.registerLazySingleton<CollegeMajorRepository>(
+    () => CollegeMajorRepositoryImpl(remoteDataSource: getIt(), cacheManager: getIt(), networkInfo: getIt()),
   );
 }
 
@@ -144,6 +157,12 @@ void _initDataSources() {
 
   getIt.registerLazySingleton<CreatePostRemoteDataSource>(
     () => CreatePostRemoteDataSource(
+      apiController: getIt(),
+      internetConnectionChecker: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton<CollegeMajorRemoteDataSource>(
+    () => CollegeMajorRemoteDataSource(
       apiController: getIt(),
       internetConnectionChecker: getIt(),
     ),

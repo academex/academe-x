@@ -24,6 +24,7 @@ class PostHeader extends StatelessWidget {
             shape: BoxShape.circle,
             color: Colors.grey.shade200
           ),
+          child: const Icon(Icons.person_outline),
         ),
         10.pw(),
         Expanded(
@@ -36,18 +37,29 @@ class PostHeader extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
-              AppText(
-                text: '@${post.user!.username}',
-                fontSize: 12  ,
-                color: Color(0xFF64748B),
-                fontWeight: FontWeight.w400,
-              ),
-              AppText(
-                text: getTimeAgo(post.createdAt!),
-                fontSize: 12  ,
-                color: Color(0xFF64748B),
-                fontWeight: FontWeight.w400,
+              Row(
+                children: [
+                  AppText(
+                    text: '@${post.user!.username}',
+                    fontSize: 12  ,
+                    color: Color(0xFF64748B),
+                    fontWeight: FontWeight.w400,
+                  ),
+                  AppText(
+                    text: ' | ',
+                    fontSize: 16  ,
+                    color: Color(0xFF64748B),
+                    fontWeight: FontWeight.w400,
+                  ),
+                  AppText(
+                    text: getTimeAgo(post.createdAt!),
+                    fontSize: 12  ,
+                    color: Color(0xFF64748B),
+                    fontWeight: FontWeight.w400,
+                  )
+                ],
               )
+
             ],
           ),
         ),
@@ -72,11 +84,11 @@ class PostHeader extends StatelessWidget {
       final months = (difference.inDays / 30).floor();
       return '$months ${months == 1 ? 'month' : 'months'} ago';
     } else if (difference.inDays > 0) {
-      return 'منذ${difference.inDays} ${difference.inDays == 1 ? 'يوم' : 'أيام'}';
+      return 'منذ${difference.inDays} ${difference.inDays == 1 ? 'ي' : 'أي'}';
     } else if (difference.inHours > 0) {
-      return 'منذ ${difference.inHours}  ${difference.inHours == 1 ? 'ساعة' : 'ساعات'}';
+      return 'منذ ${difference.inHours}  ${difference.inHours == 1 ? 'س' : 'س'}';
     } else if (difference.inMinutes > 0) {
-      return 'منذ${difference.inMinutes} ${difference.inMinutes == 1 ? 'دقيقة' : 'دقايق'}';
+      return 'منذ${difference.inMinutes} ${difference.inMinutes == 1 ? 'د' : 'د'}';
     } else {
       return 'الان';
     }
