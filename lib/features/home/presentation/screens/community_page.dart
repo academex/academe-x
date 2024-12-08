@@ -27,13 +27,6 @@ class _CommunityPageState extends State<CommunityPage> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-  // ( HiveCacheManager().getCachedResponse(CacheKeys.MAJORS,
-  //   (p0) => (p0 as List)
-  //       .map((item) => MajorModel.fromJson(item as Map<String, dynamic>))
-  //       .toList())).then(
-  //     (value) => majors =value!
-  //   );
-  //   context.read<CollegeMajorsCubit>().loadMajors();
   }
 
   @override
@@ -260,17 +253,6 @@ class _CommunityPageState extends State<CommunityPage> {
                   children: [
                     inScroll ? 0.ph() : 60.ph(),
                     HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-                    // Row(
-                    //   children: [
-                    //     _buildLogoContainer(),
-                    //     8.pw(),
-                    //     _buildTitleAndSubtitle(inScroll),
-                    //     const Spacer(),
-                    //     _buildIconButton('assets/icons/search.png', inScroll),
-                    //     _buildIconButton(
-                    //         'assets/icons/notification.png', inScroll),
-                    //   ],
-                    // ),
                     ,18.ph(),
                     Row(
                       children: [
@@ -318,9 +300,9 @@ class _CommunityPageState extends State<CommunityPage> {
                               child: Image.asset(image),
                             ),
                             onTap: () {
-                              context
-                                  .read<CategoryCubit>()
-                                  .selectCategory(index);
+                              // context
+                              //     .read<CategoryCubit>()
+                              //     .selectCategory(index);
                             },
                           ),
                           12.ph(),

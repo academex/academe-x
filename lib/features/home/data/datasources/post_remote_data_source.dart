@@ -99,11 +99,13 @@ class PostRemoteDataSource {
       throw OfflineException(errorMessage: 'No Internet Connection');
     }
   }
+
+
   Future<BaseResponse<void>> reactToPost(String reactionType,int postId) async {
     if (await internetConnectionChecker.hasConnection) {
       try {
         final response = await apiController.post(
-          Uri.parse('${ApiSetting.getPosts}/$postId/react'),
+          Uri.parse('${ApiSetting.getPosts}$postId/react'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
