@@ -285,7 +285,8 @@ class _CommunityPageState extends State<CommunityPage> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       String? title = state.majors[index].majorAr;
-                      String image = 'assets/images/image_test1.png';
+                      // String image = 'assets/images/image_test1.png';
+                      String image = state.majors[index].name!;
                       return Column(
                         children: [
                           GestureDetector(
@@ -297,7 +298,17 @@ class _CommunityPageState extends State<CommunityPage> {
                                       // : const Color(0x0F000000),
                                   borderRadius:
                                   BorderRadius.circular(10)),
-                              child: Image.asset(image),
+                              child: Center(
+                                child: AppText(
+                                  text: image.toUpperCase(),
+                                  fontSize: 16,
+                                  // color: Colors.white,
+                                  fontWeight:FontWeight.bold ,
+                                  // fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
+
+                                ),
+                              )
+                              // child: Image.asset(image),
                             ),
                             onTap: () {
                               // context
