@@ -7,7 +7,7 @@ import '../../../../../../core/data/mock_posts.dart';
 
 class TagCubit extends Cubit<TagState> {
   TagCubit(super.initialState);
-  final SucsessTagState _tagState = SucsessTagState(selectedTags: []);
+  final SuccessTagState _tagState = SuccessTagState(selectedTags: []);
   late List<MajorEntity> data;
   changeTagesSelected(List<bool> selectedTags) {
     data = [];

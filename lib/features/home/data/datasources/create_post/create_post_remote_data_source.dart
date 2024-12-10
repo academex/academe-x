@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:academe_x/features/college_major/data/models/major_model.dart';
+import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:http_parser/http_parser.dart'; // Import this for MediaType
 
 import 'package:academe_x/academeX_main.dart';
@@ -69,39 +71,42 @@ class CreatePostRemoteDataSource {
     required PostModel post,
     BuildContext? context,
   }) async {
-    // _uploadImage(file: file, images: images, post: post);
-    if (post.tags == null) {
+    int _total = 0, _received = 0;
+    late http.StreamedResponse _response;
+    File? _image;
+    final List<int> _bytes = [];
+
+    if (post.tags!.isEmpty) {
       throw ValidationException(messages: ['يرجى اختيار tag']);
     }
+
     return await _postWithExceptions(
       func: () async {
-        File? file = getIt<FilePickerLoaded>().file;
-        List<File>? images = getIt<ImagePickerLoaded>().images;
-
         var url = Uri.parse(ApiSetting.createPost);
         var request = http.MultipartRequest('POST', url);
 
         request.fields['content'] = post.content!;
-        for(int i = 0; i<post.tags!.length;i++) {
+        for (int i = 0; i < post.tags!.length; i++) {
           request.fields['tagIds[$i]'] = post.tags![i].id.toString();
         }
 
-        // Add file
-        if(file != null) {
-           var file1 = await http.MultipartFile.fromPath(
+        // Add file if available
+        if (post.file != null && post.file!.url != null) {
+          var file1 = await http.MultipartFile.fromPath(
             'file',
-            file.path,
-             filename: file.path.split('/').last,
-             contentType: MediaType('application', 'pdf'),
-                      );
-           request.files.add(file1);
+            post.file!.url!,
+            filename: post.file!.url!.split('/').last,
+            contentType: MediaType('application', 'pdf'),
+          );
+          request.files.add(file1);
         }
+
         // Add images
-        for (File image in images??[]) {
+        for (ImageEntity image in post.images ?? []) {
           request.files.add(await http.MultipartFile.fromPath(
             'images',
-            image.path,
-            filename: image.path.split('/').last,
+            image.url!,
+            filename: image.url!.split('/').last,
             contentType: MediaType('image', 'jpeg'), // Adjust as needed
           ));
         }
@@ -124,21 +129,25 @@ class CreatePostRemoteDataSource {
           print('Error: ${response.statusCode}');
         }
 
-        // getIt<ImagePickerLoaded>().images = null;
-        // getIt<FilePickerLoaded>().file = null;
-        final Map<String, dynamic> responseBody = jsonDecode(await response.stream.bytesToString());
+        // Decode the response body
+        final Map<String, dynamic> responseBody = jsonDecode(utf8.decode(_bytes));
         Logger().f(responseBody.toString());
+
         if (response.statusCode >= 400) {
           _handleHttpError(responseBody);
         }
+
+        // Parse the response to get the model
         final PostBaseResponse baseResponse = PostBaseResponse.fromJson(
           responseBody,
-          (json) => PostModel.fromJson(json),
+              (json) => PostModel.fromJson(json),
         );
+
         return baseResponse.data!;
       },
     );
   }
+
 
   Future<List<MajorModel>> getTags() async {
     List<MajorModel>? majorCached =
@@ -231,5 +240,36 @@ class CreatePostRemoteDataSource {
         );
       }
     }
+  }
+}
+class MultipartRequest extends http.MultipartRequest {
+  MultipartRequest(
+      String method,
+      Uri url, {
+         required this.onProgress,
+      }) : super(method, url);
+
+  final void Function(int bytes, int totalBytes) onProgress;
+
+  /// Freezes all mutable fields and returns a single-subscription [ByteStream]
+  /// that will emit the request body.
+  http.ByteStream finalize() {
+    final byteStream = super.finalize();
+    if (onProgress == null) return byteStream;
+
+    final total = this.contentLength;
+    int bytes = 0;
+
+    final t = StreamTransformer.fromHandlers(
+      handleData: (List<int> data, EventSink<List<int>> sink) {
+        bytes += data.length;
+        onProgress(bytes, total);
+        if(total >= bytes) {
+          sink.add(data);
+        }
+      },
+    );
+    final stream = byteStream.transform(t);
+    return http.ByteStream(stream);
   }
 }

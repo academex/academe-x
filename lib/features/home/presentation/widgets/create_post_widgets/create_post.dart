@@ -1,15 +1,21 @@
 import 'dart:io';
 
+import 'package:academe_x/core/core.dart';
+import 'package:academe_x/academeX_main.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
+import 'package:academe_x/features/auth/domain/entities/response/user_response_entity.dart';
+import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
+import 'package:academe_x/features/college_major/controller/cubit/college_majors_state.dart';
+import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/file_info_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
+import 'package:academe_x/features/home/home.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/chose_tag_widget.dart';
-import 'package:academe_x/lib.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +33,8 @@ class CreatePost {
   File? file = null;
 
   void showCreatePostModal(BuildContext parContext) async {
+    int tagId = (await parContext.cachedUser)!.user.tagId;
+    MajorModel? userMajor = null;
     UserResponseEntity user = (await parContext.cachedUser)!.user;
     String userName = '${user.firstName} ${user.lastName}';
     showModalBottomSheet(
@@ -36,6 +44,7 @@ class CreatePost {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
       ),
       builder: (context) {
+
         return FractionallySizedBox(
           heightFactor: 0.9, // Modal height factor
           child: Padding(
@@ -71,6 +80,7 @@ class CreatePost {
                           fontSize: 14,
                           color: Colors.green,
                           onPressed: () {
+                            context.read<PostsCubit>().cancelCreationPostState();
                             Navigator.pop(context);
                           },
                         ),
@@ -102,13 +112,29 @@ class CreatePost {
                           children: [
                             AppText(
                               text: userName,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
                             ),
-                            AppText(
-                              text: '#تطوير البرمجيات',
-                              fontSize: 12,
-                              color: Colors.grey,
+                            BlocBuilder<CollegeMajorsCubit, CollegeMajorsState>(
+                              builder: (context, state) {
+
+                                if(state.status == MajorsStatus.success) {
+
+                                  userMajor = getUserMajor(parContext, state.majors,tagId);
+                                  context.read<TagCubit>().init(userMajor!);
+                                  return AppText(
+                                    text:  '${userMajor!.majorEn!.replaceAll(' ', '_')}#',
+                                    fontSize: 12.sp,
+                                    color: Colors.grey,
+                                  );
+                                }
+                                return AppText(
+                                  text: 'نحاول الحصول على tag',
+                                  fontSize: 12.sp,
+                                  color: Colors.grey,
+                                );
+                              },
+
                             ),
                           ],
                         ),
@@ -140,14 +166,16 @@ class CreatePost {
                     // need if statment as : if(textController.isNotEmpty) do the loop
                     // for loop for the hashes
                     BlocBuilder<TagCubit, TagState>(
+                      // buildWhen: (previous, current) {
+                      //   return previous.toString() != current.toString();
+                      // },
+
                       builder: (context, state) {
-                        if (state is SucsessTagState) {
-                          post = post.copyWith(
-                              tags: state.selectedTags
-                                  .map(
-                                    (e) => e,
-                                  )
-                                  .toList());
+                        Logger().f(state);
+                        if (state is SuccessTagState) {
+
+                          getIt<SuccessTagState>().selectedTags = state.selectedTags;
+
                           return Wrap(
                             spacing: 3, // Space between buttons horizontally
                             runSpacing: 0,
@@ -168,6 +196,7 @@ class CreatePost {
                         return const SizedBox();
                       },
                     ),
+
                     16.ph(),
                     BlocBuilder<PickerCubit, PickState>(
                       builder: (context, state) {
@@ -195,15 +224,15 @@ class CreatePost {
                                             index < images!.length;
                                             index++)
                                           Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 9),
-                                            height: 178,
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 9.w),
+                                            height: 178.w,
                                             width:
                                                 images!.length == 1 ? 300 : 178,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(12)),
+                                              BorderRadius.all(
+                                                      Radius.circular(12.r)),
                                               image: DecorationImage(
                                                 image:
                                                     FileImage(images![index]),
@@ -264,6 +293,7 @@ class CreatePost {
                           ),
                         ),
                         BlocBuilder<ShowTagCubit, bool>(
+
                           builder: (context, state) {
                             return IconBottomForCreatePost(
                               selected: state,
@@ -289,6 +319,7 @@ class CreatePost {
                     ),
                     // const Spacer(),
                     10.ph(),
+
                     SubmitButton(
                         formKey: _formKey,
                         post: post,
@@ -302,6 +333,14 @@ class CreatePost {
         );
       },
     );
+  }
+
+  MajorModel getUserMajor(BuildContext context, tags,int tagId) {
+    for(int i =0;i<tags.length;i++){
+      if(tags[i].id == tagId) return tags[i];
+    }
+    throw ValidationException(messages: ['we don\'t find your tag']);
+
   }
 }
 
@@ -318,6 +357,7 @@ class SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocConsumer<PostsCubit, PostsState>(
       listener: (createPostContext, state) {
         if (state.creationState == CreationStatus.failure) {
@@ -353,9 +393,13 @@ class SubmitButton extends StatelessWidget {
                                 ? null
                                 : FileInfo(
                                     url: getIt<FilePickerLoaded>().file!.path,
-                                  ));
+                                  ),
+                            tags:getIt<SuccessTagState>().selectedTags,
+                        );
+
+                        Logger().f(post.tags);
                         context.read<PostsCubit>().sendPost(
-                            post: post.copyWith(content: textController.text,isSaved: true));
+                            post: post.copyWith(content: textController.text,));
                       }
                     }
                   : null,

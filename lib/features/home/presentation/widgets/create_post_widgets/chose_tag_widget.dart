@@ -1,26 +1,29 @@
+import 'package:academe_x/core/widgets/widgets.dart';
+import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
 import 'package:academe_x/features/college_major/controller/cubit/college_majors_state.dart';
-import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
+import 'package:academe_x/features/home/home.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
-import 'package:academe_x/features/home/presentation/controllers/states/create_post/get_tags_state.dart';
-import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:academe_x/features/college_major/data/models/major_model.dart';
+
 
 class SelectableButtonGrid extends StatelessWidget {
-  // List to keep track of selected states
   late final List<bool> _isSelected;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<GetTagsCubit>(
-      create: (context) => getIt<GetTagsCubit>()..getTags(),
-      child: BlocBuilder<GetTagsCubit, CollegeMajorsState>(builder: (context, state) {
-        if (state is GetTagsLoading) {
+    return BlocBuilder<CollegeMajorsCubit, CollegeMajorsState>(
+      buildWhen: (previous, current) {
+        return previous.toString() == current.toString();
+      },
+        builder: (context, state) {
+        if (state.status == MajorsStatus.loading) {
           return LoadingShimmerWidget();
-        } else if (state is GetTagsSuccessful) {
-          context.read<TagCubit>().init(state.majors.first);
+        } else if (state.status == MajorsStatus.success) {
+
           _isSelected = List.generate(
             state.majors.length,
             (index) {
@@ -28,7 +31,6 @@ class SelectableButtonGrid extends StatelessWidget {
               return false;
             },
           );
-          Logger().d(state.majors.toString());
           return Expanded(
             child: RawScrollbar(
               thumbVisibility: true,
@@ -44,14 +46,15 @@ class SelectableButtonGrid extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Wrap(
-                    spacing: 8.0, // Space between buttons horizontally
-                    runSpacing: 8.0, // Space between buttons vertically
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    /// start: This is place that
+                    /// - display the tags
+                    /// - select tags
                     children: List.generate(state.majors.length, (index) {
                       return GestureDetector(
                         onTap: () {
-                          // setState(() {
-                          _isSelected[index] =
-                              !_isSelected[index]; // Toggle selection
+                          _isSelected[index] =!_isSelected[index]; // Toggle selection
                           if (_isSelected[index]) {
                             context.read<TagCubit>().addTag(state.majors[index]);
                           } else {
@@ -59,10 +62,9 @@ class SelectableButtonGrid extends StatelessWidget {
                                 .read<TagCubit>()
                                 .removeTag(state.majors[index]);
                           }
-                          // context.read<TagCubit>().changeTagesSelected(_isSelected);
-                          // });
                         },
                         child: BlocBuilder<TagCubit, TagState>(
+
                           builder: (context, tagState) {
                             return Container(
                               padding: EdgeInsets.symmetric(
@@ -93,7 +95,7 @@ class SelectableButtonGrid extends StatelessWidget {
               ),
             ),
           );
-        } else if (state is GetTagsError) {
+        } else if (state.status == MajorsStatus.failure) {
           return AppText(
             text: state.errorMessage!,
             fontSize: 12.sp,
@@ -102,8 +104,8 @@ class SelectableButtonGrid extends StatelessWidget {
         } else {
           return SizedBox();
         }
-      }),
-    );
+      },);
+
   }
 }
 
@@ -124,7 +126,7 @@ class LoadingShimmerWidget extends StatelessWidget {
             child: Wrap(
               spacing: 8.0, // Space between shimmer items horizontally
               runSpacing: 8.0, // Space between shimmer items vertically
-              children: List.generate(10, (index) {
+              children: List.generate(6, (index) {
                 // Example shimmer count
                 return Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,

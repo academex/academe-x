@@ -17,7 +17,7 @@ import '../../features/home/presentation/controllers/cubits/post/posts_cubit.dar
 import '../core.dart';
 // import '../services/hive_cache_manager.dart';
 
-final getIt = GetIt.instance;
+final GetIt getIt = GetIt.instance;
 
 Future<void> init() async {
   // Cubits
@@ -40,6 +40,7 @@ Future<void> init() async {
 }
 
 void _initCubits() {
+
   getIt.registerFactory<LoginCubit>(() => LoginCubit(authUseCase: getIt()));
 
   getIt.registerFactory<CreatePostCubit>(
@@ -94,11 +95,19 @@ void _initCubits() {
   getIt.registerFactory<CollegeMajorsCubit>(
     () => CollegeMajorsCubit(cacheManager: getIt(), getMajorsUseCase: getIt()),
   );
+
 }
 
 void _initState() {
-  getIt.registerSingleton(FilePickerLoaded(null));
-  getIt.registerSingleton(ImagePickerLoaded(null));
+  getIt.registerLazySingleton<FilePickerLoaded>(
+        ()=>FilePickerLoaded(null),
+  );
+  getIt.registerLazySingleton<ImagePickerLoaded>(
+        ()=>ImagePickerLoaded(null),
+  );
+  getIt.registerLazySingleton<SuccessTagState>(
+      ()=>SuccessTagState(selectedTags: []),
+  );
 }
 
 void _initUseCases() {

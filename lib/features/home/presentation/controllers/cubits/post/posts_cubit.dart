@@ -8,27 +8,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+
 import '../../../../../../core/pagination/pagination_params.dart';
 import '../../../../data/models/post/post_model.dart';
 import '../../../../domain/entities/post/post_entity.dart';
 import '../../../../domain/entities/post/reactions_entity.dart';
 import '../../states/post/post_state.dart';
 
-
-
 class PostsCubit extends Cubit<PostsState> {
   final PostUseCase postUseCase;
   final HiveCacheManager _cacheManager;
 
-
-  bool _isLoading = false; // Add loading flag to prevent multiple simultaneous calls
+  bool _isLoading =
+      false; // Add loading flag to prevent multiple simultaneous calls
 
   PostsCubit({
     required this.postUseCase,
-  }) : _cacheManager = getIt<HiveCacheManager>(),
+  })  : _cacheManager = getIt<HiveCacheManager>(),
         super(PostsState());
-
-
 
   Future<void> loadPosts({bool refresh = false}) async {
     if (_isLoading) return;
@@ -42,59 +39,59 @@ class PostsCubit extends Cubit<PostsState> {
         print('Loading page: $page');
         print('After load - Next page will be: ${state.postsCurrentPage + 1}');
       }
-        emit(state.copyWith(status: PostStatus.loading));
+      emit(state.copyWith(status: PostStatus.loading));
 
       final result = await postUseCase.getPosts(PaginationParams(page: page));
 
       result.fold(
-            (failure)async  {
-              final cachedPosts = await _getCachedPosts();
+        (failure) async {
+          final cachedPosts = await _getCachedPosts();
 
-              if (cachedPosts != null && cachedPosts.isNotEmpty) {
-                // If we have cached posts, use them
-                emit(state.copyWith(
-                  status: PostStatus.success,
-                  posts: cachedPosts,
-                  errorMessage: 'Using cached data: ${failure.message}',
-                  hasPostsReachedMax: true, // Prevent pagination in offline mode
-                ));
-              } else {
-                // If no cache, show error
-                emit(state.copyWith(
-                  status: PostStatus.failure,
-                  errorMessage: failure.message,
-                ));
-              }
+          if (cachedPosts != null && cachedPosts.isNotEmpty) {
+            // If we have cached posts, use them
+            emit(state.copyWith(
+              status: PostStatus.success,
+              posts: cachedPosts,
+              errorMessage: 'Using cached data: ${failure.message}',
+              hasPostsReachedMax: true, // Prevent pagination in offline mode
+            ));
+          } else {
+            // If no cache, show error
+            emit(state.copyWith(
+              status: PostStatus.failure,
+              errorMessage: failure.message,
+            ));
+          }
         },
-            (paginatedData) {
+        (paginatedData) {
+          if (refresh) {
+            emit(state.copyWith(
+              status: PostStatus.success,
+              posts: paginatedData.items,
+              hasPostsReachedMax: !paginatedData.hasNextPage,
+              postsCurrentPage: 2,
+              errorMessage: null,
+            ));
+            return;
+          }
+          final List<PostEntity> newPosts = [...state.posts];
 
-              if (refresh) {
-                emit(state.copyWith(
-                  status: PostStatus.success,
-                  posts: paginatedData.items,
-                  hasPostsReachedMax: !paginatedData.hasNextPage,
-                  postsCurrentPage: 2,
-                  errorMessage: null,
-                ));
-                return;
-              }
-              final List<PostEntity> newPosts = [...state.posts];
+          // Add only non-duplicate items from paginatedData
+          for (var newPost in paginatedData.items) {
+            if (!newPosts
+                .any((existingPost) => existingPost.id == newPost.id)) {
+              newPosts.add(newPost);
+            }
+          }
 
-              // Add only non-duplicate items from paginatedData
-              for (var newPost in paginatedData.items) {
-                if (!newPosts.any((existingPost) => existingPost.id == newPost.id)) {
-                  newPosts.add(newPost);
-                }
-              }
+          // newPosts.shuffle();
 
-              // newPosts.shuffle();
-
-              final nextPage = state.postsCurrentPage + 1;
+          final nextPage = state.postsCurrentPage + 1;
           emit(state.copyWith(
             status: PostStatus.success,
             posts: newPosts,
             hasPostsReachedMax: !paginatedData.hasNextPage,
-            postsCurrentPage:nextPage,
+            postsCurrentPage: nextPage,
             errorMessage: null,
           ));
         },
@@ -103,7 +100,9 @@ class PostsCubit extends Cubit<PostsState> {
       final cachedPosts = await _getCachedPosts();
 
       if (cachedPosts != null && cachedPosts.isNotEmpty) {
-        final postsToShow = refresh ? cachedPosts : List<PostEntity>.from(cachedPosts)..shuffle();
+        final postsToShow =
+            refresh ? cachedPosts : List<PostEntity>.from(cachedPosts)
+              ..shuffle();
 
         emit(state.copyWith(
           status: PostStatus.success,
@@ -117,13 +116,15 @@ class PostsCubit extends Cubit<PostsState> {
           errorMessage: e.toString(),
         ));
       }
-    }finally {
+    } finally {
       _isLoading = false;
     }
   }
 
- Future<void> reactToPost({required String reactType, required int postId,required BuildContext context}) async {
-
+  Future<void> reactToPost(
+      {required String reactType,
+      required int postId,
+      required BuildContext context}) async {
     try {
       // If posts are empty, try to get them from cache first
       if (state.posts.isEmpty) {
@@ -134,7 +135,7 @@ class PostsCubit extends Cubit<PostsState> {
             status: PostStatus.success,
           ));
         } else {
-          AppLogger.e('No posts found in state or cache');  // Debug log
+          AppLogger.e('No posts found in state or cache'); // Debug log
           return; // Exit if we can't find any posts
         }
       }
@@ -142,7 +143,6 @@ class PostsCubit extends Cubit<PostsState> {
       // Create a copy of current posts
       final currentPosts = List<PostEntity>.from(state.posts);
       final postIndex = currentPosts.indexWhere((post) => post.id == postId);
-
 
       if (postIndex == -1) {
         return;
@@ -158,12 +158,11 @@ class PostsCubit extends Cubit<PostsState> {
       final currentPost = currentPosts[postIndex];
 
       // Create updated reactions list
-      final currentReactions = List<ReactionItemEntity>.from(currentPost.reactions?.items ?? []);
+      final currentReactions =
+          List<ReactionItemEntity>.from(currentPost.reactions?.items ?? []);
 
-
-      final existingReactionIndex = currentReactions.indexWhere(
-              (reaction) => reaction.user.id == currentUser.user.id
-      );
+      final existingReactionIndex = currentReactions
+          .indexWhere((reaction) => reaction.user.id == currentUser.user.id);
 
       if (existingReactionIndex != -1) {
         final existingReaction = currentReactions[existingReactionIndex];
@@ -180,32 +179,28 @@ class PostsCubit extends Cubit<PostsState> {
                 id: currentUser.user.id,
                 username: currentUser.user.username,
                 firstName: currentUser.user.firstName,
-                lastName: currentUser.user.lastName
-            ),
+                lastName: currentUser.user.lastName),
           );
         }
       } else if (reactType != 'none') {
         // Add new reaction if user hasn't reacted before
-        currentReactions.add(
-          ReactionItemEntity(
-            id: DateTime.now().millisecondsSinceEpoch,
-            type: reactType,
-            user: PostUserEntity(
-                id: currentUser.user.id,
-                username: currentUser.user.username,
-              firstName:  currentUser.user.firstName,
-                lastName:  currentUser.user.lastName
-          ),
+        currentReactions.add(ReactionItemEntity(
+          id: DateTime.now().millisecondsSinceEpoch,
+          type: reactType,
+          user: PostUserEntity(
+              id: currentUser.user.id,
+              username: currentUser.user.username,
+              firstName: currentUser.user.firstName,
+              lastName: currentUser.user.lastName),
         ));
       }
 
       // Create updated post with new reactions
       final updatedPost = currentPost.copyWith(
         reactions: ReactionsEntity(
-          count:currentReactions.length ,
+          count: currentReactions.length,
           items: currentReactions,
         ),
-
       );
 
       // Update posts list
@@ -218,26 +213,24 @@ class PostsCubit extends Cubit<PostsState> {
       ));
       // AppLogger.success('reaction in updated post: ${currentPosts[postIndex].reactions!.items[0].type}');  // Debug log
 
-
       // Make API call
       final result = await postUseCase.reactToPost(reactType, postId);
 
       result.fold(
-            (failure) async {
-          AppLogger.e('API call failed: ${failure.message}');  // Debug log
+        (failure) async {
+          AppLogger.e('API call failed: ${failure.message}'); // Debug log
           // Revert changes in case of failure
           emit(state.copyWith(
             posts: state.posts,
             errorMessage: failure.message,
           ));
         },
-            (data) {
-          AppLogger.success('API call succeeded');  // Debug log
-
+        (data) {
+          AppLogger.success('API call succeeded'); // Debug log
         },
       );
     } catch (e) {
-      AppLogger.e('Error in reactToPost: $e');  // Debug log
+      AppLogger.e('Error in reactToPost: $e'); // Debug log
       final cachedPosts = await _getCachedPosts();
 
       if (cachedPosts != null && cachedPosts.isNotEmpty) {
@@ -258,56 +251,66 @@ class PostsCubit extends Cubit<PostsState> {
     }
   }
 
-  Future<void> getReactions({required String reactType,required int postId,bool fromScroll=false}) async {
+  Future<void> getReactions(
+      {required String reactType,
+      required int postId,
+      bool fromScroll = false}) async {
     AppLogger.success('message $postId');
     if (_isLoading) return;
     // if (state.hasReactionsReachedMax) return;
     try {
       _isLoading = true;
-      final page = !fromScroll?1: state.reactionsCurrentPage;
+      final page = !fromScroll ? 1 : state.reactionsCurrentPage;
       if (kDebugMode) {
-        print('Before load - Current page reaction: ${state.reactionsCurrentPage}');
+        print(
+            'Before load - Current page reaction: ${state.reactionsCurrentPage}');
         print('Loading page reaction: $page');
-        print('After load - Next page reaction will be: ${state.reactionsCurrentPage + 1}');
+        print(
+            'After load - Next page reaction will be: ${state.reactionsCurrentPage + 1}');
       }
-      emit(state.copyWith(reactionStatus: ReactionStatus.loading,selectedType: reactType));
+      emit(state.copyWith(
+          reactionStatus: ReactionStatus.loading, selectedType: reactType));
 
       // Make API call
-      final result = await postUseCase.getReactions(PaginationParams(page: page),reactType,postId);
+      final result = await postUseCase.getReactions(
+          PaginationParams(page: page), reactType, postId);
 
       result.fold(
-            (failure) async {
-          AppLogger.e('API call failed: ${failure.message}');  // Debug log
+        (failure) async {
+          AppLogger.e('API call failed: ${failure.message}'); // Debug log
 
           // Revert changes in case of failure
           emit(state.copyWith(
-            reactionStatus: ReactionStatus.failure,
-            reactionItems: [],
-            errorMessage: failure.message,
-              selectedType: reactType
-          ));
+              reactionStatus: ReactionStatus.failure,
+              reactionItems: [],
+              errorMessage: failure.message,
+              selectedType: reactType));
         },
-            (data) {
-              AppLogger.success('message ${data.items}');
-              AppLogger.success('message ${state.reactionItems}');
-              final List<ReactionItemEntity> newReactions = [...?state.reactionItems];
-              if (!fromScroll) {
-                newReactions.clear();
-              }
-              for (var newReaction in data.items) {
-                if (!newReactions.any((existingReaction) => existingReaction.id == newReaction.id)) {
-                  newReactions.add(newReaction);
-                }
-              }
-              final nextPage =!fromScroll?1: state.reactionsCurrentPage + 1;
-              emit(state.copyWith(
-                reactionStatus: ReactionStatus.success,
-                reactionItems: !fromScroll?data.items: newReactions,                // posts: newPosts,
-                hasReactionsReachedMax: !data.hasNextPage,
-                statisticsEntity: data.statisticsModel!,
-                reactionsCurrentPage:nextPage,
-                errorMessage: null,
-              ));
+        (data) {
+          AppLogger.success('message ${data.items}');
+          AppLogger.success('message ${state.reactionItems}');
+          final List<ReactionItemEntity> newReactions = [
+            ...?state.reactionItems
+          ];
+          if (!fromScroll) {
+            newReactions.clear();
+          }
+          for (var newReaction in data.items) {
+            if (!newReactions.any(
+                (existingReaction) => existingReaction.id == newReaction.id)) {
+              newReactions.add(newReaction);
+            }
+          }
+          final nextPage = !fromScroll ? 1 : state.reactionsCurrentPage + 1;
+          emit(state.copyWith(
+            reactionStatus: ReactionStatus.success,
+            reactionItems: !fromScroll ? data.items : newReactions,
+            // posts: newPosts,
+            hasReactionsReachedMax: !data.hasNextPage,
+            statisticsEntity: data.statisticsModel!,
+            reactionsCurrentPage: nextPage,
+            errorMessage: null,
+          ));
 
           // AppLogger.success('API call succeeded ${data.statisticsModel!}');  // Debug log
           // emit(state.copyWith(
@@ -316,11 +319,10 @@ class PostsCubit extends Cubit<PostsState> {
           //     statisticsEntity: data.statisticsModel,
           //     selectedType: reactType
           // ));
-
         },
       );
     } catch (e) {
-      AppLogger.e('Error in reactToPost: $e');  // Debug log
+      AppLogger.e('Error in reactToPost: $e'); // Debug log
       final cachedPosts = await _getCachedPosts();
 
       if (cachedPosts != null && cachedPosts.isNotEmpty) {
@@ -341,23 +343,17 @@ class PostsCubit extends Cubit<PostsState> {
     }
   }
 
-
-
-
-  Future<void> savePost({required int postId,required bool isSaved}) async {
+  Future<void> savePost({required int postId, required bool isSaved}) async {
     try {
-
       // Create a deep copy of current posts
       final updatedPosts = List<PostEntity>.from(state.posts);
 
       // Update post in the list
       final postIndex = updatedPosts.indexWhere((post) => post.id == postId);
       if (postIndex != -1) {
-        updatedPosts[postIndex] = updatedPosts[postIndex].copyWith(
-            isSaved: !isSaved
-        );
+        updatedPosts[postIndex] =
+            updatedPosts[postIndex].copyWith(isSaved: !isSaved);
       }
-
 
       // Emit optimistic update immediately
       emit(state.copyWith(
@@ -367,15 +363,14 @@ class PostsCubit extends Cubit<PostsState> {
       final result = await postUseCase.savePost(postId);
 
       result.fold(
-            (failure) async {
+        (failure) async {
           AppLogger.e('API call failed: ${failure.message}');
           // Revert changes in case of failure
           emit(state.copyWith(
             errorMessage: failure.message,
           ));
         },
-            (paginatedData) {
-        },
+        (paginatedData) {},
       );
     } catch (e) {
       final cachedPosts = await _getCachedPosts();
@@ -398,11 +393,10 @@ class PostsCubit extends Cubit<PostsState> {
     }
   }
 
-
 // Also add this to your PostsCubit class:
   @override
   void emit(PostsState state) {
-    Logger().d(state);
+    // Logger().d(state);
     super.emit(state);
   }
 
@@ -410,7 +404,7 @@ class PostsCubit extends Cubit<PostsState> {
     try {
       return await _cacheManager.getCachedResponse<List<PostEntity>>(
         CacheKeys.POSTS,
-            (json) => (json as List)
+        (json) => (json as List)
             .map((item) => PostModel.fromJson(item as Map<String, dynamic>))
             .toList(),
       );
@@ -439,27 +433,28 @@ class PostsCubit extends Cubit<PostsState> {
     await loadPosts(refresh: true);
   }
 
+  cancelCreationPostState(){
+    emit(state.copyWith(creationStatus: CreationStatus.initial));
+  }
   sendPost({required PostEntity post}) async {
-    Logger().d(post);
-    emit(state.copyWith(
-      creationStatus: CreationStatus.loading
-    ));
+    // Logger().d(post);
+    emit(state.copyWith(creationStatus: CreationStatus.loading));
     var createPostRes = await postUseCase.createPost(post);
     createPostRes.fold(
-          (l) {
-        emit(state.copyWith(
-          creationStatus: CreationStatus.failure,
-          creationPostErrorMessage: l.message,
-        ));
+      (l) {
+        emit(
+          state.copyWith(
+            creationStatus: CreationStatus.failure,
+            creationPostErrorMessage: l.message,
+          ),
+        );
       },
-          (r) {
-            Logger().d(r.toString());
+      (r) {
+        Logger().d(r.toString());
         emit(state.copyWith(
-          creationStatus: CreationStatus.success,
-          posts: [r,...state.posts]
-        ));
+            creationStatus: CreationStatus.success,
+            posts: [r, ...state.posts]));
       },
     );
   }
-
 }

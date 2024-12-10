@@ -1,18 +1,23 @@
 // enum LoginStatus { initial, loading, success, failure }
 import 'package:academe_x/features/college_major/domain/entities/major_entity.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class TagState {}
+abstract class TagState extends  Equatable{}
 
-class InitTagState extends TagState {}
+class InitTagState extends TagState   {
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+}
 
-class SucsessTagState extends TagState {
-  final List<MajorEntity> selectedTags;
-  SucsessTagState({required this.selectedTags});
+class SuccessTagState extends TagState{
+  List<MajorEntity> selectedTags;
+  SuccessTagState({required this.selectedTags});
 
   TagState copyWith({
     required List<MajorEntity> selectedTags,
   }) {
-    return SucsessTagState(selectedTags: selectedTags);
+    return SuccessTagState(selectedTags: selectedTags);
   }
 
   add(MajorEntity tag) {
@@ -25,4 +30,11 @@ class SucsessTagState extends TagState {
 
     // }
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [...selectedTags];
+
+
+
 }
