@@ -39,7 +39,7 @@ class PostActionButtons extends StatelessWidget {
           const Spacer(),
           SaveButton(
             postId: post.id!,
-            isSaved: post.isSaved!,
+            isSaved: post.isSaved??false,
             onSave: () => context.read<PostsCubit>().savePost(
               postId: post.id!,
               isSaved: post.isSaved!,

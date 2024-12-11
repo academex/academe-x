@@ -71,9 +71,6 @@ class CreatePostRemoteDataSource {
     required PostModel post,
     BuildContext? context,
   }) async {
-    int _total = 0, _received = 0;
-    late http.StreamedResponse _response;
-    File? _image;
     final List<int> _bytes = [];
 
     if (post.tags!.isEmpty) {
@@ -83,7 +80,9 @@ class CreatePostRemoteDataSource {
     return await _postWithExceptions(
       func: () async {
         var url = Uri.parse(ApiSetting.createPost);
-        var request = http.MultipartRequest('POST', url);
+        var request = MultipartRequest('POST', url,onProgress: (bytes, totalBytes) {
+          Logger().f(bytes);
+        },);
 
         request.fields['content'] = post.content!;
         for (int i = 0; i < post.tags!.length; i++) {
@@ -119,6 +118,7 @@ class CreatePostRemoteDataSource {
         });
 
         // Send request
+        Logger().d(request.fields);
         var response = await request.send();
 
         Logger().d(response);
@@ -130,7 +130,7 @@ class CreatePostRemoteDataSource {
         }
 
         // Decode the response body
-        final Map<String, dynamic> responseBody = jsonDecode(utf8.decode(_bytes));
+        final Map<String, dynamic> responseBody = jsonDecode(await response.stream.bytesToString());
         Logger().f(responseBody.toString());
 
         if (response.statusCode >= 400) {
