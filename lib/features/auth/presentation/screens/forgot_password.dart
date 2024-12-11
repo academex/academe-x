@@ -1,6 +1,7 @@
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -51,7 +52,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 50.ph(),
                 Center(
                   child: CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 16 ,fontWeight: FontWeight.w600,), onPressed: (){
-                        Navigator.pushNamed(context, '/verification_code');
+                        context.pushNamed('/verification_code');
 
                   }, backgraoundColor: const Color(0xFF0077FF))
 

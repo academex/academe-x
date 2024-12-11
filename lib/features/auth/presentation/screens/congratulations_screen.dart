@@ -1,6 +1,8 @@
+import 'package:academe_x/core/utils/go_router.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class AccountCreationSuccessScreen extends StatelessWidget {
   const AccountCreationSuccessScreen({super.key});
@@ -78,7 +80,8 @@ class AccountCreationSuccessScreen extends StatelessWidget {
                   CustomButton(
                     widget: AppText(text: context.localizations.goToMainPage, fontSize: 16 ,color: Colors.white,),
                     onPressed:(){
-                      Navigator.pushReplacementNamed(context, '/home_screen');
+                      context.go('/home_screen');
+                      // Navigator.pushReplacementNamed(context, '/home_screen');
                     }, backgraoundColor:Colors.transparent,
                     wihtBorder: true,
                   ),

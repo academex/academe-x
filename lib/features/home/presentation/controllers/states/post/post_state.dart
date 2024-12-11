@@ -7,15 +7,18 @@ import '../../../../domain/entities/home/post_entity_s.dart';
 import '../../../../domain/entities/post/post_entity.dart';
 
 enum PostStatus { initial, loading, success, failure }
+enum PostDetailsStatus { initial, loading, success, failure }
 enum ReactionStatus { initial, loading, success, failure }
 enum CreationStatus { initial, loading, success, failure }
 
 class PostsState extends Equatable {
   final PostStatus status;
   final ReactionStatus reactionStatus;
+  final PostDetailsStatus postDetailsStatus;
   final CreationStatus creationState;
   final StatisticsEntity? statisticsEntity;
   final List<PostEntity> posts;
+  final PostEntity? post;
   List<ReactionItemEntity>? reactionItems;
   final bool hasPostsReachedMax;
   int postsCurrentPage;
@@ -34,9 +37,11 @@ class PostsState extends Equatable {
   PostsState({
     this.status = PostStatus.initial,
     this.creationState = CreationStatus.initial,
+    this.postDetailsStatus = PostDetailsStatus.initial,
     this.posts = const <PostEntity>[],
     this.reactionItems = const <ReactionItemEntity>[],
     this.statisticsEntity,
+    this.post,
     this.reactionStatus = ReactionStatus.initial,
     this.isSaved = false,
     this.hasPostsReachedMax = false,
@@ -53,8 +58,10 @@ class PostsState extends Equatable {
   PostsState copyWith({
     PostStatus? status,
     CreationStatus? creationStatus,
+    PostDetailsStatus? postDetailsStatus,
     ReactionStatus? reactionStatus,
     List<PostEntity>? posts,
+    PostEntity? post,
      StatisticsEntity? statisticsEntity,
     List<ReactionItemEntity>? reactionItems,
     bool? hasPostsReachedMax,
@@ -71,8 +78,10 @@ class PostsState extends Equatable {
       status: status ?? this.status,
       creationState: creationStatus ?? this.creationState,
       reactionStatus: reactionStatus ?? this.reactionStatus,
+      post: post ?? this.post,
       posts: posts ?? this.posts,
       statisticsEntity: statisticsEntity ?? this.statisticsEntity,
+      postDetailsStatus: postDetailsStatus ?? this.postDetailsStatus,
       // posts: posts ?? this.posts,
       hasReactionsReachedMax: hasReactionsReachedMax ?? this.hasReactionsReachedMax,
       reactionsCurrentPage: reactionsCurrentPage ?? this.reactionsCurrentPage,
@@ -91,6 +100,7 @@ class PostsState extends Equatable {
   @override
   List<Object?> get props => [
     creationState,
+    postDetailsStatus,
     status,
     reactionStatus,
     posts,

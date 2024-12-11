@@ -2,6 +2,7 @@ import 'package:academe_x/features/college_major/controller/cubit/college_major_
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../college_major/controller/cubit/college_majors_state.dart';
 
@@ -334,7 +335,7 @@ class SignUpScreen extends StatelessWidget {
         if (state.errorMessage != null) {
           context.showSnackBar(message: state.errorMessage![0], error: true,);
         }else if(state.isAuthenticated){
-          Navigator.pushReplacementNamed(context, '/account_creation');
+          context.pushReplacementNamed('/account_creation');
         }
       },
       // listenWhen: (previous, current) => current.errorMessage !=previous.errorMessage,
@@ -373,7 +374,7 @@ class SignUpScreen extends StatelessWidget {
           color: Colors.black,
         ),
         GestureDetector(
-          onTap: () => Navigator.pushNamed(context, '/login'),
+          onTap: () => context.pushNamed('/login'),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: AppText(

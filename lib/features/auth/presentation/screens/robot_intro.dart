@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:math' as math;
 
+import 'package:go_router/go_router.dart';
+
 class RobotIntroScreen extends StatelessWidget {
   const RobotIntroScreen({super.key});
 
@@ -51,7 +53,7 @@ class RobotIntroScreen extends StatelessWidget {
                   borderColor: Colors.white,
                   // text: ,
                   onPressed: () {
-                    Navigator.pushNamed(context, '/sign_up');
+                    context.pushNamed('/sign_up');
 
                     // Add your navigation logic here for the next step
                   }, widget: AppText(text: context.localizations.startButton, fontSize: 16  ,color: Colors.white,),
