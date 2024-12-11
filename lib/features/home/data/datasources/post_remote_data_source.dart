@@ -63,8 +63,40 @@ class PostRemoteDataSource {
   }
 
 
+  Future<BaseResponse<PostModel>> getPostDetails(PaginationParams paginationParams) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        final response = await apiController.get(
+          Uri.parse('${ApiSetting.getPosts}${paginationParams.postId}'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
+          },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          _handleHttpError(responseBody);
+        }
+
+        final baseResponse = BaseResponse<PostModel>.fromJson(
+          responseBody,
+              (json) {
+                return PostModel.fromJson(json);
+          },
+        );
+        return baseResponse;
+
+
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
+
   Future<PaginatedResponse<ReactionItemModel>> getReactions(PaginationParams paginationParams,String reactType,int postId) async {
-    AppLogger.success( Uri.parse('${ApiSetting.getUserReactionByType}/$postId/reactions?page=${paginationParams.page}&type=$reactType').toString());
     if (await internetConnectionChecker.hasConnection) {
       try {
         final response = await apiController.get(

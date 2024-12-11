@@ -19,6 +19,10 @@ class PostUseCase {
     return await postRepository.getPosts(paginationParams);
   }
 
+  Future<Either<Failure, BaseResponse<PostEntity>>> getPostDetails(PaginationParams paginationParams) async {
+    return await postRepository.getPostDetails(paginationParams);
+  }
+
 
   Future<Either<Failure, void>> reactToPost(String reactionType,int postId) async {
     return await postRepository.reactToPost(reactionType,postId);

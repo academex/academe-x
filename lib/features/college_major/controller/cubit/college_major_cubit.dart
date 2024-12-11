@@ -19,7 +19,6 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
         super(const CollegeMajorsState());
 
   void toggleExpanded() {
-    AppLogger.success('message');
     emit(state.copyWith(isExpanded: !state.isExpanded));
 
   }
@@ -36,7 +35,6 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
     emit(state.copyWith(isLoadingForCollege: true,errorMessage: null));
 
     final result = await _collegeMajorsUseCase.getColleges();
-    AppLogger.success(result.toString());
     result.fold(
           (failure) {
 
@@ -71,7 +69,6 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
 
   @override
   void emit(CollegeMajorsState state) {
-    AppLogger.success(state.toString());
     super.emit(state);
   }
 

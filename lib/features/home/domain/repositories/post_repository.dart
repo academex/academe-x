@@ -14,6 +14,7 @@ import '../entities/post/save_response_entity.dart';
 abstract class PostRepository {
   PostRepository();
   Future<Either<Failure, PaginatedResponse<PostModel>>>getPosts(PaginationParams paginationParams);
+  Future<Either<Failure, BaseResponse<PostModel>>>getPostDetails(PaginationParams paginationParams);
   Future<Either<Failure, void>>reactToPost(String reactionType,int postId);
   Future<Either<Failure, BaseResponse<SaveResponseEntity>>>savePost(int postId);
   Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>>getReactions(PaginationParams paginationParams,String reactionType,int postId);

@@ -52,7 +52,6 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   Widget _buildSliverAppBar() {
-    AppLogger.success(majors.toString());
     return SliverAppBar(
       automaticallyImplyLeading: true,
       expandedHeight: 260,
@@ -152,7 +151,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 return Column(
                   children: [
                     20.ph(),
-                    PostWidget(post: post),
+                    PostWidget(post: post,fromHome:true),
                     if (index < state.posts.length - 1) ...[
                       16.ph(),
                       Divider(
@@ -382,125 +381,3 @@ class _CommunityPageState extends State<CommunityPage> {
 }
 
 
-void showShareOptions(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-    ),
-    backgroundColor: Colors.white,
-    builder: (context) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 4,
-              width: 56,
-              color: const Color(0xffE7E8EA),
-            ),
-            20.ph(),
-            // Close button and title
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                100.pw(),
-
-                AppText(
-                  text: 'مشاركة بواسطة',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(Icons.close, color: Colors.grey),
-                ),
-                // To balance the close icon space
-              ],
-            ),
-            // Sharing options
-            20.ph(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildShareOption(
-                  iconPath: 'assets/icons/copy_link.png',
-                  label: 'نسخ الرابط',
-                  onTap: () {
-                    // Add your Copy Link logic here
-                    Navigator.pop(context);
-                  },
-                ),
-                _buildShareOption(
-                  iconPath: 'assets/icons/telegram.png',
-                  label: 'تلجرام',
-                  onTap: () {
-                    // Add your Telegram sharing logic here
-                    Navigator.pop(context);
-                  },
-                ),
-                _buildShareOption(
-                  iconPath: 'assets/icons/X.png',
-                  label: 'تويتر',
-                  onTap: () {
-                    // Add your Twitter sharing logic here
-                    Navigator.pop(context);
-                  },
-                ),
-                _buildShareOption(
-                  iconPath: 'assets/icons/whatsapp.png',
-                  label: 'واتساب',
-                  onTap: () {
-                    // Add your WhatsApp sharing logic here
-                    Navigator.pop(context); // Close the bottom sheet
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-// Helper widget to build a share option
-Widget _buildShareOption(
-    {required String iconPath,
-    required String label,
-    required VoidCallback onTap}) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          height: 69,
-          width: 69,
-          decoration: BoxDecoration(
-              color: const Color(0xF9F9F9C4),
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage(
-                  iconPath,
-                ),
-              )),
-        ),
-        // CircleAvatar(
-        //   radius: 28.0,
-        //   backgroundColor: Colors.grey.shade200,
-        //   child: Image.asset(iconPath, height: 30, width: 30),
-        // ),
-        const SizedBox(height: 8),
-        AppText(
-          text: label,
-          fontSize: 12,
-          color: const Color(0xff3D5A80),
-        )
-      ],
-    ),
-  );
-}

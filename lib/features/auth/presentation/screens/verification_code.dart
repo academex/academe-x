@@ -1,5 +1,6 @@
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';class VerificationCodeScreen extends StatelessWidget {
   const VerificationCodeScreen({super.key});
   // FocusNode
@@ -103,7 +104,7 @@ import 'package:pinput/pinput.dart';class VerificationCodeScreen extends Statele
               ),
               const Spacer(),
               CustomButton(widget: AppText(text: context.localizations.confirmationButton, fontSize: 14  ,color: Colors.white,fontWeight: FontWeight.bold,), onPressed: (){
-                Navigator.pushNamed(context, '/create_new_password');
+                context.pushNamed('/create_new_password');
 
               }, backgraoundColor: const Color(0xff0077FF)),
 

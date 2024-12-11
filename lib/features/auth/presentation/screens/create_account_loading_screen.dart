@@ -6,6 +6,7 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 class AccountCreationScreen extends StatefulWidget {
   const AccountCreationScreen({super.key});
 
@@ -30,7 +31,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
     // context.read<CollegeMajorsCubit>().loadMajors();
 
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.pushReplacementNamed(context, '/account_creation_success');
+      context.pushReplacementNamed('/account_creation_success');
     });// animation
   }
 

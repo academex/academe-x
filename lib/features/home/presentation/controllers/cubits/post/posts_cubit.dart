@@ -122,6 +122,53 @@ class PostsCubit extends Cubit<PostsState> {
     }
   }
 
+  Future<void> loadPostDetails({required String postId}) async {
+
+      emit(state.copyWith(postDetailsStatus: PostDetailsStatus.loading));
+
+      final result = await postUseCase.getPostDetails(PaginationParams(page: 1,postId: postId));
+
+      result.fold(
+            (failure)async  {
+          emit(state.copyWith(
+            postDetailsStatus: PostDetailsStatus.failure,
+            errorMessage: failure.message,
+          ));
+        },
+            (data) {
+              emit(state.copyWith(
+                postDetailsStatus: PostDetailsStatus.success,
+                // posts: [data.data!],
+                post: data.data,
+
+                errorMessage: null,
+              ));
+        },
+      );
+    }
+    // catch (e) {
+    //   final cachedPosts = await _getCachedPosts();
+    //
+    //   if (cachedPosts != null && cachedPosts.isNotEmpty) {
+    //     final postsToShow = refresh ? cachedPosts : List<PostEntity>.from(cachedPosts)..shuffle();
+    //
+    //     emit(state.copyWith(
+    //       status: PostStatus.success,
+    //       posts: postsToShow,
+    //       errorMessage: 'Using cached data: $e',
+    //       hasPostsReachedMax: true, // Prevent pagination in offline mode
+    //     ));
+    //   } else {
+    //     emit(state.copyWith(
+    //       status: PostStatus.failure,
+    //       errorMessage: e.toString(),
+    //     ));
+    //   }
+    // }finally {
+    //   _isLoading = false;
+    // }
+
+
  Future<void> reactToPost({required String reactType, required int postId,required BuildContext context}) async {
 
     try {
@@ -259,7 +306,6 @@ class PostsCubit extends Cubit<PostsState> {
   }
 
   Future<void> getReactions({required String reactType,required int postId,bool fromScroll=false}) async {
-    AppLogger.success('message $postId');
     if (_isLoading) return;
     // if (state.hasReactionsReachedMax) return;
     try {
@@ -288,8 +334,6 @@ class PostsCubit extends Cubit<PostsState> {
           ));
         },
             (data) {
-              AppLogger.success('message ${data.items}');
-              AppLogger.success('message ${state.reactionItems}');
               final List<ReactionItemEntity> newReactions = [...?state.reactionItems];
               if (!fromScroll) {
                 newReactions.clear();

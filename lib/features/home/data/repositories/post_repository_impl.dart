@@ -60,6 +60,36 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
+  Future<Either<Failure, BaseResponse<PostModel>>> getPostDetails(PaginationParams paginationParams) async {
+    try {
+      // First try to get from network
+      final result = await remoteDataSource.getPostDetails(paginationParams);
+
+      // Cache successful network response
+
+      return Right(result);
+    } on OfflineException catch (e) {
+      // Handle offline case by trying cache
+      return Left(NoInternetConnectionFailure(message:e.errorMessage));
+      // return _handleOfflineCase(e, paginationParams);
+    } on ServerException catch (e) {
+      // On server error, try cache first
+      return Left(ServerFailure(message:e.message));
+      // return _handleServerError(e, paginationParams);
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    } on TimeOutExeption catch (e) {
+      // On timeout, try cache
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } catch (e, stack) {
+      AppLogger.e('Unexpected error: $e\n$stack');
+      return Left(ServerFailure(message: 'An unexpected error occurred: $e'));
+    }
+  }
+
+  @override
   Future<Either<Failure, BaseResponse<void>>> reactToPost(String reactionType,int postId) async {
     try {
       // First try to get from network
@@ -144,7 +174,6 @@ class PostRepositoryImpl implements PostRepository {
       ) async {
     // Try to get from cache
     final cachedPosts = await _getPostsFromCache();
-    AppLogger.success('message ${cachedPosts}');
     if (cachedPosts != null) {
       return Right(_createPaginatedResponse(cachedPosts, params));
     }

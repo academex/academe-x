@@ -2,6 +2,7 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
    LoginScreen({super.key});
@@ -179,7 +180,7 @@ class LoginScreen extends StatelessWidget {
             ),
             const Spacer(),
             GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/forgot_password'),
+              onTap: () => context.pushNamed( '/forgot_password'),
               child: AppText(
                 text: context.localizations.forgotPassword,
                 fontSize: context.isTablet ? 16 : 14,
@@ -193,31 +194,12 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget _buildLoginButton(BuildContext context) {
-    // Widget buttonChild;
-    // // AppLogger.d('when click login ${baseState.isLoading.toString()}');
-    // if (baseState.isLoading) {
-    //   buttonChild = const CircularProgressIndicator(color: Colors.white);
-    // } else {
-    //   buttonChild = AppText(
-    //     text: context.localizations.loginButton,
-    //     fontSize: context.isTablet ? 18 : 16,
-    //     color: Colors.white,
-    //     fontWeight: FontWeight.bold,
-    //   );
-    // }
-    //
-    // return CustomButton(
-    //   disable:baseState.isLoading,
-    //   backgraoundColor: Colors.blueAccent,
-    //   widget: buttonChild,
-    //   onPressed: () => _handleLogin(context, baseState),
-    // );
     return BlocConsumer<LoginCubit, AuthState>(
       listener: (context, state) {
         if (state.errorMessage != null) {
           context.showSnackBar(message: state.errorMessage![0], error: true);
         }else if(state.isAuthenticated){
-          Navigator.pushReplacementNamed(context, '/home_screen');
+          context.go('/home_screen');
         }
       },
       builder: (context, state) {
@@ -295,7 +277,7 @@ class LoginScreen extends StatelessWidget {
           color: const Color(0xFF3253FF),
           fontSize: context.isTablet ? 18 : 16,
           fontWeight: FontWeight.w600,
-          onPressed: () => Navigator.pushNamed(context, '/robot_intro'),
+          onPressed: () => context.pushNamed('/robot_intro'),
         ),
       ],
     );

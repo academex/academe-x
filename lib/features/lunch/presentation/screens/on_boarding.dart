@@ -2,7 +2,8 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import l10n
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart'; // Import l10n
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -48,7 +49,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 alignment: Alignment.topRight,
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/login');
+                    context.pushReplacementNamed('/login');
                   },
                   child: Text(
                     'context.localizations.skip',
@@ -180,7 +181,7 @@ class _OnBoardingState extends State<OnBoarding> {
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut);
                         } else {
-                          Navigator.pushReplacementNamed(context, '/login');
+                          context.pushReplacementNamed('/login');
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -225,7 +226,7 @@ class _OnBoardingState extends State<OnBoarding> {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          Navigator.pushNamed(context, '/privacy_policy_page');
+                          context.pushNamed('/privacy_policy_page');
                         },
                     ),
                     TextSpan(
