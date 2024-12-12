@@ -4,6 +4,7 @@ import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/core/pagination/paginated_meta.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/home/data/datasources/create_post/create_post_remote_data_source.dart';
+import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/reaction_item_model.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -17,6 +18,7 @@ import '../models/post/save_response_model.dart';
 
 typedef PostsResponse  = BaseResponse<PaginatedResponse<List<PostModel>>>;
 typedef SaveResponse  = BaseResponse<SaveResponseModel>;
+typedef CommentsResponse  = BaseResponse<List<CommentModel>>;
 
 class PostRemoteDataSource {
   final ApiController apiController;
@@ -193,6 +195,42 @@ class PostRemoteDataSource {
         );
 
         return baseResponse;
+
+
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
+  Future<List<CommentModel>> getComments(int postId) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        final response = await apiController.get(
+          Uri.parse('${ApiSetting.getComments}/$postId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
+          },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          _handleHttpError(responseBody);
+        }
+        if(response.statusCode ==200 || responseBody['data'] == null){
+          ///TODO
+        }
+
+        final baseResponse = CommentsResponse.fromJson(
+          responseBody,
+              (json) {
+            return (json as List).map((e) => CommentModel.fromJson(e),).toList();
+          },
+        );
+
+        return baseResponse.data!;
 
 
       } on TimeOutExeption {

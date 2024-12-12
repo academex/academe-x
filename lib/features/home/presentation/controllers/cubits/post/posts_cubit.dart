@@ -2,6 +2,7 @@ import 'package:academe_x/core/constants/cache_keys.dart';
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/features.dart';
+import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:flutter/cupertino.dart';
@@ -509,6 +510,28 @@ class PostsCubit extends Cubit<PostsState> {
             posts: [r, ...state.posts]));
       },
     );
+  }
+
+  getComments(int postId) async {
+    emit(state.copyWith(commentsStatus: CommentsStatus.loading));
+    var comments = await postUseCase.getComments(postId);
+    comments.fold(
+          (l) {
+        emit(
+          state.copyWith(
+            commentsStatus: CommentsStatus.failure,
+            commentError: l.message,
+          ),
+        );
+      },
+          (r) {
+        Logger().d(r.toString());
+        emit(state.copyWith(
+            commentsStatus: CommentsStatus.success,
+            comments: r,),);
+      },
+    );
+
   }
 
 }

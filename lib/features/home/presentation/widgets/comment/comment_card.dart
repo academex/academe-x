@@ -74,7 +74,7 @@ class CommentCard extends StatelessWidget {
                     radius: 20,
                   ),
                   if (!isReply)
-                    BlocBuilder<ShowRepliesCubit, ShowReplyesState>(
+                    BlocBuilder<ShowRepliesCubit, ShowRepliesState>(
                       buildWhen: (previous, current) =>
                           current.index == commentIndex,
                       builder: (context, state) {
@@ -136,7 +136,7 @@ class CommentCard extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 7, vertical: 5.h),
                               child: BlocBuilder<ShowRepliesCubit,
-                                  ShowReplyesState>(
+                                  ShowRepliesState>(
                                 buildWhen: (previous, current) {
                                   return commentIndex == current.index;
                                 },

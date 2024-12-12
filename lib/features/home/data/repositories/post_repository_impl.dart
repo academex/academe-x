@@ -2,6 +2,7 @@ import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/save_response_model.dart';
+import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:dartz/dartz.dart';
@@ -293,31 +294,27 @@ class PostRepositoryImpl implements PostRepository {
 
   @override
   Future<Either<Failure, PostEntity>> createPost(PostEntity post) async {
-    try {
-      final result = await createPostRemoteDataSource.createPost(
-        post: PostModel.fromEntity(post),
-      );
-      return Right(result);
-    } on OfflineException catch (e) {
-      return Left(NoInternetConnectionFailure(message: e.errorMessage));
-    } on TimeOutExeption catch (e) {
-      return Left(TimeOutFailure(message: e.errorMessage));
-    } on ValidationException catch (e) {
-      return Left(ValidationFailure(
-          message: e.messages.first, messages: [e.messages.first]));
-    } on AuthException catch (e) {
-      return Left(AuthFailure(message: e.errorMessage));
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } on Exception catch (e) {
-      return Left(ServerFailure(message: 'Server Failure : $e'));
-    }
+    return handlingException<PostEntity>(() => createPostRemoteDataSource.createPost(
+      post: PostModel.fromEntity(post),
+    ),);
   }
 
   @override
   Future<Either<Failure, List<MajorModel>>> getTags() async {
+    return handlingException<List<MajorModel>>(() => createPostRemoteDataSource.getTags(),);
+  }
+
+  @override
+  Future<Either<Failure, List<CommentEntity>>> getComments(int postId) {
+    return handlingException<List<CommentEntity>>(() => remoteDataSource.getComments(postId),);
+  }
+
+
+
+
+  Future<Either<Failure, T>> handlingException<T>(Future<T> Function() implementRemoteDataSourceMethod) async{
     try {
-      final result = await createPostRemoteDataSource.getTags();
+      final result = await implementRemoteDataSourceMethod();
       return Right(result);
     } on OfflineException catch (e) {
       return Left(NoInternetConnectionFailure(message: e.errorMessage));
@@ -337,52 +334,6 @@ class PostRepositoryImpl implements PostRepository {
 
 
 
-  // Future<void> _cacheReactionsResults(List<ReactionItemModel> reactions, int page) async {
-  //   try {
-  //     if (page == 1) {
-  //       // For first page, replace cache
-  //       await cacheManager.cacheResponse(
-  //         CacheKeys.REACTIONS,
-  //         reactions.map((reaction) => reaction.toJson()).toList(),
-  //       );
-  //     } else {
-  //       // For pagination, merge with existing cache
-  //       final existingCache = await _getReactionsFromCache();
-  //       if (existingCache != null) {
-  //         final mergedReactions = _mergeReactions(existingCache, reactions);
-  //         await cacheManager.cacheResponse(
-  //           CacheKeys.POSTS,
-  //           mergedReactions.map((post) => post.toJson()).toList(),
-  //         );
-  //       }
-  //     }
-  //   } catch (e) {
-  //     AppLogger.w('Cache operation failed: $e');
-  //     // Don't throw - caching errors shouldn't affect the main flow
-  //   }
-  // }
 
-  // Future<List<ReactionItemModel>?> _getReactionsFromCache() async {
-  //   try {
-  //     return await cacheManager.getCachedResponse<List<ReactionItemModel>>(
-  //       CacheKeys.REACTIONS,
-  //           (json) => (json as List)
-  //           .map((item) => ReactionItemModel.fromJson(item as Map<String, dynamic>))
-  //           .toList(),
-  //     );
-  //   } catch (e) {
-  //     AppLogger.w('Failed to get from cache: $e');
-  //     return null;
-  //   }
-  // }
 
-  // List<ReactionItemModel> _mergeReactions(List<ReactionItemModel> existing, List<ReactionItemModel> new_) {
-  //   final merged = [...existing];
-  //   for (var post in new_) {
-  //     if (!merged.any((p) => p.id == post.id)) {
-  //       merged.add(post);
-  //     }
-  //   }
-  //   return merged;
-  // }
 }

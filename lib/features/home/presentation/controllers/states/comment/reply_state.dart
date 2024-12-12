@@ -1,10 +1,10 @@
 // enum LoginStatus { initial, loading, success, failure }
-class ReplySatae{
+class ReplyState{
   final String commenter;
-  ReplySatae({required this.commenter});
-  ReplySatae copyWith({
+  ReplyState({required this.commenter});
+  ReplyState copyWith({
      required String commenter,
   }){
-    return ReplySatae(commenter:commenter);
+    return ReplyState(commenter:commenter);
   }
 }

@@ -2,6 +2,7 @@
 import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
+import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/save_response_entity.dart';
 import 'package:dartz/dartz.dart';
@@ -41,6 +42,11 @@ class PostUseCase {
 
   Future<Either<Failure, PostEntity>> createPost(PostEntity post) async {
     return await postRepository.createPost(post);
+  }
+
+
+  Future<Either<Failure, List<CommentEntity>>> getComments(int postId) async {
+    return await postRepository.getComments(postId);
   }
 
 

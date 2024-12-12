@@ -1,4 +1,5 @@
 
+import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/statistics_entity.dart';
 import 'package:equatable/equatable.dart';
@@ -10,6 +11,7 @@ enum PostStatus { initial, loading, success, failure }
 enum PostDetailsStatus { initial, loading, success, failure }
 enum ReactionStatus { initial, loading, success, failure }
 enum CreationStatus { initial, loading, success, failure }
+enum CommentsStatus { initial, loading, success, failure }
 
 class PostsState extends Equatable {
   final PostStatus status;
@@ -29,6 +31,11 @@ class PostsState extends Equatable {
   final String? creationPostErrorMessage;
   final String? selectedType;
   final DateTime? lastUpdated;  // Add this to track cache freshness
+  // this for comment
+  final CommentsStatus commentsStatus;
+  final List<CommentEntity> comments;
+  final String? commentError;
+
 
 
 
@@ -52,6 +59,11 @@ class PostsState extends Equatable {
     this.selectedType,
     this.lastUpdated,
     this.creationPostErrorMessage,
+    //for comment
+    this.commentsStatus = CommentsStatus.initial,
+    this.comments = const [],
+    this.commentError,
+
 
   });
 
@@ -72,6 +84,9 @@ class PostsState extends Equatable {
     String? errorMessage,
     String? selectedType,
     String? creationPostErrorMessage,
+    CommentsStatus? commentsStatus,
+    String? commentError,
+    List<CommentEntity>? comments,
 
   }) {
     return PostsState(
@@ -93,6 +108,11 @@ class PostsState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       creationPostErrorMessage: creationPostErrorMessage ?? this.creationPostErrorMessage,
       selectedType: selectedType ?? this.selectedType,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
+      // comment
+      comments: comments ?? this.comments,
+      commentsStatus: commentsStatus ?? this.commentsStatus,
+      commentError: commentError ?? this.commentError,
 
     );
   }
@@ -114,6 +134,8 @@ class PostsState extends Equatable {
     selectedType,
     isSaved,
     creationPostErrorMessage,
-
+    comments,
+    commentError,
+    commentsStatus,
   ];
 }

@@ -1,12 +1,12 @@
 // enum LoginStatus { initial, loading, success, failure }
-class ShowReplyesState{
+class ShowRepliesState{
   final bool show;
   final int index;
-  ShowReplyesState({ this.show = false,required this.index});
-  ShowReplyesState copyWith({
+  ShowRepliesState({ this.show = false,required this.index});
+  ShowRepliesState copyWith({
      required bool show,
      required int index
   }){
-    return ShowReplyesState(show: show, index: index);
+    return ShowRepliesState(show: show, index: index);
   }
 }

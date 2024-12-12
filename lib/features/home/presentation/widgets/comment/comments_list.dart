@@ -19,10 +19,10 @@ class CommentsList {
         return MultiBlocProvider(
           providers: [
             BlocProvider<ReplyCubit>(
-              create: (context) => ReplyCubit(ReplySatae(commenter: '')),
+              create: (context) => ReplyCubit(ReplyState(commenter: '')),
             ),
             BlocProvider<ShowRepliesCubit>(
-              create: (context) => ShowRepliesCubit(ShowReplyesState(index: 0)),
+              create: (context) => ShowRepliesCubit(ShowRepliesState(index: 0)),
             ),
           ],
           child: FractionallySizedBox(
@@ -68,7 +68,7 @@ class CommentsList {
                               },
                               commentIndex: index,
                             ),
-                            BlocBuilder<ShowRepliesCubit, ShowReplyesState>(
+                            BlocBuilder<ShowRepliesCubit, ShowRepliesState>(
                                 buildWhen: (previous, current) {
                               return current.index == index;
                             }, builder: (context, state) {
@@ -110,7 +110,7 @@ class CommentsList {
                     child: Row(
                       children: [
                         Expanded(
-                          child: BlocBuilder<ReplyCubit, ReplySatae>(
+                          child: BlocBuilder<ReplyCubit, ReplyState>(
                             builder: (context, state) {
                               comment.text = state.commenter != ''
                                   ? '${state.commenter}: '
