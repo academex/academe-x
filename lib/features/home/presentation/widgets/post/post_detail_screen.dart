@@ -119,7 +119,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 break;
             }
 
-            return PostWidget(post: state.post!);
+            return PostWidget(post: state.posts.first);
             // if (state is PostDetailsLoading) {
             //   return const Center(child: CircularProgressIndicator());
             // }

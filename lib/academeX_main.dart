@@ -7,7 +7,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/utils/deep_link_service.dart';
 import 'core/utils/go_router.dart';
-import 'features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'lib.dart';
@@ -57,9 +56,7 @@ class AcademeXMain extends StatelessWidget {
       BlocProvider<PostImageCubit>(
         create: (context) => getIt<PostImageCubit>(),
       ),
-      BlocProvider<CreatePostCubit>(
-        create: (context) => getIt<CreatePostCubit>(),
-      ),
+
 
       BlocProvider<PostsCubit>(
         create: (context) => getIt<PostsCubit>()..loadPosts(),

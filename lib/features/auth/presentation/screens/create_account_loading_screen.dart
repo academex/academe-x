@@ -1,7 +1,4 @@
-import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
-import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
-import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

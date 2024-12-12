@@ -1,10 +1,9 @@
 import 'package:academe_x/features/college_major/controller/cubit/college_majors_state.dart';
-import 'package:academe_x/features/home/domain/usecases/get_tags_use_case.dart';
-import 'package:academe_x/features/home/presentation/controllers/states/create_post/get_tags_state.dart';
+import 'package:academe_x/features/college_major/domain/usecases/college_major_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GetTagsCubit extends Cubit<CollegeMajorsState> {
-  GetTagsUseCase getTagsUseCase;
+  CollegeMajorUseCase getTagsUseCase;
   GetTagsCubit({required this.getTagsUseCase}):  super(const CollegeMajorsState());
   getTags() async {
     emit(state.copyWith(

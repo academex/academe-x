@@ -1,18 +1,13 @@
 import 'package:academe_x/features/college_major/data/data.dart';
 import 'package:academe_x/features/features.dart';
-import 'package:academe_x/features/home/domain/usecases/get_tags_use_case.dart';
 import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
-import 'package:academe_x/features/home/presentation/controllers/states/create_post/get_tags_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../../features/college_major/controller/cubit/college_major_cubit.dart';
 import '../../features/college_major/domain/repositories/college_major_repository.dart';
 import '../../features/college_major/domain/usecases/college_major_use_case.dart';
-import '../../features/home/data/repositories/create_post_repository_imp.dart';
-import '../../features/home/domain/usecases/create_post_use_case.dart';
-import '../../features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import '../../features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import '../core.dart';
 // import '../services/hive_cache_manager.dart';
@@ -43,9 +38,6 @@ void _initCubits() {
 
   getIt.registerFactory<LoginCubit>(() => LoginCubit(authUseCase: getIt()));
 
-  getIt.registerFactory<CreatePostCubit>(
-    () => CreatePostCubit(InitialState(), createPostUseCase: getIt()),
-  );
 
   getIt.registerFactory<GetTagsCubit>(
     () => GetTagsCubit(getTagsUseCase: getIt()),
@@ -114,16 +106,12 @@ void _initUseCases() {
   getIt.registerLazySingleton<AuthenticationUseCase>(
     () => AuthenticationUseCase(authenticationRepository: getIt()),
   );
-  getIt.registerLazySingleton<CreatePostUseCase>(
-    () => CreatePostUseCase(createPostRepository: getIt()),
-  );
+
   getIt.registerLazySingleton<PostUseCase>(
     () => PostUseCase(postRepository: getIt()),
   );
 
-  getIt.registerLazySingleton<GetTagsUseCase>(
-    () => GetTagsUseCase(createPostRepository: getIt()),
-  );
+
   getIt.registerLazySingleton<CollegeMajorUseCase>(
     () => CollegeMajorUseCase(collegeMajorRepository: getIt()),
   );
@@ -135,9 +123,6 @@ void _initRepositories() {
         remoteDataSource: getIt(),
         cacheManager: getIt(),
         networkInfo: InternetConnectionChecker()),
-  );
-  getIt.registerLazySingleton<CreatePostRepository>(
-    () => CreatePostRepositoryImp(createPostRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton<PostRepository>(
     () => PostRepositoryImpl(remoteDataSource: getIt(), cacheManager: getIt(),createPostRemoteDataSource: getIt()),
