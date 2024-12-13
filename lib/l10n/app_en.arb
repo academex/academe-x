@@ -2,7 +2,7 @@
   "appTitle": "AcademeX",
   "loginTitle": "Login",
   "loginSubTitle": "Please enter your information to log in to the world of knowledge and learning.",
-  "emailLabel": "Email",
+  "emailLabel": "Email or username",
   "emailHint": "Enter email address",
   "passwordLabel": "Password",
   "passwordHint": "Enter password",

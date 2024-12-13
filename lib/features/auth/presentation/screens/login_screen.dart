@@ -127,7 +127,7 @@ class LoginScreen extends StatelessWidget {
           label: context.localizations.emailLabel,
           hintText: context.localizations.emailHint,
           controller:emailController,
-          validator: (value) => value?.isEmpty ?? true ? 'البريد الإلكتروني مطلوب' : null,
+          validator: (value) => value?.isEmpty ?? true ? 'البريد الإلكتروني أو اسم المستخدم مطلوب' : null,
         ),
         SizedBox(height: context.hp(2)),
         BlocBuilder<LoginCubit,AuthState>(
