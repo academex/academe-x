@@ -57,7 +57,7 @@ class ApiController {
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
-        int timeAlive = 120,
+        int timeAlive = 30,
   }) async {
     try {
 

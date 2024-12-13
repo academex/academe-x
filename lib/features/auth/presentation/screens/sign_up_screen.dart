@@ -335,7 +335,7 @@ class SignUpScreen extends StatelessWidget {
         if (state.errorMessage != null) {
           context.showSnackBar(message: state.errorMessage![0], error: true,);
         }else if(state.isAuthenticated){
-          context.pushReplacementNamed('/account_creation');
+          context.go('/account_creation');
         }
       },
       // listenWhen: (previous, current) => current.errorMessage !=previous.errorMessage,

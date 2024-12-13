@@ -9,7 +9,6 @@ extension AuthCacheManager on HiveCacheManager {
   // Cache the authenticated user
   Future<void> cacheAuthUser(AuthTokenEntity user) async {
     try {
-      AppLogger.success('in cacheAuthUser ${user.toString()}');
       await cacheResponse<AuthTokenEntity>(
         CacheKeys.USER,
         user,

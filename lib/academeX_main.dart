@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/utils/deep_link_service.dart';
 import 'core/utils/go_router.dart';
+import 'features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
@@ -62,41 +63,18 @@ class AcademeXMain extends StatelessWidget {
       ),
 
       BlocProvider<PostsCubit>(
-        create: (context) => getIt<PostsCubit>()..loadPosts(),
+        create: (context) => getIt<PostsCubit>()..loadTagPosts(),
       ),
 
       BlocProvider<CollegeMajorsCubit>(
-        create: (context) => getIt<CollegeMajorsCubit>()..getColleges()..getTags(),
+        create: (context) => getIt<CollegeMajorsCubit>()..initCollegeMajor(),
+      ),
+      BlocProvider<GetTagsCubit>(
+        create: (context) => getIt<GetTagsCubit>()..getTags(),
       ),
     ];
   }
 
-  // Widget _buildMaterialApp() {
-  //   return ScreenUtilInit(
-  //     designSize: const Size(375, 812),
-  //     minTextAdapt: true,
-  //     splitScreenMode: true,
-  //     child: MaterialApp.router(
-  //       routerConfig: goRouter,
-  //       // navigatorKey: NavigationService.navigatorKey,
-  //       title: 'AcademeX',
-  //       locale: const Locale('ar'),
-  //       supportedLocales: AppLocalizations.supportedLocales,
-  //       localizationsDelegates: const [
-  //         AppLocalizations.delegate,
-  //         GlobalMaterialLocalizations.delegate,
-  //         GlobalWidgetsLocalizations.delegate,
-  //         GlobalCupertinoLocalizations.delegate,
-  //       ],
-  //       debugShowCheckedModeBanner: false,
-  //       // home: HomePage(),
-  //       theme: _buildTheme(),
-  //       initialRoute: '/',
-  //       onGenerateRoute: AppRouter.generateRoute,
-  //       builder: (context, child) => _buildAppWithExtra(context, child),
-  //     ),
-  //   );
-  // }
   Widget _buildMaterialApp() {
     return ScreenUtilInit(
       designSize: const Size(375, 812),

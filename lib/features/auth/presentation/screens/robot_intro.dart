@@ -53,7 +53,7 @@ class RobotIntroScreen extends StatelessWidget {
                   borderColor: Colors.white,
                   // text: ,
                   onPressed: () {
-                    context.pushNamed('/sign_up');
+                    context.go('/sign_up');
 
                     // Add your navigation logic here for the next step
                   }, widget: AppText(text: context.localizations.startButton, fontSize: 16  ,color: Colors.white,),

@@ -277,7 +277,7 @@ class LoginScreen extends StatelessWidget {
           color: const Color(0xFF3253FF),
           fontSize: context.isTablet ? 18 : 16,
           fontWeight: FontWeight.w600,
-          onPressed: () => context.pushNamed('/robot_intro'),
+          onPressed: () => context.go('/robot_intro'),
         ),
       ],
     );

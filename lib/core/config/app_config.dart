@@ -56,7 +56,7 @@ class AppConfig {
         apiUrl = 'https://academex-1.onrender.com';
         authEndpoint = '$apiUrl/auth';
         tagsEndpoint = '$apiUrl/tag';
-        postsEndpoint = '$apiUrl/post/';
+        postsEndpoint = '$apiUrl/post';
         getTagsEndpoint = '$apiUrl/tag/user-college-tags';
 
         enableAnalytics = false;

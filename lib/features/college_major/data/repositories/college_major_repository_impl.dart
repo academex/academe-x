@@ -97,7 +97,7 @@ class CollegeMajorRepositoryImpl implements CollegeMajorRepository {
     try {
       AppLogger.i('Getting majors from cache first');
       final cached = await cacheManager.getCachedResponse<List<MajorModel>>(
-        CacheKeys.MAJORS,
+        '${CacheKeys.MAJORS}/$collegeName',
             (dynamic data) {
           final List<dynamic> list = data as List;
           return list.map((item) {
@@ -115,7 +115,7 @@ class CollegeMajorRepositoryImpl implements CollegeMajorRepository {
       AppLogger.i('No cache found, fetching from remote');
       final majorsByName = await remoteDataSource.getMajorsByCollege(collegeName);
 
-      await cacheManager.cacheResponse(CacheKeys.MAJORS, majorsByName);
+      await cacheManager.cacheResponse('${CacheKeys.MAJORS}/$collegeName', majorsByName);
       return Right(majorsByName);
     }on ValidationException catch (e) {
       return Left(ValidationFailure(messages: e.messages, message: ''));

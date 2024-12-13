@@ -27,10 +27,11 @@ class PostRemoteDataSource {
 
 
   Future<PaginatedResponse<PostModel>> getPosts(PaginationParams paginationParams) async {
+    AppLogger.success(paginationParams.tagId.toString());
     if (await internetConnectionChecker.hasConnection) {
       try {
         final response = await apiController.get(
-          Uri.parse('${ApiSetting.getPosts}?page=${paginationParams.page}'),
+          Uri.parse('${ApiSetting.getPosts}?tagId=${paginationParams.tagId}&page=${paginationParams.page}'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
@@ -67,7 +68,7 @@ class PostRemoteDataSource {
     if (await internetConnectionChecker.hasConnection) {
       try {
         final response = await apiController.get(
-          Uri.parse('${ApiSetting.getPosts}${paginationParams.postId}'),
+          Uri.parse('${ApiSetting.getPosts}/${paginationParams.postId}'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
@@ -137,7 +138,7 @@ class PostRemoteDataSource {
     if (await internetConnectionChecker.hasConnection) {
       try {
         final response = await apiController.post(
-          Uri.parse('${ApiSetting.getPosts}$postId/react'),
+          Uri.parse('${ApiSetting.getPosts}/$postId/react'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
