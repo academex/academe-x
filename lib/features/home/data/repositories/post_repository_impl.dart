@@ -1,4 +1,4 @@
-import 'package:academe_x/core/network/base_response.dart';
+import 'package:academe_x/core/utils/network/base_response.dart';
 import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/save_response_model.dart';
@@ -12,8 +12,8 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/pagination/paginated_meta.dart';
 import '../../../../core/pagination/paginated_response.dart';
 import '../../../../core/pagination/pagination_params.dart';
-import '../../../../core/storage/cache/hive_cache_manager.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../../core/utils/storage/cache/hive_cache_manager.dart';
 import '../../domain/repositories/post_repository.dart';
 import '../datasources/create_post/create_post_remote_data_source.dart';
 import '../datasources/post_remote_data_source.dart';

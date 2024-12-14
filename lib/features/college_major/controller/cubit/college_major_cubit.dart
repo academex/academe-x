@@ -6,6 +6,7 @@ import 'package:academe_x/features/college_major/domain/usecases/college_major_u
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../academeX_main.dart';
+import '../../../../core/utils/storage/cache/hive_cache_manager.dart';
 import '../../../auth/domain/entities/response/auth_token_entity.dart';
 
 

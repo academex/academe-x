@@ -1,15 +1,12 @@
 
-import 'package:academe_x/core/constants/app_navigation.dart';
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
-import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 
 import 'package:academe_x/features/home/presentation/widgets/post/post_actions.dart';
 import 'package:academe_x/features/home/presentation/widgets/post/post_content.dart';
 import 'package:academe_x/features/home/presentation/widgets/post/post_header.dart';
 import 'package:academe_x/features/home/presentation/widgets/post/post_media.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 
@@ -26,7 +23,7 @@ class PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () =>fromHome? context.go('/post/${post.id}') : null,
+      // onTap: () =>fromHome? context.go('/post/${post.id}') : null,
       child:  Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

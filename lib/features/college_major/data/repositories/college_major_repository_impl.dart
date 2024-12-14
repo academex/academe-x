@@ -1,11 +1,7 @@
-import 'package:academe_x/core/network/base_response.dart';
 import 'package:academe_x/features/college_major/data/data.dart';
 import 'package:academe_x/features/college_major/data/models/college_model.dart';
 import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:academe_x/features/college_major/domain/domain.dart';
-import 'package:academe_x/features/home/data/models/post/post_model.dart';
-import 'package:academe_x/features/home/data/models/post/save_response_model.dart';
-import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:dartz/dartz.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -13,8 +9,8 @@ import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/error/failure.dart';
 
-import '../../../../core/storage/cache/hive_cache_manager.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../../core/utils/storage/cache/hive_cache_manager.dart';
 
 
 class CollegeMajorRepositoryImpl implements CollegeMajorRepository {
@@ -32,27 +28,21 @@ class CollegeMajorRepositoryImpl implements CollegeMajorRepository {
   @override
   Future<Either<Failure, List<CollegeModel>>> getColleges() async {
     try {
-      AppLogger.i('Getting colleges from cache first');
       final cached = await cacheManager.getCachedResponse<List<CollegeModel>>(
         CacheKeys.COLLEGES,
             (dynamic data) {
-          AppLogger.i('Parsing cached data: $data');
           final List<dynamic> list = data as List;
           return list.map((item) {
-            AppLogger.i('Parsing item: $item');
             return CollegeModel.fromJson(item as Map<String, dynamic>);
           }).toList();
         },
       );
 
       if (cached != null) {
-        AppLogger.i('Returning cached data: $cached');
         return Right(cached);
       }
 
-      AppLogger.i('No cache found, fetching from remote');
       final result = await remoteDataSource.getColleges();
-      AppLogger.i('Got remote data: $result');
 
       await cacheManager.cacheResponse(CacheKeys.COLLEGES, result);
       return Right(result);
@@ -95,24 +85,20 @@ class CollegeMajorRepositoryImpl implements CollegeMajorRepository {
   @override
   Future<Either<Failure, List<MajorModel>>> getMajorsByCollege(String collegeName) async {
     try {
-      AppLogger.i('Getting majors from cache first');
       final cached = await cacheManager.getCachedResponse<List<MajorModel>>(
         '${CacheKeys.MAJORS}/$collegeName',
             (dynamic data) {
           final List<dynamic> list = data as List;
           return list.map((item) {
-            AppLogger.i('Parsing item: $item');
             return MajorModel.fromJson(item as Map<String, dynamic>);
           }).toList();
         },
       );
 
       if (cached != null) {
-        AppLogger.i('Returning cached data: $cached');
         return Right(cached);
       }
 
-      AppLogger.i('No cache found, fetching from remote');
       final majorsByName = await remoteDataSource.getMajorsByCollege(collegeName);
 
       await cacheManager.cacheResponse('${CacheKeys.MAJORS}/$collegeName', majorsByName);

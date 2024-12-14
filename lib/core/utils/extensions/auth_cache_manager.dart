@@ -4,6 +4,7 @@ import 'package:academe_x/features/auth/auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../constants/cache_keys.dart';
+import '../storage/cache/hive_cache_manager.dart';
 
 extension AuthCacheManager on HiveCacheManager {
   // Cache the authenticated user
@@ -12,7 +13,8 @@ extension AuthCacheManager on HiveCacheManager {
       await cacheResponse<AuthTokenEntity>(
         CacheKeys.USER,
         user,
-        duration: const Duration(days: 30), // Or your preferred token lifetime
+        duration: const Duration(days: 30),
+        isUser: true
       );
       AppLogger.success('User cached successfully');
     } catch (e) {
@@ -29,6 +31,7 @@ extension AuthCacheManager on HiveCacheManager {
             (json) {
           return  AuthTokenModel.fromJson(json);
             },
+        isUser: true
       );
 
       if (user != null ) {
@@ -43,30 +46,6 @@ extension AuthCacheManager on HiveCacheManager {
       return null;
     }
   }
-  //
-  // // Validate token
-  // bool isTokenValid(AuthTokenEntity user) {
-  //   if (user.accessToken.isEmpty) {
-  //     return false;
-  //   }
-  //
-  //   // Check token expiration if you have expiration in your AuthTokenEntity
-  //   try {
-  //       final expiryDate = DateTime.now().add(const Duration(hours  : 1));
-  //       if (DateTime.now().isAfter(expiryDate)) {
-  //         AppLogger.w('Token has expired');
-  //         return false;
-  //       }
-  //
-  //     // Add any additional token validation logic here
-  //     return true;
-  //   } catch (e) {
-  //     AppLogger.e('Token validation error: $e');
-  //     return false;
-  //   }
-  // }
-
-  // Clear auth cache
   Future<void> clearAuthCache() async {
     try {
       await removeCacheItem(CacheKeys.USER);
@@ -77,7 +56,6 @@ extension AuthCacheManager on HiveCacheManager {
     }
   }
 
-  // Check if user is authenticated
   Future<bool> isAuthenticated() async {
     final user = await getCachedAuthUser();
     return user != null;

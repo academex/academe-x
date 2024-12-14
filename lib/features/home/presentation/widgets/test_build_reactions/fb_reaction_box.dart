@@ -21,23 +21,12 @@ class FbReactionBox extends StatefulWidget {
     required this.onReact,
   }) : super(key: key);
 
-  // late PostEntity post;
-  // FbReactionBox(post);
-
   @override
   createState() => FbReactionBoxState();
 }
 
 class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMixin {
-  // final _audioPlayer = AudioPlayer();
 
-
-
-
-  static const double _boxHeight = 50.0;
-  static const double _emojiSize = 40.0;
-
-  // Animation durations
   final int _durationAnimationBox = 500;
   final int _durationAnimationBtnLongPress = 150;
   final int _durationAnimationBtnShortPress = 500;
@@ -45,7 +34,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   final int _durationAnimationEmojiWhenRelease = 1000;
   final _durationLongPress = Duration(milliseconds: 250);
 
-  // Animation controllers
   late AnimationController _animControlBtnLongPress;
   late AnimationController _animControlBox;
   late AnimationController _animControlBtnShortPress;
@@ -89,6 +77,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
   // State variables
   ReactionEmoji _emojiUserChoose = ReactionEmoji.nothing;
+  ReactionEmoji _currentEmojiChoose = ReactionEmoji.nothing;
   ReactionEmoji _currentEmojiFocus = ReactionEmoji.nothing;
   ReactionEmoji _previousEmojiFocus = ReactionEmoji.nothing;
 
@@ -111,20 +100,17 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   }
 
   void _initializeUserReaction() async{
-    AuthTokenModel? authTokenModel =await context.cachedUser;
-
-
     if(widget.post.isReacted!){
       final currentUserReaction = widget.post.reactionType;
       if (currentUserReaction != null) {
         setState(() {
-          _emojiUserChoose = _getReactionEmojiFromString(currentUserReaction);
-          _currentEmojiFocus = _emojiUserChoose;
-          _isLiked = _emojiUserChoose != ReactionEmoji.nothing;
+          _currentEmojiChoose = _getReactionEmojiFromString(currentUserReaction);
+          _currentEmojiFocus = _currentEmojiChoose;
+          _isLiked = _currentEmojiChoose != ReactionEmoji.nothing;
         });
       } else {
         setState(() {
-          _emojiUserChoose = ReactionEmoji.nothing;
+          _currentEmojiChoose = ReactionEmoji.nothing;
           _currentEmojiFocus = ReactionEmoji.nothing;
           _isLiked = false;
         });
@@ -132,25 +118,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
 
     }
-    // if (widget.post.reactions != null && widget.post.reactions!.items.isNotEmpty) {
-    //   final currentUserReaction = widget.post.reactions!.items
-    //       .where((reaction) => reaction.user.id == authTokenModel.user.id)
-    //       .firstOrNull;
-    //
-    //   if (currentUserReaction != null) {
-    //     setState(() {
-    //       _emojiUserChoose = _getReactionEmojiFromString(currentUserReaction.type);
-    //       _currentEmojiFocus = _emojiUserChoose;
-    //       _isLiked = _emojiUserChoose != ReactionEmoji.nothing;
-    //     });
-    //   } else {
-    //     setState(() {
-    //       _emojiUserChoose = ReactionEmoji.nothing;
-    //       _currentEmojiFocus = ReactionEmoji.nothing;
-    //       _isLiked = false;
-    //     });
-    //   }
-    // }
+
   }
 
    ReactionEmoji _getReactionEmojiFromString(String type) {
@@ -188,34 +156,34 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   }
   void _handleReaction(ReactionEmoji reaction) async {
     // If clicking the same reaction that's already selected, remove it
-    if (reaction == _emojiUserChoose) {
+    AppLogger.success('reaction  ${reaction}');
+
+    if (reaction == _currentEmojiChoose) {
       widget.onReact(reaction.name);
 
       setState(() {
+        _currentEmojiChoose = ReactionEmoji.nothing;
         // _emojiUserChoose = ReactionEmoji.nothing;
         _currentEmojiFocus = ReactionEmoji.nothing;
         _isLiked = false;
       });
     }
-    // If selecting a new reaction
     else {
       widget.onReact(reaction.name);
 
       setState(() {
+        _currentEmojiChoose = reaction;
         _emojiUserChoose = reaction;
         _currentEmojiFocus = reaction;
         _isLiked = true;
       });
 
+      AppLogger.success(_emojiUserChoose.toString());
+
       _hideBox();
     }
   }
-
-
-
-
   void _initAnimationBtnLike() {
-    // long press
     _animControlBtnLongPress =
         AnimationController(vsync: this, duration: Duration(milliseconds: _durationAnimationBtnLongPress));
     _zoomEmojiLikeInBtn = Tween(begin: 1.0, end: 0.85).animate(_animControlBtnLongPress);
@@ -244,7 +212,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
       setState(() {});
     });
   }
-
   void _initAnimationBoxAndEmojis() {
     _animControlBox = AnimationController(vsync: this, duration: Duration(milliseconds: _durationAnimationBox));
 
@@ -344,7 +311,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
     //   setState(() {});
     // });
   }
-
   void _initAnimationEmojiWhenDrag() {
     _animControlEmojiWhenDrag =
         AnimationController(vsync: this, duration: Duration(milliseconds: _durationAnimationEmojiWhenDrag));
@@ -363,7 +329,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
       setState(() {});
     });
   }
-
   void _initAnimationEmojiWhenDragOutside() {
     _animControlEmojiWhenDragOutside =
         AnimationController(vsync: this, duration: Duration(milliseconds: _durationAnimationEmojiWhenDrag));
@@ -372,7 +337,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
       setState(() {});
     });
   }
-
   void _initAnimationBoxWhenDragOutside() {
     _animControlBoxWhenDragOutside =
         AnimationController(vsync: this, duration: Duration(milliseconds: _durationAnimationEmojiWhenDrag));
@@ -381,7 +345,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
       setState(() {});
     });
   }
-
   void _initAnimationEmojiWhenDragInside() {
     _animControlEmojiWhenDragInside =
         AnimationController(vsync: this, duration: Duration(milliseconds: _durationAnimationEmojiWhenDrag));
@@ -395,7 +358,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
       }
     });
   }
-
   void _initAnimationEmojiWhenRelease() {
     _animControlEmojiWhenRelease =
         AnimationController(vsync: this, duration: Duration(milliseconds: _durationAnimationEmojiWhenRelease));
@@ -471,10 +433,8 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-
     return  GestureDetector(
-      onHorizontalDragEnd: _onHorizontalDragEndBoxEmoji,
-      onHorizontalDragUpdate: _onHorizontalDragUpdateBoxEmoji,
+
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -705,6 +665,8 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
   Widget _buildLikeButton() {
     return GestureDetector(
+      onHorizontalDragEnd: _onHorizontalDragEndBoxEmoji,
+      onHorizontalDragUpdate: _onHorizontalDragUpdateBoxEmoji,
       onTapDown: _onTapDownBtn,
       onTapUp: _onTapUpBtn,
       onTap: _onTapBtn,
@@ -743,7 +705,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
     if (_isDragging) {
       return widget.post.reactions!.count.toString();
     }
-    switch (_emojiUserChoose) {
+    switch (_currentEmojiChoose) {
       case ReactionEmoji.nothing:
         return widget.post.reactions!.count.toString();
       case ReactionEmoji.heart:
@@ -765,7 +727,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
     //   return AppAssets.defaultIcon;
     // } else
       if (!_isDragging) {
-      switch (_emojiUserChoose) {
+      switch (_currentEmojiChoose) {
         case ReactionEmoji.nothing:
           return AppAssets.defaultIcon;
         case ReactionEmoji.insightful:
@@ -787,7 +749,7 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   Color _getColorBtn() {
 
     if (!_isDragging) {
-      switch (_emojiUserChoose) {
+      switch (_currentEmojiChoose) {
         case ReactionEmoji.celebrate:
           return Color(0xffFFDCD4);
         case ReactionEmoji.heart:
@@ -808,20 +770,10 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
     }
   }
 
-  // void _onHorizontalDragEndBoxEmoji(DragEndDetails dragEndDetail) {
-  //   _isDragging = false;
-  //   _isDraggingOutside = false;
-  //   _isJustDragInside = true;
-  //   _previousEmojiFocus = ReactionEmoji.nothing;
-  //   _currentEmojiFocus = ReactionEmoji.nothing;
-  //
-  //   _onTapUpBtn(null);
-  // }
-
   void _onHorizontalDragEndBoxEmoji(DragEndDetails dragEndDetail) {
     if (_currentEmojiFocus != ReactionEmoji.nothing) {
       // If dragging to the same emoji that's already selected, remove it
-      if (_currentEmojiFocus == _emojiUserChoose) {
+      if (_currentEmojiFocus == _currentEmojiChoose) {
         _handleReaction(_emojiUserChoose); // Will remove the reaction
       } else {
         _handleReaction(_currentEmojiFocus); // Will change to new reaction
@@ -917,7 +869,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
   void _handleWhenDragBetweenEmoji(ReactionEmoji currentEmoji) {
 
-    // _playSound(AssetSounds.focus);
     _emojiUserChoose = currentEmoji;
     _previousEmojiFocus = _currentEmojiFocus;
     _currentEmojiFocus = currentEmoji;
@@ -957,10 +908,13 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
   void _onTapBtn() {
     if (!_isLongPress) {
-      if (_emojiUserChoose == ReactionEmoji.nothing) {
+      AppLogger.success('test reactions ${(_currentEmojiChoose == ReactionEmoji.nothing).toString()}');
+      AppLogger.success('test reactions ${(_currentEmojiFocus == _currentEmojiChoose).toString()}');
+      AppLogger.success('test reactions ${_currentEmojiFocus.toString()}');
+      if (_currentEmojiChoose == ReactionEmoji.nothing) {
         _handleReaction(ReactionEmoji.heart); // Default reaction
-      } else {
-        _handleReaction(_emojiUserChoose); // Will remove the current reaction
+      } else  {
+        _handleReaction(_currentEmojiChoose); // Will remove the current reaction
       }
     }
   }

@@ -7,7 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
-import '../utils/logger.dart';
+import '../logger.dart';
+
 
 class ApiController {
   static ApiController instance = ApiController._internal();

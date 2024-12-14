@@ -26,21 +26,6 @@ class PostActions extends StatelessWidget {
   final PostEntity post;
 
   const PostActions({required this.post, super.key});
-
-  Future<void> _handleReaction(String reactType, BuildContext context) async {
-    try {
-      await context.read<PostsCubit>().reactToPost(
-        context: context,
-        reactType: reactType.toUpperCase(),
-        postId: post.id!,
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update reaction')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PostsCubit,PostsState>(

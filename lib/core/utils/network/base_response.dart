@@ -1,4 +1,4 @@
-import '../utils/logger.dart';
+import '../logger.dart';
 
 class BaseResponse<T> {
   final String status;
