@@ -5,6 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 
+import '../network/api_setting.dart';
+
 class ShareService {
   static Future<void> shareViaWhatsApp(String postId, String postTitle) async {
     final url = '${ApiSetting.baseUrl}/post/$postId';

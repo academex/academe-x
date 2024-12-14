@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/utils/deep_link_service.dart';
 import 'core/utils/go_router.dart';
+import 'core/utils/network/cubits/connectivity_cubit.dart';
 import 'features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';

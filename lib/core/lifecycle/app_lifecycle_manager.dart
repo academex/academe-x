@@ -47,6 +47,7 @@ class _AppLifecycleManagerState extends State<AppLifecycleManager>
   void _onResumed() {
     AppLogger.i('_onResumed');
     // Refresh data, reconnect services etc
+
     // .
   }
 

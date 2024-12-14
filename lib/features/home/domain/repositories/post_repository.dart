@@ -6,7 +6,7 @@ import 'package:academe_x/features/home/domain/entities/post/tag_entity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
-import '../../../../core/network/base_response.dart';
+import '../../../../core/utils/network/base_response.dart';
 import '../../../../core/pagination/paginated_response.dart';
 import '../../../../core/pagination/pagination_params.dart';
 import '../entities/post/reaction_item_entity.dart';

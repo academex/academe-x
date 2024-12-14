@@ -1,5 +1,5 @@
 
-import 'package:academe_x/core/network/base_response.dart';
+import 'package:academe_x/core/utils/network/base_response.dart';
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';

@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:academe_x/core/config/app_config.dart';
+import 'package:academe_x/features/auth/auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../logger.dart';
 import '../base/base_storage_manager.dart';
 import '../config/storage_config.dart';
-import '../../utils/logger.dart';
 
 class HiveCacheManager implements BaseStorageManager {
   static final HiveCacheManager _instance = HiveCacheManager._internal();
@@ -16,6 +17,7 @@ class HiveCacheManager implements BaseStorageManager {
   late Box<String> _settingsBox;
   int _currentCacheSize = 0;
   final bool _isInitialized = false;
+  late String? cachedString;
 
 
   @override
@@ -100,13 +102,15 @@ class HiveCacheManager implements BaseStorageManager {
     return totalSize;
   }
 
-  Future<Map<String, int>> getAllStorageSizes() async {
+  Future<Map<String, double>> getAllStorageSizes() async {
     return {
-      'cache': await getCurrentCacheSize(),
-      'userData': await getUserDataSize(),
-      'settings': await getSettingsSize(),
+      'cache': (await getCurrentCacheSize())*0.001,
+      'userData': (await getUserDataSize())*0.001,
+      'settings': (await getSettingsSize())*0.001,
+      'total': (await getCurrentCacheSize()+ await getUserDataSize()+ await getSettingsSize())*0.001
     };
   }
+
 
   // Check if total storage is approaching limit
   Future<bool> isStorageNearingLimit() async {
@@ -183,6 +187,7 @@ class HiveCacheManager implements BaseStorageManager {
       String key,
       T data, {
         Duration duration = AppConfig.cacheMaxAge,
+        bool isUser=false
       }) async {
     final expiryTime = DateTime.now().add(duration);
     final cacheData = {
@@ -196,7 +201,11 @@ class HiveCacheManager implements BaseStorageManager {
       await _evictOldestEntries(requiredSpace: dataSize);
     }
 
+    if (isUser){
+    await _userBox.put(key, encodedData);
+    }else{
     await _cacheBox.put(key, encodedData);
+    }
     _currentCacheSize += dataSize;
     await _checkStorageSize();
 
@@ -223,10 +232,16 @@ class HiveCacheManager implements BaseStorageManager {
   Future<T?> getCachedResponse<T>(
       String key,
       T Function(dynamic) fromJson,
+  {bool isUser=false}
       ) async {
-    final cachedString = _cacheBox.get(key);
+
+    if (isUser){
+      cachedString = _userBox.get(key);
+    }else{
+      cachedString = _cacheBox.get(key);
+    }
     if (cachedString == null) return null;
-    final cachedData = jsonDecode(cachedString);
+    final cachedData = jsonDecode(cachedString!);
     final expiryTime = DateTime.fromMillisecondsSinceEpoch(cachedData['expiry']);
 
     if (DateTime.now().isAfter(expiryTime)) {
@@ -272,6 +287,8 @@ class HiveCacheManager implements BaseStorageManager {
   @override
   Future<void> clear() async {
     await _cacheBox.clear();
+    await _userBox.clear();
+    await _settingsBox.clear();
     _currentCacheSize = 0;
   }
 

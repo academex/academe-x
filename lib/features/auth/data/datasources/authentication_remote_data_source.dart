@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:academe_x/core/network/base_response.dart';
+import 'package:academe_x/core/utils/network/base_response.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import 'package:academe_x/lib.dart';
+
+import '../../../../core/utils/handle_http_error.dart';
+import '../../../../core/utils/network/api_controller.dart';
+import '../../../../core/utils/network/api_setting.dart';
 
 typedef AuthResponse = BaseResponse<AuthTokenModel>;
 typedef CollegesResponse  = BaseResponse<List<CollegeModel>>;
@@ -30,7 +34,7 @@ class AuthenticationRemoteDataSource {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
         if (response.statusCode >= 400) {
-           _handleHttpError(responseBody);
+          HandleHttpError.handleHttpError(responseBody);
         }
         final AuthResponse baseResponse = AuthResponse.fromJson(
           responseBody,
@@ -109,7 +113,7 @@ class AuthenticationRemoteDataSource {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
         if (response.statusCode >= 400) {
-          _handleHttpError(responseBody);
+          HandleHttpError.handleHttpError(responseBody);
         }
 
 
@@ -145,7 +149,7 @@ class AuthenticationRemoteDataSource {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
         if(response.statusCode>=400){
-          _handleHttpError(responseBody);
+          HandleHttpError.handleHttpError(responseBody);
         }
 
           final CollegesResponse baseResponse = CollegesResponse.fromJson(
@@ -179,7 +183,7 @@ class AuthenticationRemoteDataSource {
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
 
         if(response.statusCode>=400){
-          _handleHttpError(responseBody);
+          HandleHttpError.handleHttpError(responseBody);
         }
 
         final MajorsResponse baseResponse = MajorsResponse.fromJson(

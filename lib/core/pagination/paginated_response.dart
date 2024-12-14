@@ -35,8 +35,4 @@ class PaginatedResponse<T> {
 
   bool get hasNextPage => paginatedMeta.page < paginatedMeta.pagesCount;
 
-  // // Helper method to safely access statistics
-  // int getStatValue(String key) {
-  //   return statisticsModel?.statistics[key] ?? 0;
-  // }
 }

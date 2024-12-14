@@ -23,6 +23,8 @@ dependencies:
   photo_view: ^0.14.0  # For image viewing
 #  flutter_reaction_button: ^3.0.0+3
   reaction_button: ^0.0.7
+#  whatsapp_reactions: ^0.0.4
+  flutter_reaction_button: ^3.0.0+3
 
   # State Management
   flutter_bloc: ^8.1.6

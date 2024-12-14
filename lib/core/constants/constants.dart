@@ -1,6 +1,5 @@
 export 'app_assets.dart';
 export 'app_colors.dart';
-export 'app_images.dart';
 export 'app_robot.dart';
 export 'app_size.dart';
 export 'app_theme_data.dart';
