@@ -67,6 +67,41 @@ class PostRemoteDataSource {
       throw OfflineException(errorMessage: 'No Internet Connection');
     }
   }
+  Future<List<CommentModel>> getComments(int postId) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        final response = await apiController.get(
+          Uri.parse('${ApiSetting.getComments}/$postId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
+          },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          HandleHttpError.handleHttpError(responseBody);
+        }
+        if(response.statusCode ==200 || responseBody['data'] == null){
+          ///TODO
+        }
+
+        final baseResponse = CommentsResponse.fromJson(
+          responseBody,
+              (json) {
+            return (json as List).map((e) => CommentModel.fromJson(e),).toList();
+          },
+        );
+
+        return baseResponse.data!;
+
+
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
 
 
   Future<BaseResponse<PostModel>> getPostDetails(PaginationParams paginationParams) async {

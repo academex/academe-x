@@ -25,6 +25,7 @@ import '../../../../../core/utils/network/api_controller.dart';
 import '../../../../../core/utils/network/api_setting.dart';
 import '../../../../../core/utils/storage/cache/hive_cache_manager.dart';
 import '../../../presentation/controllers/states/create_post/create_post_icons_state.dart';
+import '../../models/post/comment_model.dart';
 
 typedef PostBaseResponse = BaseResponse<PostModel>;
 typedef TagBaseResponse = BaseResponse<List<MajorModel>>;
@@ -186,11 +187,11 @@ class CreatePostRemoteDataSource {
         final Map<String, dynamic> responseBodyDecoded = jsonDecode(responseBody);
         Logger().f(responseBodyDecoded.toString());
 
-        if (response.statusCode >= 400) {
-          HandleHttpError.handleHttpError(responseBody);
-        if (sendResponse.statusCode >= 400) {
-          _handleHttpError(responseBodyDecoded);
-        }
+        // if (response.statusCode >= 400) {
+        //   HandleHttpError.handleHttpError(responseBody);
+        // if (sendResponse.statusCode >= 400) {
+        //   _handleHttpError(responseBodyDecoded);
+        // }
 
         // Parse the response to get the model
         final PostBaseResponse baseResponse = PostBaseResponse.fromJson(
@@ -202,6 +203,7 @@ class CreatePostRemoteDataSource {
       },
     );
   }
+
 
 // Helper function to track upload progress for a stream.
   Stream<List<int>> trackUploadProgress(
