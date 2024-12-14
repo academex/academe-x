@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:academe_x/core/core.dart';
-import 'package:academe_x/academeX_main.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/auth/domain/entities/response/user_response_entity.dart';
 import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
@@ -29,14 +28,12 @@ class CreatePost {
   final TextEditingController _postController = TextEditingController();
   PostEntity post = const PostEntity();
   final _formKey = GlobalKey<FormState>();
-  List<File>? images = null;
-  File? file = null;
+
 
   void showCreatePostModal(BuildContext parContext) async {
     int tagId = (await parContext.cachedUser)!.user.tagId;
-    MajorModel? userMajor = null;
+
     UserResponseEntity user = (await parContext.cachedUser)!.user;
-    String userName = '${user.firstName} ${user.lastName}';
     showModalBottomSheet(
       context: parContext,
       isScrollControlled: true,
@@ -44,287 +41,48 @@ class CreatePost {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
       ),
       builder: (context) {
-
         return FractionallySizedBox(
-          heightFactor: 0.9, // Modal height factor
+          heightFactor: 0.9,
           child: Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: 24,
-              right: 24,
-              top: 16,
-            ), // Adjust for keyboard and padding
+              left: 24.w,
+              right: 24.w,
+              top: 16.h,
+            ),
             child: SingleChildScrollView(
               child: SizedBox(
                 height: 0.85.sh,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Top handle to indicate drag
-                    Center(
-                      child: Container(
-                        width: 56,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffE7E8EA),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
+                    const CenterDivider(),
+                    10.ph(),
+                    const TitleWithCancel(),
                     16.ph(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AppText(
-                          text: 'الغاء',
-                          fontSize: 14,
-                          color: Colors.green,
-                          onPressed: () {
-                            context.read<PostsCubit>().cancelCreationPostState();
-                            Navigator.pop(context);
-                          },
-                        ),
-                        AppText(
-                          text: 'إنشاء بوست',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        // You can add another icon or widget here if needed
-                        50.ph(), // Placeholder for alignment
-                      ],
-                    ),
+                    UserInfo(user: user,context: parContext,tagId:tagId),
                     16.ph(),
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 20,
-                          child: user.photoUrl == null
-                              ? AppText(
-                                  text: user.firstName[0],
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                )
-                              : Image.network(user.photoUrl!),
-                        ),
-                        8.pw(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AppText(
-                              text: userName,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            BlocBuilder<CollegeMajorsCubit, CollegeMajorsState>(
-                              builder: (context, state) {
-
-                                if(state.status == MajorsStatus.success) {
-
-                                  userMajor = getUserMajor(parContext, state.majors,tagId);
-                                  context.read<TagCubit>().init(userMajor!);
-                                  return AppText(
-                                    text:  '${userMajor!.majorEn!.replaceAll(' ', '_')}#',
-                                    fontSize: 12.sp,
-                                    color: Colors.grey,
-                                  );
-                                }
-                                return AppText(
-                                  text: 'نحاول الحصول على tag',
-                                  fontSize: 12.sp,
-                                  color: Colors.grey,
-                                );
-                              },
-
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                    TextFieldForCreatePost(formKey: _formKey, postController: _postController),
+                    const ShowSelectedTags(),
                     16.ph(),
-                    Form(
-                      key: _formKey,
-                      child: AppTextField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                        withBoarder: false,
-                        maxLine: null,
-                        controller: _postController,
-                        hintText: 'قم بكتابة ما تريد الاستفسار عنه ..',
-                        keyboardType: TextInputType.multiline,
-                        suffix: GestureDetector(
-                          onTap: () {
-                            _postController.clear();
-                          },
-                          child: const Icon(Icons.clear, color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                    // need if statment as : if(textController.isNotEmpty) do the loop
-                    // for loop for the hashes
-                    BlocBuilder<TagCubit, TagState>(
-                      // buildWhen: (previous, current) {
-                      //   return previous.toString() != current.toString();
-                      // },
-
-                      builder: (context, state) {
-                        Logger().f(state);
-                        if (state is SuccessTagState) {
-
-                          getIt<SuccessTagState>().selectedTags = state.selectedTags;
-
-                          return Wrap(
-                            spacing: 3, // Space between buttons horizontally
-                            runSpacing: 0,
-                            children: List.generate(state.selectedTags.length,
-                                (index) {
-                              return AppText(
-                                text: state.selectedTags[index].collegeEn !=
-                                        null
-                                    ? '${state.selectedTags[index].majorEn!}#'
-                                        .replaceAll(' ', '_')
-                                    : '',
-                                fontSize: 14.sp,
-                                color: const Color(0xff0077FF),
-                              );
-                            }),
-                          );
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-
-                    16.ph(),
-                    BlocBuilder<PickerCubit, PickState>(
-                      builder: (context, state) {
-                        images = getIt<ImagePickerLoaded>().images;
-                        file = getIt<FilePickerLoaded>().file;
-                        if (state is ImagePickerLoaded ||
-                            state is FilePickerLoaded ||
-                            state is CreatePostIconsInit) {
-                          return Expanded(
-                            flex: (images == null && file == null)
-                                ? 0
-                                : (images != null && file != null)
-                                    ? 13
-                                    : (images != null)
-                                        ? 7
-                                        : 2,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  if (images != null)
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(children: [
-                                        for (int index = 0;
-                                            index < images!.length;
-                                            index++)
-                                          Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 9.w),
-                                            height: 178.w,
-                                            width:
-                                                images!.length == 1 ? 300 : 178,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                              BorderRadius.all(
-                                                      Radius.circular(12.r)),
-                                              image: DecorationImage(
-                                                image:
-                                                    FileImage(images![index]),
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                      ]),
-                                    ),
-                                  10.ph(),
-                                  if (file != null) FileContainer(file: file),
-                                ],
-                              ),
-                            ),
-                          );
-                        }
-                        // else if (state is FilePickerLoaded) {
-                        //   return FileContainer(file: getIt<FilePickerLoaded>().file);
-                        // }
-                        else if (state is CreateMultiChoice) {
-                          return CreateMultiChoiceWidget();
-                        } else {
-                          return 0.ph();
-                        }
-                      },
-                    ),
-                    Row(
-                      children: [
-                        BlocBuilder<PickerCubit, PickState>(
-                          builder: (context, state) => Row(
-                            children: [
-                              IconBottomForCreatePost(
-                                selected:
-                                    getIt<ImagePickerLoaded>().images != null,
-                                imagePath: 'assets/icons/image.png',
-                                onPressed: () {
-                                  context.read<PickerCubit>().pickImage();
-                                },
-                              ),
-                              IconBottomForCreatePost(
-                                selected:
-                                    getIt<FilePickerLoaded>().file != null,
-                                imagePath: 'assets/icons/document.png',
-                                onPressed: () {
-                                  context.read<PickerCubit>().pickFile();
-                                },
-                              ),
-                              IconBottomForCreatePost(
-                                selected: state is CreateMultiChoice,
-                                imagePath: 'assets/icons/menu.png',
-                                onPressed: () {
-                                  context
-                                      .read<PickerCubit>()
-                                      .createMultiChoice();
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        BlocBuilder<ShowTagCubit, bool>(
-
-                          builder: (context, state) {
-                            return IconBottomForCreatePost(
-                              selected: state,
-                              imagePath: 'assets/icons/hash.png',
-                              onPressed: () {
-                                context.read<ShowTagCubit>().changeState();
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                    ShowImagesAndFileAndMultiChoice(),
+                    7.ph(),
+                    const IconChoises(),
+                    // select one tag
                     BlocBuilder<ShowTagCubit, bool>(
                       builder: (context, state) {
                         if (state) {
-                          return Expanded(child: SelectableButtonGrid());
+                          return Expanded(child: SelectableButtonGrid(userTagId: tagId,));
                         } else {
-                          return const Spacer(
-                            flex: 5,
-                          );
+                          return const Spacer();
                         }
                       },
                     ),
-                    // const Spacer(),
-                    10.ph(),
-
                     SubmitButton(
                         formKey: _formKey,
                         post: post,
                         textController: _postController),
-                    20.ph(),
+                    // 5.ph(),
                   ],
                 ),
               ),
@@ -334,13 +92,333 @@ class CreatePost {
       },
     );
   }
+}
 
-  MajorModel getUserMajor(BuildContext context, tags,int tagId) {
+class IconChoises extends StatelessWidget {
+  const IconChoises({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        BlocBuilder<PickerCubit, PickState>(
+          builder: (context, state) => Row(
+            children: [
+              IconBottomForCreatePost(
+                selected:
+                    getIt<ImagePickerLoaded>().images != null,
+                imagePath: 'assets/icons/image.png',
+                onPressed: () {
+                  context.read<PickerCubit>().pickImage();
+                },
+              ),
+              IconBottomForCreatePost(
+                selected:
+                    getIt<FilePickerLoaded>().file != null,
+                imagePath: 'assets/icons/document.png',
+                onPressed: () {
+                  context.read<PickerCubit>().pickFile();
+                },
+              ),
+              IconBottomForCreatePost(
+                selected: state is CreateMultiChoice,
+                imagePath: 'assets/icons/menu.png',
+                onPressed: () {
+                  context
+                      .read<PickerCubit>()
+                      .createMultiChoice();
+                },
+              ),
+            ],
+          ),
+        ),
+        BlocBuilder<ShowTagCubit, bool>(
+
+          builder: (context, state) {
+            return IconBottomForCreatePost(
+              selected: state,
+              imagePath: 'assets/icons/hash.png',
+              onPressed: () {
+                context.read<ShowTagCubit>().changeState();
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ShowImagesAndFileAndMultiChoice extends StatelessWidget{
+  late List<File>? images;
+  late File? file;
+
+   ShowImagesAndFileAndMultiChoice({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PickerCubit, PickState>(
+      buildWhen: (previous, current) => current is! CreatePostIconsLoading,
+      builder: (context, state) {
+        Logger().f(state);
+        images = getIt<ImagePickerLoaded>().images;
+        file = getIt<FilePickerLoaded>().file;
+        if (state is ImagePickerLoaded ||
+            state is FilePickerLoaded ||
+            state is CreatePostIconsInit ) {
+          return Column(
+            children: [
+              if (images != null) ImageContainer(images: images),
+              10.ph(),
+              if (file != null) FileContainer(file: file),
+            ],
+          );
+        }
+        else if (state is CreateMultiChoice) {
+          return CreateMultiChoiceWidget();
+        } else {
+          return 0.ph();
+        }
+      },
+    );
+  }
+}
+
+class ImageContainer extends StatelessWidget {
+  const ImageContainer({
+    super.key,
+    required this.images,
+  });
+
+  final List<File>? images;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(children: [
+        for (int index = 0;
+            index < images!.length;
+            index++)
+          Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: 9.w),
+            height: 178.w,
+            width:
+                images!.length == 1 ? 300 : 178,
+            decoration: BoxDecoration(
+              borderRadius:
+              BorderRadius.all(
+                      Radius.circular(12.r)),
+              image: DecorationImage(
+                image:
+                    FileImage(images![index]),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+      ]),
+    );
+  }
+}
+
+class ShowSelectedTags extends StatelessWidget {
+  const ShowSelectedTags({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<TagCubit, TagState>(
+      builder: (context, state) {
+        Logger().f(state);
+        if (state is SuccessTagState) {
+          // getIt<SuccessTagState>().selectedTags = state.selectedTags;
+          return Wrap(
+            spacing: 15, // Space between buttons horizontally
+            runSpacing: 0,
+            children: List.generate(state.selectedTags.length,
+                (index) {
+              return AppText(
+                text: state.selectedTags[index].name !=
+                        null
+                    ? '${state.selectedTags[index].name!}#'
+                    : '',
+                fontSize: 14.sp,
+                color: const Color(0xff0077FF),
+              );
+            }),
+          );
+        }
+        return const SizedBox();
+      },
+    );
+  }
+}
+
+class TextFieldForCreatePost extends StatelessWidget {
+  const TextFieldForCreatePost({
+    super.key,
+    required GlobalKey<FormState> formKey,
+    required TextEditingController postController,
+  }) : _formKey = formKey, _postController = postController;
+
+  final GlobalKey<FormState> _formKey;
+  final TextEditingController _postController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: AppTextField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter some text';
+          }
+          return null;
+        },
+        withBoarder: false,
+        maxLine: 2,
+        controller: _postController,
+        hintText: 'قم بكتابة ما تريد الاستفسار عنه ..',
+        keyboardType: TextInputType.multiline,
+        suffix: GestureDetector(
+          onTap: () {
+            _postController.clear();
+          },
+          child: const Icon(Icons.clear, color: Colors.grey),
+        ),
+      ),
+    );
+  }
+}
+
+class UserInfo extends StatelessWidget{
+  final UserResponseEntity user;
+  final BuildContext context;
+  final int tagId;
+  const UserInfo({super.key, required this.user,required this.context,required this.tagId});
+
+  @override
+  Widget build(BuildContext context) {
+    String userName = '${user.firstName} ${user.lastName}';
+
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 20,
+          child: user.photoUrl == null
+              ? AppText(
+            text: user.firstName[0],
+            fontSize: 15,
+            color: Colors.white,
+          )
+              : Image.network(user.photoUrl!),
+        ),
+        8.pw(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppText(
+              text: userName,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+            ),
+            BlocBuilder<CollegeMajorsCubit, CollegeMajorsState>(
+              builder: (context, state) {
+
+                if(state.status == MajorsStatus.success) {
+
+                  MajorModel? userMajor = getUserMajor(state.majors,tagId);
+                  context.read<TagCubit>().init(userMajor);
+                  return AppText(
+                    text:  '${userMajor.majorEn!.replaceAll(' ', '_')}#',
+                    fontSize: 12.sp,
+                    color: Colors.grey,
+                  );
+                }
+                return AppText(
+                  text: 'نحاول الحصول على tag',
+                  fontSize: 12.sp,
+                  color: Colors.grey,
+                );
+              },
+
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  MajorModel getUserMajor(tags,int tagId) {
     for(int i =0;i<tags.length;i++){
       if(tags[i].id == tagId) return tags[i];
     }
     throw ValidationException(messages: ['we don\'t find your tag']);
 
+  }
+}
+
+
+class TitleWithCancel extends StatelessWidget {
+  const TitleWithCancel({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      // mainAxisAlignment: MainAxisAlignment.,
+      children: [
+        Expanded(
+          child: AppText(
+            text: 'الغاء',
+            fontSize: 14.sp,
+            color: Colors.green,
+            onPressed: () {
+              context.read<PostsCubit>().cancelCreationPostState();
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        Expanded(
+          child: AppText(
+            text: 'إنشاء بوست',
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const Expanded(
+          child: SizedBox()
+        ),
+
+        // const Expanded(child: SizedBox(width: 70,)),
+
+      ],
+    );
+  }
+}
+
+class CenterDivider extends StatelessWidget {
+  const CenterDivider({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 56,
+        height: 5,
+        decoration: BoxDecoration(
+          color: const Color(0xffE7E8EA),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
   }
 }
 
@@ -381,6 +459,8 @@ class SubmitButton extends StatelessWidget {
             GestureDetector(
               onTap: state.creationState != CreationStatus.loading
                   ? () {
+                // context.showSnackBar(message: 'message',time: 5,behavior: SnackBarBehavior.fixed);
+                // Navigator.pop(context);
                       if (formKey.currentState!.validate()) {
                         post = post.copyWith(
                             images: getIt<ImagePickerLoaded>()
@@ -419,8 +499,6 @@ class SubmitButton extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         )
                       : SizedBox(
-                          // height: 50,
-                          // width: 50,
                           child: CircularProgressIndicator(
                             backgroundColor: Colors.grey[200],
                             valueColor: const AlwaysStoppedAnimation<Color>(

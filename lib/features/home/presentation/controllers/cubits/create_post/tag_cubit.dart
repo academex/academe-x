@@ -7,16 +7,17 @@ import '../../../../../../core/data/mock_posts.dart';
 
 class TagCubit extends Cubit<TagState> {
   TagCubit(super.initialState);
-  final SuccessTagState _tagState = SuccessTagState(selectedTags: []);
+  SuccessTagState _tagState = SuccessTagState(selectedTags: []);
   late List<MajorEntity> data;
-  changeTagesSelected(List<bool> selectedTags) {
+  changeTagsSelected(List<bool> selectedTags) {
     data = [];
     for (int i = 0; i < selectedTags.length; i++) {
       if (selectedTags[i]) {
         // data.add(MockData.tags[i]);
       }
     }
-    emit(_tagState.copyWith(selectedTags: data));
+    _tagState = _tagState.copyWith(selectedTags: data);
+    emit(_tagState);
   }
 
   addTag(MajorEntity tag) {
@@ -32,6 +33,7 @@ class TagCubit extends Cubit<TagState> {
   }
 
   init(MajorEntity tag) {
-    emit(_tagState.copyWith(selectedTags: [tag]));
+    _tagState = _tagState.copyWith(selectedTags: [tag]);
+    emit(_tagState);
   }
 }

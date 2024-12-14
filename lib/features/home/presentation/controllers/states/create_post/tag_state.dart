@@ -7,14 +7,14 @@ abstract class TagState extends  Equatable{}
 class InitTagState extends TagState   {
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class SuccessTagState extends TagState{
   List<MajorEntity> selectedTags;
   SuccessTagState({required this.selectedTags});
 
-  TagState copyWith({
+  SuccessTagState copyWith({
     required List<MajorEntity> selectedTags,
   }) {
     return SuccessTagState(selectedTags: selectedTags);

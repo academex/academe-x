@@ -5,8 +5,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:academe_x/lib.dart';
 
 extension contextExtenssion on BuildContext {
-  void showSnackBar({required String message, bool error = false,int time = 2}) {
+  void showSnackBar({required String message, bool error = false,int time = 2, SnackBarBehavior? behavior}) {
     ScaffoldMessenger.of(this).showSnackBar(
+      snackBarAnimationStyle: AnimationStyle(duration: const Duration(seconds: 1)),
+
       SnackBar(
         content: Text(
           message,
@@ -14,7 +16,9 @@ extension contextExtenssion on BuildContext {
         backgroundColor: error ? Colors.red.shade800 : Colors.green.shade800,
         duration:  Duration(seconds: time),
         dismissDirection: DismissDirection.horizontal,
-        behavior: SnackBarBehavior.floating,
+        behavior: behavior??SnackBarBehavior.floating,
+
+
       ),
     );
   }
