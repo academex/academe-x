@@ -1,7 +1,9 @@
+import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
 import 'package:academe_x/features/auth/presentation/controllers/cubits/auth_cubit.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 
 class LoginCubit extends AuthCubit {
@@ -66,6 +68,14 @@ class LoginCubit extends AuthCubit {
   }
 
 
+  Future<void> logout() async {
+    try {
+      await HiveCacheManager().clear();
+      NavigationService.navigatorKey.currentContext!.go('/login');
+    } catch (e) {
+      AppLogger.e(e.toString());
+    }
+  }
 
   // @override
   // Future<void> close() {

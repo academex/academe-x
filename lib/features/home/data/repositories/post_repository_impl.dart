@@ -33,12 +33,14 @@ class PostRepositoryImpl implements PostRepository {
 
   @override
   Future<Either<Failure, PaginatedResponse<PostModel>>> getPosts(PaginationParams paginationParams) async {
+
+
     try {
       // First try to get from network
       final result = await remoteDataSource.getPosts(paginationParams);
 
       // Cache successful network response
-      _cachePostsResults(result.items, paginationParams.page);
+      _cachePostsResults(result.items, paginationParams.page,tagId: paginationParams.tagId);
 
       return Right(result);
     } on OfflineException catch (e) {
@@ -120,12 +122,12 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-  Future<void> _cachePostsResults(List<PostModel> posts, int page) async {
+  Future<void> _cachePostsResults(List<PostModel> posts, int page,{int? tagId}) async {
     try {
       if (page == 1) {
         // For first page, replace cache
         await cacheManager.cacheResponse(
-          CacheKeys.POSTS,
+          '${CacheKeys.POSTS}/$tagId',
           posts.map((post) => post.toJson()).toList(),
         );
       } else {
@@ -134,7 +136,7 @@ class PostRepositoryImpl implements PostRepository {
         if (existingCache != null) {
           final mergedPosts = _mergePosts(existingCache, posts);
           await cacheManager.cacheResponse(
-            CacheKeys.POSTS,
+            '${CacheKeys.POSTS}/$tagId',
             mergedPosts.map((post) => post.toJson()).toList(),
           );
         }
@@ -145,14 +147,22 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-  Future<List<PostModel>?> _getPostsFromCache() async {
+  Future<List<PostModel>?> _getPostsFromCache({int? tagId}) async {
     try {
-      return await cacheManager.getCachedResponse<List<PostModel>>(
-        CacheKeys.POSTS,
+      var x= await cacheManager.getCachedResponse<List<PostModel>>(
+        '${CacheKeys.POSTS}/$tagId',
             (json) => (json as List)
             .map((item) => PostModel.fromJson(item as Map<String, dynamic>))
             .toList(),
+
+
       );
+      AppLogger.success('_getPostsFromCache $x');
+
+
+      return x;
+
+
     } catch (e) {
       AppLogger.w('Failed to get from cache: $e');
       return null;
@@ -174,7 +184,7 @@ class PostRepositoryImpl implements PostRepository {
       PaginationParams params,
       ) async {
     // Try to get from cache
-    final cachedPosts = await _getPostsFromCache();
+    final cachedPosts = await _getPostsFromCache(tagId: params.tagId);
     if (cachedPosts != null) {
       return Right(_createPaginatedResponse(cachedPosts, params));
     }
@@ -186,7 +196,7 @@ class PostRepositoryImpl implements PostRepository {
       PaginationParams params,
       ) async {
     // Try to get from cache
-    final cachedPosts = await _getPostsFromCache();
+    final cachedPosts = await _getPostsFromCache(tagId: params.tagId);
     if (cachedPosts != null) {
       return Right(_createPaginatedResponse(cachedPosts, params));
     }
@@ -198,7 +208,7 @@ class PostRepositoryImpl implements PostRepository {
       PaginationParams params,
       ) async {
     // Try to get from cache
-    final cachedPosts = await _getPostsFromCache();
+    final cachedPosts = await _getPostsFromCache(tagId: params.tagId);
     if (cachedPosts != null) {
       return Right(_createPaginatedResponse(cachedPosts, params));
     }

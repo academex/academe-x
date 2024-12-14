@@ -1,7 +1,9 @@
 import 'package:academe_x/core/constants/cache_keys.dart';
+import 'package:academe_x/core/utils/deep_link_service.dart';
 import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 enum AuthStatus { initial, authenticated, unauthenticated }
 
 abstract class AuthCubit extends Cubit<AuthState> {
@@ -58,10 +60,6 @@ abstract class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(isExpanded: !state.isExpanded));
   }
 
-  void selectCollege(String college) {
-    emit(state.copyWith(selectedCollege: college));
-  }
-
   void selectIndex({required int? index, required SelectionType selectionType}) {
     if (selectionType == SelectionType.major) {
       emit(state.copyWith(selectedMajorIndex: index));
@@ -81,20 +79,7 @@ abstract class AuthCubit extends Cubit<AuthState> {
   }
 
 
-  // Future<AuthTokenEntity?> _checkAuthStatus() async {
-  //   try {
-  //     final cachedUser = await HiveCacheManager().getCachedResponse<AuthTokenEntity>(CacheKeys.USER,(p0) {
-  //       return AuthTokenModel.fromJson(p0);
-  //
-  //     },);
-  //     if (cachedUser != null) {
-  //       // You might want to add token validation here
-  //       return cachedUser;
-  //     }
-  //     return null;
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
+
+
 
 }

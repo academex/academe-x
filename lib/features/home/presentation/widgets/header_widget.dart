@@ -41,7 +41,7 @@ class HeaderWidget extends StatelessWidget {
       width: 50,
       height: 50,
       decoration: const BoxDecoration(
-        color: Color(0xff007BFF),
+        color: Color(0xff1F02E8),
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       child: Image.asset(

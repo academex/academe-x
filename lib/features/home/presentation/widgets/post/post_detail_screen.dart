@@ -63,63 +63,48 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         ),
         body: BlocBuilder<PostsCubit, PostsState>(
           builder: (context, state) {
-
             switch (state.postDetailsStatus) {
               case PostDetailsStatus.initial:
               case PostDetailsStatus.loading:
-                if (state.posts.isEmpty) {
-                  return  SliverFillRemaining(
-                      child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => Column(
-                          children: [
-                            const PostWidgetShimmer(),
-                            Divider(
-                              color: Colors.grey.shade300,
-                              endIndent: 25,
-                              indent: 25,
-                            ),
-                          ],
-                        ),
-                      )
-                    //
-                  );
-                }
-                break;
-
-              case PostDetailsStatus.failure:
-                if (state.posts.isEmpty) {
-                  return SliverFillRemaining(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(state.errorMessage ?? 'Failed to fetch posts'),
-                          16.ph(),
-                          ElevatedButton(
-                            onPressed: () async{
-                              return  await context.read<PostsCubit>().loadPosts();
-                            },
-                            child: const Text('Retry'),
-                          ),
-                        ],
-                      ),
+            return  ListView.builder(
+                itemCount: 1,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => Column(
+                  children: [
+                    const PostWidgetShimmer(),
+                    Divider(
+                      color: Colors.grey.shade300,
+                      endIndent: 25,
+                      indent: 25,
                     ),
-                  );
-                }
-                break;
+                  ],
+                ),
+              );
+              case PostDetailsStatus.failure:
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(state.errorMessage ?? 'Failed to fetch posts'),
+                      16.ph(),
+                      ElevatedButton(
+                        onPressed: () async{
+                          return  await context.read<PostsCubit>().loadPosts();
+                        },
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
 
               case PostDetailsStatus.success:
-                if (state.posts.isEmpty) {
-                  return const SliverFillRemaining(
-
-                    child: Center(child: Text('No posts found')),
-                  );
+                if (state.post!=null) {
+                  return PostWidget(post: state.post!);
                 }
                 break;
             }
 
-            return PostWidget(post: state.posts.first);
+
             // if (state is PostDetailsLoading) {
             //   return const Center(child: CircularProgressIndicator());
             // }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:academe_x/core/constants/cache_keys.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
 import 'package:academe_x/features/college_major/controller/cubit/college_majors_state.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
@@ -19,90 +20,91 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  final _scrollController = ScrollController();
+  // final _scrollController = ScrollController();
   Timer? _debounce;
-  List<MajorModel> majors=[];
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    context.read<PostsCubit>().scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    context.read<PostsCubit>().scrollController.dispose();
     super.dispose();
   }
+
+
 
   void _onScroll() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       if (_isBottom) {
-        context.read<PostsCubit>().loadPosts();
+        context.read<PostsCubit>().loadPosts(tagId: context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
       }
     });
   }
 
   bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
+    if (!context.read<PostsCubit>().scrollController.hasClients) return false;
+    final maxScroll = context.read<PostsCubit>().scrollController.position.maxScrollExtent;
+    final currentScroll = context.read<PostsCubit>().scrollController.offset;
     return currentScroll >= (maxScroll * 0.9);
   }
 
+
   Widget _buildSliverAppBar() {
-    return SliverAppBar(
-      automaticallyImplyLeading: true,
-      expandedHeight: 260,
-      pinned: true,
-      leading: 0.pw(),
-      flexibleSpace: LayoutBuilder(
-        builder: (context, constraints) {
-          final percent = (constraints.maxHeight - kToolbarHeight) /
-              (260 - kToolbarHeight);
-          return FlexibleSpaceBar(
-            centerTitle: true,
-            title: AnimatedOpacity(
-              opacity: percent < 0.2 ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 100),
-              child: _buildHeaderContent(true),
-            ),
-            background: _buildHeaderBackground(false),
-          );
-        },
+    return BlocBuilder<CollegeMajorsCubit,CollegeMajorsState>(
+      buildWhen: (previous, current) => previous!=current,
+      builder: (context, state) => SliverAppBar(
+        automaticallyImplyLeading: true,
+        expandedHeight:state.isVisibileMajors? 250: 150,
+        pinned: true,
+        leading: 0.pw(),
+        flexibleSpace: LayoutBuilder(
+          builder: (context, constraints) {
+            final percent = (constraints.maxHeight - kToolbarHeight) /
+                ((state.isVisibileMajors? 250: 150) - kToolbarHeight);
+            return FlexibleSpaceBar(
+              centerTitle: true,
+              title: AnimatedOpacity(
+                opacity: percent < 0.2 ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 100),
+                child: _buildHeaderContent(true, state),
+              ),
+              background: _buildHeaderBackground(false,state),
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget _buildPostsList() {
     return SliverPadding(
-
       padding: const EdgeInsets.symmetric(horizontal: 20),
       sliver: BlocBuilder<PostsCubit, PostsState>(
         builder: (context, state) {
           switch (state.status) {
             case PostStatus.initial:
             case PostStatus.loading:
-              if (state.posts.isEmpty) {
-                return  SliverFillRemaining(
-                  child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => Column(
-                      children: [
-                        const PostWidgetShimmer(),
-                        Divider(
-                          color: Colors.grey.shade300,
-                          endIndent: 25,
-                          indent: 25,
-                        ),
-                      ],
-                    ),
-                  )
-                  //
-                );
-              }
-              break;
+            return  SliverFillRemaining(
+                child: ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) => Column(
+                    children: [
+                      const PostWidgetShimmer(),
+                      Divider(
+                        color: Colors.grey.shade300,
+                        endIndent: 25,
+                        indent: 25,
+                      ),
+                    ],
+                  ),
+                )
+              //
+            );
 
             case PostStatus.failure:
               if (state.posts.isEmpty) {
@@ -179,10 +181,10 @@ class _CommunityPageState extends State<CommunityPage> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        return await context.read<PostsCubit>().refreshPosts();
+        return await context.read<PostsCubit>().refreshPosts(context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
       },
       child: CustomScrollView(
-        controller: _scrollController,
+        controller: context.read<PostsCubit>().scrollController,
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(), // Add this to enable refresh when at top
         ),
@@ -195,149 +197,158 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
-  Widget _buildHeaderBackground(bool inScroll) {
+  Widget _buildHeaderBackground(bool inScroll,CollegeMajorsState state) {
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF2200F2),
       ),
-      child: _buildHeaderContent(inScroll),
+      child: _buildHeaderContent(inScroll,state),
     );
   }
 
-  Widget _buildHeaderContent(bool inScroll) {
+  Widget _buildHeaderContent(bool inScroll,CollegeMajorsState state) {
+      if (state.isLoadingMajorSetting ||
+        (state.status == MajorsStatus.loading && state.majors.isEmpty)) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.status == MajorsStatus.failure && state.majors.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(state.errorMessage ?? 'Failed to load majors'),
+            ElevatedButton(
+              onPressed: () =>
+                  context.read<CollegeMajorsCubit>().refreshMajors(),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
 
-    return BlocBuilder<CollegeMajorsCubit, CollegeMajorsState>(
-        builder: (context, state) {
-          if (state.status == MajorsStatus.loading && state.majors.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.status == MajorsStatus.failure && state.majors.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+    final title = state.selectedMajor != null
+        ? '${state.selectedMajor!.majorAr!} | ${state.selectedMajor!.name!.toUpperCase()}'
+        : 'Loading...';
+    return inScroll
+        ? SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SizedBox(
+                  width: 327,
+                  // 327.w,
+                  height: 45  ,
+                  child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
+              ),
+            ),
+            inScroll ? 0.ph() : 15.ph(),
+            inScroll ? 0.ph() : _buildCategoryTabs(),
+          ],
+        ))
+        :  Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              inScroll ? 0.ph() : 60.ph(),
+              HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title:title , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
+              ,18.ph(),
+              Row(
                 children: [
-                  Text(state.errorMessage ?? 'Failed to load majors'),
-                  ElevatedButton(
-                    onPressed: () =>
-                        context.read<CollegeMajorsCubit>().refreshMajors(),
-                    child: const Text('Retry'),
+                  AppText(
+                    text: 'التخصصات',
+                    fontSize: 16  ,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                  const Spacer(),
+                  AppText(
+                    text:context.read<CollegeMajorsCubit>().state.isVisibileMajors? 'عرض اقل' : 'عرض المزيد',
+                    fontWeight: FontWeight.w500,
+                    onPressed: () {
+                      context.read<CollegeMajorsCubit>().toggleVisibleMajors();
+
+
+                    },
+                    fontSize: 12  ,
+                    color: Colors.white.withOpacity(0.66),
                   ),
                 ],
               ),
-            );
-          }
-          return inScroll
-              ? SafeArea(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                        width: 327,
-                        // 327.w,
-                        height: 45  ,
-                        child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-                    ),
-                  ),
-                  inScroll ? 0.ph() : 15.ph(),
-                  inScroll ? 0.ph() : _buildCategoryTabs(),
-                ],
-              ))
-              :  Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              12.ph(),
+            ],
+          ),
+        ),
+        state.isVisibileMajors?
+        Container(
+          padding: const EdgeInsets.only(right: 24),
+          height: 100,
+          // width: 327.w,
+          child: ListView.separated(
+            reverse: true,
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                bool isSelected= state.majors[index].name! == state.selectedTag;
+                String? title = state.majors[index].majorAr;
+                // String image = 'assets/images/image_test1.png';
+                String image = state.majors[index].name!;
+                return Column(
                   children: [
-                    inScroll ? 0.ph() : 60.ph(),
-                    HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-                    ,18.ph(),
-                    Row(
-                      children: [
-                        AppText(
-                          text: 'التخصصات',
-                          fontSize: 16  ,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                        const Spacer(),
-                        AppText(
-                          text: 'عرض المزيد',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12  ,
-                          color: Colors.white.withOpacity(0.66),
-                        ),
-                      ],
+                    GestureDetector(
+                      child: Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                            color:isSelected?Colors.white: Color(0x0F000000),
+                                // : const,
+                            borderRadius:
+                            BorderRadius.circular(10)),
+                        child: Center(
+                          child: AppText(
+                            text: image.toUpperCase(),
+                            fontSize: 16,
+                            fontWeight:isSelected? FontWeight.bold : FontWeight.normal,
+
+                          ),
+                        )
+                      ),
+                      onTap: ()async {
+                        context
+                            .read<CollegeMajorsCubit>()
+                            .selectTag(state.majors[index]);
+                        //
+
+                     await   context
+                            .read<PostsCubit>()
+                            .loadTagPosts(tagId: state.majors[index].id!);
+                      },
                     ),
                     12.ph(),
+                    AppText(
+                      text: title!,
+                      fontSize: 14,
+                      color: Colors.white,
+                      // fontWeight:FontWeight.bold ,
+                      fontWeight:isSelected? FontWeight.bold : FontWeight.normal,
+                      // fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
+
+                    )
                   ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(right: 24),
-                height: 100,
-                // width: 327.w,
-                child: ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      String? title = state.majors[index].majorAr;
-                      // String image = 'assets/images/image_test1.png';
-                      String image = state.majors[index].name!;
-                      return Column(
-                        children: [
-                          GestureDetector(
-                            child: Container(
-                              width: 56,
-                              height: 56,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                      // : const Color(0x0F000000),
-                                  borderRadius:
-                                  BorderRadius.circular(10)),
-                              child: Center(
-                                child: AppText(
-                                  text: image.toUpperCase(),
-                                  fontSize: 16,
-                                  // color: Colors.white,
-                                  fontWeight:FontWeight.bold ,
-                                  // fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
-
-                                ),
-                              )
-                              // child: Image.asset(image),
-                            ),
-                            onTap: () {
-                              // context
-                              //     .read<CategoryCubit>()
-                              //     .selectCategory(index);
-                            },
-                          ),
-                          12.ph(),
-                          AppText(
-                            text: title!,
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight:FontWeight.bold ,
-                            // fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
-
-                          )
-                        ],
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return 10.pw();
-                    },
-                    itemCount: state.majors.length),
-              )
-            ],
-          );
-        });
-
-
-
+                );
+              },
+              separatorBuilder: (context, index) {
+                return 10.pw();
+              },
+              itemCount: state.majors.length),
+        )
+            :0.ph(),
+      ],
+    );
   }
 
 

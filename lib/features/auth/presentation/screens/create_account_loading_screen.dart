@@ -28,7 +28,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> with Sing
     // context.read<CollegeMajorsCubit>().loadMajors();
 
     Future.delayed(const Duration(seconds: 4), () {
-      context.pushReplacementNamed('/account_creation_success');
+      context.go('/account_creation_success');
     });// animation
   }
 

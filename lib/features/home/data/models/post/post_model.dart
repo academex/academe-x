@@ -55,7 +55,6 @@ class PostModel extends PostEntity {
   }
 
   Map<String, dynamic> toJson() {
-    AppLogger.success('in post model ${tags}');
     return {
       'id': id,
       'content': content,

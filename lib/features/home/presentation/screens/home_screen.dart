@@ -37,6 +37,7 @@
 // }
 
 
+import 'package:academe_x/features/home/presentation/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,13 +83,12 @@ class HomeScreen extends StatelessWidget {
   Widget _buildBody(int currentIndex) {
     return IndexedStack(
       index: currentIndex,
-      children: [
+      children:const [
         CommunityPage(),
-        const LibraryPage(),
-        const Row(),
-        const Row()
-        // ChatPage(),
-        // ProfilePage(),
+         LibraryPage(),
+         Row(),
+         Row(),
+        ProfilePage(),
       ],
     );
   }

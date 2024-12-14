@@ -1,22 +1,59 @@
 import 'package:academe_x/core/core.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/college_major/controller/cubit/college_majors_state.dart';
-import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:academe_x/features/college_major/domain/entities/major_entity.dart';
 import 'package:academe_x/features/college_major/domain/usecases/college_major_use_case.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/cache_keys.dart';
+import '../../../../academeX_main.dart';
+import '../../../auth/domain/entities/response/auth_token_entity.dart';
+
 
 class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
   final CollegeMajorUseCase _collegeMajorsUseCase;
+  late  AuthTokenEntity? _authTokenEntity;
+  late  MajorEntity? _majorEntity;
 
   CollegeMajorsCubit({
     required HiveCacheManager cacheManager,
     required CollegeMajorUseCase getMajorsUseCase,
   }) :
         _collegeMajorsUseCase = getMajorsUseCase,
-        super(const CollegeMajorsState());
+        super( CollegeMajorsState());
+
+  void toggleVisibleMajors(){
+    // AppLogger.success('message');
+    emit(state.copyWith(isVisibileMajors: !state.isVisibileMajors));
+
+  }
+
+  Future<void> initCollegeMajor()async{
+    await getColleges();
+    await getTags();
+    await getCachedUser();
+    await getMajorSetting();
+  }
+
+  Future<void> getCachedUser()async{
+    _authTokenEntity= (await NavigationService.navigatorKey.currentContext!.cachedUser);
+  }
+
+  Future<void> getMajorSetting() async {
+    try {
+      if (_authTokenEntity != null && state.majors.isNotEmpty) {
+        _majorEntity = state.majors.firstWhere(
+              (element) => _authTokenEntity!.user.tagId == element.id,
+        );
+        selectTag(_majorEntity!);
+      }
+      emit(state.copyWith(isLoadingMajorSetting: false));
+    } catch (e) {
+      emit(state.copyWith(
+        isLoadingMajorSetting: false,
+        errorMessage: 'Failed to load major settings',
+      ));
+    }
+  }
 
   void toggleExpanded() {
     emit(state.copyWith(isExpanded: !state.isExpanded));
@@ -31,6 +68,7 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
 
 
   Future<void> getColleges() async {
+
     if (state.isLoadingForCollege) return;
     emit(state.copyWith(isLoadingForCollege: true,errorMessage: null));
 
@@ -123,30 +161,6 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
     }
   }
 
-  // Future<List<MajorModel>?> _getCachedMajors() async {
-  //   try {
-  //     return await _cacheManager.getCachedResponse<List<MajorModel>>(
-  //       CacheKeys.MAJORS,
-  //           (json) => (json as List)
-  //           .map((item) => MajorModel.fromJson(item as Map<String, dynamic>))
-  //           .toList(),
-  //     );
-  //   } catch (e) {
-  //     debugPrint('Failed to get majors from cache: $e');
-  //     return null;
-  //   }
-  // }
-
-  // Future<void> _cacheMajors(List<MajorEntity> majors) async {
-  //   try {
-  //     await _cacheManager.cacheResponse(
-  //       CacheKeys.MAJORS,
-  //       majors.map((major) => major.entityToModel(major).toJson()).toList(),
-  //     );
-  //   } catch (e) {
-  //     debugPrint('Failed to cache majors: $e');
-  //   }
-  // }
 
   Future<void> refreshMajors() async {
     final currentCollegeName = state.selectedCollege;
@@ -177,5 +191,10 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
             majors: r));
       },
     );
+  }
+
+  Future<void> selectTag(MajorEntity major) async{
+
+    emit(state.copyWith(selectedTag: major.name,selectedMajor: major));
   }
 }

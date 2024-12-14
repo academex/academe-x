@@ -184,7 +184,6 @@ class HiveCacheManager implements BaseStorageManager {
       T data, {
         Duration duration = AppConfig.cacheMaxAge,
       }) async {
-    AppLogger.i('Caching data for key: $key');
     final expiryTime = DateTime.now().add(duration);
     final cacheData = {
       'data': data,
@@ -217,7 +216,6 @@ class HiveCacheManager implements BaseStorageManager {
   }
   void logStorageStats() async {
     final stats = await getDiagnostics();
-    AppLogger.i('Storage Statistics:');
     stats.forEach((key, value) {
     });
   }

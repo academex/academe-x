@@ -3,6 +3,8 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../college_major/controller/cubit/college_major_cubit.dart';
+import '../controllers/cubits/post/posts_cubit.dart';
 import 'create_post_widgets/create_post.dart';
 
 // class CustomBottomNavBar extends StatelessWidget {
@@ -154,7 +156,15 @@ class CustomBottomNavBar extends StatelessWidget {
       backgroundColor: Colors.blue,
       child: const Icon(Icons.add, size: 32.0),
     ): InkWell(
-      onTap: () => context.read<BottomNavCubit>().changePage(index),
+      onTap: () async{
+        if(index == 0){
+          context.read<PostsCubit>().goToTop();
+        await  context.read<PostsCubit>().refreshPosts(context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
+        }
+        // index == 0? :null;
+
+        context.read<BottomNavCubit>().changePage(index);
+      },
       child: BlocBuilder<BottomNavCubit,int>(builder: (context, currentIndex) {
         return Column(
           mainAxisSize: MainAxisSize.min,
