@@ -70,7 +70,7 @@ class LoginCubit extends AuthCubit {
 
   Future<void> logout() async {
     try {
-      await HiveCacheManager().clearAuthCache();
+      await HiveCacheManager().clear();
       NavigationService.navigatorKey.currentContext!.go('/login');
     } catch (e) {
       AppLogger.e(e.toString());
