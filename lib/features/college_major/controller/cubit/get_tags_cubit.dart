@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GetTagsCubit extends Cubit<CollegeMajorsState> {
   CollegeMajorUseCase getTagsUseCase;
-  GetTagsCubit({required this.getTagsUseCase}):  super(const CollegeMajorsState());
+  GetTagsCubit({required this.getTagsUseCase}):  super(CollegeMajorsState());
   getTags() async {
     emit(state.copyWith(
       status: MajorsStatus.loading

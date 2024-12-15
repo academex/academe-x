@@ -19,6 +19,9 @@ class TagCubit extends Cubit<TagState> {
     _tagState = _tagState.copyWith(selectedTags: data);
     emit(_tagState);
   }
+  List<MajorEntity> getSelectedTags(){
+    return _tagState.selectedTags;
+  }
 
   addTag(MajorEntity tag) {
     emit(InitTagState());
@@ -33,7 +36,9 @@ class TagCubit extends Cubit<TagState> {
   }
 
   init(MajorEntity tag) {
-    _tagState = _tagState.copyWith(selectedTags: [tag]);
-    emit(_tagState);
+    if(_tagState.selectedTags.isEmpty) {
+      _tagState = _tagState.copyWith(selectedTags: [tag]);
+      emit(_tagState);
+    }
   }
 }

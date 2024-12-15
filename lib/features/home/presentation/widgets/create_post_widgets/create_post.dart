@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:academe_x/academeX_main.dart';
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/auth/domain/entities/response/user_response_entity.dart';
@@ -67,7 +68,7 @@ class CreatePost {
                     16.ph(),
                     ShowImagesAndFileAndMultiChoice(),
                     7.ph(),
-                    const IconChoises(),
+                    const IconChoices(),
                     // select one tag
                     BlocBuilder<ShowTagCubit, bool>(
                       builder: (context, state) {
@@ -81,7 +82,9 @@ class CreatePost {
                     SubmitButton(
                         formKey: _formKey,
                         post: post,
-                        textController: _postController),
+                        textController: _postController,
+                      parentContext: parContext,
+                    ),
                     // 5.ph(),
                   ],
                 ),
@@ -94,8 +97,8 @@ class CreatePost {
   }
 }
 
-class IconChoises extends StatelessWidget {
-  const IconChoises({
+class IconChoices extends StatelessWidget {
+  const IconChoices({
     super.key,
   });
 
@@ -161,7 +164,7 @@ class ShowImagesAndFileAndMultiChoice extends StatelessWidget{
     return BlocBuilder<PickerCubit, PickState>(
       buildWhen: (previous, current) => current is! CreatePostIconsLoading,
       builder: (context, state) {
-        Logger().f(state);
+        // Logger().f(state);
         images = getIt<ImagePickerLoaded>().images;
         file = getIt<FilePickerLoaded>().file;
         if (state is ImagePickerLoaded ||
@@ -232,7 +235,7 @@ class ShowSelectedTags extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TagCubit, TagState>(
       builder: (context, state) {
-        Logger().f(state);
+        // Logger().f(state);
         if (state is SuccessTagState) {
           // getIt<SuccessTagState>().selectedTags = state.selectedTags;
           return Wrap(
@@ -426,27 +429,22 @@ class SubmitButton extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   PostEntity post;
   final TextEditingController textController;
+  BuildContext parentContext;
   SubmitButton({
     super.key,
     required this.formKey,
     required this.post,
     required this.textController,
+    required this.parentContext,
   });
 
   @override
   Widget build(BuildContext context) {
 
-    return BlocConsumer<PostsCubit, PostsState>(
-      listener: (createPostContext, state) {
-        if (state.creationState == CreationStatus.failure) {
-          context.showSnackBar(message: state.creationPostErrorMessage!, error: true);
-        } else if (state.creationState == CreationStatus.success) {
-          Navigator.pop(context);
-          context.showSnackBar(message: 'تم نشر منشورك بنجاح', error: false);
-        }
-      },
+
+    return BlocBuilder<PostsCubit, PostsState>(
+
       builder: (context, state) {
-        if (state.creationState == CreationStatus.failure) Logger().e(state.creationPostErrorMessage);
         return Column(
           children: [
             if (state.creationState == CreationStatus.failure)
@@ -459,8 +457,6 @@ class SubmitButton extends StatelessWidget {
             GestureDetector(
               onTap: state.creationState != CreationStatus.loading
                   ? () {
-                // context.showSnackBar(message: 'message',time: 5,behavior: SnackBarBehavior.fixed);
-                // Navigator.pop(context);
                       if (formKey.currentState!.validate()) {
                         post = post.copyWith(
                             images: getIt<ImagePickerLoaded>()
@@ -474,12 +470,13 @@ class SubmitButton extends StatelessWidget {
                                 : FileInfo(
                                     url: getIt<FilePickerLoaded>().file!.path,
                                   ),
-                            tags:getIt<SuccessTagState>().selectedTags,
+                            tags:getIt<TagCubit>().getSelectedTags(),
                         );
 
                         Logger().f(post.tags);
                         context.read<PostsCubit>().sendPost(
                             post: post.copyWith(content: textController.text,));
+
                       }
                     }
                   : null,

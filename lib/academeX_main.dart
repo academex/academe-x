@@ -1,14 +1,16 @@
 import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
 import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
+import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:logger/logger.dart';
 import 'core/utils/deep_link_service.dart';
 import 'core/utils/go_router.dart';
 import 'features/college_major/controller/cubit/get_tags_cubit.dart';
-import 'features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'lib.dart';
@@ -136,7 +138,56 @@ class AcademeXMain extends StatelessWidget {
           }
         },
         ),
-    ], child: child!);
+
+        BlocListener<PostsCubit, PostsState>(listener: (context, state) {
+          bool isLoading = state.creationState == CreationStatus.loading;
+          bool isSuccess = state.creationState == CreationStatus.success;
+          bool isFailure = state.creationState == CreationStatus.failure;
+          Logger().f(NavigationService.navigatorKey.currentContext);
+          // if(state.creationState == CreationStatus.loading) Navigator.pop(context);
+
+
+          ScaffoldMessenger.of(context).clearSnackBars();
+          // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          Logger().f(state.creationState);
+          // if(state.creationState == CreationStatus.loading) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: GestureDetector(
+                  onTap: () => CreatePost().showCreatePostModal(NavigationService.navigatorKey.currentContext!),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      AppText(
+                        fontSize: 12.sp,
+                        text: isLoading?'جار رفع منشورك':isFailure?state.creationPostErrorMessage!:'تم نشر منشورك بنجاح',
+                        color: Colors.white,
+                      ),
+                      if(isLoading)
+                      2.ph(),
+                      if(isLoading)
+                      const LinearProgressIndicator(
+                        backgroundColor: Colors.white,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      ),
+                    ],
+                  ),
+                ),
+                backgroundColor: isLoading?Colors.green.shade800:isFailure?Colors.red:Colors.green,
+                duration:  Duration(seconds: isLoading?500:2),
+                dismissDirection: DismissDirection.horizontal,
+                behavior:SnackBarBehavior.fixed,
+                padding:EdgeInsets.symmetric(vertical: 10.h,horizontal: 15.w),
+
+
+              ),
+            );
+          // }
+
+
+        },),
+
+        ], child: child!);
   }
 
   void _showNoConnectionBanner(

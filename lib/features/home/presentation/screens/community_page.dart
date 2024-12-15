@@ -55,6 +55,7 @@ class _CommunityPageState extends State<CommunityPage> {
 
 
   Widget _buildSliverAppBar() {
+
     return BlocBuilder<CollegeMajorsCubit,CollegeMajorsState>(
       buildWhen: (previous, current) => previous!=current,
       builder: (context, state) => SliverAppBar(

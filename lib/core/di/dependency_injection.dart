@@ -62,7 +62,7 @@ void _initCubits() {
   getIt.registerFactory<PickerCubit>(
     () => PickerCubit(CreatePostIconsInit()),
   );
-  getIt.registerFactory<TagCubit>(
+  getIt.registerLazySingleton<TagCubit>(
     () => TagCubit(InitTagState()),
   );
   getIt.registerFactory<ShowTagCubit>(

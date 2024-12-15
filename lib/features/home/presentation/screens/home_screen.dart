@@ -37,18 +37,22 @@
 // }
 
 
+import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/screens/profile_page.dart';
+import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:academe_x/lib.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:logger/logger.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen();
 
   @override
   Widget build(BuildContext context) {
-
 
     // StorageService.getUser()!.user.
     return BlocBuilder<BottomNavCubit, int>(

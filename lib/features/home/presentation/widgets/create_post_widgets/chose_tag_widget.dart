@@ -52,8 +52,7 @@ class SelectableButtonGrid extends StatelessWidget {
 
                               return GestureDetector(
                                 onTap: () {
-                                  Logger().d(tagState.selectedTags.toString() +'/'+state.majors[index].id.toString()+'/'+isSelectedTag(major: state.majors[index], tags: tagState.selectedTags).toString());
-                                  // _isSelected[index] =!_isSelected[index]; // Toggle selection
+                                  // Logger().d(tagState.selectedTags.toString() +'/'+state.majors[index].id.toString()+'/'+isSelectedTag(major: state.majors[index], tags: tagState.selectedTags).toString());
                                   if (!isSelectedTag(major: state.majors[index], tags: tagState.selectedTags)) {
                                     context.read<TagCubit>().addTag(state.majors[index]);
                                   } else {
