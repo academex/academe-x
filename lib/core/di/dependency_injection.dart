@@ -10,7 +10,9 @@ import '../../features/college_major/domain/repositories/college_major_repositor
 import '../../features/college_major/domain/usecases/college_major_use_case.dart';
 import '../../features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import '../core.dart';
-// import '../services/hive_cache_manager.dart';
+import '../utils/network/api_controller.dart';
+import '../utils/network/cubits/connectivity_cubit.dart';
+import '../utils/storage/cache/hive_cache_manager.dart';
 
 final GetIt getIt = GetIt.instance;
 

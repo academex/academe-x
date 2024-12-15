@@ -1,8 +1,11 @@
-import 'package:academe_x/core/storage/storage.dart';
+import 'package:academe_x/core/utils/storage/storage.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:academe_x/lib.dart';
+
+import '../utils/storage/cache/hive_cache_manager.dart';
 
 enum Environment { dev, staging, prod }
 
@@ -29,7 +32,7 @@ class AppConfig {
 
   // Timeouts
   static const Duration connectionTimeout = Duration(seconds: 30);
-  static const Duration receiveTimeout = Duration(seconds: 30);
+  // static const Duration receiveTimeout = Duration(seconds: 30);
 
   // Cache configuration
   static const Duration cacheMaxAge = Duration(days: 7);
@@ -107,17 +110,17 @@ class AppConfig {
 
   static Future<void> _initializeAnalytics() async {
     try {
-      // final analytics = FirebaseAnalytics.instance;
-      // await analytics.setAnalyticsCollectionEnabled(true);
-      // await analytics.logAppOpen();
-      // await analytics.setUserProperty(
-      //   name: 'app_version',
-      //   value: packageInfo.version,
-      // );
-      // await analytics.setUserProperty(
-      //   name: 'environment',
-      //   value: environment.name,
-      // );
+      final analytics = FirebaseAnalytics.instance;
+      await analytics.setAnalyticsCollectionEnabled(true);
+      await analytics.logAppOpen();
+      await analytics.setUserProperty(
+        name: 'app_version',
+        value: packageInfo.version,
+      );
+      await analytics.setUserProperty(
+        name: 'environment',
+        value: environment.name,
+      );
     } catch (e) {
       debugPrint('Failed to initialize analytics: $e');
     }
@@ -134,7 +137,9 @@ class AppConfig {
       if (enableDebugMode) {
         debugPrint('Cache initialized successfully');
         debugPrint(
-            'Cache size: ${await cacheManager.getAllStorageSizes()}bytes');
+            'Cache size: ${await cacheManager.getAllStorageSizes()}KB');
+        debugPrint(
+            'Total cache size: ${(await cacheManager.getAllStorageSizes())['total']}KB');
       }
     } catch (e, stackTrace) {
       debugPrint('Failed to initialize cache: $e');

@@ -48,6 +48,8 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 
+import '../widgets/lib/flutter_reaction_button.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen();
 
@@ -60,7 +62,7 @@ class HomeScreen extends StatelessWidget {
         return Scaffold(
           floatingActionButton: _buildFloatingActionButton(currentIndex),
           bottomNavigationBar: const CustomBottomNavBar(),
-          body: _buildBody(currentIndex),
+          body: _buildBody(currentIndex,context),
         );
       },
     );
@@ -84,18 +86,53 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(int currentIndex) {
+  Widget _buildBody(int currentIndex,BuildContext context) {
     return IndexedStack(
       index: currentIndex,
-      children:const [
-        CommunityPage(),
-         LibraryPage(),
-         Row(),
-         Row(),
-        ProfilePage(),
+      children:[
+        const CommunityPage(),
+         const LibraryPage(),
+         const Row(),
+      Center(
+        child: ReactionButton<String>(
+          placeHolder: Reaction<String>(
+      value: 'like',
+      icon: Text('like'),
+    ),
+          onReactionChanged: (Reaction<String>? reaction) {
+            debugPrint('Selected value: ${reaction?.value}');
+          },
+          reactions: <Reaction<String>>[
+            Reaction<String>(
+              value: 'likelikelikelikelike',
+              icon: Text('likelikelikelikelike'),
+            ),
+            Reaction<String>(
+              value: 'lovelovelovelovelove',
+              icon: Text('likelikelikelikelike'),
+            ),
+          ],
+          // initialReaction: ,
+          selectedReaction: Reaction<String>(
+            value: 'like_fill',
+            icon: Text('like_fill'),
+          ), itemSize: Size(200,200),
+        )
+      ),
+      ProfilePage(),
       ],
     );
   }
+  // void showReactionPopup(BuildContext context, Offset offset) {
+  //   Reactionpopup.showReaction(
+  //
+  //     context,
+  //     offset: offset,
+  //     handlePressed: (Emotions emotion) {
+  //       print('Selected emotion: $emotion');
+  //     },
+  //   );
+  // }
 
   void _handleUploadFile() {
     // Handle file upload logic

@@ -8,7 +8,7 @@ import 'package:http_parser/http_parser.dart'; // Import this for MediaType
 import 'package:academe_x/academeX_main.dart';
 import 'package:academe_x/core/constants/cache_keys.dart';
 import 'package:academe_x/core/core.dart';
-import 'package:academe_x/core/network/base_response.dart';
+import 'package:academe_x/core/utils/network/base_response.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/tag_model.dart';
@@ -20,7 +20,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../../../../../core/utils/handle_http_error.dart';
+import '../../../../../core/utils/network/api_controller.dart';
+import '../../../../../core/utils/network/api_setting.dart';
+import '../../../../../core/utils/storage/cache/hive_cache_manager.dart';
 import '../../../presentation/controllers/states/create_post/create_post_icons_state.dart';
+import '../../models/post/comment_model.dart';
 
 typedef PostBaseResponse = BaseResponse<PostModel>;
 typedef TagBaseResponse = BaseResponse<List<MajorModel>>;
@@ -97,6 +102,7 @@ class CreatePostRemoteDataSource {
             filename: post.file!.url!.split('/').last,
             contentType: MediaType('application', 'pdf'),
           );
+
           request.files.add(file1);
         }
 
@@ -160,7 +166,7 @@ class CreatePostRemoteDataSource {
       });
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
       if (response.statusCode >= 400) {
-        _handleHttpError(responseBody);
+        HandleHttpError.handleHttpError(responseBody);
       }
       final TagBaseResponse baseResponse = TagBaseResponse.fromJson(
         responseBody,
@@ -199,46 +205,46 @@ class CreatePostRemoteDataSource {
       throw OfflineException(errorMessage: 'No Internet Connection');
     }
   }
-
-  void _handleHttpError(Map<String, dynamic> json) {
-    // Handle error response format with statusCode field
-    if (json.containsKey('statusCode')) {
-      final errorResponse = ErrorResponseModel.fromJson(json);
-
-      switch (errorResponse.statusCode) {
-        case 400:
-          final messages =
-              errorResponse.messages ?? [errorResponse.message ?? ''];
-          throw ValidationException(messages: messages);
-        case 401:
-          throw UnauthorizedException(
-            message: errorResponse.message ?? 'Unauthorized',
-          );
-        case 500:
-        case 502:
-        case 503:
-        case 504:
-          throw ServerException(
-            message: errorResponse.message ??
-                'Server error (${errorResponse.statusCode})',
-          );
-        default:
-          throw ServerException(
-            message: errorResponse.message ?? 'Server error',
-          );
-      }
-    } else {
-      if (json['status'] == 'error') {
-        AppLogger.e('Login Error: ${json['status']}');
-        if (json['message'] is List) {
-          final List<String> messages =
-              (json['message'] as List).map((e) => e.toString()).toList();
-          throw ValidationException(messages: messages);
-        }
-        throw ValidationException(
-          messages: [json['message'].toString() ?? 'Unknown error'],
-        );
-      }
-    }
-  }
+  //
+  // void _handleHttpError(Map<String, dynamic> json) {
+  //   // Handle error response format with statusCode field
+  //   if (json.containsKey('statusCode')) {
+  //     final errorResponse = ErrorResponseModel.fromJson(json);
+  //
+  //     switch (errorResponse.statusCode) {
+  //       case 400:
+  //         final messages =
+  //             errorResponse.messages ?? [errorResponse.message ?? ''];
+  //         throw ValidationException(messages: messages);
+  //       case 401:
+  //         throw UnauthorizedException(
+  //           message: errorResponse.message ?? 'Unauthorized',
+  //         );
+  //       case 500:
+  //       case 502:
+  //       case 503:
+  //       case 504:
+  //         throw ServerException(
+  //           message: errorResponse.message ??
+  //               'Server error (${errorResponse.statusCode})',
+  //         );
+  //       default:
+  //         throw ServerException(
+  //           message: errorResponse.message ?? 'Server error',
+  //         );
+  //     }
+  //   } else {
+  //     if (json['status'] == 'error') {
+  //       AppLogger.e('Login Error: ${json['status']}');
+  //       if (json['message'] is List) {
+  //         final List<String> messages =
+  //             (json['message'] as List).map((e) => e.toString()).toList();
+  //         throw ValidationException(messages: messages);
+  //       }
+  //       throw ValidationException(
+  //         messages: [json['message'].toString() ?? 'Unknown error'],
+  //       );
+  //     }
+  //   }
+  // }
 }

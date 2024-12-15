@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../../../../core/services/share_service.dart';
+import '../../../../../../core/utils/services/share_service.dart';
 import '../../../../domain/entities/post/post_entity.dart';
 import '../../../controllers/cubits/post/posts_cubit.dart';
 import '../../action_button.dart';
@@ -57,22 +57,20 @@ class PostActionButtons extends StatelessWidget {
     try {
       await context.read<PostsCubit>().reactToPost(
         context: context,
-        reactType: reactType.toUpperCase(),
+        reactType: reactType.toUpperCase() == "NOTHING" ? "HEART": reactType.toUpperCase() ,
         postId: post.id!,
       );
     } catch (e) {
       // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update reaction')),
+      context.showSnackBar(
+        message: 'Failed to update reaction',
+        error: true
+
       );
     }
   }
 }
 
-void sharePost(String postId) {
-  final String postUrl = 'https://academex-1.onrender.com/post/$postId';
-  Share.share(postUrl, subject: 'Check out this post!');
-}
 
 void showShareOptions(BuildContext context,PostEntity post) {
   showModalBottomSheet(

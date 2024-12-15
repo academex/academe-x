@@ -25,11 +25,10 @@ export 'lifecycle/lifecycle.dart';
 export 'di/di.dart';
 
 // Services
-export 'services/services.dart';
 
 
 //Storage
-export 'storage/storage.dart';
+export 'utils/storage/storage.dart';
 
 // Widgets
 export 'widgets/widgets.dart';
@@ -39,4 +38,3 @@ export 'utils/utils.dart';
 
 
 // Network
-export 'network/network.dart';

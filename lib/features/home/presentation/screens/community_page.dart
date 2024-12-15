@@ -20,7 +20,6 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  // final _scrollController = ScrollController();
   Timer? _debounce;
 
   @override
@@ -143,7 +142,6 @@ class _CommunityPageState extends State<CommunityPage> {
             delegate: SliverChildBuilderDelegate(
                   (context, index) {
                 if (index >= state.posts.length) {
-
                   if (state.hasPostsReachedMax) {
                     return null;
                   }
