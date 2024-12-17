@@ -1,24 +1,23 @@
 import 'package:academe_x/features/auth/auth.dart';
+import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 
 class CommentEntity {
   int? id;
-  String? comment;
+  String? content;
   int? likes;
   bool? isHidden;
   DateTime? createdAt;
   DateTime? updatedAt;
-  int? userId;
   int? postId;
   UserResponseEntity? user;
 
   CommentEntity({
     this.id,
-    this.comment,
+    this.content,
     this.likes,
     this.isHidden,
     this.createdAt,
     this.updatedAt,
-    this.userId,
     this.postId,
     this.user,
   });

@@ -30,7 +30,12 @@ class PostActionButtons extends StatelessWidget {
           ActionButton(
             iconPath: 'assets/icons/comment.png',
             count: post.commentsCount.toString(),
-            onTap: () => CommentsList(postId: post.id, context: context),
+            onTap: () {
+              context
+                  .read<PostsCubit>()
+                  .getComments(postId: post.id!);
+              CommentsList(postId: post.id, context: context);
+            },
           ),
           10.pw(),
           ActionButton(

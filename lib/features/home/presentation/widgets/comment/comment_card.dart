@@ -4,6 +4,7 @@ import 'package:academe_x/lib.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CommentCard extends StatelessWidget {
   final String commenter;
@@ -16,12 +17,14 @@ class CommentCard extends StatelessWidget {
   bool _showReplyVisibility = false;
   bool isEndReply;
   bool useNewDesign = true;
+  DateTime createdAt;
 
   CommentCard({
     required this.commenter,
     required this.commentText,
     required this.likes,
     required this.reply,
+    required this.createdAt,
     // this.showReplies,
     this.commentIndex,
     this.isReply = false,
@@ -104,7 +107,7 @@ class CommentCard extends StatelessWidget {
                     Row(
                       children: [
                         AppText(
-                          text: 'قبل ساعتين',
+                          text: getTimeAgo(createdAt),
                           fontSize: 13,
                           color: const Color(0xffA0A1AB),
                         ),
@@ -198,6 +201,26 @@ class CommentCard extends StatelessWidget {
       ),
     );
   }
+  String getTimeAgo(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inDays > 365) {
+      final years = (difference.inDays / 365).floor();
+      return '$years ${years == 1 ? 'year' : 'years'} ago';
+    } else if (difference.inDays > 30) {
+      final months = (difference.inDays / 30).floor();
+      return '$months ${months == 1 ? 'month' : 'months'} ago';
+    } else if (difference.inDays > 0) {
+      return 'منذ${difference.inDays} ${difference.inDays == 1 ? 'ي' : 'أي'}';
+    } else if (difference.inHours > 0) {
+      return 'منذ ${difference.inHours}  ${difference.inHours == 1 ? 'س' : 'س'}';
+    } else if (difference.inMinutes > 0) {
+      return 'منذ${difference.inMinutes} ${difference.inMinutes == 1 ? 'د' : 'د'}';
+    } else {
+      return 'الان';
+    }
+  }
 
   // Widget _buildLikeButton(
   //     {required int likeCount, required BuildContext context}) {
@@ -227,4 +250,64 @@ class CommentCard extends StatelessWidget {
   //     ),
   //   );
   // }
+}
+class CommentCardShimmer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 9, right: 25, left: 15),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.grey[300],
+              radius: 20,
+            ),
+            9.pw(),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 15,
+                    width: 100,
+                    color: Colors.grey[300],
+                  ),
+                  5.ph(),
+                  Container(
+                    height: 10,
+                    width: 200,
+                    color: Colors.grey[300],
+                  ),
+                  5.ph(),
+                  Container(
+                    height: 10,
+                    width: 150,
+                    color: Colors.grey[300],
+                  ),
+                ],
+              ),
+            ),
+            BlocBuilder<FavoriteCubit, bool>(
+              builder: (context, state) => SizedBox(
+                height: 40,
+                width: 60,
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[200],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:academe_x/features/college_major/domain/entities/major_entity.dart';
+import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
@@ -21,5 +22,5 @@ abstract class PostRepository {
   Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>>getReactions(PaginationParams paginationParams,String reactionType,int postId);
   Future<Either<Failure, PostEntity>> createPost(PostEntity post);
   Future<Either<Failure, List<MajorEntity>>> getTags();
-  Future<Either<Failure, List<CommentEntity>>>  getComments(int postId);
+  Future<Either<Failure, PaginatedResponse<CommentModel>>>  getComments(PaginationParams paginationParams,int postId);
 }

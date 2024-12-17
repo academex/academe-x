@@ -1,6 +1,7 @@
 
 import 'package:academe_x/core/utils/network/base_response.dart';
 import 'package:academe_x/features/features.dart';
+import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
@@ -45,8 +46,8 @@ class PostUseCase {
   }
 
 
-  Future<Either<Failure, List<CommentEntity>>> getComments(int postId) async {
-    return await postRepository.getComments(postId);
+  Future<Either<Failure, PaginatedResponse<CommentModel>>> getComments(PaginationParams paginationParams,int postId) async {
+    return await postRepository.getComments(paginationParams,postId);
   }
 
 

@@ -9,17 +9,17 @@ class UserResponseModel extends UserResponseEntity {
   required super.username,
   required super.firstName,
   required super.lastName,
-  required super.email,
-  required super.role,
-  required super.photoUrl,
-  required super.bio,
-  required super.isActive,
-  required super.currentYear,
-  required super.gender,
-  required super.phoneNum,
-  required super.tagId,
-    required super.createdAt,
-  required super.updatedAt,
+   super.email,
+  super.role,
+  super.photoUrl,
+  super.bio,
+    super.isActive,
+   super.currentYear,
+   super.gender,
+   super.phoneNum,
+   super.tagId,
+     super.createdAt,
+   super.updatedAt,
   });
 
 
@@ -38,8 +38,8 @@ class UserResponseModel extends UserResponseEntity {
       gender: json['gender'],
       phoneNum: json['phoneNum'],
       tagId: json['tagId'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: json['createdAt'] != null?DateTime.parse(json['createdAt']):null,
+      updatedAt: json['updatedAt'] != null? DateTime.parse(json['updatedAt']):null,
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:academe_x/core/utils/network/base_response.dart';
 import 'package:academe_x/features/college_major/data/models/major_model.dart';
+import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/save_response_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
@@ -313,10 +314,11 @@ class PostRepositoryImpl implements PostRepository {
   Future<Either<Failure, List<MajorModel>>> getTags() async {
     return handlingException<List<MajorModel>>(() => createPostRemoteDataSource.getTags(),);
   }
+  //Future<PaginatedResponse<CommentModel>>
 
   @override
-  Future<Either<Failure, List<CommentEntity>>> getComments(int postId) {
-    return handlingException<List<CommentEntity>>(() => remoteDataSource.getComments(postId),);
+  Future<Either<Failure, PaginatedResponse<CommentModel>>> getComments(PaginationParams paginationParams,int postId) {
+    return handlingException<PaginatedResponse<CommentModel>>(() => remoteDataSource.getComments(paginationParams: paginationParams,postId: postId),);
   }
 
 

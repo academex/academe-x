@@ -34,7 +34,10 @@ class PostsState extends Equatable {
   // this for comment
   final CommentsStatus commentsStatus;
   final List<CommentEntity> comments;
+  final int latestPostIdGetHereComments;
   final String? commentError;
+   bool hasCommentReachedMax;
+  int commentCurrentPage;
 
 
 
@@ -63,6 +66,9 @@ class PostsState extends Equatable {
     this.commentsStatus = CommentsStatus.initial,
     this.comments = const [],
     this.commentError,
+    this.commentCurrentPage = 1,
+    this.hasCommentReachedMax = false,
+    this.latestPostIdGetHereComments = -1,
 
 
   });
@@ -77,6 +83,7 @@ class PostsState extends Equatable {
      StatisticsEntity? statisticsEntity,
     List<ReactionItemEntity>? reactionItems,
     bool? hasPostsReachedMax,
+    bool? hasCommentReachedMax,
      bool? hasReactionsReachedMax,
     int? reactionsCurrentPage,
     bool? isSaved,
@@ -87,6 +94,8 @@ class PostsState extends Equatable {
     CommentsStatus? commentsStatus,
     String? commentError,
     List<CommentEntity>? comments,
+    int? commentCurrentPage,
+    int? latestPostIdGetHereComments,
 
   }) {
     return PostsState(
@@ -103,6 +112,7 @@ class PostsState extends Equatable {
 
       reactionItems: reactionItems ?? this.reactionItems,
       hasPostsReachedMax: hasPostsReachedMax ?? this.hasPostsReachedMax,
+      hasCommentReachedMax: hasCommentReachedMax ?? this.hasCommentReachedMax,
       isSaved: isSaved ?? this.isSaved,
       postsCurrentPage: postsCurrentPage ?? this.postsCurrentPage,
       errorMessage: errorMessage ?? this.errorMessage,
@@ -113,6 +123,8 @@ class PostsState extends Equatable {
       comments: comments ?? this.comments,
       commentsStatus: commentsStatus ?? this.commentsStatus,
       commentError: commentError ?? this.commentError,
+      commentCurrentPage: commentCurrentPage ?? this.commentCurrentPage,
+      latestPostIdGetHereComments: latestPostIdGetHereComments ?? this.latestPostIdGetHereComments,
 
     );
   }
@@ -127,6 +139,7 @@ class PostsState extends Equatable {
     statisticsEntity,
     reactionItems,
     hasPostsReachedMax,
+    hasCommentReachedMax,
     hasReactionsReachedMax,
     reactionsCurrentPage,
     postsCurrentPage,
@@ -137,5 +150,7 @@ class PostsState extends Equatable {
     comments,
     commentError,
     commentsStatus,
+    commentCurrentPage,
+    latestPostIdGetHereComments,
   ];
 }

@@ -3,6 +3,7 @@ import 'package:academe_x/core/core.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/data/models/post/comment_model.dart';
+import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,10 +24,12 @@ class PostsCubit extends Cubit<PostsState> {
   final PostUseCase postUseCase;
   final HiveCacheManager _cacheManager;
   final ScrollController scrollController = ScrollController();
+  final ScrollController commentScrollController = ScrollController();
 
 
 
   bool _isLoading = false; // Add loading flag to prevent multiple simultaneous calls
+  bool _commentIsLoading = false; // Add loading flag to prevent multiple simultaneous calls
 
   PostsCubit({
     required this.postUseCase,
@@ -548,25 +551,79 @@ class PostsCubit extends Cubit<PostsState> {
     );
   }
 
-  getComments(int postId) async {
-    emit(state.copyWith(commentsStatus: CommentsStatus.loading));
-    var comments = await postUseCase.getComments(postId);
-    comments.fold(
-          (l) {
-        emit(
-          state.copyWith(
-            commentsStatus: CommentsStatus.failure,
-            commentError: l.message,
-          ),
-        );
-      },
-          (r) {
-        Logger().d(r.toString());
-        emit(state.copyWith(
+  getComments({bool refresh = false,required int postId}) async {
+    Logger().d('message${state.latestPostIdGetHereComments} $postId');
+
+    if(state.latestPostIdGetHereComments != postId || state.commentsStatus == CommentsStatus.failure) {
+      refresh = true;
+      emit(state.copyWith(
+        commentsStatus: CommentsStatus.initial,
+        hasCommentReachedMax: false,
+        latestPostIdGetHereComments: postId,
+        commentCurrentPage: 1,
+        posts: null,
+        commentError: null,
+
+      ));
+    }
+
+    Logger().f('$_commentIsLoading ${state.hasCommentReachedMax && !refresh}');
+    if(_commentIsLoading) return;
+    if(state.hasCommentReachedMax) return;
+
+      // emit(state.copyWith(commentsStatus: CommentsStatus.loading));
+    _commentIsLoading = true;
+        // state.copyWith(
+        //   commentsStatus: CommentsStatus.loading,
+        // );
+
+      final page = refresh ? 1 : state.commentCurrentPage;
+     Logger().d('current page:$page');
+
+      final result = await postUseCase.getComments(PaginationParams(page: page),postId);
+      result.fold(
+            (failure)async  {emit(state.copyWith(
+              commentsStatus: CommentsStatus.failure,
+              errorMessage: failure.message,
+            ));
+        },
+            (paginatedData) {
+              Logger().d(paginatedData.items.last.content);
+          if (refresh) {
+            emit(state.copyWith(
+              commentsStatus: CommentsStatus.success,
+              comments: paginatedData.items,
+              hasCommentReachedMax: !paginatedData.hasNextPage,
+              commentCurrentPage: 2,
+              errorMessage: null,
+            ));
+            return;
+          }
+          final List<CommentEntity> newComments = state.comments;
+          for (var newComment in paginatedData.items) {
+            if (!newComments.any((existingComment) => existingComment.id == newComment.id)) {
+              newComments.add(newComment);
+            }
+          }
+          final nextPage = state.postsCurrentPage + 1;
+          emit(state.copyWith(
             commentsStatus: CommentsStatus.success,
-            comments: r,),);
-      },
-    );
+            comments: newComments,
+            hasCommentReachedMax: !paginatedData.hasNextPage,
+            commentCurrentPage:nextPage,
+            errorMessage: null,
+          ));
+        },
+      );
+    // } catch (e) {
+    //   emit(state.copyWith(
+    //     commentsStatus: CommentsStatus.failure,
+    //     errorMessage: e.toString(),
+    //   ));
+    // }finally {
+      _commentIsLoading = false;
+    // }
+
 
   }
 

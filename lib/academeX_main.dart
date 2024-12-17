@@ -144,14 +144,14 @@ class AcademeXMain extends StatelessWidget {
           bool isLoading = state.creationState == CreationStatus.loading;
           bool isSuccess = state.creationState == CreationStatus.success;
           bool isFailure = state.creationState == CreationStatus.failure;
-          Logger().f(NavigationService.navigatorKey.currentContext);
+          // Logger().f(NavigationService.navigatorKey.currentContext);
           // if(state.creationState == CreationStatus.loading) Navigator.pop(context);
 
 
           ScaffoldMessenger.of(context).clearSnackBars();
           // ScaffoldMessenger.of(context).hideCurrentSnackBar();
           Logger().f(state.creationState);
-          // if(state.creationState == CreationStatus.loading) {
+          if(isLoading || isFailure || isSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: GestureDetector(
@@ -183,7 +183,7 @@ class AcademeXMain extends StatelessWidget {
 
               ),
             );
-          // }
+          }
 
 
         },),

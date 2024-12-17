@@ -10,6 +10,7 @@ import 'package:academe_x/features/home/data/models/post/reaction_item_model.dar
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import 'package:academe_x/lib.dart';
+import 'package:logger/logger.dart';
 
 import '../../../../core/pagination/paginated_response.dart';
 import '../../../../core/pagination/pagination_params.dart';
@@ -67,11 +68,13 @@ class PostRemoteDataSource {
       throw OfflineException(errorMessage: 'No Internet Connection');
     }
   }
-  Future<List<CommentModel>> getComments(int postId) async {
+  Future<PaginatedResponse<CommentModel>> getComments(
+      {required PaginationParams paginationParams,required int postId}) async {
     if (await internetConnectionChecker.hasConnection) {
       try {
+        Logger().d(postId);
         final response = await apiController.get(
-          Uri.parse('${ApiSetting.getComments}/$postId'),
+          Uri.parse('${ApiSetting.getComments}/$postId/comment?limit=${paginationParams.limit}&page=${paginationParams.page}'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
@@ -81,17 +84,18 @@ class PostRemoteDataSource {
         if(response.statusCode>=400){
           HandleHttpError.handleHttpError(responseBody);
         }
-        if(response.statusCode ==200 || responseBody['data'] == null){
-          ///TODO
-        }
-
-        final baseResponse = CommentsResponse.fromJson(
+        final baseResponse = BaseResponse<PaginatedResponse<CommentModel>>.fromJson(
           responseBody,
               (json) {
-            return (json as List).map((e) => CommentModel.fromJson(e),).toList();
+            return  PaginatedResponse<CommentModel>.fromJson(
+              json,(p0) {
+              return CommentModel.fromJson(p0);
+            },
+            );
           },
         );
 
+        // Logger().d(baseResponse.data!.items);
         return baseResponse.data!;
 
 

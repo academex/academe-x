@@ -3,15 +3,15 @@ class UserResponseEntity {
   String username;
   String firstName;
   String lastName;
-  String email;
-  String role;
+  String? email;
+  String? role;
   String? photoUrl;
   String? bio;
-  int currentYear;
-  String gender;
-  String phoneNum;
-  int tagId;
-  bool isActive;
+  int? currentYear;
+  String? gender;
+  String? phoneNum;
+  int? tagId;
+  bool? isActive;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -20,17 +20,17 @@ class UserResponseEntity {
     required this.username,
     required this.firstName,
     required this.lastName,
-    required this.email,
-    required this.role,
+     this.email,
+    this.role,
     this.photoUrl,
     this.bio,
-    required this.currentYear,
-    required this.gender,
-    required this.phoneNum,
-    required this.tagId,
-    required this.isActive,
-    required this.createdAt,
-    required this.updatedAt,
+    this.currentYear,
+    this.gender,
+    this.phoneNum,
+    this.tagId,
+    this.isActive,
+    this.createdAt,
+    this.updatedAt,
   });
 
 
