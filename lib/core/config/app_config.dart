@@ -22,7 +22,6 @@ class AppConfig {
   static late String authEndpoint;
   static late String tagsEndpoint;
   static late String postsEndpoint;
-  static late String commentEndpoint;
   static late String getTagsEndpoint;
 
   // Feature flags
@@ -60,7 +59,6 @@ class AppConfig {
         apiUrl = 'https://academex-1.onrender.com';
         authEndpoint = '$apiUrl/auth';
         tagsEndpoint = '$apiUrl/tag';
-        commentEndpoint = '$apiUrl/comment/';
         postsEndpoint = '$apiUrl/post';
         getTagsEndpoint = '$apiUrl/tag/user-college-tags';
 

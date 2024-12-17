@@ -32,7 +32,7 @@ class CreatePost {
 
 
   void showCreatePostModal(BuildContext parContext) async {
-    int tagId = (await parContext.cachedUser)!.user.tagId;
+    int tagId = (await parContext.cachedUser)!.user.tagId!;
 
     UserResponseEntity user = (await parContext.cachedUser)!.user;
     showModalBottomSheet(
@@ -83,7 +83,6 @@ class CreatePost {
                         formKey: _formKey,
                         post: post,
                         textController: _postController,
-                      parentContext: parContext,
                     ),
                     // 5.ph(),
                   ],
@@ -429,13 +428,11 @@ class SubmitButton extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   PostEntity post;
   final TextEditingController textController;
-  BuildContext parentContext;
   SubmitButton({
     super.key,
     required this.formKey,
     required this.post,
     required this.textController,
-    required this.parentContext,
   });
 
   @override
@@ -473,10 +470,9 @@ class SubmitButton extends StatelessWidget {
                             tags:getIt<TagCubit>().getSelectedTags(),
                         );
 
-                        Logger().f(post.tags);
                         context.read<PostsCubit>().sendPost(
                             post: post.copyWith(content: textController.text,));
-
+                        Navigator.pop(context);
                       }
                     }
                   : null,
