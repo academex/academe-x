@@ -65,7 +65,7 @@ class CollegeMajorsState extends Equatable {
       selectedCollege: selectedCollege ?? this.selectedCollege,
       isVisibileMajors: isVisibileMajors ?? this.isVisibileMajors,
       selectedTag: selectedTag ?? this.selectedTag,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: errorMessage,
       isLoadingMajorSetting: isLoadingMajorSetting ?? this.isLoadingMajorSetting,
       selectedMajorIndex: selectedMajorIndex ?? this.selectedMajorIndex,
       collegeAndMajor: collegeAndMajor ?? this.collegeAndMajor,

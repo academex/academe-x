@@ -30,7 +30,7 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
 
   Future<void> initCollegeMajor()async{
     await getColleges();
-    await getTags();
+    // await getTags();
     await getCachedUser();
     await getMajorSetting();
   }
@@ -69,30 +69,21 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
 
 
   Future<void> getColleges() async {
-
     if (state.isLoadingForCollege) return;
-    emit(state.copyWith(isLoadingForCollege: true,errorMessage: null));
+    emit(state.copyWith(isLoadingForCollege: true));
 
     final result = await _collegeMajorsUseCase.getColleges();
     result.fold(
           (failure) {
-
         List<String>? errorMessage=[];
-        if (failure is ValidationFailure) {
-          errorMessage = failure.messages;
-        } else if (failure is UnauthorizedFailure) {
-          errorMessage.add(failure.message);
-        } else {
-          errorMessage.add(failure.message);
-        }
+        errorMessage.add(failure.message);
         emit(state.copyWith(
-          errorMessage: null,
+          errorMessage: errorMessage.first,
           isLoadingForCollege: false,
         ));
       },
           (colleges) async {
         emit(state.copyWith(
-          status: MajorsStatus.success,
             colleges: colleges,
             isLoadingForCollege: false,
             errorMessage: null
@@ -174,7 +165,6 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
 
   Future<void> retry()async{
      await getColleges();
-
   }
 
   getTags() async {

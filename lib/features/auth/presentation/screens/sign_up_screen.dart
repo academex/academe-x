@@ -164,7 +164,7 @@ class SignUpScreen extends StatelessWidget {
                 label: 'الاسم الأول',
                 hintText: 'أدخل اسمك الأول',
                 controller: state.firstNameController!,
-                validator: FormValidators.validateName,
+                // validator: FormValidators.validateName,
               ),
             ),
             17.pw(), // Horizontal spacing between fields
@@ -173,7 +173,7 @@ class SignUpScreen extends StatelessWidget {
                 label: 'الاسم الأخير',
                 hintText: 'أدخل اسمك الأخير',
                 controller:state.lastNameController!,
-                validator: FormValidators.validateName,
+                // validator: FormValidators.validateName,
               ),
             ),
           ],
@@ -182,20 +182,20 @@ class SignUpScreen extends StatelessWidget {
           label: 'اسم المستخدم',
           hintText: 'اكتب اسم المستخدم',
           controller: state.userNameController!,
-          validator: FormValidators.validateUsername,
+          // validator: FormValidators.validateUsername,
         ),
         CustomTextField(
           label: context.localizations.emailLabel,
           hintText: context.localizations.emailHint,
           controller: state.emailController!,
-          validator: FormValidators.validateEmail,
+          // validator: FormValidators.validateEmail,
         ),
         CustomTextField(
           label: 'رقم الهاتف',
           hintText: '000000000',
           controller: state.phoneController!,
           isPhone: true,
-          validator: FormValidators.validatePhone,
+          // validator: FormValidators.validatePhone,
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,7 +250,7 @@ class SignUpScreen extends StatelessWidget {
       togglePasswordVisibility: () {
       context.read<SignupCubit>().togglePasswordVisibility();
       },
-      validator: FormValidators.validatePassword,
+      // validator: FormValidators.validatePassword,
     ),
         CustomTextField(
           label: context.localizations.confirmPasswordLabel,
@@ -261,7 +261,7 @@ class SignUpScreen extends StatelessWidget {
           togglePasswordVisibility: () {
             context.read<SignupCubit>().togglePasswordVisibility();
           },
-          validator: (p0) =>FormValidators.validateConfirmPassword(p0,  state.passwordController!.text)
+          // validator: (p0) =>FormValidators.validateConfirmPassword(p0,  state.passwordController!.text)
           // ,
         ),
       ],

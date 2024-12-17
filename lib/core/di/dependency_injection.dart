@@ -80,12 +80,10 @@ void _initCubits() {
   getIt.registerFactory<SignupCubit>(
     () => SignupCubit(
       authUseCase: getIt(),
+      collegeMajorsCubit: getIt()
     ),
   );
 
-  getIt.registerFactory<CollegeCubit>(
-    () => CollegeCubit(),
-  );
   getIt.registerFactory<CollegeMajorsCubit>(
     () => CollegeMajorsCubit(cacheManager: getIt(), getMajorsUseCase: getIt()),
   );

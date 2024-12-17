@@ -80,17 +80,16 @@ Widget _buildHeader(CollegeMajorsState state) {
   );
 }
 Widget _buildCollegesList(CollegeMajorsState state,BuildContext context) {
-  AppLogger.success('there is error ${state.errorMessage}');
-  AppLogger.success('there is error ${state.colleges}');
+  AppLogger.success(state.toString());
   if(state.errorMessage !=null){
     return CompactErrorWidget(
-      message: 'خطأ في التحميل',
+      message: state.errorMessage,
       onRetry: () async{
         await context.read<CollegeMajorsCubit>().retry();
       },
     );
   }
-  else if(!state.isLoadingForCollege && state.colleges!=null){
+   if(state.colleges!=null){
     return Column(
         children: state.colleges!.map((college) {
           final isSelected = state.selectedCollege == college.collegeEn;

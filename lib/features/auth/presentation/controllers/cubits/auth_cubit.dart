@@ -58,10 +58,6 @@ abstract class AuthCubit extends Cubit<AuthState> {
   }
 
 
-  void toggleExpanded() {
-    emit(state.copyWith(isExpanded: !state.isExpanded));
-  }
-
   void selectIndex({required int? index, required SelectionType selectionType}) {
     if (selectionType == SelectionType.major) {
       emit(state.copyWith(selectedMajorIndex: index));
@@ -73,15 +69,6 @@ abstract class AuthCubit extends Cubit<AuthState> {
   void selectTagId({required int? tagId,}) {
       emit(state.copyWith(selectedTagId: tagId));
   }
-
-  void appendMajorToBaseVar(String major) {
-    emit(state.copyWith(
-        collegeAndMajor: "${state.selectedCollege!} ($major) "
-    ));
-  }
-
-
-
 
 
 }
