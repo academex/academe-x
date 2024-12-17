@@ -552,12 +552,13 @@ class PostsCubit extends Cubit<PostsState> {
   }
 
   getComments({bool refresh = false,required int postId}) async {
-    Logger().d('message${state.latestPostIdGetHereComments} $postId');
+    Logger().d(
+        'message${state.latestPostIdGetHereComments} $postId   ${state.latestPostIdGetHereComments != postId}');
 
-    if(state.latestPostIdGetHereComments != postId || state.commentsStatus == CommentsStatus.failure) {
+    if (state.latestPostIdGetHereComments != postId) {
       refresh = true;
       emit(state.copyWith(
-        commentsStatus: CommentsStatus.initial,
+        commentsStatus: CommentsStatus.loading,
         hasCommentReachedMax: false,
         latestPostIdGetHereComments: postId,
         commentCurrentPage: 1,
@@ -566,8 +567,14 @@ class PostsCubit extends Cubit<PostsState> {
 
       ));
     }
+    if ((refresh && state.commentsStatus == CommentsStatus.failure)) {
+      emit(state.copyWith(
+        commentsStatus: CommentsStatus.initial,
+        latestPostIdGetHereComments: postId,
+      ));
+    }
 
-    Logger().f('$_commentIsLoading ${state.hasCommentReachedMax && !refresh}');
+    Logger().f('$_commentIsLoading ${state.hasCommentReachedMax}');
     if(_commentIsLoading) return;
     if(state.hasCommentReachedMax) return;
 
@@ -582,20 +589,22 @@ class PostsCubit extends Cubit<PostsState> {
 
       final result = await postUseCase.getComments(PaginationParams(page: page),postId);
       result.fold(
-            (failure)async  {emit(state.copyWith(
-              commentsStatus: CommentsStatus.failure,
-              errorMessage: failure.message,
-            ));
-        },
+      (failure) async {
+        emit(
+          state.copyWith(
+            commentsStatus: CommentsStatus.failure,
+            commentError: failure.message,
+          ),
+        );
+      },
             (paginatedData) {
-              Logger().d(paginatedData.items.last.content);
           if (refresh) {
             emit(state.copyWith(
               commentsStatus: CommentsStatus.success,
               comments: paginatedData.items,
               hasCommentReachedMax: !paginatedData.hasNextPage,
-              commentCurrentPage: 2,
-              errorMessage: null,
+              commentCurrentPage: state.commentCurrentPage+1,
+              commentError: null,
             ));
             return;
           }
@@ -605,13 +614,12 @@ class PostsCubit extends Cubit<PostsState> {
               newComments.add(newComment);
             }
           }
-          final nextPage = state.postsCurrentPage + 1;
           emit(state.copyWith(
             commentsStatus: CommentsStatus.success,
             comments: newComments,
             hasCommentReachedMax: !paginatedData.hasNextPage,
-            commentCurrentPage:nextPage,
-            errorMessage: null,
+            commentCurrentPage:state.postsCurrentPage +1,
+            commentError: null,
           ));
         },
       );

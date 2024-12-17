@@ -71,7 +71,7 @@ class CommentsList {
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) => Column(
                                 children: [
-                                  const PostWidgetShimmer(),
+                                  CommentCardShimmer(),
                                   Divider(
                                     color: Colors.grey.shade300,
                                     endIndent: 25,
@@ -88,13 +88,14 @@ class CommentsList {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(state.errorMessage ??
-                                        'Failed to fetch posts'),
+                                        'Failed to fetch Comments'),
                                     16.ph(),
                                     ElevatedButton(
                                       onPressed: () async {
                                         return await context
                                             .read<PostsCubit>()
-                                            .getComments(postId: postId);
+                                            .getComments(
+                                                postId: postId, refresh: true);
                                       },
                                       child: const Text('Retry'),
                                     ),
@@ -112,7 +113,6 @@ class CommentsList {
                         }
                         return NotificationListener(
                           onNotification: (notification) {
-
                             if (notification is ScrollEndNotification){
                               Logger().d(notification.metrics.pixels);
                                 if(notification.metrics.pixels == notification.metrics.maxScrollExtent) {
@@ -131,13 +131,93 @@ class CommentsList {
                             shrinkWrap: true,
                             itemCount: state.comments.length,
                             itemBuilder: (context, index) {
-                              if (index == state.comments.length-1) {
-                                if (state.hasCommentReachedMax) {
-                                  return null;
-                                }
-                                return const PostWidgetShimmer();
-                              }
                               final comment = state.comments[index];
+
+                              if (index == state.comments.length-1) {
+                                if (state.commentsStatus ==
+                                    CommentsStatus.loading) {
+                                  if (state.hasCommentReachedMax) {
+                                    return CommentCard(
+                                      commenter:
+                                          '${comment.user!.firstName} ${comment.user!.lastName}',
+                                      commentText: comment.content!,
+                                      likes: comment.likes!,
+                                      createdAt: comment.updatedAt!,
+                                      // replies: comments[index].replies,
+                                      reply: () {
+                                        context.read<ReplyCubit>().reply(
+                                            commenter:
+                                                'رد على @${comment.user!.username}');
+                                      },
+                                      commentIndex: index,
+                                    );
+                                  }
+                                  return Column(
+                                    children: [
+                                      CommentCard(
+                                        commenter:
+                                            '${comment.user!.firstName} ${comment.user!.lastName}',
+                                        commentText: comment.content!,
+                                        likes: comment.likes!,
+                                        createdAt: comment.updatedAt!,
+                                        // replies: comments[index].replies,
+                                        reply: () {
+                                          context.read<ReplyCubit>().reply(
+                                              commenter:
+                                                  'رد على @${comment.user!.username}');
+                                        },
+                                        commentIndex: index,
+                                      ),
+                                      CommentCardShimmer(),
+                                    ],
+                                  );
+                                } else if (state.commentsStatus ==
+                                    CommentsStatus.failure) {
+                                  return Column(
+                                    children: [
+                                      CommentCard(
+                                        commenter:
+                                            '${comment.user!.firstName} ${comment.user!.lastName}',
+                                        commentText: comment.content!,
+                                        likes: comment.likes!,
+                                        createdAt: comment.updatedAt!,
+                                        // replies: comments[index].replies,
+                                        reply: () {
+                                          context.read<ReplyCubit>().reply(
+                                              commenter:
+                                                  'رد على @${comment.user!.username}');
+                                        },
+                                        commentIndex: index,
+                                      ),
+                                      Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(state.errorMessage ??
+                                                'Failed to fetch Comments'),
+                                            16.ph(),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                return await context
+                                                    .read<PostsCubit>()
+                                                    .getComments(
+                                                        postId: postId,
+                                                        refresh: true);
+                                              },
+                                              child: const Text('Retry'),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      AppText(
+                                          text: state.commentError ??
+                                              'I Dont know what hapen!!',
+                                          fontSize: 14.sp),
+                                    ],
+                                  );
+                                }
+                              }
                               return CommentCard(
                               commenter:
                                   '${comment.user!.firstName} ${comment.user!.lastName}',
