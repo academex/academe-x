@@ -21,16 +21,21 @@ class CommunityPage extends StatefulWidget {
 
 class _CommunityPageState extends State<CommunityPage> {
   Timer? _debounce;
+  late ScrollController _scrollController;
+
 
   @override
   void initState() {
     super.initState();
-    context.read<PostsCubit>().scrollController.addListener(_onScroll);
+    context.read<CollegeMajorsCubit>().initCollegeMajorForHome();
+    context.read<PostsCubit>().loadTagPosts();
+    // Future
+    _scrollController = context.read<PostsCubit>().scrollController;
+    _scrollController.addListener(_onScroll);
   }
-
   @override
   void dispose() {
-    context.read<PostsCubit>().scrollController.dispose();
+    _scrollController.removeListener(_onScroll);
     super.dispose();
   }
 
@@ -54,9 +59,8 @@ class _CommunityPageState extends State<CommunityPage> {
 
 
   Widget _buildSliverAppBar() {
-
     return BlocBuilder<CollegeMajorsCubit,CollegeMajorsState>(
-      buildWhen: (previous, current) => previous!=current,
+      // buildWhen: (previous, current) => previous!=current,
       builder: (context, state) => SliverAppBar(
         automaticallyImplyLeading: true,
         expandedHeight:state.isVisibileMajors? 250: 150,
@@ -105,7 +109,6 @@ class _CommunityPageState extends State<CommunityPage> {
                 )
               //
             );
-
             case PostStatus.failure:
               if (state.posts.isEmpty) {
                 return SliverFillRemaining(
@@ -127,7 +130,6 @@ class _CommunityPageState extends State<CommunityPage> {
                 );
               }
               break;
-
             case PostStatus.success:
               if (state.posts.isEmpty) {
                 return const SliverFillRemaining(
@@ -206,11 +208,10 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   Widget _buildHeaderContent(bool inScroll,CollegeMajorsState state) {
-      if (state.isLoadingMajorSetting ||
-        (state.status == MajorsStatus.loading && state.majors.isEmpty)) {
+      if (
+        (state.status == MajorsStatus.loading)) {
       return const Center(child: CircularProgressIndicator());
-    }
-    if (state.status == MajorsStatus.failure && state.majors.isEmpty) {
+    }else if(state.status == MajorsStatus.failure && state.majors.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -225,129 +226,134 @@ class _CommunityPageState extends State<CommunityPage> {
         ),
       );
     }
-
-    final title = state.selectedMajor != null
-        ? '${state.selectedMajor!.majorAr!} | ${state.selectedMajor!.name!.toUpperCase()}'
-        : 'Loading...';
-    return inScroll
-        ? SafeArea(
-        child: Column(
+    else if(state.status== MajorsStatus.success){
+        final title = state.selectedMajor != null
+            ? '${state.selectedMajor!.majorAr!} | ${state.selectedMajor!.name!.toUpperCase()}'
+            : 'Loading...';
+        return inScroll
+            ? SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                      width: 327,
+                      // 327.w,
+                      height: 45  ,
+                      child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
+                  ),
+                ),
+                inScroll ? 0.ph() : 15.ph(),
+                inScroll ? 0.ph() : _buildCategoryTabs(),
+              ],
+            ))
+            :  Column(
           children: [
-            Expanded(
-              child: SizedBox(
-                  width: 327,
-                  // 327.w,
-                  height: 45  ,
-                  child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-              ),
-            ),
-            inScroll ? 0.ph() : 15.ph(),
-            inScroll ? 0.ph() : _buildCategoryTabs(),
-          ],
-        ))
-        :  Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              inScroll ? 0.ph() : 60.ph(),
-              HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title:title , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-              ,18.ph(),
-              Row(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppText(
-                    text: 'التخصصات',
-                    fontSize: 16  ,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                  const Spacer(),
-                  AppText(
-                    text:context.read<CollegeMajorsCubit>().state.isVisibileMajors? 'عرض اقل' : 'عرض المزيد',
-                    fontWeight: FontWeight.w500,
-                    onPressed: () {
-                      context.read<CollegeMajorsCubit>().toggleVisibleMajors();
+                  inScroll ? 0.ph() : 60.ph(),
+                  HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title:title , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
+                  ,18.ph(),
+                  Row(
+                    children: [
+                      AppText(
+                        text: 'التخصصات',
+                        fontSize: 16  ,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                      const Spacer(),
+                      AppText(
+                        text:context.read<CollegeMajorsCubit>().state.isVisibileMajors? 'عرض اقل' : 'عرض المزيد',
+                        fontWeight: FontWeight.w500,
+                        onPressed: () {
+                          context.read<CollegeMajorsCubit>().toggleVisibleMajors();
 
 
-                    },
-                    fontSize: 12  ,
-                    color: Colors.white.withOpacity(0.66),
+                        },
+                        fontSize: 12  ,
+                        color: Colors.white.withOpacity(0.66),
+                      ),
+                    ],
                   ),
+                  12.ph(),
                 ],
               ),
-              12.ph(),
-            ],
-          ),
-        ),
-        state.isVisibileMajors?
-        Container(
-          padding: const EdgeInsets.only(right: 24),
-          height: 100,
-          // width: 327.w,
-          child: ListView.separated(
-            reverse: true,
-              physics: const BouncingScrollPhysics(),
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                bool isSelected= state.majors[index].name! == state.selectedTag;
-                String? title = state.majors[index].majorAr;
-                // String image = 'assets/images/image_test1.png';
-                String image = state.majors[index].name!;
-                return Column(
-                  children: [
-                    GestureDetector(
-                      child: Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                            color:isSelected?Colors.white: Color(0x0F000000),
-                                // : const,
-                            borderRadius:
-                            BorderRadius.circular(10)),
-                        child: Center(
-                          child: AppText(
-                            text: image.toUpperCase(),
-                            fontSize: 16,
-                            fontWeight:isSelected? FontWeight.bold : FontWeight.normal,
+            ),
+            state.isVisibileMajors?
+            Container(
+              padding: const EdgeInsets.only(right: 24),
+              height: 100,
+              // width: 327.w,
+              child: ListView.separated(
+                  reverse: true,
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    bool isSelected= state.majors[index].name! == state.selectedTag;
+                    String? title = state.majors[index].majorAr;
+                    // String image = 'assets/images/image_test1.png';
+                    String image = state.majors[index].name!;
+                    return Column(
+                      children: [
+                        GestureDetector(
+                          child: Container(
+                              width: 56,
+                              height: 56,
+                              decoration: BoxDecoration(
+                                  color:isSelected?Colors.white: Color(0x0F000000),
+                                  // : const,
+                                  borderRadius:
+                                  BorderRadius.circular(10)),
+                              child: Center(
+                                child: AppText(
+                                  text: image.toUpperCase(),
+                                  fontSize: 16,
+                                  fontWeight:isSelected? FontWeight.bold : FontWeight.normal,
 
+                                ),
+                              )
                           ),
+                          onTap: ()async {
+                            context
+                                .read<CollegeMajorsCubit>()
+                                .selectTag(state.majors[index]);
+                            //
+
+                            await   context
+                                .read<PostsCubit>()
+                                .loadTagPosts(tagId: state.majors[index].id!);
+                          },
+                        ),
+                        12.ph(),
+                        AppText(
+                          text: title!,
+                          fontSize: 14,
+                          color: Colors.white,
+                          // fontWeight:FontWeight.bold ,
+                          fontWeight:isSelected? FontWeight.bold : FontWeight.normal,
+                          // fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
+
                         )
-                      ),
-                      onTap: ()async {
-                        context
-                            .read<CollegeMajorsCubit>()
-                            .selectTag(state.majors[index]);
-                        //
+                      ],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return 10.pw();
+                  },
+                  itemCount: state.majors.length),
+            )
+                :0.ph(),
+          ],
+        );
+      }  else{
+      return Text('data');
+      }
 
-                     await   context
-                            .read<PostsCubit>()
-                            .loadTagPosts(tagId: state.majors[index].id!);
-                      },
-                    ),
-                    12.ph(),
-                    AppText(
-                      text: title!,
-                      fontSize: 14,
-                      color: Colors.white,
-                      // fontWeight:FontWeight.bold ,
-                      fontWeight:isSelected? FontWeight.bold : FontWeight.normal,
-                      // fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
 
-                    )
-                  ],
-                );
-              },
-              separatorBuilder: (context, index) {
-                return 10.pw();
-              },
-              itemCount: state.majors.length),
-        )
-            :0.ph(),
-      ],
-    );
   }
 
 

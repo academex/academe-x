@@ -20,10 +20,8 @@ class SignupCubit extends AuthCubit {
     showEducationInfo: !showEducationInfo,
   ));
   if (!showEducationInfo) {  // This means we're switching TO education info
-    AppLogger.success('message ${showEducationInfo}');
-   // await collegeMajorsCubit.getColleges();
+   await collegeMajorsCubit.getColleges();
   }
-
 }
 
   Future<void> signup(SignupRequestEntity user) async {

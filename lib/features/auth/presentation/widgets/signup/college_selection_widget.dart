@@ -80,35 +80,34 @@ Widget _buildHeader(CollegeMajorsState state) {
   );
 }
 Widget _buildCollegesList(CollegeMajorsState state,BuildContext context) {
-  AppLogger.success(state.toString());
-  if(state.errorMessage !=null){
+  if(state.errorMessageCollege !=null){
     return CompactErrorWidget(
-      message: state.errorMessage,
+      message: state.errorMessageCollege,
       onRetry: () async{
         await context.read<CollegeMajorsCubit>().retry();
       },
     );
   }
-   if(state.colleges!=null){
-    return Column(
-        children: state.colleges!.map((college) {
-          final isSelected = state.selectedCollege == college.collegeEn;
-          return CollegeItem(
-            state:state,
-            college:  college.collegeEn!,
-            collegeData:const CollegeData(icon: '', majors: []),
-            isSelected: isSelected,
-            selectedMajor: state.selectedCollege,
-            onCollegeSelected: (college) async{
-              context.read<CollegeMajorsCubit>().selectCollege(college);
-             await context.read<CollegeMajorsCubit>().loadMajors(collegeName: college);
-            },
-          );
-        }).toList()
-    );
+   if(state.isLoadingForCollege){
+     return const CollegeSelectionShimmer();
   }
-  else if(state.isLoadingForCollege) {
-    return const CollegeSelectionShimmer();
+  else if(state.colleges!=null) {
+     return Column(
+         children: state.colleges!.map((college) {
+           final isSelected = state.selectedCollege == college.collegeEn;
+           return CollegeItem(
+             state:state,
+             college:  college.collegeEn!,
+             collegeData:const CollegeData(icon: '', majors: []),
+             isSelected: isSelected,
+             selectedMajor: state.selectedCollege,
+             onCollegeSelected: (college) async{
+               context.read<CollegeMajorsCubit>().selectCollege(college);
+               await context.read<CollegeMajorsCubit>().loadMajors(collegeName: college);
+             },
+           );
+         }).toList()
+     );
   }
   else{
     return CompactErrorWidget(

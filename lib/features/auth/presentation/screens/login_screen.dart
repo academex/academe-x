@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../home/presentation/controllers/cubits/post/posts_cubit.dart';
+
 class LoginScreen extends StatelessWidget {
    LoginScreen({super.key});
   GlobalKey<FormState>? formKey= GlobalKey();
@@ -13,11 +15,8 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig.init(context);
-    // final formKey = GlobalKey<FormState>();
-
     return BlocProvider(
       create: (context) => getIt<LoginCubit>(),
-
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
@@ -195,11 +194,13 @@ class LoginScreen extends StatelessWidget {
 
   Widget _buildLoginButton(BuildContext context) {
     return BlocConsumer<LoginCubit, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async{
         if (state.errorMessage != null) {
           context.showSnackBar(message: state.errorMessage![0], error: true);
         }else if(state.isAuthenticated){
+
           context.go('/home_screen');
+
         }
       },
       builder: (context, state) {

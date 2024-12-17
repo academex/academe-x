@@ -128,9 +128,8 @@ class PostsCubit extends Cubit<PostsState> {
   void goToTop(){
    scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.bounceIn);
   }
+
   Future<void> loadTagPosts({int? tagId}) async {
-
-
     try {
       emit(state.copyWith(status: PostStatus.loading));
       final result = await postUseCase.getPosts(PaginationParams(page:1,tagId:tagId));
@@ -156,7 +155,6 @@ class PostsCubit extends Cubit<PostsState> {
           }
         },
             (paginatedData) {
-
           emit(state.copyWith(
             status: PostStatus.success,
             posts: paginatedData.items,
@@ -627,4 +625,10 @@ class PostsCubit extends Cubit<PostsState> {
 
   }
 
+
+  @override
+  Future<void> close() {
+    scrollController.dispose();
+    return super.close();
+  }
 }

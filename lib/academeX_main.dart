@@ -64,11 +64,11 @@ class AcademeXMain extends StatelessWidget {
 
 
       BlocProvider<PostsCubit>(
-        create: (context) => getIt<PostsCubit>()..loadTagPosts(),
+        create: (context) => getIt<PostsCubit>(),
       ),
 
       BlocProvider<CollegeMajorsCubit>(
-        create: (context) => getIt<CollegeMajorsCubit>()..initCollegeMajor(),
+        create: (context) => getIt<CollegeMajorsCubit>()..initCollegeMajorForApp(),
       ),
       BlocProvider<GetTagsCubit>(
         create: (context) => getIt<GetTagsCubit>()..getTags(),
@@ -83,7 +83,6 @@ class AcademeXMain extends StatelessWidget {
       splitScreenMode: true,
       child: MaterialApp.router(
         routerConfig: goRouter,
-
         title: 'AcademeX',
         locale: const Locale('ar'),
         supportedLocales: AppLocalizations.supportedLocales,
@@ -140,53 +139,53 @@ class AcademeXMain extends StatelessWidget {
         },
         ),
 
-        BlocListener<PostsCubit, PostsState>(listener: (context, state) {
-          bool isLoading = state.creationState == CreationStatus.loading;
-          bool isSuccess = state.creationState == CreationStatus.success;
-          bool isFailure = state.creationState == CreationStatus.failure;
-          // Logger().f(NavigationService.navigatorKey.currentContext);
-          // if(state.creationState == CreationStatus.loading) Navigator.pop(context);
-
-
-          ScaffoldMessenger.of(context).clearSnackBars();
-          // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Logger().f(state.creationState);
-          if(isLoading || isFailure || isSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: GestureDetector(
-                  onTap: () => CreatePost().showCreatePostModal(NavigationService.navigatorKey.currentContext!),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      AppText(
-                        fontSize: 12.sp,
-                        text: isLoading?'جار رفع منشورك':isFailure?state.creationPostErrorMessage!:'تم نشر منشورك بنجاح',
-                        color: Colors.white,
-                      ),
-                      if(isLoading)
-                      2.ph(),
-                      if(isLoading)
-                      const LinearProgressIndicator(
-                        backgroundColor: Colors.white,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      ),
-                    ],
-                  ),
-                ),
-                backgroundColor: isLoading?Colors.green.shade800:isFailure?Colors.red:Colors.green,
-                duration:  Duration(seconds: isLoading?500:2),
-                dismissDirection: DismissDirection.horizontal,
-                behavior:SnackBarBehavior.fixed,
-                padding:EdgeInsets.symmetric(vertical: 10.h,horizontal: 15.w),
-
-
-              ),
-            );
-          }
-
-
-        },),
+        // BlocListener<PostsCubit, PostsState>(listener: (context, state) {
+        //   bool isLoading = state.creationState == CreationStatus.loading;
+        //   bool isSuccess = state.creationState == CreationStatus.success;
+        //   bool isFailure = state.creationState == CreationStatus.failure;
+        //   // Logger().f(NavigationService.navigatorKey.currentContext);
+        //   // if(state.creationState == CreationStatus.loading) Navigator.pop(context);
+        //
+        //
+        //   ScaffoldMessenger.of(context).clearSnackBars();
+        //   // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        //   Logger().f(state.creationState);
+        //   if(isLoading || isFailure || isSuccess) {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       SnackBar(
+        //         content: GestureDetector(
+        //           onTap: () => CreatePost().showCreatePostModal(NavigationService.navigatorKey.currentContext!),
+        //           child: Column(
+        //             crossAxisAlignment: CrossAxisAlignment.stretch,
+        //             children: [
+        //               AppText(
+        //                 fontSize: 12.sp,
+        //                 text: isLoading?'جار رفع منشورك':isFailure?state.creationPostErrorMessage!:'تم نشر منشورك بنجاح',
+        //                 color: Colors.white,
+        //               ),
+        //               if(isLoading)
+        //               2.ph(),
+        //               if(isLoading)
+        //               const LinearProgressIndicator(
+        //                 backgroundColor: Colors.white,
+        //                 valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //         backgroundColor: isLoading?Colors.green.shade800:isFailure?Colors.red:Colors.green,
+        //         duration:  Duration(seconds: isLoading?500:2),
+        //         dismissDirection: DismissDirection.horizontal,
+        //         behavior:SnackBarBehavior.fixed,
+        //         padding:EdgeInsets.symmetric(vertical: 10.h,horizontal: 15.w),
+        //
+        //
+        //       ),
+        //     );
+        //   }
+        //
+        //
+        // },),
 
         ], child: child!);
   }

@@ -32,11 +32,6 @@ class LoginCubit extends AuthCubit {
     }
 
     setLoading();
-    //
-    // emit(state.copyWith(
-    //   isLoading: true,
-    //   errorMessage: null,
-    // ));
 
     final result = await authenticationUseCase.login(user);
     Future.delayed(
@@ -74,8 +69,8 @@ class LoginCubit extends AuthCubit {
     try {
       await HiveCacheManager().clear();
       NavigationService.navigatorKey.currentContext!.go('/login');
+      NavigationService.navigatorKey.currentContext!.read<BottomNavCubit>().changePage(0);
     } catch (e) {
-      AppLogger.e(e.toString());
     }
   }
 

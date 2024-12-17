@@ -64,7 +64,6 @@ class CustomBottomNavBar extends StatelessWidget {
           context.read<PostsCubit>().goToTop();
         await  context.read<PostsCubit>().refreshPosts(context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
         }
-        // index == 0? :null;
 
         context.read<BottomNavCubit>().changePage(index);
       },

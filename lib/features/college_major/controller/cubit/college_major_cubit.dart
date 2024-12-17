@@ -28,9 +28,16 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
 
   }
 
-  Future<void> initCollegeMajor()async{
+  Future<void> initCollegeMajorForHome({bool forApp=false})async{
+    await getTags();
+    await getCachedUser();
+    await getMajorSetting();
+  }
+
+  Future<void> initCollegeMajorForApp({bool forApp=false})async{
+    // forApp? : null;
     await getColleges();
-    // await getTags();
+    await getTags();
     await getCachedUser();
     await getMajorSetting();
   }
@@ -71,14 +78,13 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
   Future<void> getColleges() async {
     if (state.isLoadingForCollege) return;
     emit(state.copyWith(isLoadingForCollege: true));
-
     final result = await _collegeMajorsUseCase.getColleges();
     result.fold(
           (failure) {
         List<String>? errorMessage=[];
         errorMessage.add(failure.message);
         emit(state.copyWith(
-          errorMessage: errorMessage.first,
+          errorMessageCollege: errorMessage.first,
           isLoadingForCollege: false,
         ));
       },
@@ -86,8 +92,8 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
         emit(state.copyWith(
             colleges: colleges,
             isLoadingForCollege: false,
-            errorMessage: null
-
+            errorMessageCollege: null,
+          clearErrorMessageCollege: true,
         ));
       },
     );

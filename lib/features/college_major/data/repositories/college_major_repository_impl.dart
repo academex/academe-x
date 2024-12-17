@@ -28,20 +28,20 @@ class CollegeMajorRepositoryImpl implements CollegeMajorRepository {
   @override
   Future<Either<Failure, List<CollegeModel>>> getColleges() async {
     try {
-      // final cached = await cacheManager.getCachedResponse<List<CollegeModel>>(
-      //   CacheKeys.COLLEGES,
-      //       (dynamic data) {
-      //     final List<dynamic> list = data as List;
-      //     return list.map((item) {
-      //       return CollegeModel.fromJson(item as Map<String, dynamic>);
-      //     }).toList();
-      //   },
-      // );
-      //
-      // if (cached != null) {
-      //   return Right(cached);
-      // }
+      final cached = await cacheManager.getCachedResponse<List<CollegeModel>>(
+        CacheKeys.COLLEGES,
+            (dynamic data) {
+          final List<dynamic> list = data as List;
+          return list.map((item) {
+            return CollegeModel.fromJson(item as Map<String, dynamic>);
+          }).toList();
+        },
+      );
 
+      if (cached != null) {
+        return Right(cached);
+      }
+      //
       final result = await remoteDataSource.getColleges();
 
       await cacheManager.cacheResponse(CacheKeys.COLLEGES, result);
@@ -85,19 +85,19 @@ class CollegeMajorRepositoryImpl implements CollegeMajorRepository {
   @override
   Future<Either<Failure, List<MajorModel>>> getMajorsByCollege(String collegeName) async {
     try {
-      // final cached = await cacheManager.getCachedResponse<List<MajorModel>>(
-      //   '${CacheKeys.MAJORS}/$collegeName',
-      //       (dynamic data) {
-      //     final List<dynamic> list = data as List;
-      //     return list.map((item) {
-      //       return MajorModel.fromJson(item as Map<String, dynamic>);
-      //     }).toList();
-      //   },
-      // );
-      //
-      // if (cached != null) {
-      //   return Right(cached);
-      // }
+      final cached = await cacheManager.getCachedResponse<List<MajorModel>>(
+        '${CacheKeys.MAJORS}/$collegeName',
+            (dynamic data) {
+          final List<dynamic> list = data as List;
+          return list.map((item) {
+            return MajorModel.fromJson(item as Map<String, dynamic>);
+          }).toList();
+        },
+      );
+
+      if (cached != null) {
+        return Right(cached);
+      }
 
       final majorsByName = await remoteDataSource.getMajorsByCollege(collegeName);
 
