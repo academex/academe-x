@@ -140,7 +140,9 @@ class CreatePostRemoteDataSource {
         Logger().f(responseBody.toString());
 
         if (response.statusCode >= 400) {
-          _handleHttpError(responseBody);
+          HandleHttpError.handleHttpError(responseBody);
+
+          // _handleHttpError(responseBody);
         }
 
         // Parse the response to get the model

@@ -1,0 +1,16 @@
+[1mdiff --git a/lib/academeX_main.dart b/lib/academeX_main.dart[m
+[1mindex 1b2cf2e..221487b 100644[m
+[1m--- a/lib/academeX_main.dart[m
+[1m+++ b/lib/academeX_main.dart[m
+[36m@@ -123,11 +123,7 @@[m [mclass AcademeXMain extends StatelessWidget {[m
+ [m
+         BlocListener<ConnectivityCubit, ConnectivityStatus>([m
+         listener: (context, status) async{[m
+[31m-[m
+[31m-[m
+[31m-[m
+           if (status == ConnectivityStatus.disconnected) {[m
+[31m-[m
+             _showNoConnectionBanner(context, ConnectivityStatus.disconnected);[m
+           }[m
+ [m
