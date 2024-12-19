@@ -552,6 +552,7 @@ class PostsCubit extends Cubit<PostsState> {
   }
 
   getComments({bool refresh = false,required int postId}) async {
+
     Logger().d(
         'message${state.latestPostIdGetHereComments} $postId   ${state.latestPostIdGetHereComments != postId}');
 
@@ -562,8 +563,7 @@ class PostsCubit extends Cubit<PostsState> {
         hasCommentReachedMax: false,
         latestPostIdGetHereComments: postId,
         commentCurrentPage: 1,
-        posts: null,
-        commentError: null,
+        comments: [],
 
       ));
     }
@@ -580,9 +580,9 @@ class PostsCubit extends Cubit<PostsState> {
 
       // emit(state.copyWith(commentsStatus: CommentsStatus.loading));
     _commentIsLoading = true;
-        // state.copyWith(
-        //   commentsStatus: CommentsStatus.loading,
-        // );
+        emit(state.copyWith(
+          commentsStatus: CommentsStatus.loading,
+        ));
 
       final page = refresh ? 1 : state.commentCurrentPage;
      Logger().d('current page:$page');

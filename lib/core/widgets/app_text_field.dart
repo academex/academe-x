@@ -68,6 +68,7 @@ class AppTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+
           validator: validator,
           enabled: enabled,
           autofocus: autofocus,
@@ -102,6 +103,7 @@ class AppTextField extends StatelessWidget {
                   )
                 : null,
             focusedBorder: OutlineInputBorder(
+              gapPadding: 0,
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
                   color: withBoarder ? Color(0xff3253FF) : Colors.transparent),

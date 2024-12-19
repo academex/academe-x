@@ -1,9 +1,5 @@
-import 'dart:async';
-
-import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
-import 'package:academe_x/features/home/presentation/widgets/post/shimmer/post_widget_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academe_x/lib.dart';
@@ -16,7 +12,6 @@ class CommentsList {
   final FocusNode _focusNode = FocusNode();
   TextEditingController comment = TextEditingController();
 
-  // MockData mockData =MockData();
   var comments = MockData.comments;
 
   CommentsList({required postId, required BuildContext context}) {
@@ -67,19 +62,22 @@ class CommentsList {
                         switch (state.commentsStatus) {
                           case CommentsStatus.initial:
                           case CommentsStatus.loading:
-                            return ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) => Column(
-                                children: [
-                                  CommentCardShimmer(),
-                                  Divider(
-                                    color: Colors.grey.shade300,
-                                    endIndent: 25,
-                                    indent: 25,
-                                  ),
-                                ],
-                              ),
-                            );
+                            if(state.comments.isEmpty) {
+                              return ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) =>
+                                    Column(
+                                      children: [
+                                        CommentCardShimmer(),
+                                        Divider(
+                                          color: Colors.grey.shade300,
+                                          endIndent: 25,
+                                          indent: 25,
+                                        ),
+                                      ],
+                                    ),
+                              );
+                            }
 
                           case CommentsStatus.failure:
                             if (state.comments.isEmpty) {
@@ -114,8 +112,8 @@ class CommentsList {
                         return NotificationListener(
                           onNotification: (notification) {
                             if (notification is ScrollEndNotification){
-                              Logger().d(notification.metrics.pixels);
-                                if(notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                              Logger().f('asdf${notification.metrics.pixels/notification.metrics.maxScrollExtent}');
+                                if(notification.metrics.pixels/notification.metrics.maxScrollExtent > 0.7) {
                                   context.read<PostsCubit>().getComments(
                                       postId: postId);
                                 }
@@ -329,7 +327,7 @@ class CommentsList {
                                   child: const ImageIcon(
                                     AssetImage('assets/images/send.png'),
                                     color: Colors.black,
-                                    size: 24,
+                                    // size: 24,
                                   ),
                                 ),
                               );
