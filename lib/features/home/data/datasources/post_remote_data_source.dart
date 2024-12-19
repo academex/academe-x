@@ -33,7 +33,6 @@ class PostRemoteDataSource {
 
 
   Future<PaginatedResponse<PostModel>> getPosts(PaginationParams paginationParams) async {
-    AppLogger.success(paginationParams.tagId.toString());
     if (await internetConnectionChecker.hasConnection) {
       try {
         final response = await apiController.get(

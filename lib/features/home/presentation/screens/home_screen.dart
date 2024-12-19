@@ -95,14 +95,14 @@ class HomeScreen extends StatelessWidget {
          const Row(),
       Center(
         child: ReactionButton<String>(
-          placeHolder: Reaction<String>(
+          placeHolder: const Reaction<String>(
       value: 'like',
       icon: Text('like'),
     ),
           onReactionChanged: (Reaction<String>? reaction) {
             debugPrint('Selected value: ${reaction?.value}');
           },
-          reactions: <Reaction<String>>[
+          reactions: const <Reaction<String>>[
             Reaction<String>(
               value: 'likelikelikelikelike',
               icon: Text('likelikelikelikelike'),
@@ -113,13 +113,13 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
           // initialReaction: ,
-          selectedReaction: Reaction<String>(
+          selectedReaction: const Reaction<String>(
             value: 'like_fill',
             icon: Text('like_fill'),
           ), itemSize: Size(200,200),
         )
       ),
-      ProfilePage(),
+      const ProfilePage(),
       ],
     );
   }

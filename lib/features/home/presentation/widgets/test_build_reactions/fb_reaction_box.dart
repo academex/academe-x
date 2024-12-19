@@ -156,7 +156,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
   }
   void _handleReaction(ReactionEmoji reaction) async {
     // If clicking the same reaction that's already selected, remove it
-    AppLogger.success('reaction  ${reaction}');
 
     if (reaction == _currentEmojiChoose) {
       widget.onReact(reaction.name);
@@ -908,9 +907,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
 
   void _onTapBtn() {
     if (!_isLongPress) {
-      AppLogger.success('test reactions ${(_currentEmojiChoose == ReactionEmoji.nothing).toString()}');
-      AppLogger.success('test reactions ${(_currentEmojiFocus == _currentEmojiChoose).toString()}');
-      AppLogger.success('test reactions ${_currentEmojiFocus.toString()}');
       if (_currentEmojiChoose == ReactionEmoji.nothing) {
         _handleReaction(ReactionEmoji.heart); // Default reaction
       } else  {

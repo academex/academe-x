@@ -231,7 +231,7 @@ class ErrorStateWidget extends StatelessWidget {
 
               // Error Message
               AppText(
-                text: message ?? 'context.localizations.generalErrorMessage',
+                text: message!,
                 fontSize: context.isTablet ? 18 : 16,
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
                 textAlign: TextAlign.center,
@@ -367,7 +367,7 @@ class CompactErrorWidget extends StatelessWidget {
           SizedBox(width: context.wp(2)),
           Expanded(
             child: AppText(
-              text: message ?? 'context.localizations.generalErrorMessage',
+              text: message!,
               fontSize: context.isTablet ? 14 : 12,
               color: Theme.of(context).colorScheme.error,
             ),

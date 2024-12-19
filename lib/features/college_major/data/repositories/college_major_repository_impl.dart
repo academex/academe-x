@@ -41,7 +41,7 @@ class CollegeMajorRepositoryImpl implements CollegeMajorRepository {
       if (cached != null) {
         return Right(cached);
       }
-
+      //
       final result = await remoteDataSource.getColleges();
 
       await cacheManager.cacheResponse(CacheKeys.COLLEGES, result);

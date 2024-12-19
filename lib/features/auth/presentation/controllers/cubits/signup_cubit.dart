@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignupCubit extends AuthCubit {
-  // CollegeMajorsCubit collegeMajorsCubit;
+  CollegeMajorsCubit collegeMajorsCubit;
 
   SignupCubit({required AuthenticationUseCase authUseCase,
-    // required this.collegeMajorsCubit
+    required this.collegeMajorsCubit
   })
       : super(
       initialState: AuthState.initialSignup(),
@@ -15,11 +15,13 @@ class SignupCubit extends AuthCubit {
 
   );
 
-  void showEduInfo(bool showEducationInfo){
+  void showEduInfo(bool showEducationInfo) async{
   emit(state.copyWith(
     showEducationInfo: !showEducationInfo,
   ));
-
+  if (!showEducationInfo) {  // This means we're switching TO education info
+   await collegeMajorsCubit.getColleges();
+  }
 }
 
   Future<void> signup(SignupRequestEntity user) async {

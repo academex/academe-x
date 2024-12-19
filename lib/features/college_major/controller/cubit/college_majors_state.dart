@@ -13,6 +13,7 @@ class CollegeMajorsState extends Equatable {
   final String? selectedCollege;
   final String? selectedTag;
   final String? errorMessage;
+  final String? errorMessageCollege;
   final String? collegeAndMajor;
   final bool isCached;
   final bool isVisibileMajors;
@@ -31,6 +32,7 @@ class CollegeMajorsState extends Equatable {
     this.selectedMajor,
     this.selectedTag,
     this.errorMessage,
+    this.errorMessageCollege,
     this.isLoadingMajorSetting=true,
     this.collegeAndMajor,
     this.selectedMajorIndex,
@@ -45,11 +47,12 @@ class CollegeMajorsState extends Equatable {
     List<MajorEntity>? majors,
     List<CollegeEntity>? colleges,
     MajorEntity? selectedMajor,
-
     String? selectedCollege,
     String? selectedTag,
     String? collegeAndMajor,
     String? errorMessage,
+    String? errorMessageCollege,
+    bool? clearErrorMessageCollege,
     bool? isCached,
     int?selectedMajorIndex,
     bool? isExpanded,
@@ -66,6 +69,9 @@ class CollegeMajorsState extends Equatable {
       isVisibileMajors: isVisibileMajors ?? this.isVisibileMajors,
       selectedTag: selectedTag ?? this.selectedTag,
       errorMessage: errorMessage ?? this.errorMessage,
+      errorMessageCollege: clearErrorMessageCollege == true
+          ? null
+          : errorMessageCollege ?? this.errorMessageCollege,
       isLoadingMajorSetting: isLoadingMajorSetting ?? this.isLoadingMajorSetting,
       selectedMajorIndex: selectedMajorIndex ?? this.selectedMajorIndex,
       collegeAndMajor: collegeAndMajor ?? this.collegeAndMajor,
@@ -85,11 +91,12 @@ class CollegeMajorsState extends Equatable {
     selectedCollege,
     isLoadingMajorSetting,
     selectedTag,
-    errorMessage,
     selectedMajor,
     collegeAndMajor,
     isCached,
     isExpanded,
     isLoadingForCollege,
+    errorMessage,
+    errorMessageCollege,
   ];
 }
