@@ -22,7 +22,7 @@ import '../models/post/save_response_model.dart';
 
 typedef PostsResponse  = BaseResponse<PaginatedResponse<List<PostModel>>>;
 typedef SaveResponse  = BaseResponse<SaveResponseModel>;
-typedef CommentsResponse  = BaseResponse<List<CommentModel>>;
+typedef CreatePostBaseResponse  = BaseResponse<CommentModel>;
 
 class PostRemoteDataSource {
   final ApiController apiController;
@@ -293,5 +293,42 @@ class PostRemoteDataSource {
   //   }
   // }
 
+
+  Future<CreatePostBaseResponse> createComment({required int postId,required String content}) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        Logger().d(postId);
+        final response = await apiController.post(
+          Uri.parse('${ApiSetting.getComments}/$postId/comment/'),
+          headers: {
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
+          },
+          body:
+            {'content':content},
+
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          HandleHttpError.handleHttpError(responseBody);
+        }
+        UserResponseEntity? user = (await NavigationService.navigatorKey.currentContext!.cachedUser)!.user;
+        final baseResponse = CreatePostBaseResponse.fromJson(
+          responseBody,
+              (json) {
+            return CommentModel.fromJson(json,user: user);
+          },
+        );
+
+        // Logger().d(baseResponse.data!.items);
+        return baseResponse;
+
+
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
 }
 

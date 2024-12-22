@@ -44,6 +44,10 @@ class PostUseCase {
   Future<Either<Failure, PostEntity>> createPost(PostEntity post) async {
     return await postRepository.createPost(post);
   }
+  Future<Either<Failure, CreatePostBaseResponse>> createComment({required int postId,required String content}) async {
+    return await postRepository.createComment(postId: postId,content: content);
+  }
+
 
 
   Future<Either<Failure, PaginatedResponse<CommentModel>>> getComments(PaginationParams paginationParams,int postId) async {

@@ -90,6 +90,8 @@ class AppTextField extends StatelessWidget {
             isDense: isDense,
             contentPadding: contentPadding,
             suffix: suffix,
+
+
             prefixText: prefixText,
             hintText: hintText,
             hintStyle: hintStyle ?? TextStyle(color: Colors.black26),

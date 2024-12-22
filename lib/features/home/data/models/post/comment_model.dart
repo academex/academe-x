@@ -15,8 +15,8 @@ class CommentModel extends CommentEntity {
   });
 
   // fromJson method to convert JSON to CommentModel
-  factory CommentModel.fromJson(Map<String, dynamic> json) {
-    Logger().d(json['user']);
+  factory CommentModel.fromJson(Map<String, dynamic> json,{UserResponseEntity? user}) {
+    Logger().d(json);
     return CommentModel(
       id: json['id'],
       content: json['content'],
@@ -24,8 +24,8 @@ class CommentModel extends CommentEntity {
       isHidden: json['isHidden'],
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
-      postId: json['post']['id'],
-      user: json['user'] != null ? UserResponseModel.fromJson(json['user']) : null,
+      postId: json['post']?['id'],
+      user: json['user'] != null ? UserResponseModel.fromJson(json['user']) : user,
     );
   }
 

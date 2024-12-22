@@ -6,6 +6,7 @@ import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -551,8 +552,6 @@ class PostsCubit extends Cubit<PostsState> {
 
   getComments({bool refresh = false,required int postId}) async {
 
-    Logger().d(
-        'message${state.latestPostIdGetHereComments} $postId   ${state.latestPostIdGetHereComments != postId}');
 
     if (state.latestPostIdGetHereComments != postId) {
       refresh = true;
@@ -633,6 +632,29 @@ class PostsCubit extends Cubit<PostsState> {
 
   }
 
+  createComment({required int postId,required String content}) async {
+    Logger().d(state.createCommentStatus);
+    // if(state.createCommentStatus == CreateCommentStatus.loading) return;
+    emit(state.copyWith(
+      createCommentStatus: CreateCommentStatus.loading,
+    ));
+    Either<Failure, CreatePostBaseResponse> response = await postUseCase.createComment(postId: postId, content: content);
+
+    response.fold(
+    (l) {
+      Logger().e(l.message);
+      emit(state.copyWith(
+        createCommentStatus: CreateCommentStatus.failure,
+        createCommentError: l.message,
+      ));
+    }, (r) {
+      Logger().t(r);
+      state.comments.add(r.data!);
+      emit(state.copyWith(
+        createCommentStatus: CreateCommentStatus.success,
+      ));
+    },);
+  }
 
   @override
   Future<void> close() {

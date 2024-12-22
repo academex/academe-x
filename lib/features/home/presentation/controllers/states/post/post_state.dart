@@ -12,6 +12,7 @@ enum PostDetailsStatus { initial, loading, success, failure }
 enum ReactionStatus { initial, loading, success, failure }
 enum CreationStatus { initial, loading, success, failure }
 enum CommentsStatus { initial, loading, success, failure }
+enum CreateCommentStatus { initial, loading, success, failure }
 
 class PostsState extends Equatable {
   final PostStatus status;
@@ -33,9 +34,11 @@ class PostsState extends Equatable {
   final DateTime? lastUpdated;  // Add this to track cache freshness
   // this for comment
   final CommentsStatus commentsStatus;
+  final CreateCommentStatus createCommentStatus;
   final List<CommentEntity> comments;
   final int latestPostIdGetHereComments;
   final String? commentError;
+  final String? createCommentError;
    bool hasCommentReachedMax;
   int commentCurrentPage;
 
@@ -64,8 +67,10 @@ class PostsState extends Equatable {
     this.creationPostErrorMessage,
     //for comment
     this.commentsStatus = CommentsStatus.initial,
+    this.createCommentStatus = CreateCommentStatus.initial,
     this.comments = const [],
     this.commentError,
+    this.createCommentError,
     this.commentCurrentPage = 1,
     this.hasCommentReachedMax = false,
     this.latestPostIdGetHereComments = -1,
@@ -92,7 +97,9 @@ class PostsState extends Equatable {
     String? selectedType,
     String? creationPostErrorMessage,
     CommentsStatus? commentsStatus,
+    CreateCommentStatus? createCommentStatus,
     String? commentError,
+    String? createCommentError,
     List<CommentEntity>? comments,
     int? commentCurrentPage,
     int? latestPostIdGetHereComments,
@@ -122,7 +129,9 @@ class PostsState extends Equatable {
       // comment
       comments: comments ?? this.comments,
       commentsStatus: commentsStatus ?? this.commentsStatus,
+      createCommentStatus: createCommentStatus ?? this.createCommentStatus,
       commentError: commentError ?? this.commentError,
+      createCommentError: createCommentError ?? this.createCommentError,
       commentCurrentPage: commentCurrentPage ?? this.commentCurrentPage,
       latestPostIdGetHereComments: latestPostIdGetHereComments ?? this.latestPostIdGetHereComments,
 
@@ -152,5 +161,7 @@ class PostsState extends Equatable {
     commentsStatus,
     commentCurrentPage,
     latestPostIdGetHereComments,
+    createCommentStatus,
+    createCommentError,
   ];
 }

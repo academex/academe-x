@@ -112,7 +112,6 @@ class CommentsList {
                         return NotificationListener(
                           onNotification: (notification) {
                             if (notification is ScrollEndNotification){
-                              Logger().f('asdf${notification.metrics.pixels/notification.metrics.maxScrollExtent}');
                                 if(notification.metrics.pixels/notification.metrics.maxScrollExtent > 0.7) {
                                   context.read<PostsCubit>().getComments(
                                       postId: postId);
@@ -293,9 +292,10 @@ class CommentsList {
                     //   },
                     // ),
                   ),
+
                   Padding(
                     padding: EdgeInsets.only(
-                        bottom: 5, left: 24, right: 24, top: 2.h),
+                        bottom: 5.h, left: 24.w, right: 24.w, top: 2.h),
                     child: Row(
                       children: [
                         Expanded(
@@ -314,9 +314,13 @@ class CommentsList {
                                 minLine: 1,
                                 withBoarder: true,
                                 // prefixText: state.commenter,
-                                suffix: GestureDetector(
+                                suffix: InkWell(
+
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+
                                   onTap: () {
                                     if (comment.text != '') {
+                                    context.read<PostsCubit>().createComment(postId: postId, content: comment.text);
                                       context
                                           .read<ReplyCubit>()
                                           .reply(commenter: '');
@@ -324,10 +328,14 @@ class CommentsList {
                                       FocusScope.of(context).unfocus();
                                     }
                                   },
-                                  child: const ImageIcon(
-                                    AssetImage('assets/images/send.png'),
-                                    color: Colors.black,
-                                    // size: 24,
+                                  child: Container(
+                                    padding: EdgeInsets.zero,
+                                    margin: EdgeInsets.all(2),
+                                    child: const ImageIcon(
+                                      AssetImage('assets/images/send.png'),
+                                      color: Colors.black,
+                                      // size: 24,
+                                    ),
                                   ),
                                 ),
                               );
