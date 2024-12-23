@@ -269,16 +269,24 @@ class CommentCardShimmer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    height: 15,
-                    width: 100,
-                    color: Colors.grey[300],
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      height: 15,
+                      width: 100,
+                      color: Colors.grey[300],
+                    ),
                   ),
                   5.ph(),
-                  Container(
-                    height: 10,
-                    width: 200,
-                    color: Colors.grey[300],
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      height: 10,
+                      width: 200,
+                      color: Colors.grey[300],
+                    ),
                   ),
                   5.ph(),
                   Container(
@@ -289,18 +297,16 @@ class CommentCardShimmer extends StatelessWidget {
                 ],
               ),
             ),
-            BlocBuilder<FavoriteCubit, bool>(
-              builder: (context, state) => SizedBox(
-                height: 40,
-                width: 60,
-                child: Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey[200],
-                    ),
+            SizedBox(
+              height: 40,
+              width: 60,
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[200],
                   ),
                 ),
               ),

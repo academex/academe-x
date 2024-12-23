@@ -6,6 +6,7 @@ import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -550,50 +551,57 @@ class PostsCubit extends Cubit<PostsState> {
   }
 
   getComments({bool refresh = false,required int postId}) async {
-    Logger().d('message${state.latestPostIdGetHereComments} $postId');
 
-    if(state.latestPostIdGetHereComments != postId || state.commentsStatus == CommentsStatus.failure) {
+
+    if (state.latestPostIdGetHereComments != postId) {
       refresh = true;
       emit(state.copyWith(
-        commentsStatus: CommentsStatus.initial,
+        commentsStatus: CommentsStatus.loading,
         hasCommentReachedMax: false,
         latestPostIdGetHereComments: postId,
         commentCurrentPage: 1,
-        posts: null,
-        commentError: null,
+        comments: [],
 
       ));
     }
+    if ((refresh && state.commentsStatus == CommentsStatus.failure)) {
+      emit(state.copyWith(
+        commentsStatus: CommentsStatus.initial,
+        latestPostIdGetHereComments: postId,
+      ));
+    }
 
-    Logger().f('$_commentIsLoading ${state.hasCommentReachedMax && !refresh}');
+    Logger().f('$_commentIsLoading ${state.hasCommentReachedMax}');
     if(_commentIsLoading) return;
     if(state.hasCommentReachedMax) return;
 
       // emit(state.copyWith(commentsStatus: CommentsStatus.loading));
     _commentIsLoading = true;
-        // state.copyWith(
-        //   commentsStatus: CommentsStatus.loading,
-        // );
+        emit(state.copyWith(
+          commentsStatus: CommentsStatus.loading,
+        ));
 
       final page = refresh ? 1 : state.commentCurrentPage;
      Logger().d('current page:$page');
 
       final result = await postUseCase.getComments(PaginationParams(page: page),postId);
       result.fold(
-            (failure)async  {emit(state.copyWith(
-              commentsStatus: CommentsStatus.failure,
-              errorMessage: failure.message,
-            ));
-        },
+      (failure) async {
+        emit(
+          state.copyWith(
+            commentsStatus: CommentsStatus.failure,
+            commentError: failure.message,
+          ),
+        );
+      },
             (paginatedData) {
-              Logger().d(paginatedData.items.last.content);
           if (refresh) {
             emit(state.copyWith(
               commentsStatus: CommentsStatus.success,
               comments: paginatedData.items,
               hasCommentReachedMax: !paginatedData.hasNextPage,
-              commentCurrentPage: 2,
-              errorMessage: null,
+              commentCurrentPage: state.commentCurrentPage+1,
+              commentError: null,
             ));
             return;
           }
@@ -603,13 +611,12 @@ class PostsCubit extends Cubit<PostsState> {
               newComments.add(newComment);
             }
           }
-          final nextPage = state.postsCurrentPage + 1;
           emit(state.copyWith(
             commentsStatus: CommentsStatus.success,
             comments: newComments,
             hasCommentReachedMax: !paginatedData.hasNextPage,
-            commentCurrentPage:nextPage,
-            errorMessage: null,
+            commentCurrentPage:state.postsCurrentPage +1,
+            commentError: null,
           ));
         },
       );
@@ -625,6 +632,29 @@ class PostsCubit extends Cubit<PostsState> {
 
   }
 
+  createComment({required int postId,required String content}) async {
+    Logger().d(state.createCommentStatus);
+    // if(state.createCommentStatus == CreateCommentStatus.loading) return;
+    emit(state.copyWith(
+      createCommentStatus: CreateCommentStatus.loading,
+    ));
+    Either<Failure, CreatePostBaseResponse> response = await postUseCase.createComment(postId: postId, content: content);
+
+    response.fold(
+    (l) {
+      Logger().e(l.message);
+      emit(state.copyWith(
+        createCommentStatus: CreateCommentStatus.failure,
+        createCommentError: l.message,
+      ));
+    }, (r) {
+      Logger().t(r);
+      state.comments.add(r.data!);
+      emit(state.copyWith(
+        createCommentStatus: CreateCommentStatus.success,
+      ));
+    },);
+  }
 
   @override
   Future<void> close() {

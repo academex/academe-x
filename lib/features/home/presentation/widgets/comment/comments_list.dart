@@ -1,9 +1,5 @@
-import 'dart:async';
-
-import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
-import 'package:academe_x/features/home/presentation/widgets/post/shimmer/post_widget_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academe_x/lib.dart';
@@ -16,7 +12,6 @@ class CommentsList {
   final FocusNode _focusNode = FocusNode();
   TextEditingController comment = TextEditingController();
 
-  // MockData mockData =MockData();
   var comments = MockData.comments;
 
   CommentsList({required postId, required BuildContext context}) {
@@ -67,19 +62,22 @@ class CommentsList {
                         switch (state.commentsStatus) {
                           case CommentsStatus.initial:
                           case CommentsStatus.loading:
-                            return ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) => Column(
-                                children: [
-                                  const PostWidgetShimmer(),
-                                  Divider(
-                                    color: Colors.grey.shade300,
-                                    endIndent: 25,
-                                    indent: 25,
-                                  ),
-                                ],
-                              ),
-                            );
+                            if(state.comments.isEmpty) {
+                              return ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) =>
+                                    Column(
+                                      children: [
+                                        CommentCardShimmer(),
+                                        Divider(
+                                          color: Colors.grey.shade300,
+                                          endIndent: 25,
+                                          indent: 25,
+                                        ),
+                                      ],
+                                    ),
+                              );
+                            }
 
                           case CommentsStatus.failure:
                             if (state.comments.isEmpty) {
@@ -88,13 +86,14 @@ class CommentsList {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(state.errorMessage ??
-                                        'Failed to fetch posts'),
+                                        'Failed to fetch Comments'),
                                     16.ph(),
                                     ElevatedButton(
                                       onPressed: () async {
                                         return await context
                                             .read<PostsCubit>()
-                                            .getComments(postId: postId);
+                                            .getComments(
+                                                postId: postId, refresh: true);
                                       },
                                       child: const Text('Retry'),
                                     ),
@@ -112,10 +111,8 @@ class CommentsList {
                         }
                         return NotificationListener(
                           onNotification: (notification) {
-
                             if (notification is ScrollEndNotification){
-                              Logger().d(notification.metrics.pixels);
-                                if(notification.metrics.pixels == notification.metrics.maxScrollExtent) {
+                                if(notification.metrics.pixels/notification.metrics.maxScrollExtent > 0.7) {
                                   context.read<PostsCubit>().getComments(
                                       postId: postId);
                                 }
@@ -131,13 +128,93 @@ class CommentsList {
                             shrinkWrap: true,
                             itemCount: state.comments.length,
                             itemBuilder: (context, index) {
-                              if (index == state.comments.length-1) {
-                                if (state.hasCommentReachedMax) {
-                                  return null;
-                                }
-                                return const PostWidgetShimmer();
-                              }
                               final comment = state.comments[index];
+
+                              if (index == state.comments.length-1) {
+                                if (state.commentsStatus ==
+                                    CommentsStatus.loading) {
+                                  if (state.hasCommentReachedMax) {
+                                    return CommentCard(
+                                      commenter:
+                                          '${comment.user!.firstName} ${comment.user!.lastName}',
+                                      commentText: comment.content!,
+                                      likes: comment.likes!,
+                                      createdAt: comment.updatedAt!,
+                                      // replies: comments[index].replies,
+                                      reply: () {
+                                        context.read<ReplyCubit>().reply(
+                                            commenter:
+                                                'رد على @${comment.user!.username}');
+                                      },
+                                      commentIndex: index,
+                                    );
+                                  }
+                                  return Column(
+                                    children: [
+                                      CommentCard(
+                                        commenter:
+                                            '${comment.user!.firstName} ${comment.user!.lastName}',
+                                        commentText: comment.content!,
+                                        likes: comment.likes!,
+                                        createdAt: comment.updatedAt!,
+                                        // replies: comments[index].replies,
+                                        reply: () {
+                                          context.read<ReplyCubit>().reply(
+                                              commenter:
+                                                  'رد على @${comment.user!.username}');
+                                        },
+                                        commentIndex: index,
+                                      ),
+                                      CommentCardShimmer(),
+                                    ],
+                                  );
+                                } else if (state.commentsStatus ==
+                                    CommentsStatus.failure) {
+                                  return Column(
+                                    children: [
+                                      CommentCard(
+                                        commenter:
+                                            '${comment.user!.firstName} ${comment.user!.lastName}',
+                                        commentText: comment.content!,
+                                        likes: comment.likes!,
+                                        createdAt: comment.updatedAt!,
+                                        // replies: comments[index].replies,
+                                        reply: () {
+                                          context.read<ReplyCubit>().reply(
+                                              commenter:
+                                                  'رد على @${comment.user!.username}');
+                                        },
+                                        commentIndex: index,
+                                      ),
+                                      Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(state.errorMessage ??
+                                                'Failed to fetch Comments'),
+                                            16.ph(),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                return await context
+                                                    .read<PostsCubit>()
+                                                    .getComments(
+                                                        postId: postId,
+                                                        refresh: true);
+                                              },
+                                              child: const Text('Retry'),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      AppText(
+                                          text: state.commentError ??
+                                              'I Dont know what hapen!!',
+                                          fontSize: 14.sp),
+                                    ],
+                                  );
+                                }
+                              }
                               return CommentCard(
                               commenter:
                                   '${comment.user!.firstName} ${comment.user!.lastName}',
@@ -215,9 +292,10 @@ class CommentsList {
                     //   },
                     // ),
                   ),
+
                   Padding(
                     padding: EdgeInsets.only(
-                        bottom: 5, left: 24, right: 24, top: 2.h),
+                        bottom: 5.h, left: 24.w, right: 24.w, top: 2.h),
                     child: Row(
                       children: [
                         Expanded(
@@ -236,9 +314,13 @@ class CommentsList {
                                 minLine: 1,
                                 withBoarder: true,
                                 // prefixText: state.commenter,
-                                suffix: GestureDetector(
+                                suffix: InkWell(
+
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+
                                   onTap: () {
                                     if (comment.text != '') {
+                                    context.read<PostsCubit>().createComment(postId: postId, content: comment.text);
                                       context
                                           .read<ReplyCubit>()
                                           .reply(commenter: '');
@@ -246,10 +328,14 @@ class CommentsList {
                                       FocusScope.of(context).unfocus();
                                     }
                                   },
-                                  child: const ImageIcon(
-                                    AssetImage('assets/images/send.png'),
-                                    color: Colors.black,
-                                    size: 24,
+                                  child: Container(
+                                    padding: EdgeInsets.zero,
+                                    margin: EdgeInsets.all(2),
+                                    child: const ImageIcon(
+                                      AssetImage('assets/images/send.png'),
+                                      color: Colors.black,
+                                      // size: 24,
+                                    ),
                                   ),
                                 ),
                               );

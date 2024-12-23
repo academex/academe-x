@@ -321,7 +321,10 @@ class PostRepositoryImpl implements PostRepository {
     return handlingException<PaginatedResponse<CommentModel>>(() => remoteDataSource.getComments(paginationParams: paginationParams,postId: postId),);
   }
 
-
+  @override
+  Future<Either<Failure, CreatePostBaseResponse>> createComment({required int postId, required String content}) {
+    return handlingException<CreatePostBaseResponse>(() => remoteDataSource.createComment(postId:postId,content:content),);
+  }
 
 
   Future<Either<Failure, T>> handlingException<T>(Future<T> Function() implementRemoteDataSourceMethod) async{
@@ -343,6 +346,8 @@ class PostRepositoryImpl implements PostRepository {
       return Left(ServerFailure(message: 'Server Failure : $e'));
     }
   }
+
+
 
 
 
