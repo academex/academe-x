@@ -27,7 +27,7 @@ import 'file_container.dart';
 
 class CreatePost {
   final TextEditingController _postController = TextEditingController();
-  PostEntity post = const PostEntity();
+  PostEntity post =  PostEntity();
   final _formKey = GlobalKey<FormState>();
 
 

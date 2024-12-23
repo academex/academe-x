@@ -13,7 +13,7 @@ import 'package:academe_x/features/home/domain/entities/post/reactions_entity.da
 import 'file_info_model.dart';
 
 class PostModel extends PostEntity {
-  const PostModel({
+   PostModel({
     required super.id,
     required super.content,
     required super.createdAt,

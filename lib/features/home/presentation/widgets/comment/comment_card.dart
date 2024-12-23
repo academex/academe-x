@@ -120,62 +120,12 @@ class CommentCard extends StatelessWidget {
                         return changedState && needStatus;
                       },
                       builder: (context, state) {
-
+                        if(!(state.comments[commentIndex!].isSending??false)) return ReplyAndTime(createdAt: createdAt, reply: reply);
                         Logger().w(state.createCommentStatus);
                         if(state.createCommentStatus == CreateCommentStatus.success){
                           state.comments[commentIndex!].isSending = false;
                           state.createCommentStatus = CreateCommentStatus.initial;
-                          return Row(
-                            children: [
-                              AppText(
-                                text: getTimeAgo(createdAt),
-                                fontSize: 13,
-                                color: const Color(0xffA0A1AB),
-                              ),
-                              8.pw(),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(30),
-                                onTap: reply,
-                                child: SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: Center(
-                                    child: AppText(
-                                      text: "رد",
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              if (replies!.isNotEmpty)
-                                InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  onTap: () {
-                                    _showReplyVisibility = !_showReplyVisibility;
-                                    context.read<ShowRepliesCubit>().change(
-                                        postIndex: commentIndex!,
-                                        visibility: _showReplyVisibility);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5.h),
-                                    child: BlocBuilder<ShowRepliesCubit,
-                                        ShowRepliesState>(
-                                      buildWhen: (previous, current) {
-                                        return commentIndex == current.index;
-                                      },
-                                      builder: (context, state) => AppText(
-                                        text: !_showReplyVisibility
-                                            ? 'عرض الردور'
-                                            : 'اخفاء الردور',
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          );
+                          return ReplyAndTime(createdAt: createdAt, reply: reply);
                         }else if(state.createCommentStatus == CreateCommentStatus.loading){
                           return AppText(text: 'جار ارسال ردك...', fontSize: 10.sp);
                         }else if(state.createCommentStatus == CreateCommentStatus.failure){
@@ -196,57 +146,7 @@ class CommentCard extends StatelessWidget {
                             ],
                           );
                         }else {
-                          return Row(
-                            children: [
-                              AppText(
-                                text: getTimeAgo(createdAt),
-                                fontSize: 13,
-                                color: const Color(0xffA0A1AB),
-                              ),
-                              8.pw(),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(30),
-                                onTap: reply,
-                                child: SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: Center(
-                                    child: AppText(
-                                      text: "رد",
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              if (replies!.isNotEmpty)
-                                InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  onTap: () {
-                                    _showReplyVisibility = !_showReplyVisibility;
-                                    context.read<ShowRepliesCubit>().change(
-                                        postIndex: commentIndex!,
-                                        visibility: _showReplyVisibility);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5.h),
-                                    child: BlocBuilder<ShowRepliesCubit,
-                                        ShowRepliesState>(
-                                      buildWhen: (previous, current) {
-                                        return commentIndex == current.index;
-                                      },
-                                      builder: (context, state) => AppText(
-                                        text: !_showReplyVisibility
-                                            ? 'عرض الردور'
-                                            : 'اخفاء الردور',
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          );
+                          return ReplyAndTime(createdAt: createdAt, reply: reply);
                         }
                       },
                     ),
@@ -297,26 +197,7 @@ class CommentCard extends StatelessWidget {
       ),
     );
   }
-  String getTimeAgo(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
 
-    if (difference.inDays > 365) {
-      final years = (difference.inDays / 365).floor();
-      return '$years ${years == 1 ? 'year' : 'years'} ago';
-    } else if (difference.inDays > 30) {
-      final months = (difference.inDays / 30).floor();
-      return '$months ${months == 1 ? 'month' : 'months'} ago';
-    } else if (difference.inDays > 0) {
-      return 'منذ${difference.inDays} ${difference.inDays == 1 ? 'ي' : 'أي'}';
-    } else if (difference.inHours > 0) {
-      return 'منذ ${difference.inHours}  ${difference.inHours == 1 ? 'س' : 'س'}';
-    } else if (difference.inMinutes > 0) {
-      return 'منذ${difference.inMinutes} ${difference.inMinutes == 1 ? 'د' : 'د'}';
-    } else {
-      return 'الان';
-    }
-  }
 
   // Widget _buildLikeButton(
   //     {required int likeCount, required BuildContext context}) {
@@ -346,6 +227,88 @@ class CommentCard extends StatelessWidget {
   //     ),
   //   );
   // }
+}
+String getTimeAgo(DateTime dateTime) {
+  final now = DateTime.now();
+  final difference = now.difference(dateTime);
+
+  if (difference.inDays > 365) {
+    final years = (difference.inDays / 365).floor();
+    return '$years ${years == 1 ? 'year' : 'years'} ago';
+  } else if (difference.inDays > 30) {
+    final months = (difference.inDays / 30).floor();
+    return '$months ${months == 1 ? 'month' : 'months'} ago';
+  } else if (difference.inDays > 0) {
+    return 'منذ${difference.inDays} ${difference.inDays == 1 ? 'ي' : 'أي'}';
+  } else if (difference.inHours > 0) {
+    return 'منذ ${difference.inHours}  ${difference.inHours == 1 ? 'س' : 'س'}';
+  } else if (difference.inMinutes > 0) {
+    return 'منذ${difference.inMinutes} ${difference.inMinutes == 1 ? 'د' : 'د'}';
+  } else {
+    return 'الان';
+  }
+}
+class ReplyAndTime extends StatelessWidget {
+  DateTime createdAt;
+  void Function()? reply;
+  ReplyAndTime({super.key,required this.createdAt,required this.reply});
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        AppText(
+          text: getTimeAgo(createdAt),
+          fontSize: 13,
+          color: const Color(0xffA0A1AB),
+        ),
+        8.pw(),
+        InkWell(
+          borderRadius: BorderRadius.circular(30),
+          onTap: reply,
+          child: SizedBox(
+            width: 30,
+            height: 30,
+            child: Center(
+              child: AppText(
+                text: "رد",
+                fontSize: 13,
+              ),
+            ),
+          ),
+        ),
+        // if (replies!.isNotEmpty)
+        //   InkWell(
+        //     borderRadius: BorderRadius.circular(20),
+        //     onTap: () {
+        //       _showReplyVisibility = !_showReplyVisibility;
+        //       context.read<ShowRepliesCubit>().change(
+        //           postIndex: commentIndex!,
+        //           visibility: _showReplyVisibility);
+        //     },
+        //     child: Padding(
+        //       padding: EdgeInsets.symmetric(
+        //           horizontal: 7, vertical: 5.h),
+        //       child: BlocBuilder<ShowRepliesCubit,
+        //           ShowRepliesState>(
+        //         buildWhen: (previous, current) {
+        //           return commentIndex == current.index;
+        //         },
+        //         builder: (context, state) => AppText(
+        //           text: !_showReplyVisibility
+        //               ? 'عرض الردور'
+        //               : 'اخفاء الردور',
+        //           fontSize: 12,
+        //           color: Colors.black,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+      ],
+    );
+  }
+
 }
 class CommentCardShimmer extends StatelessWidget {
   @override

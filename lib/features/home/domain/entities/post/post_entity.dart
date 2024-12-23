@@ -19,12 +19,12 @@ class PostEntity extends Equatable {
   final List<MajorEntity>? tags;
   final PostUserEntity? user;
   final ReactionsEntity? reactions;
-  final int? commentsCount;
+   int? commentsCount;
   final bool? isSaved;
   final bool? isReacted;
   final String? reactionType;
 
-  const PostEntity({
+   PostEntity({
     this.id,
     this.savedPostId,
     this.content,

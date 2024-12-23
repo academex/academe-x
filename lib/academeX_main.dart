@@ -159,11 +159,13 @@ class AcademeXMain extends StatelessWidget {
           if(isLoading || isFailure || isSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
+
                 content: GestureDetector(
                   onTap: () => CreatePost().showCreatePostModal(NavigationService.navigatorKey.currentContext!),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      if(!isLoading)
                       AppText(
                         fontSize: 12.sp,
                         text: isLoading?'جار رفع منشورك':isFailure?state.creationPostErrorMessage!:'تم نشر منشورك بنجاح',
@@ -179,11 +181,11 @@ class AcademeXMain extends StatelessWidget {
                     ],
                   ),
                 ),
-                backgroundColor: isLoading?Colors.green.shade800:isFailure?Colors.red:Colors.green,
+                backgroundColor: isLoading?Colors.transparent:isFailure?Colors.red:Colors.green,
                 duration:  Duration(seconds: isLoading?500:2),
                 dismissDirection: DismissDirection.horizontal,
                 behavior:SnackBarBehavior.fixed,
-                padding:EdgeInsets.symmetric(vertical: 10.h,horizontal: 15.w),
+                padding:EdgeInsets.symmetric(vertical: isLoading?0:10.h,horizontal: isLoading?0:15.w),
 
 
               ),

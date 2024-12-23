@@ -553,10 +553,12 @@ class PostsCubit extends Cubit<PostsState> {
   getComments({bool refresh = false,required int postId}) async {
 
 
+
+    bool noComments = state.posts[_getPostIndexByPostId(postId)].commentsCount == 0;
     if (state.latestPostIdGetHereComments != postId) {
       refresh = true;
       emit(state.copyWith(
-        commentsStatus: CommentsStatus.loading,
+        commentsStatus: noComments? CommentsStatus.success:CommentsStatus.loading,
         hasCommentReachedMax: false,
         latestPostIdGetHereComments: postId,
         commentCurrentPage: 1,
@@ -564,6 +566,7 @@ class PostsCubit extends Cubit<PostsState> {
 
       ));
     }
+    if(noComments)return;
     if ((refresh && state.commentsStatus == CommentsStatus.failure)) {
       emit(state.copyWith(
         commentsStatus: CommentsStatus.initial,
@@ -643,6 +646,14 @@ class PostsCubit extends Cubit<PostsState> {
     // }
 
   }
+  int _getPostIndexByPostId(int postId){
+    for(int i =0; i<state.posts.length;i++){
+      if(state.posts[i].id == postId) {
+        return i;
+      };
+    }
+    return -1;
+  }
   createComment({required int postId,required String content,withoutAddNew = false}) async {
     UserResponseEntity user = (await NavigationService.navigatorKey.currentContext!.cachedUser)!.user;
     if(!withoutAddNew) {
@@ -654,6 +665,7 @@ class PostsCubit extends Cubit<PostsState> {
           isSending: true,
           likes: 0);
       state.comments.add(newComment);
+      state.posts[_getPostIndexByPostId(postId)].commentsCount = state.posts[_getPostIndexByPostId(postId)].commentsCount! + 1;
     }
     Logger().d(state.createCommentStatus);
     // if(state.createCommentStatus == CreateCommentStatus.loading) return;
