@@ -41,7 +41,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-.dart_tool/
+.dart_tool/dartpad
 .packages
 .flutter-plugins
 .flutter-plugins-dependencies
