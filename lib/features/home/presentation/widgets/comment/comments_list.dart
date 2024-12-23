@@ -57,6 +57,9 @@ class CommentsList {
                   // Use Expanded to make the list scrollable
                   Expanded(
                     child: BlocBuilder<PostsCubit, PostsState>(
+                      buildWhen: (previous, current) {
+                        return current.commentsStatus != previous.commentsStatus;
+                      },
                       builder: (context, state) {
                         Logger().f(state.commentsStatus);
                         switch (state.commentsStatus) {
@@ -135,6 +138,7 @@ class CommentsList {
                                     CommentsStatus.loading) {
                                   if (state.hasCommentReachedMax) {
                                     return CommentCard(
+                                        postId: postId,
                                       commenter:
                                           '${comment.user!.firstName} ${comment.user!.lastName}',
                                       commentText: comment.content!,
@@ -152,6 +156,7 @@ class CommentsList {
                                   return Column(
                                     children: [
                                       CommentCard(
+                                        postId: postId,
                                         commenter:
                                             '${comment.user!.firstName} ${comment.user!.lastName}',
                                         commentText: comment.content!,
@@ -173,6 +178,7 @@ class CommentsList {
                                   return Column(
                                     children: [
                                       CommentCard(
+                                        postId: postId,
                                         commenter:
                                             '${comment.user!.firstName} ${comment.user!.lastName}',
                                         commentText: comment.content!,
@@ -216,6 +222,7 @@ class CommentsList {
                                 }
                               }
                               return CommentCard(
+                                postId: postId,
                               commenter:
                                   '${comment.user!.firstName} ${comment.user!.lastName}',
                               commentText: comment.content!,
@@ -235,62 +242,6 @@ class CommentsList {
                       },
                     ),
 
-                    // ListView.builder(
-                    //   itemCount: comments.length,
-                    //   itemBuilder: (context, index) {
-                    //     return Column(
-                    //       children: [
-                    //
-                    //
-                    //         CommentCard(
-                    //           commenter: comments[index].commenter,
-                    //           commentText: comments[index].commentText,
-                    //           likes: comments[index].likes,
-                    //           replies: comments[index].replies,
-                    //           reply: () {
-                    //             context.read<ReplyCubit>().reply(
-                    //                 commenter:
-                    //                     'رد على @${comments[index].commenter}');
-                    //           },
-                    //           commentIndex: index,
-                    //         ),
-                    //
-                    //
-                    //         BlocBuilder<ShowRepliesCubit, ShowRepliesState>(
-                    //             buildWhen: (previous, current) {
-                    //           return current.index == index;
-                    //         }, builder: (context, state) {
-                    //           return Column(
-                    //             children: [
-                    //               for (int i = 0;
-                    //                   i < comments[index].replies.length &&
-                    //                       state.show &&
-                    //                       state.index == index;
-                    //                   i++)
-                    //                 CommentCard(
-                    //                   isReply: true,
-                    //                   commenter:
-                    //                       comments[index].replies[i].commenter,
-                    //                   commentText: comments[index]
-                    //                       .replies[i]
-                    //                       .commentText,
-                    //                   likes: comments[index].replies[i].likes,
-                    //                   reply: () {
-                    //                     context.read<ReplyCubit>().reply(
-                    //                         commenter:
-                    //                             'رد على @${comments[index].replies[i].commenter}');
-                    //                   },
-                    //                   isEndReply: i ==
-                    //                       ((comments[index].replies.length) -
-                    //                           1),
-                    //                 ),
-                    //             ],
-                    //           );
-                    //         }),
-                    //       ],
-                    //     );
-                    //   },
-                    // ),
                   ),
 
                   Padding(

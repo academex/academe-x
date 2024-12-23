@@ -34,8 +34,9 @@ class PostsState extends Equatable {
   final DateTime? lastUpdated;  // Add this to track cache freshness
   // this for comment
   final CommentsStatus commentsStatus;
-  final CreateCommentStatus createCommentStatus;
+   CreateCommentStatus createCommentStatus;
   final List<CommentEntity> comments;
+  final List<CommentEntity> failureComments;
   final int latestPostIdGetHereComments;
   final String? commentError;
   final String? createCommentError;
@@ -69,6 +70,7 @@ class PostsState extends Equatable {
     this.commentsStatus = CommentsStatus.initial,
     this.createCommentStatus = CreateCommentStatus.initial,
     this.comments = const [],
+    this.failureComments = const [],
     this.commentError,
     this.createCommentError,
     this.commentCurrentPage = 1,
@@ -101,6 +103,7 @@ class PostsState extends Equatable {
     String? commentError,
     String? createCommentError,
     List<CommentEntity>? comments,
+    List<CommentEntity>? failureComments,
     int? commentCurrentPage,
     int? latestPostIdGetHereComments,
 
@@ -128,6 +131,7 @@ class PostsState extends Equatable {
       lastUpdated: lastUpdated ?? this.lastUpdated,
       // comment
       comments: comments ?? this.comments,
+      failureComments: failureComments ?? this.failureComments,
       commentsStatus: commentsStatus ?? this.commentsStatus,
       createCommentStatus: createCommentStatus ?? this.createCommentStatus,
       commentError: commentError ?? this.commentError,
@@ -163,5 +167,6 @@ class PostsState extends Equatable {
     latestPostIdGetHereComments,
     createCommentStatus,
     createCommentError,
+    failureComments,
   ];
 }

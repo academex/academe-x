@@ -632,12 +632,38 @@ class PostsCubit extends Cubit<PostsState> {
 
   }
 
-  createComment({required int postId,required String content}) async {
+  retrySendFailureComments(){
+    List<CommentEntity> failureComments = state.failureComments;
+    // int length = failureComments.length;
+    // for(int i =0; i< failureComments.length;i++){
+    //   if(state.createCommentStatus == CreateCommentStatus.success || i == 0){
+    //     if(i!=0) state.failureComments.removeAt(i-1);
+    //     createComment(postId: failureComments[i].postId!, content: failureComments[i].content!,withoutAddNew: true);
+    //   }
+    // }
+
+  }
+  createComment({required int postId,required String content,withoutAddNew = false}) async {
+    UserResponseEntity user = (await NavigationService.navigatorKey.currentContext!.cachedUser)!.user;
+    if(!withoutAddNew) {
+      CommentEntity newComment = CommentModel(user: user,
+          content: content,
+          postId: postId,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          isSending: true,
+          likes: 0);
+      state.comments.add(newComment);
+    }
     Logger().d(state.createCommentStatus);
     // if(state.createCommentStatus == CreateCommentStatus.loading) return;
+    CommentsStatus priviusCommentStatus = state.commentsStatus;
     emit(state.copyWith(
       createCommentStatus: CreateCommentStatus.loading,
+      comments: state.comments,
+      commentsStatus: CommentsStatus.loading,
     ));
+    emit(state.copyWith(commentsStatus: priviusCommentStatus));
     Either<Failure, CreatePostBaseResponse> response = await postUseCase.createComment(postId: postId, content: content);
 
     response.fold(
@@ -646,14 +672,18 @@ class PostsCubit extends Cubit<PostsState> {
       emit(state.copyWith(
         createCommentStatus: CreateCommentStatus.failure,
         createCommentError: l.message,
+        failureComments: [...state.failureComments,CommentEntity(content: content,postId: postId)]
+
       ));
     }, (r) {
       Logger().t(r);
-      state.comments.add(r.data!);
+      // state.comments.add(r.data!);
+
       emit(state.copyWith(
         createCommentStatus: CreateCommentStatus.success,
       ));
     },);
+
   }
 
   @override

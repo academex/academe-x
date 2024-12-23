@@ -12,11 +12,11 @@ class CommentModel extends CommentEntity {
     super.updatedAt,
     super.postId,
     super.user,
+    super.isSending,
   });
 
   // fromJson method to convert JSON to CommentModel
   factory CommentModel.fromJson(Map<String, dynamic> json,{UserResponseEntity? user}) {
-    Logger().d(json);
     return CommentModel(
       id: json['id'],
       content: json['content'],

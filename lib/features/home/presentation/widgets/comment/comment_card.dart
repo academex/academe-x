@@ -1,9 +1,12 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CommentCard extends StatelessWidget {
@@ -11,6 +14,7 @@ class CommentCard extends StatelessWidget {
   final String commentText;
   int likes;
   final int? commentIndex;
+  final int postId;
   final bool isReply;
   final void Function() reply;
   final List<Comment>? replies;
@@ -21,6 +25,7 @@ class CommentCard extends StatelessWidget {
 
   CommentCard({
     required this.commenter,
+    required this.postId,
     required this.commentText,
     required this.likes,
     required this.reply,
@@ -73,8 +78,8 @@ class CommentCard extends StatelessWidget {
               Column(
                 children: [
                   CircleAvatar(
-                    child: Text(commenter[0]),
                     radius: 20,
+                    child: Text(commenter[0]),
                   ),
                   if (!isReply)
                     BlocBuilder<ShowRepliesCubit, ShowRepliesState>(
@@ -104,57 +109,148 @@ class CommentCard extends StatelessWidget {
                     ),
                     5.ph(),
                     Text(commentText),
-                    Row(
-                      children: [
-                        AppText(
-                          text: getTimeAgo(createdAt),
-                          fontSize: 13,
-                          color: const Color(0xffA0A1AB),
-                        ),
-                        8.pw(),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(30),
-                          onTap: reply,
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: Center(
-                              child: AppText(
-                                text: "رد",
+                    // if(withStatus == null || withStatus == false)
+
+                    BlocBuilder<PostsCubit, PostsState>(
+                      buildWhen: (previous, current) {
+                        bool changedState = previous.createCommentStatus !=
+                            current.createCommentStatus;
+                        bool needStatus = current.comments[commentIndex!].isSending??false;
+
+                        return changedState && needStatus;
+                      },
+                      builder: (context, state) {
+
+                        Logger().w(state.createCommentStatus);
+                        if(state.createCommentStatus == CreateCommentStatus.success){
+                          state.comments[commentIndex!].isSending = false;
+                          state.createCommentStatus = CreateCommentStatus.initial;
+                          return Row(
+                            children: [
+                              AppText(
+                                text: getTimeAgo(createdAt),
                                 fontSize: 13,
+                                color: const Color(0xffA0A1AB),
                               ),
-                            ),
-                          ),
-                        ),
-                        if (replies!.isNotEmpty)
-                          InkWell(
-                            borderRadius: BorderRadius.circular(20),
-                            onTap: () {
-                              _showReplyVisibility = !_showReplyVisibility;
-                              context.read<ShowRepliesCubit>().change(
-                                  postIndex: commentIndex!,
-                                  visibility: _showReplyVisibility);
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 7, vertical: 5.h),
-                              child: BlocBuilder<ShowRepliesCubit,
-                                  ShowRepliesState>(
-                                buildWhen: (previous, current) {
-                                  return commentIndex == current.index;
-                                },
-                                builder: (context, state) => AppText(
-                                  text: !_showReplyVisibility
-                                      ? 'عرض الردور'
-                                      : 'اخفاء الردور',
-                                  fontSize: 12,
-                                  color: Colors.black,
+                              8.pw(),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(30),
+                                onTap: reply,
+                                child: SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Center(
+                                    child: AppText(
+                                      text: "رد",
+                                      fontSize: 13,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                      ],
+                              if (replies!.isNotEmpty)
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () {
+                                    _showReplyVisibility = !_showReplyVisibility;
+                                    context.read<ShowRepliesCubit>().change(
+                                        postIndex: commentIndex!,
+                                        visibility: _showReplyVisibility);
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 7, vertical: 5.h),
+                                    child: BlocBuilder<ShowRepliesCubit,
+                                        ShowRepliesState>(
+                                      buildWhen: (previous, current) {
+                                        return commentIndex == current.index;
+                                      },
+                                      builder: (context, state) => AppText(
+                                        text: !_showReplyVisibility
+                                            ? 'عرض الردور'
+                                            : 'اخفاء الردور',
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        }else if(state.createCommentStatus == CreateCommentStatus.loading){
+                          return AppText(text: 'جار ارسال ردك...', fontSize: 10.sp);
+                        }else if(state.createCommentStatus == CreateCommentStatus.failure){
+                          String retry = 'اعادة المحاولة';
+                          if(state.failureComments.length == 2){
+                            retry = 'اعادة محاةلة ارسال التعليقين';
+                          }else if(state.failureComments.length > 2){
+                            retry = 'اعادة محاولة ارسال جميع تعليقاتك';
+                          }
+                          return Row(
+                            children: [
+                              Expanded(child: AppText(text: state.createCommentError!, fontSize: 10.sp,color: Colors.red,)),
+                              IconButton(onPressed: () {
+                                context.read<PostsCubit>().retrySendFailureComments();
+                              }, icon: InkWell(
+                                child: AppText(text: retry, fontSize: 10.sp,color: Colors.blue,),
+                              ))
+                            ],
+                          );
+                        }else {
+                          return Row(
+                            children: [
+                              AppText(
+                                text: getTimeAgo(createdAt),
+                                fontSize: 13,
+                                color: const Color(0xffA0A1AB),
+                              ),
+                              8.pw(),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(30),
+                                onTap: reply,
+                                child: SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Center(
+                                    child: AppText(
+                                      text: "رد",
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (replies!.isNotEmpty)
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () {
+                                    _showReplyVisibility = !_showReplyVisibility;
+                                    context.read<ShowRepliesCubit>().change(
+                                        postIndex: commentIndex!,
+                                        visibility: _showReplyVisibility);
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 7, vertical: 5.h),
+                                    child: BlocBuilder<ShowRepliesCubit,
+                                        ShowRepliesState>(
+                                      buildWhen: (previous, current) {
+                                        return commentIndex == current.index;
+                                      },
+                                      builder: (context, state) => AppText(
+                                        text: !_showReplyVisibility
+                                            ? 'عرض الردور'
+                                            : 'اخفاء الردور',
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        }
+                      },
                     ),
+
                     9.ph(),
                   ],
                 ),
