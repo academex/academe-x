@@ -113,22 +113,28 @@ class ApiController {
     }
   }
 
-  Future<Map> delete(
+  Future delete(
     Uri url, {
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
-    required BuildContext context,
   }) async {
-    http.Response response = await http.delete(url,
+    return await http.delete(url,
         headers: headers ?? {"Content-Type": "application/json"},
         body: body,
         encoding: encoding);
-    Map<String, dynamic> data = await jsonDecode(response.body);
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return data;
-    } else {
-      return data;
-    }
+
+  }
+  Future put(
+      Uri url, {
+        Map<String, String>? headers,
+        Object? body,
+        Encoding? encoding,
+      }) async {
+    return await http.put(url,
+        headers: headers ?? {"Content-Type": "application/json"},
+        body: body,
+        encoding: encoding);
+
   }
 }

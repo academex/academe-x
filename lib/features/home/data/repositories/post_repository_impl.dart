@@ -329,8 +329,13 @@ class PostRepositoryImpl implements PostRepository {
 
   Future<Either<Failure, T>> handlingException<T>(Future<T> Function() implementRemoteDataSourceMethod) async{
     try {
+
       final result = await implementRemoteDataSourceMethod();
-      return Right(result);
+      if(T is Unit) {
+        return Right(Unit as T);
+      }else {
+        return Right(result);
+      }
     } on OfflineException catch (e) {
       return Left(NoInternetConnectionFailure(message: e.errorMessage));
     } on TimeOutExeption catch (e) {
@@ -345,6 +350,16 @@ class PostRepositoryImpl implements PostRepository {
     } on Exception catch (e) {
       return Left(ServerFailure(message: 'Server Failure : $e'));
     }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteComment({required int postId, required int commentId}) {
+    return handlingException<Unit>(() => remoteDataSource.deleteComment(postId:postId,commentId: commentId),);
+  }
+
+  @override
+  Future<Either<Failure, CreatePostBaseResponse>> updateComment({required int postId, required String content, required int commentId}) {
+    return handlingException<CreatePostBaseResponse>(() => remoteDataSource.updateComment(postId:postId,content:content,commentId: commentId),);
   }
 
 

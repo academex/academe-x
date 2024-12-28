@@ -57,7 +57,8 @@ class AppTextField extends StatelessWidget {
   TextInputAction? textInputAction;
 
   // final bool isOTP;
-  FocusNode? focusNode = FocusNode();
+  FocusNode? focusNode;
+
 
   final Function(String)? onSubmitted;
   final Function(String)? onChanged;
@@ -68,7 +69,7 @@ class AppTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
-
+focusNode: focusNode,
           validator: validator,
           enabled: enabled,
           autofocus: autofocus,

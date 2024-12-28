@@ -7,6 +7,7 @@ import 'package:academe_x/features/home/data/datasources/create_post/create_post
 import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_model.dart';
 import 'package:academe_x/features/home/data/models/post/reaction_item_model.dart';
+import 'package:dartz/dartz.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import 'package:academe_x/lib.dart';
@@ -297,9 +298,10 @@ class PostRemoteDataSource {
   Future<CreatePostBaseResponse> createComment({required int postId,required String content}) async {
     if (await internetConnectionChecker.hasConnection) {
       try {
-        Logger().d(postId);
+        // Logger().d(postId);
         final response = await apiController.post(
-          Uri.parse('${ApiSetting.getComments}/$postId/comment/'),
+
+          Uri.parse('${ApiSetting.getComments}/$postId/comment/'),// /post/2/comment/
           headers: {
             'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
           },
@@ -325,6 +327,67 @@ class PostRemoteDataSource {
 
       } on TimeOutExeption {
         rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+  Future<CreatePostBaseResponse> updateComment({required int postId,required String content,required int commentId}) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        Logger().d(postId);
+        final response = await apiController.put(
+
+          Uri.parse('${ApiSetting.getComments}/$postId/comment/$commentId'),// /post/2/comment/2
+          headers: {
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
+          },
+          body:
+            {'content':content},
+
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          HandleHttpError.handleHttpError(responseBody);
+        }
+        UserResponseEntity? user = (await NavigationService.navigatorKey.currentContext!.cachedUser)!.user;
+        final baseResponse = CreatePostBaseResponse.fromJson(
+          responseBody,
+              (json) {
+            return CommentModel.fromJson(json,user: user);
+          },
+        );
+
+        // Logger().d(baseResponse.data!.items);
+        return baseResponse;
+
+
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
+  Future<Unit> deleteComment({required int postId,required int commentId}) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        Logger().d(postId);
+        final response = await apiController.delete(
+          Uri.parse('${ApiSetting.getComments}/$postId/comment/$commentId'),// /post/2/comment/
+          headers: {
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
+            "Content-Type": "application/json",
+          },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          HandleHttpError.handleHttpError(responseBody);
+        }
+        return unit;
+      } on TimeOutExeption {
+        rethrow ;
       }
     } else {
       throw OfflineException(errorMessage: 'No Internet Connection');

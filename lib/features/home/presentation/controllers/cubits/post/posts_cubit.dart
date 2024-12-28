@@ -654,6 +654,75 @@ class PostsCubit extends Cubit<PostsState> {
     }
     return -1;
   }
+  int _getCommentIndexByCommentId(int commentId){
+    for(int i =0; i<state.comments.length;i++){
+      if(state.comments[i].id == commentId) {
+        return i;
+      };
+    }
+    return -1;
+  }
+  int _getCommentIndexByContent(String content){
+    for(int i =state.comments.length - 1; i>=0;i--){
+      if(state.comments[i].content == content) {
+        return i;
+      };
+    }
+    return -1;
+  }
+  actionsOnComment({required int postId,String? content,withoutAddNew = false}){
+    Logger().w(state.commentAction);
+    emit(state.copyWith(commentsStatus: CommentsStatus.loading));
+    if(state.commentAction == CommentAction.create){
+      createComment(postId: postId, content: content!,withoutAddNew: withoutAddNew);
+    }else if(state.commentAction == CommentAction.update){
+      updateComment(postId: postId,commentId: state.actionCommentId, content: content!);
+    }else if(state.commentAction == CommentAction.delete){
+      deleteComment(postId: postId,commentId: state.actionCommentId);
+    }
+    emit(state.copyWith(commentAction: CommentAction.create));
+    Future.delayed(Duration(milliseconds: 500),() => emit(state.copyWith(commentsStatus: CommentsStatus.success)),);
+  }
+  deleteComment({required int postId,required int commentId}) async {
+    emit(state.copyWith(
+      updateDeleteCommentStatus: UpdateDeleteCommentStatus.loading,
+    ));
+    Either<Failure, Unit> response = await postUseCase.deleteComment(postId: postId, commentId: commentId);
+    response.fold((l) {
+      Logger().e(l.message);
+      emit(state.copyWith(
+        updateDeleteCommentStatus: UpdateDeleteCommentStatus.failure,
+        commentError: l.message,
+          commentsStatus: CommentsStatus.success,
+      ));
+    }, (r) {
+      state.comments.removeAt(_getCommentIndexByCommentId(commentId));
+      state.posts[_getPostIndexByPostId(postId)].commentsCount = state.posts[_getPostIndexByPostId(postId)].commentsCount! -1;
+
+      emit(state.copyWith(
+        updateDeleteCommentStatus: UpdateDeleteCommentStatus.success,
+          commentsStatus: CommentsStatus.success,
+
+      ));
+    },);
+  }
+  updateComment({required int postId,required String content,required int commentId}) async {
+    emit(state.copyWith(
+      updateDeleteCommentStatus: UpdateDeleteCommentStatus.loading,
+    ));
+    Either<Failure, CreatePostBaseResponse> response = await postUseCase.updateComment(postId: postId, content: content, commentId: commentId);
+    response.fold((l) {
+      emit(state.copyWith(
+        updateDeleteCommentStatus: UpdateDeleteCommentStatus.failure,
+      ));
+    }, (r) {
+      state.comments[_getCommentIndexByCommentId(commentId)] = r.data!;
+      emit(state.copyWith(
+        updateDeleteCommentStatus: UpdateDeleteCommentStatus.success,
+
+      ));
+    },);
+  }
   createComment({required int postId,required String content,withoutAddNew = false}) async {
     UserResponseEntity user = (await NavigationService.navigatorKey.currentContext!.cachedUser)!.user;
     if(!withoutAddNew) {
@@ -669,13 +738,13 @@ class PostsCubit extends Cubit<PostsState> {
     }
     Logger().d(state.createCommentStatus);
     // if(state.createCommentStatus == CreateCommentStatus.loading) return;
-    CommentsStatus priviusCommentStatus = state.commentsStatus;
+    CommentsStatus previusCommentStatus = state.commentsStatus;
     emit(state.copyWith(
       createCommentStatus: CreateCommentStatus.loading,
       comments: state.comments,
       commentsStatus: CommentsStatus.loading,
     ));
-    emit(state.copyWith(commentsStatus: priviusCommentStatus));
+    emit(state.copyWith(commentsStatus: previusCommentStatus));
     Either<Failure, CreatePostBaseResponse> response = await postUseCase.createComment(postId: postId, content: content);
 
     response.fold(
@@ -688,12 +757,19 @@ class PostsCubit extends Cubit<PostsState> {
 
       ));
     }, (r) {
-      Logger().t(r);
-      // state.comments.add(r.data!);
 
-      emit(state.copyWith(
-        createCommentStatus: CreateCommentStatus.success,
-      ));
+      // state.comments[_getCommentIndexByContent(content)] = r.data!;
+      try {
+
+        emit(state.copyWith(
+          createCommentStatus: CreateCommentStatus.success,
+        ));
+        Future.delayed(const Duration(milliseconds: 500),() => state.comments[_getCommentIndexByContent(content)] = r.data!,);
+      }catch (_, e){
+        Logger().e('error$e');
+      }
+
+
     },);
 
   }

@@ -13,6 +13,8 @@ enum ReactionStatus { initial, loading, success, failure }
 enum CreationStatus { initial, loading, success, failure }
 enum CommentsStatus { initial, loading, success, failure }
 enum CreateCommentStatus { initial, loading, success, failure }
+enum UpdateDeleteCommentStatus { initial, loading, success, failure }
+enum CommentAction { create, delete, update }
 
 class PostsState extends Equatable {
   final PostStatus status;
@@ -35,6 +37,7 @@ class PostsState extends Equatable {
   // this for comment
   final CommentsStatus commentsStatus;
    CreateCommentStatus createCommentStatus;
+  UpdateDeleteCommentStatus updateDeleteCommentStatus;
   final List<CommentEntity> comments;
   final List<CommentEntity> failureComments;
   final int latestPostIdGetHereComments;
@@ -42,6 +45,8 @@ class PostsState extends Equatable {
   final String? createCommentError;
    bool hasCommentReachedMax;
   int commentCurrentPage;
+  int actionCommentId;
+  CommentAction commentAction;
 
 
 
@@ -69,6 +74,7 @@ class PostsState extends Equatable {
     //for comment
     this.commentsStatus = CommentsStatus.initial,
     this.createCommentStatus = CreateCommentStatus.initial,
+    this.updateDeleteCommentStatus = UpdateDeleteCommentStatus.initial,
     this.comments = const [],
     this.failureComments = const [],
     this.commentError,
@@ -76,6 +82,8 @@ class PostsState extends Equatable {
     this.commentCurrentPage = 1,
     this.hasCommentReachedMax = false,
     this.latestPostIdGetHereComments = -1,
+    this.actionCommentId = -1,
+    this.commentAction = CommentAction.create,
 
 
   });
@@ -106,6 +114,9 @@ class PostsState extends Equatable {
     List<CommentEntity>? failureComments,
     int? commentCurrentPage,
     int? latestPostIdGetHereComments,
+    int? actionCommentId,
+    CommentAction? commentAction,
+    UpdateDeleteCommentStatus? updateDeleteCommentStatus,
 
   }) {
     return PostsState(
@@ -138,6 +149,9 @@ class PostsState extends Equatable {
       createCommentError: createCommentError ?? this.createCommentError,
       commentCurrentPage: commentCurrentPage ?? this.commentCurrentPage,
       latestPostIdGetHereComments: latestPostIdGetHereComments ?? this.latestPostIdGetHereComments,
+      actionCommentId: actionCommentId ?? this.actionCommentId,
+      commentAction: commentAction ?? this.commentAction,
+      updateDeleteCommentStatus: updateDeleteCommentStatus ?? this.updateDeleteCommentStatus,
 
     );
   }
@@ -168,5 +182,8 @@ class PostsState extends Equatable {
     createCommentStatus,
     createCommentError,
     failureComments,
+    actionCommentId,
+    commentAction,
+    updateDeleteCommentStatus,
   ];
 }

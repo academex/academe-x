@@ -48,7 +48,13 @@ class PostUseCase {
     return await postRepository.createComment(postId: postId,content: content);
   }
 
+  Future<Either<Failure, CreatePostBaseResponse>> updateComment({required int postId,required String content,required int commentId}) async {
+    return await postRepository.updateComment(postId: postId,content: content,commentId: commentId);
+  }
 
+  Future<Either<Failure, Unit>> deleteComment({required int postId,required int commentId}) async {
+    return await postRepository.deleteComment(postId: postId,commentId: commentId);
+  }
 
   Future<Either<Failure, PaginatedResponse<CommentModel>>> getComments(PaginationParams paginationParams,int postId) async {
     return await postRepository.getComments(paginationParams,postId);

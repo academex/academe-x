@@ -24,6 +24,8 @@ abstract class PostRepository {
   Future<Either<Failure, PostEntity>> createPost(PostEntity post);
   Future<Either<Failure, List<MajorEntity>>> getTags();
   Future<Either<Failure, CreatePostBaseResponse>> createComment({required int postId,required String content});
+  Future<Either<Failure, CreatePostBaseResponse>> updateComment({required int postId,required String content,required int commentId});
+  Future<Either<Failure, Unit>> deleteComment({required int postId,required int commentId});
   Future<Either<Failure, PaginatedResponse<CommentModel>>>  getComments(PaginationParams paginationParams,int postId);
 
 }

@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/lib.dart';
@@ -10,9 +11,11 @@ import 'package:logger/logger.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CommentCard extends StatelessWidget {
-  final String commenter;
-  final String commentText;
-  int likes;
+  final CommentEntity comment;
+
+  // final String commenter;
+  // final String commentText;
+  // int likes;
   final int? commentIndex;
   final int postId;
   final bool isReply;
@@ -21,15 +24,18 @@ class CommentCard extends StatelessWidget {
   bool _showReplyVisibility = false;
   bool isEndReply;
   bool useNewDesign = true;
-  DateTime createdAt;
+  late final String userName;
+
+  // DateTime createdAt;
 
   CommentCard({
-    required this.commenter,
+    required this.comment,
+    // required this.commenter,
     required this.postId,
-    required this.commentText,
-    required this.likes,
+    // required this.commentText,
+    // required this.likes,
     required this.reply,
-    required this.createdAt,
+    // required this.createdAt,
     // this.showReplies,
     this.commentIndex,
     this.isReply = false,
@@ -42,6 +48,7 @@ class CommentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (useNewDesign) isEndReply = false;
+    userName = '${comment.user!.firstName} ${comment.user!.lastName}';
     return BlocProvider(
       create: (_) => FavoriteCubit(false),
       child: Padding(
@@ -79,7 +86,7 @@ class CommentCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    child: Text(commenter[0]),
+                    child: Text(userName[0]),
                   ),
                   if (!isReply)
                     BlocBuilder<ShowRepliesCubit, ShowRepliesState>(
@@ -103,54 +110,111 @@ class CommentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppText(
-                      text: commenter,
+                      text: userName,
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),
                     5.ph(),
-                    Text(commentText),
+                    Text(comment.content!),
                     // if(withStatus == null || withStatus == false)
 
                     BlocBuilder<PostsCubit, PostsState>(
                       buildWhen: (previous, current) {
                         bool changedState = previous.createCommentStatus !=
                             current.createCommentStatus;
-                        bool needStatus = current.comments[commentIndex!].isSending??false;
+                        bool needStatus;
+
+                        try{
+                          needStatus = current.comments[commentIndex!].isSending??false;
+                        }catch  (e){
+                          needStatus = false;
+                        }
 
                         return changedState && needStatus;
                       },
                       builder: (context, state) {
-                        if(!(state.comments[commentIndex!].isSending??false)) return ReplyAndTime(createdAt: createdAt, reply: reply);
-                        Logger().w(state.createCommentStatus);
-                        if(state.createCommentStatus == CreateCommentStatus.success){
+                        if (!(state.comments[commentIndex!].isSending ?? false))
+                          return ReplyAndTime(
+                              createdAt: comment.createdAt!, reply: reply);
+                        if (state.createCommentStatus ==
+                            CreateCommentStatus.success) {
                           state.comments[commentIndex!].isSending = false;
                           state.createCommentStatus = CreateCommentStatus.initial;
-                          return ReplyAndTime(createdAt: createdAt, reply: reply);
-                        }else if(state.createCommentStatus == CreateCommentStatus.loading){
-                          return AppText(text: 'جار ارسال ردك...', fontSize: 10.sp);
-                        }else if(state.createCommentStatus == CreateCommentStatus.failure){
+                          return ReplyAndTime(
+                            createdAt: comment.createdAt!, reply: reply,);
+                        } else if (state.createCommentStatus ==
+                            CreateCommentStatus.loading) {
+                          return AppText(
+                              text: 'جار ارسال ردك...', fontSize: 10.sp);
+                        } else if (state.createCommentStatus ==
+                            CreateCommentStatus.failure) {
                           String retry = 'اعادة المحاولة';
-                          if(state.failureComments.length == 2){
+                          if (state.failureComments.length == 2) {
                             retry = 'اعادة محاةلة ارسال التعليقين';
-                          }else if(state.failureComments.length > 2){
+                          } else if (state.failureComments.length > 2) {
                             retry = 'اعادة محاولة ارسال جميع تعليقاتك';
                           }
                           return Row(
                             children: [
-                              Expanded(child: AppText(text: state.createCommentError!, fontSize: 10.sp,color: Colors.red,)),
-                              IconButton(onPressed: () {
-                                context.read<PostsCubit>().retrySendFailureComments();
-                              }, icon: InkWell(
-                                child: AppText(text: retry, fontSize: 10.sp,color: Colors.blue,),
-                              ))
+                              Expanded(
+                                  child: AppText(
+                                    text: state.createCommentError!,
+                                    fontSize: 10.sp,
+                                    color: Colors.red,
+                                  )),
+                              IconButton(
+                                  onPressed: () {
+                                    context
+                                        .read<PostsCubit>()
+                                        .retrySendFailureComments();
+                                  },
+                                  icon: InkWell(
+                                    child: AppText(
+                                      text: retry,
+                                      fontSize: 10.sp,
+                                      color: Colors.blue,
+                                    ),
+                                  ))
                             ],
                           );
-                        }else {
-                          return ReplyAndTime(createdAt: createdAt, reply: reply);
+                        } else {
+                          return ReplyAndTime(
+                              createdAt: comment.createdAt!, reply: reply);
                         }
                       },
                     ),
-
+                    BlocBuilder<PostsCubit, PostsState>(
+                      buildWhen: (previous, current) {
+                        return current.updateDeleteCommentStatus !=
+                            previous.updateDeleteCommentStatus &&
+                            current.actionCommentId == comment.id;
+                      },
+                      builder: (context, state) {
+                        if (state.actionCommentId != comment.id)
+                          return const SizedBox();
+                        if (state.updateDeleteCommentStatus ==
+                            UpdateDeleteCommentStatus.loading) {
+                          if (state.commentAction == CommentAction.delete) {
+                            return const LinearProgressIndicator(
+                              color: Colors.red,
+                              backgroundColor: Colors.transparent,
+                            );
+                          }
+                          return const LinearProgressIndicator(
+                            backgroundColor: Colors.transparent,
+                            color: Colors.blue,
+                          );
+                        } else if (state.updateDeleteCommentStatus ==
+                            UpdateDeleteCommentStatus.failure) {
+                          return AppText(
+                            text: state.commentError!,
+                            fontSize: 12.sp,
+                            color: Colors.red,
+                          );
+                        }
+                        return const SizedBox();
+                      },
+                    ),
                     9.ph(),
                   ],
                 ),
@@ -160,9 +224,9 @@ class CommentCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   onTap: () {
                     if (!state) {
-                      likes++;
+                      comment.likes = comment.likes! + 1;
                     } else {
-                      likes--;
+                      comment.likes = comment.likes! - 1;
                     }
                     context.read<FavoriteCubit>().change();
                   },
@@ -185,7 +249,7 @@ class CommentCard extends StatelessWidget {
                             width: 19,
                           ),
                         2.pw(),
-                        Text(likes.toString()),
+                        Text(comment.likes.toString()),
                       ],
                     ),
                   ),
@@ -198,36 +262,8 @@ class CommentCard extends StatelessWidget {
     );
   }
 
-
-  // Widget _buildLikeButton(
-  //     {required int likeCount, required BuildContext context}) {
-  //   return InkWell(
-  //     onTap: () {
-  //       context.read<FavoriteCubit>().change();
-  //     },
-  //     child: BlocBuilder(
-  //       builder: (context, state) => Row(
-  //         children: [
-  //           if (!(state as bool))
-  //             Image.asset(
-  //               'assets/icons/favourite.png',
-  //               height: 17.h,
-  //               width: 19.w,
-  //             ),
-  //           if (state)
-  //             Image.asset(
-  //               'assets/icons/favourite_selected.png',
-  //               height: 17.h,
-  //               width: 19.w,
-  //             ),
-  //           2.pw(),
-  //           Text(likeCount.toString()),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 }
+
 String getTimeAgo(DateTime dateTime) {
   final now = DateTime.now();
   final difference = now.difference(dateTime);
@@ -248,11 +284,12 @@ String getTimeAgo(DateTime dateTime) {
     return 'الان';
   }
 }
+
 class ReplyAndTime extends StatelessWidget {
   DateTime createdAt;
   void Function()? reply;
-  ReplyAndTime({super.key,required this.createdAt,required this.reply});
 
+  ReplyAndTime({super.key, required this.createdAt, required this.reply});
 
   @override
   Widget build(BuildContext context) {
@@ -308,8 +345,8 @@ class ReplyAndTime extends StatelessWidget {
       ],
     );
   }
-
 }
+
 class CommentCardShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

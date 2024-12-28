@@ -1,16 +1,18 @@
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:logger/logger.dart';
 
 class CommentsList {
 
 
-  final FocusNode _focusNode = FocusNode();
-  TextEditingController comment = TextEditingController();
+  FocusNode _focusNode = FocusNode();
+  TextEditingController commentController = TextEditingController();
 
   var comments = MockData.comments;
 
@@ -57,11 +59,8 @@ class CommentsList {
                   // Use Expanded to make the list scrollable
                   Expanded(
                     child: BlocBuilder<PostsCubit, PostsState>(
-                      buildWhen: (previous, current) {
-                        return current.commentsStatus != previous.commentsStatus;
-                      },
+
                       builder: (context, state) {
-                        Logger().f(state.commentsStatus);
                         switch (state.commentsStatus) {
                           case CommentsStatus.initial:
                           case CommentsStatus.loading:
@@ -139,11 +138,12 @@ class CommentsList {
                                   if (state.hasCommentReachedMax) {
                                     return CommentCard(
                                         postId: postId,
-                                      commenter:
-                                          '${comment.user!.firstName} ${comment.user!.lastName}',
-                                      commentText: comment.content!,
-                                      likes: comment.likes!,
-                                      createdAt: comment.updatedAt!,
+                                      comment: comment,
+                                      // commenter:
+                                      //     '${comment.user!.firstName} ${comment.user!.lastName}',
+                                      // commentText: comment.content!,
+                                      // likes: comment.likes!,
+                                      // createdAt: comment.updatedAt!,
                                       // replies: comments[index].replies,
                                       reply: () {
                                         context.read<ReplyCubit>().reply(
@@ -157,18 +157,12 @@ class CommentsList {
                                     children: [
                                       CommentCard(
                                         postId: postId,
-                                        commenter:
-                                            '${comment.user!.firstName} ${comment.user!.lastName}',
-                                        commentText: comment.content!,
-                                        likes: comment.likes!,
-                                        createdAt: comment.updatedAt!,
-                                        // replies: comments[index].replies,
                                         reply: () {
                                           context.read<ReplyCubit>().reply(
                                               commenter:
                                                   'رد على @${comment.user!.username}');
                                         },
-                                        commentIndex: index,
+                                        commentIndex: index, comment: comment,
                                       ),
                                       CommentCardShimmer(),
                                     ],
@@ -179,11 +173,12 @@ class CommentsList {
                                     children: [
                                       CommentCard(
                                         postId: postId,
-                                        commenter:
-                                            '${comment.user!.firstName} ${comment.user!.lastName}',
-                                        commentText: comment.content!,
-                                        likes: comment.likes!,
-                                        createdAt: comment.updatedAt!,
+                                        comment: comment,
+                                        // commenter:
+                                        //     '${comment.user!.firstName} ${comment.user!.lastName}',
+                                        // commentText: comment.content!,
+                                        // likes: comment.likes!,
+                                        // createdAt: comment.updatedAt!,
                                         // replies: comments[index].replies,
                                         reply: () {
                                           context.read<ReplyCubit>().reply(
@@ -221,21 +216,53 @@ class CommentsList {
                                   );
                                 }
                               }
-                              return CommentCard(
-                                postId: postId,
-                              commenter:
-                                  '${comment.user!.firstName} ${comment.user!.lastName}',
-                              commentText: comment.content!,
-                              likes: comment.likes!,
-                              createdAt:comment.updatedAt!,
-                              // replies: comments[index].replies,
-                              reply: () {
-                                context.read<ReplyCubit>().reply(
-                                    commenter:
-                                        'رد على @${comment.user!.username}');
-                              },
-                              commentIndex: index,
-                            );
+                              return Slidable(
+                                endActionPane: ActionPane(
+                                  motion: const StretchMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        state.actionCommentId = comment.id!;
+                                        state.commentAction = CommentAction.delete;
+                                        context.read<PostsCubit>().actionsOnComment(postId: postId);
+                                      },
+                                      backgroundColor: const Color(0xFFFE4A49),
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.delete,
+                                      label: 'Delete',
+                                    ),
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        FocusScope.of(context).requestFocus(_focusNode  );
+                                        Future.delayed(const Duration(milliseconds: 400),() => commentController.text = comment.content!,);
+                                        state.actionCommentId = comment.id!;
+                                        state.commentAction = CommentAction.update;
+
+                                      },
+                                      backgroundColor: const Color(0xFF21B7CA),
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.edit,
+                                      label: 'Edit',
+                                    ),
+                                  ],
+                                ),
+                                child: CommentCard(
+                                  comment: comment,
+                                  postId: postId,
+                                  // commenter:
+                                  //     '${comment.user!.firstName} ${comment.user!.lastName}',
+                                  // commentText: comment.content!,
+                                  // likes: comment.likes!,
+                                  // createdAt: comment.updatedAt!,
+                                  // replies: comments[index].replies,
+                                  reply: () {
+                                    context.read<ReplyCubit>().reply(
+                                        commenter:
+                                            'رد على @${comment.user!.username}');
+                                  },
+                                    commentIndex: index,
+                                ),
+                              );
                             },
                           ),
                         );
@@ -252,13 +279,54 @@ class CommentsList {
                         Expanded(
                           child: BlocBuilder<ReplyCubit, ReplyState>(
                             builder: (context, state) {
-                              comment.text = state.commenter != ''
+                              commentController.text = state.commenter != ''
                                   ? '${state.commenter}: '
                                   : '';
+                              // return TextField(
+                              //   autofocus: true,
+                              //   focusNode: _focusNode,
+                              //   controller: commentController,
+                              //   decoration: InputDecoration(
+                              //     hintText: 'اكتب تعليقك...',
+                              //     border: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(5),
+                              //       borderSide: BorderSide(color: Colors.grey),
+                              //     ),
+                              //     suffixIcon: InkWell(
+                              //       borderRadius: const BorderRadius.all(Radius.circular(5)),
+                              //       onTap: () {
+                              //         if (commentController.text.isNotEmpty) {
+                              //           // Trigger the post comment action.
+                              //           context
+                              //               .read<PostsCubit>()
+                              //               .createComment(postId: postId, content: commentController.text);
+                              //
+                              //           // Trigger reply logic if needed.
+                              //           context.read<ReplyCubit>().reply(commenter: '');
+                              //
+                              //           // Clear the input field and unfocus.
+                              //           commentController.clear();
+                              //           FocusScope.of(context).unfocus();
+                              //         }
+                              //       },
+                              //       child: Container(
+                              //         padding: EdgeInsets.zero,
+                              //         margin: const EdgeInsets.all(2),
+                              //         child: const ImageIcon(
+                              //           AssetImage('assets/images/send.png'),
+                              //           color: Colors.black,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
+                              //   keyboardType: TextInputType.multiline,
+                              //   maxLines: 3,
+                              //   minLines: 1,
+                              // );
                               return AppTextField(
-                                autofocus: comment.text.isNotEmpty,
+                                autofocus: true,
                                 focusNode: _focusNode,
-                                controller: comment,
+                                controller: commentController,
                                 hintText: 'اكتب تعليقك...',
                                 keyboardType: TextInputType.multiline,
                                 maxLine: 3,
@@ -270,12 +338,11 @@ class CommentsList {
                                   borderRadius: BorderRadius.all(Radius.circular(5)),
 
                                   onTap: () {
-                                    if (comment.text != '') {
-                                    context.read<PostsCubit>().createComment(postId: postId, content: comment.text);
-                                      context
+                                    if (commentController.text != '') {
+                                      context.read<PostsCubit>().actionsOnComment(postId: postId, content: commentController.text);                                      context
                                           .read<ReplyCubit>()
                                           .reply(commenter: '');
-                                      comment.clear();
+                                      // commentController.clear();
                                       FocusScope.of(context).unfocus();
                                     }
                                   },
