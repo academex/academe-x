@@ -62,7 +62,7 @@ void _initCubits() {
   );
 
   getIt.registerFactory<PickerCubit>(
-    () => PickerCubit(CreatePostIconsInit()),
+    () => PickerCubit(PickState()),
   );
   getIt.registerLazySingleton<TagCubit>(
     () => TagCubit(InitTagState()),
@@ -91,12 +91,12 @@ void _initCubits() {
 }
 
 void _initState() {
-  getIt.registerLazySingleton<FilePickerLoaded>(
-        ()=>FilePickerLoaded(null),
-  );
-  getIt.registerLazySingleton<ImagePickerLoaded>(
-        ()=>ImagePickerLoaded(null),
-  );
+  // getIt.registerLazySingleton<FilePickerLoaded>(
+  //       ()=>FilePickerLoaded(null),
+  // );
+  // getIt.registerLazySingleton<ImagePickerLoaded>(
+  //       ()=>ImagePickerLoaded(null),
+  // );
   getIt.registerLazySingleton<SuccessTagState>(
       ()=>SuccessTagState(selectedTags: []),
   );

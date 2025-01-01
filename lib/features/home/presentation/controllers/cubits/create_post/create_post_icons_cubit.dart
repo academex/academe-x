@@ -9,37 +9,29 @@ class PickerCubit extends Cubit<PickState> {
   PickerCubit(super.initialState);
   final ImagePicker _imagePicker = ImagePicker();
 
-  cancelState() {
-    emit(CreatePostIconsInit());
-  }
 
   pickImage() async {
-    if (getIt<ImagePickerLoaded>().images != null) {
-      getIt<ImagePickerLoaded>().images = null;
-      cancelState();
-      emit(getIt<ImagePickerLoaded>());
+    if (state.images.isNotEmpty) {
+      emit(state.copyWith(images: []));
       return;
     }
-    emit(CreatePostIconsLoading());
-
     final List<XFile>? pickedFile = await _imagePicker.pickMultiImage();
     if (pickedFile != null) {
-      getIt<ImagePickerLoaded>().images =
-          pickedFile.map((image) => File(image.path)).toList();
-      emit(getIt<ImagePickerLoaded>());
+      emit(state.copyWith(images: pickedFile.map((image) => File(image.path)).toList()));
     } else {
-      emit(CreatePostIconsError('no file selected'));
+      // no file selected
     }
+  }
+  init() async {
+    state.postController.clear();
+    emit(PickState());
   }
 
   pickFile() async {
-    if (getIt<FilePickerLoaded>().file != null) {
-      getIt<FilePickerLoaded>().file = null;
-      cancelState();
-      emit(getIt<FilePickerLoaded>());
+    if (state.file.isNotEmpty) {
+      emit(state.copyWith(file: []));
       return;
     }
-    emit(CreatePostIconsLoading());
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -48,18 +40,25 @@ class PickerCubit extends Cubit<PickState> {
     );
 
     if (result != null) {
-      getIt<FilePickerLoaded>().file = File(result.files.single.path!);
-      emit(getIt<FilePickerLoaded>());
+      emit(state.copyWith(file: [File(result.files.single.path!)]));
     } else {
-      emit(CreatePostIconsError('no file selected'));
+      // no file selected
     }
+  }
+  removeImageAt(int index){
+    state.images.removeAt(index);
+    emit(state.copyWith(images: state.images));
+  }
+  removeFile(){
+    state.file.clear();
+    emit(state.copyWith(file: state.file));
   }
 
   createMultiChoice() {
-    if (state is CreateMultiChoice) {
-      cancelState();
+    if (state.status == Status.multiChoice) {
+      emit(state.copyWith(status: Status.pickers));
       return;
     }
-    emit(CreateMultiChoice());
+    emit(state.copyWith(status: Status.multiChoice));
   }
 }

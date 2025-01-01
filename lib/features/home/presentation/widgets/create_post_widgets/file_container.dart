@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:academe_x/academeX_main.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -93,20 +95,21 @@ class LoadingFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          fromCreatePost ? 'قيد الرفع' : 'قيد التنزيل',
-          style: TextStyle(fontSize: 7.5.sp, color: Colors.grey[600]),
-        ),
-        4.pw(),
-        Text(
-          '84%',
-          style: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black),
-        ),
-      ],
+    return InkWell(
+      onTap: fromCreatePost? () {
+        context.read<PickerCubit>().removeFile();
+      }:null,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            fromCreatePost ? 'حذف' : 'قيد التنزيل',
+            style: TextStyle(fontSize: 7.5.sp, color: Colors.grey[600]),
+          ),
+          4.pw(),
+          Icon(Icons.cancel),
+        ],
+      ),
     );
   }
 }

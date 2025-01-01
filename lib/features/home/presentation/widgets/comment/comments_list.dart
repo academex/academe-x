@@ -148,7 +148,7 @@ class CommentsList {
                                       reply: () {
                                         context.read<ReplyCubit>().reply(
                                             commenter:
-                                                'رد على @${comment.user!.username}');
+                                                '@${comment.user!.username}');
                                       },
                                       commentIndex: index,
                                     );
@@ -160,7 +160,7 @@ class CommentsList {
                                         reply: () {
                                           context.read<ReplyCubit>().reply(
                                               commenter:
-                                                  'رد على @${comment.user!.username}');
+                                                  '@${comment.user!.username}');
                                         },
                                         commentIndex: index, comment: comment,
                                       ),
@@ -183,7 +183,7 @@ class CommentsList {
                                         reply: () {
                                           context.read<ReplyCubit>().reply(
                                               commenter:
-                                                  'رد على @${comment.user!.username}');
+                                                  '@${comment.user!.username}');
                                         },
                                         commentIndex: index,
                                       ),
@@ -229,12 +229,12 @@ class CommentsList {
                                       backgroundColor: const Color(0xFFFE4A49),
                                       foregroundColor: Colors.white,
                                       icon: Icons.delete,
-                                      label: 'Delete',
+                                      label: 'حذف',
                                     ),
                                     SlidableAction(
                                       onPressed: (context) {
-                                        FocusScope.of(context).requestFocus(_focusNode  );
-                                        Future.delayed(const Duration(milliseconds: 400),() => commentController.text = comment.content!,);
+                                        FocusScope.of(context).requestFocus(_focusNode);
+                                        commentController.text = comment.content!;
                                         state.actionCommentId = comment.id!;
                                         state.commentAction = CommentAction.update;
 
@@ -242,7 +242,7 @@ class CommentsList {
                                       backgroundColor: const Color(0xFF21B7CA),
                                       foregroundColor: Colors.white,
                                       icon: Icons.edit,
-                                      label: 'Edit',
+                                      label: 'تعديل',
                                     ),
                                   ],
                                 ),
@@ -258,7 +258,7 @@ class CommentsList {
                                   reply: () {
                                     context.read<ReplyCubit>().reply(
                                         commenter:
-                                            'رد على @${comment.user!.username}');
+                                            '@${comment.user!.username}');
                                   },
                                     commentIndex: index,
                                 ),
@@ -333,7 +333,7 @@ class CommentsList {
                                 minLine: 1,
                                 withBoarder: true,
                                 // prefixText: state.commenter,
-                                suffix: InkWell(
+                                suffixIcon: InkWell(
 
                                   borderRadius: BorderRadius.all(Radius.circular(5)),
 
@@ -347,11 +347,11 @@ class CommentsList {
                                     }
                                   },
                                   child: Container(
-                                    padding: EdgeInsets.zero,
-                                    margin: EdgeInsets.all(2),
+                                    margin: EdgeInsets.all(15),
                                     child: const ImageIcon(
-                                      AssetImage('assets/images/send.png'),
-                                      color: Colors.black,
+
+                                      AssetImage('assets/images/send.png',),
+                                      color: Colors.black45,
                                       // size: 24,
                                     ),
                                   ),
@@ -360,30 +360,7 @@ class CommentsList {
                             },
                           ),
                         ),
-                        18.pw(),
-                        Container(
-                          width: 52,
-                          height: 52,
-                          decoration: BoxDecoration(
-                              color: Colors
-                                  .white, // Background color of the container
-                              borderRadius:
-                                  BorderRadius.circular(12), // Rounded corners
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12, // Shadow color
-                                  blurRadius: 4, // Shadow blur
-                                  offset: Offset(0, 2), // Shadow position
-                                ),
-                              ],
-                              border: Border.all(color: Colors.black12)),
-                          child: Center(
-                            child: AppText(
-                              text: '😍', // Emoji
-                              fontSize: 20, // Size of the emoji
-                            ),
-                          ),
-                        ),
+
                       ],
                     ),
                   ),

@@ -26,7 +26,6 @@ import 'create_multi_choice_widget.dart';
 import 'file_container.dart';
 
 class CreatePost {
-  final TextEditingController _postController = TextEditingController();
   PostEntity post =  PostEntity();
   final _formKey = GlobalKey<FormState>();
 
@@ -63,7 +62,7 @@ class CreatePost {
                     16.ph(),
                     UserInfo(user: user,context: parContext,tagId:tagId),
                     16.ph(),
-                    TextFieldForCreatePost(formKey: _formKey, postController: _postController),
+                    TextFieldForCreatePost(formKey: _formKey, postController: context.read<PickerCubit>().state.postController),
                     const ShowSelectedTags(),
                     16.ph(),
                     ShowImagesAndFileAndMultiChoice(),
@@ -82,7 +81,7 @@ class CreatePost {
                     SubmitButton(
                         formKey: _formKey,
                         post: post,
-                        textController: _postController,
+                        textController: context.read<PickerCubit>().state.postController,
                     ),
                     // 5.ph(),
                   ],
@@ -97,7 +96,7 @@ class CreatePost {
 }
 
 class IconChoices extends StatelessWidget {
-  const IconChoices({
+  const   IconChoices({
     super.key,
   });
 
@@ -110,7 +109,7 @@ class IconChoices extends StatelessWidget {
             children: [
               IconBottomForCreatePost(
                 selected:
-                    getIt<ImagePickerLoaded>().images != null,
+                    state.images.isNotEmpty,
                 imagePath: 'assets/icons/image.png',
                 onPressed: () {
                   context.read<PickerCubit>().pickImage();
@@ -118,14 +117,14 @@ class IconChoices extends StatelessWidget {
               ),
               IconBottomForCreatePost(
                 selected:
-                    getIt<FilePickerLoaded>().file != null,
+                    state.file.isNotEmpty,
                 imagePath: 'assets/icons/document.png',
                 onPressed: () {
                   context.read<PickerCubit>().pickFile();
                 },
               ),
               IconBottomForCreatePost(
-                selected: state is CreateMultiChoice,
+                selected: state.status == Status.multiChoice,
                 imagePath: 'assets/icons/menu.png',
                 onPressed: () {
                   context
@@ -154,30 +153,31 @@ class IconChoices extends StatelessWidget {
 }
 
 class ShowImagesAndFileAndMultiChoice extends StatelessWidget{
-  late List<File>? images;
-  late File? file;
+  late List<File> images;
+  late List<File> file;
 
    ShowImagesAndFileAndMultiChoice({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PickerCubit, PickState>(
-      buildWhen: (previous, current) => current is! CreatePostIconsLoading,
+      // buildWhen: (previous, current) {
+
+        // return current is! CreatePostIconsLoading;
+      // },
       builder: (context, state) {
         // Logger().f(state);
-        images = getIt<ImagePickerLoaded>().images;
-        file = getIt<FilePickerLoaded>().file;
-        if (state is ImagePickerLoaded ||
-            state is FilePickerLoaded ||
-            state is CreatePostIconsInit ) {
+        images = state.images;
+        file = state.file;
+        if (state.status == Status.pickers) {
           return Column(
             children: [
-              if (images != null) ImageContainer(images: images),
+              if (images.isNotEmpty) ImageContainer(images: images),
               10.ph(),
-              if (file != null) FileContainer(file: file),
+              if (file.isNotEmpty) FileContainer(file: file.first),
             ],
           );
         }
-        else if (state is CreateMultiChoice) {
+        else if (state.status == Status.multiChoice) {
           return CreateMultiChoiceWidget();
         } else {
           return 0.ph();
@@ -200,25 +200,43 @@ class ImageContainer extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(children: [
-        for (int index = 0;
-            index < images!.length;
-            index++)
-          Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: 9.w),
-            height: 178.w,
-            width:
+        for (int index = 0; index < images!.length; index++)
+          Stack(
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: 9.w),
+                height: 178.w,
+                width:
                 images!.length == 1 ? 300 : 178,
-            decoration: BoxDecoration(
-              borderRadius:
-              BorderRadius.all(
+                decoration: BoxDecoration(
+                  borderRadius:
+                  BorderRadius.all(
                       Radius.circular(12.r)),
-              image: DecorationImage(
-                image:
+                  image: DecorationImage(
+                    image:
                     FileImage(images![index]),
-                fit: BoxFit.cover,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
+              Positioned(
+                left: 0,
+                top: -10,
+                child: Container(
+                  width: 40,
+                  height: 40,
+
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.white),
+                  child: Center(
+                    child: IconButton(onPressed: () {
+                      context.read<PickerCubit>().removeImageAt(index);
+                    }, icon: const Icon(Icons.clear,color: Colors.red)),
+                  ),
+                ),
+              ),
+
+            ],
           ),
       ]),
     );
@@ -335,7 +353,7 @@ class UserInfo extends StatelessWidget{
                   MajorModel? userMajor = getUserMajor(state.majors,tagId);
                   context.read<TagCubit>().init(userMajor);
                   return AppText(
-                    text:  '${userMajor.majorEn!.replaceAll(' ', '_')}#',
+                    text:  '${userMajor.name}#',
                     fontSize: 12.sp,
                     color: Colors.grey,
                   );
@@ -381,6 +399,7 @@ class TitleWithCancel extends StatelessWidget {
             color: Colors.green,
             onPressed: () {
               context.read<PostsCubit>().cancelCreationPostState();
+              context.read<PickerCubit>().init();
               Navigator.pop(context);
             },
           ),
@@ -456,21 +475,20 @@ class SubmitButton extends StatelessWidget {
                   ? () {
                       if (formKey.currentState!.validate()) {
                         post = post.copyWith(
-                            images: getIt<ImagePickerLoaded>()
-                                .images
-                                ?.map(
+                            images: context.read<PickerCubit>().state.images
+                                .map(
                                   (e) => ImageEntity(id: 0, url: e.path),
                                 )
                                 .toList(),
-                            file: getIt<FilePickerLoaded>().file == null
+                            file: context.read<PickerCubit>().state.file.isEmpty
                                 ? null
                                 : FileInfo(
-                                    url: getIt<FilePickerLoaded>().file!.path,
+                                    url: context.read<PickerCubit>().state.file.first.path,
                                   ),
                             tags:getIt<TagCubit>().getSelectedTags(),
                         );
 
-                        context.read<PostsCubit>().sendPost(
+                        context.read<PostsCubit>().sendPost(context:context,
                             post: post.copyWith(content: textController.text,));
                         Navigator.pop(context);
                       }

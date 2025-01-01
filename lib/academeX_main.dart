@@ -151,7 +151,9 @@ class AcademeXMain extends StatelessWidget {
           bool isFailure = state.creationState == CreationStatus.failure;
           // Logger().f(NavigationService.navigatorKey.currentContext);
           // if(state.creationState == CreationStatus.loading) Navigator.pop(context);
-
+          if(isSuccess){
+            context.read<PickerCubit>().init();
+          }
 
           ScaffoldMessenger.of(context).clearSnackBars();
           // ScaffoldMessenger.of(context).hideCurrentSnackBar();

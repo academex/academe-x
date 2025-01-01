@@ -195,19 +195,21 @@ class CommentCard extends StatelessWidget {
                         if (state.updateDeleteCommentStatus ==
                             UpdateDeleteCommentStatus.loading) {
                           if (state.commentAction == CommentAction.delete) {
-                            return const LinearProgressIndicator(
-                              color: Colors.red,
-                              backgroundColor: Colors.transparent,
-                            );
+                            /// deleting
+                            // return const LinearProgressIndicator(
+                            //   color: Colors.red,
+                            //   backgroundColor: Colors.transparent,
+                            // );
                           }
-                          return const LinearProgressIndicator(
-                            backgroundColor: Colors.transparent,
-                            color: Colors.blue,
-                          );
+                          /// updating
+                          // return const LinearProgressIndicator(
+                          //   backgroundColor: Colors.transparent,
+                          //   color: Colors.blue,
+                          // );
                         } else if (state.updateDeleteCommentStatus ==
                             UpdateDeleteCommentStatus.failure) {
                           return AppText(
-                            text: state.commentError!,
+                            text: state.commentError??'un expected error',
                             fontSize: 12.sp,
                             color: Colors.red,
                           );
@@ -220,10 +222,10 @@ class CommentCard extends StatelessWidget {
                 ),
               ),
               BlocBuilder<FavoriteCubit, bool>(
-                builder: (context, state) => InkWell(
+                builder: (context, stateForFavor) => InkWell(
                   borderRadius: BorderRadius.circular(10),
                   onTap: () {
-                    if (!state) {
+                    if (!stateForFavor) {
                       comment.likes = comment.likes! + 1;
                     } else {
                       comment.likes = comment.likes! - 1;
@@ -236,13 +238,13 @@ class CommentCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (!(state as bool))
+                        if (!(stateForFavor as bool))
                           Image.asset(
                             'assets/icons/favourite.png',
                             height: 17,
                             width: 19,
                           ),
-                        if (state)
+                        if (stateForFavor)
                           Image.asset(
                             'assets/icons/favourite_selected.png',
                             height: 17,

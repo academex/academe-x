@@ -528,7 +528,7 @@ class PostsCubit extends Cubit<PostsState> {
     emit(state.copyWith(creationStatus: CreationStatus.initial));
   }
 
-  sendPost({required PostEntity post}) async {
+  sendPost({required PostEntity post,required BuildContext context}) async {
     // Logger().d(post);
     emit(state.copyWith(creationStatus: CreationStatus.loading));
     var createPostRes = await postUseCase.createPost(post);
@@ -542,10 +542,10 @@ class PostsCubit extends Cubit<PostsState> {
         );
       },
       (r) {
-        // Logger().d(r.toString());
         emit(state.copyWith(
             creationStatus: CreationStatus.success,
             posts: [r, ...state.posts]));
+
       },
     );
   }
