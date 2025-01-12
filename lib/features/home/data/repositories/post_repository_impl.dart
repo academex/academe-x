@@ -362,6 +362,20 @@ class PostRepositoryImpl implements PostRepository {
     return handlingException<CreatePostBaseResponse>(() => remoteDataSource.updateComment(postId:postId,content:content,commentId: commentId),);
   }
 
+  @override
+  Future<Either<Failure, BaseResponse<CommentModel>>> createReply({required int commentId, int? parentId,required String content}) {
+    return handlingException<BaseResponse<CommentModel>>(() => remoteDataSource.createReply(commentId:commentId,parentId:parentId,content:content),);
+
+  }
+
+  @override
+  Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies({required int commentId}) {
+    return handlingException<BaseResponse<List<CommentModel>>>(() => remoteDataSource.getReplies(commentId:commentId),);
+
+  }
+
+
+
 
 
 

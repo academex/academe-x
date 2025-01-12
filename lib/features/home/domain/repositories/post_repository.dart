@@ -28,4 +28,6 @@ abstract class PostRepository {
   Future<Either<Failure, Unit>> deleteComment({required int postId,required int commentId});
   Future<Either<Failure, PaginatedResponse<CommentModel>>>  getComments(PaginationParams paginationParams,int postId);
 
+  Future<Either<Failure, BaseResponse<CommentModel>>> createReply({required int commentId, int? parentId,required String content});
+  Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies({required int commentId});
 }

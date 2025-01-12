@@ -13,6 +13,9 @@ class CommentModel extends CommentEntity {
     super.postId,
     super.user,
     super.isSending,
+    super.isLiked,
+    super.replyCount,
+    super.repliedTo,
   });
 
   // fromJson method to convert JSON to CommentModel
@@ -21,11 +24,14 @@ class CommentModel extends CommentEntity {
       id: json['id'],
       content: json['content'],
       likes: json['likes'],
+      replyCount: json['repliesCount'],
       isHidden: json['isHidden'],
+      isLiked: json['isLiked'],
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       postId: json['post']?['id'],
       user: json['user'] != null ? UserResponseModel.fromJson(json['user']) : user,
+      repliedTo: json['repliedTo'] != null?(json['repliedTo']['user'] != null ? UserResponseModel.fromJson(json['repliedTo']['user']) : user):null,
     );
   }
 
@@ -36,9 +42,12 @@ class CommentModel extends CommentEntity {
       'content': content,
       'likes': likes,
       'isHidden': isHidden,
+      'isLiked': isLiked,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       'postId': postId,
+      'repliesCount': replyCount,
+      'repliedTo': repliedTo,
       'user': (user as UserResponseModel).toJson(),
     };
   }

@@ -11,7 +11,7 @@ import 'package:logger/logger.dart';
 class CommentsList {
 
 
-  FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   TextEditingController commentController = TextEditingController();
 
   var comments = MockData.comments;
@@ -22,14 +22,13 @@ class CommentsList {
       isScrollControlled: true, // This allows the modal to take more space
 
       builder: (context) {
-
         return MultiBlocProvider(
           providers: [
             BlocProvider<ReplyCubit>(
-              create: (context) => ReplyCubit(ReplyState(commenter: '')),
+              create: (context) => ReplyCubit(ReplyState()),
             ),
             BlocProvider<ShowRepliesCubit>(
-              create: (context) => ShowRepliesCubit(ShowRepliesState(index: 0)),
+              create: (context) => getIt<ShowRepliesCubit>(),
             ),
           ],
           child: FractionallySizedBox(
@@ -46,7 +45,7 @@ class CommentsList {
                     width: 56, // Custom width for the divider
                     child: Divider(
                       thickness: 5, // Thickness of the divider
-                      color: const Color(0xffE7E8EA), // Color of the divider
+                      color: Color(0xffE7E8EA), // Color of the divider
                     ),
                   ),
                   16.ph(),
@@ -64,7 +63,7 @@ class CommentsList {
                         switch (state.commentsStatus) {
                           case CommentsStatus.initial:
                           case CommentsStatus.loading:
-                            if(state.comments.isEmpty) {
+                            if (state.comments.isEmpty) {
                               return ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) =>
@@ -107,23 +106,29 @@ class CommentsList {
 
                           case CommentsStatus.success:
                             if (state.comments.isEmpty) {
-                              return const Center(child: Text('No Comment found'));
+                              return const Center(
+                                  child: Text('No Comment found'));
                             }
                             break;
                         }
                         return NotificationListener(
                           onNotification: (notification) {
-                            if (notification is ScrollEndNotification){
-                                if(notification.metrics.pixels/notification.metrics.maxScrollExtent > 0.7) {
-                                  context.read<PostsCubit>().getComments(
-                                      postId: postId);
-                                }
+                            if (notification is ScrollEndNotification) {
+                              if (notification.metrics.pixels /
+                                      notification.metrics.maxScrollExtent >
+                                  0.7) {
+                                context
+                                    .read<PostsCubit>()
+                                    .getComments(postId: postId);
+                              }
                             }
                             return true;
                           },
 
                           child: ListView.builder(
-                            controller: context.read<PostsCubit>().commentScrollController,
+                            controller: context
+                                .read<PostsCubit>()
+                                .commentScrollController,
                             physics: const BouncingScrollPhysics(
                               parent: AlwaysScrollableScrollPhysics(), // Add this to enable refresh when at top
                             ),
@@ -132,23 +137,15 @@ class CommentsList {
                             itemBuilder: (context, index) {
                               final comment = state.comments[index];
 
-                              if (index == state.comments.length-1) {
+                              if (index == state.comments.length - 1) {
                                 if (state.commentsStatus ==
                                     CommentsStatus.loading) {
                                   if (state.hasCommentReachedMax) {
                                     return CommentCard(
-                                        postId: postId,
+                                      postId: postId,
                                       comment: comment,
-                                      // commenter:
-                                      //     '${comment.user!.firstName} ${comment.user!.lastName}',
-                                      // commentText: comment.content!,
-                                      // likes: comment.likes!,
-                                      // createdAt: comment.updatedAt!,
-                                      // replies: comments[index].replies,
                                       reply: () {
-                                        context.read<ReplyCubit>().reply(
-                                            commenter:
-                                                '@${comment.user!.username}');
+                                        context.read<ReplyCubit>().reply(user: comment.user!,commentId: comment.id!);
                                       },
                                       commentIndex: index,
                                     );
@@ -158,9 +155,7 @@ class CommentsList {
                                       CommentCard(
                                         postId: postId,
                                         reply: () {
-                                          context.read<ReplyCubit>().reply(
-                                              commenter:
-                                                  '@${comment.user!.username}');
+                                          context.read<ReplyCubit>().reply(user: comment.user!,commentId: comment.id!);
                                         },
                                         commentIndex: index, comment: comment,
                                       ),
@@ -174,16 +169,8 @@ class CommentsList {
                                       CommentCard(
                                         postId: postId,
                                         comment: comment,
-                                        // commenter:
-                                        //     '${comment.user!.firstName} ${comment.user!.lastName}',
-                                        // commentText: comment.content!,
-                                        // likes: comment.likes!,
-                                        // createdAt: comment.updatedAt!,
-                                        // replies: comments[index].replies,
                                         reply: () {
-                                          context.read<ReplyCubit>().reply(
-                                              commenter:
-                                                  '@${comment.user!.username}');
+                                          context.read<ReplyCubit>().reply(user: comment.user!,commentId: comment.id!);
                                         },
                                         commentIndex: index,
                                       ),
@@ -223,8 +210,11 @@ class CommentsList {
                                     SlidableAction(
                                       onPressed: (context) {
                                         state.actionCommentId = comment.id!;
-                                        state.commentAction = CommentAction.delete;
-                                        context.read<PostsCubit>().actionsOnComment(postId: postId);
+                                        state.commentAction =
+                                            CommentAction.delete;
+                                        context
+                                            .read<PostsCubit>()
+                                            .actionsOnComment(postId: postId);
                                       },
                                       backgroundColor: const Color(0xFFFE4A49),
                                       foregroundColor: Colors.white,
@@ -233,11 +223,13 @@ class CommentsList {
                                     ),
                                     SlidableAction(
                                       onPressed: (context) {
-                                        FocusScope.of(context).requestFocus(_focusNode);
-                                        commentController.text = comment.content!;
+                                        FocusScope.of(context)
+                                            .requestFocus(_focusNode);
+                                        commentController.text =
+                                            comment.content!;
                                         state.actionCommentId = comment.id!;
-                                        state.commentAction = CommentAction.update;
-
+                                        state.commentAction =
+                                            CommentAction.update;
                                       },
                                       backgroundColor: const Color(0xFF21B7CA),
                                       foregroundColor: Colors.white,
@@ -249,18 +241,12 @@ class CommentsList {
                                 child: CommentCard(
                                   comment: comment,
                                   postId: postId,
-                                  // commenter:
-                                  //     '${comment.user!.firstName} ${comment.user!.lastName}',
-                                  // commentText: comment.content!,
-                                  // likes: comment.likes!,
-                                  // createdAt: comment.updatedAt!,
-                                  // replies: comments[index].replies,
                                   reply: () {
-                                    context.read<ReplyCubit>().reply(
-                                        commenter:
-                                            '@${comment.user!.username}');
+                                    FocusScope.of(context)
+                                        .requestFocus(_focusNode);
+                                    context.read<ReplyCubit>().reply(user: comment.user!,commentId: comment.id!);
                                   },
-                                    commentIndex: index,
+                                  commentIndex: index,
                                 ),
                               );
                             },
@@ -271,97 +257,81 @@ class CommentsList {
 
                   ),
 
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: 5.h, left: 24.w, right: 24.w, top: 2.h),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: BlocBuilder<ReplyCubit, ReplyState>(
-                            builder: (context, state) {
-                              commentController.text = state.commenter != ''
-                                  ? '${state.commenter}: '
-                                  : '';
-                              // return TextField(
-                              //   autofocus: true,
-                              //   focusNode: _focusNode,
-                              //   controller: commentController,
-                              //   decoration: InputDecoration(
-                              //     hintText: 'اكتب تعليقك...',
-                              //     border: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(5),
-                              //       borderSide: BorderSide(color: Colors.grey),
-                              //     ),
-                              //     suffixIcon: InkWell(
-                              //       borderRadius: const BorderRadius.all(Radius.circular(5)),
-                              //       onTap: () {
-                              //         if (commentController.text.isNotEmpty) {
-                              //           // Trigger the post comment action.
-                              //           context
-                              //               .read<PostsCubit>()
-                              //               .createComment(postId: postId, content: commentController.text);
-                              //
-                              //           // Trigger reply logic if needed.
-                              //           context.read<ReplyCubit>().reply(commenter: '');
-                              //
-                              //           // Clear the input field and unfocus.
-                              //           commentController.clear();
-                              //           FocusScope.of(context).unfocus();
-                              //         }
-                              //       },
-                              //       child: Container(
-                              //         padding: EdgeInsets.zero,
-                              //         margin: const EdgeInsets.all(2),
-                              //         child: const ImageIcon(
-                              //           AssetImage('assets/images/send.png'),
-                              //           color: Colors.black,
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ),
-                              //   keyboardType: TextInputType.multiline,
-                              //   maxLines: 3,
-                              //   minLines: 1,
-                              // );
-                              return AppTextField(
-                                autofocus: true,
-                                focusNode: _focusNode,
-                                controller: commentController,
-                                hintText: 'اكتب تعليقك...',
-                                keyboardType: TextInputType.multiline,
-                                maxLine: 3,
-                                minLine: 1,
-                                withBoarder: true,
-                                // prefixText: state.commenter,
-                                suffixIcon: InkWell(
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          bottom: 5.h, left: 24.w, right: 24.w, top: 2.h),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: BlocBuilder<ReplyCubit, ReplyState>(
+                              builder: (context, state) {
+                                commentController.text = state.user != null
+                                    ? '@${state.user!.username}: \n'
+                                    : '';
+                                return AppTextField(
+                                  autofocus: true,
+                                  focusNode: _focusNode,
+                                  controller: commentController,
+                                  hintText: 'اكتب تعليقك...',
+                                  keyboardType: TextInputType.multiline,
+                                  maxLine: 3,
+                                  minLine: 1,
+                                  withBoarder: true,
+                                  suffixIcon: InkWell(
+                                    borderRadius:
+                                        const BorderRadius.all(Radius.circular(5)),
+                                    onTap: () {
+                                      if (commentController.text != '') {
+                                        if(state.user != null){
+                                          Logger().f(state.user!.username);
+                                          context
+                                              .read<ShowRepliesCubit>()
+                                              .createRely(commentId: state.commentId!, content: commentController.text);
+                                          context
+                                              .read<ReplyCubit>()
+                                              .cancelReply();
 
-                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                        }else {
+                                          Logger().f(state.user);
+                                          context
+                                              .read<PostsCubit>()
+                                              .actionsOnComment(
+                                              postId: postId,
+                                              content: commentController.text);
+                                        }
+                                        FocusScope.of(context).unfocus();
+                                      }
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.all(15),
+                                      child: const ImageIcon(
 
-                                  onTap: () {
-                                    if (commentController.text != '') {
-                                      context.read<PostsCubit>().actionsOnComment(postId: postId, content: commentController.text);                                      context
-                                          .read<ReplyCubit>()
-                                          .reply(commenter: '');
-                                      // commentController.clear();
-                                      FocusScope.of(context).unfocus();
-                                    }
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.all(15),
-                                    child: const ImageIcon(
-
-                                      AssetImage('assets/images/send.png',),
-                                      color: Colors.black45,
-                                      // size: 24,
+                                        AssetImage('assets/images/send.png',),
+                                        color: Colors.black45,
+                                        // size: 24,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
+                                  onChanged: (p0) {
+                                    if(state.user != null) {
+                                      if (!p0.contains(
+                                          '@${state.user!.username}:')) {
+                                        commentController.clear();
+                                        context
+                                            .read<ReplyCubit>()
+                                            .cancelReply();
+                                      }
+                                    }
+                                  },
+                                );
+                              },
+                            ),
                           ),
-                        ),
 
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

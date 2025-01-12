@@ -11,7 +11,9 @@ class CommentEntity {
   int? postId;
   UserResponseEntity? user;
   bool? isSending;
+  bool? isLiked;
   int? replyCount;
+  UserResponseEntity? repliedTo;
 
   CommentEntity({
     this.id,
@@ -23,7 +25,9 @@ class CommentEntity {
     this.postId,
     this.user,
     this.isSending,
-    int? replyCount,
+    this.isLiked,
+    this.replyCount,
+    this.repliedTo,
 
   });
 }

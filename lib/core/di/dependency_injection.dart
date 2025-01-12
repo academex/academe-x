@@ -39,6 +39,7 @@ Future<void> init() async {
 void _initCubits() {
 
   getIt.registerFactory<LoginCubit>(() => LoginCubit(authUseCase: getIt()));
+  getIt.registerFactory<ShowRepliesCubit>(() => ShowRepliesCubit(ShowRepliesState(),postUseCase: getIt()));
 
 
   getIt.registerFactory<GetTagsCubit>(

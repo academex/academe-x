@@ -393,5 +393,65 @@ class PostRemoteDataSource {
       throw OfflineException(errorMessage: 'No Internet Connection');
     }
   }
+
+  Future<BaseResponse<CommentModel>> createReply({required int commentId, int? parentId,required String content}) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        final response = await apiController.post(
+          Uri.parse('${ApiSetting.getReplies}/$commentId/reply'),// /post/2/comment/
+          headers: {
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
+          },
+          body: {
+            "content":content,
+            "parentId":parentId,
+          },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          HandleHttpError.handleHttpError(responseBody);
+        }
+        final baseResponse = BaseResponse<CommentModel>.fromJson(
+          responseBody,
+              (json) {
+            return CommentModel.fromJson(json);
+          },
+        );
+        return baseResponse;
+      } on TimeOutExeption {
+        rethrow ;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
+  Future<BaseResponse<List<CommentModel>>> getReplies({required int commentId}) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        final response = await apiController.get(
+          Uri.parse('${ApiSetting.getReplies}/$commentId/reply'),// /post/2/comment/
+          headers: {
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
+          },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          HandleHttpError.handleHttpError(responseBody);
+        }
+        final baseResponse = BaseResponse<List<CommentModel>>.fromJson(
+          responseBody,
+              (json) {
+            return (json as List).map((e) => CommentModel.fromJson(e),).toList();
+          },
+        );
+        return baseResponse;
+      } on TimeOutExeption {
+        rethrow ;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
 }
 

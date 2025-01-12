@@ -60,6 +60,14 @@ class PostUseCase {
     return await postRepository.getComments(paginationParams,postId);
   }
 
+  Future<Either<Failure, BaseResponse<CommentModel>>> createReply(
+      {required int commentId, int? parentId, required String content}) async {
+    return await postRepository.createReply(
+        commentId: commentId, parentId: parentId, content: content);
+  }
 
-
+  Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies(
+      {required int commentId}) async {
+    return await postRepository.getReplies(commentId: commentId);
+  }
 }
