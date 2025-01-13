@@ -42,6 +42,7 @@ class ShowRepliesCubit extends Cubit<ShowRepliesState>{
 
   createRely(
       {required int commentId, int? parentId, required String content}) async {
+    Logger().d(content);
     final result = await postUseCase.createReply(
         content: content, commentId: commentId, parentId: parentId);
     result.fold(

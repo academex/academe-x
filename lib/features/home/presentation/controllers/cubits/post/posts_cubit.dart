@@ -574,7 +574,6 @@ class PostsCubit extends Cubit<PostsState> {
       ));
     }
 
-    Logger().f('$_commentIsLoading ${state.hasCommentReachedMax}');
     if(_commentIsLoading) return;
     if(state.hasCommentReachedMax) return;
 

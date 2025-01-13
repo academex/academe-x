@@ -4,6 +4,7 @@ import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/lib.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,6 +43,11 @@ class CommentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (useNewDesign) isEndReply = false;
     userName = '${comment.user!.firstName} ${comment.user!.lastName}';
+    String content = comment.content!;
+    // if (comment.repliedTo != null) {
+    //   content =
+    //       comment.content!.replaceFirst('${comment.repliedTo!.username}:', '');
+    // }
     return Column(
       children: [
         BlocProvider(
@@ -112,8 +118,33 @@ class CommentCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                         5.ph(),
-                        Text(comment.content!),
-                        // if(withStatus == null || withStatus == false)
+                        if (comment.repliedTo != null)
+                          Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: '@${comment.repliedTo!.username}: ',
+                                    style: TextStyle(color: Colors.blue),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        // Handle the tap event
+                                      },
+                                  ),
+                                  TextSpan(
+                                    text: content.trim(),
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        if (comment.repliedTo == null)
+                          AppText(
+                            text: content.trim(),
+                            fontSize: 14.sp,
+                          ),
                         if (isReply)
                           ReplyAndTime(
                             comment: comment,
@@ -289,15 +320,22 @@ class CommentCard extends StatelessWidget {
           }, builder: (context, state) {
             if (state.show) {
               if (state.status == ReplyStatus.success) {
+                for (int i = 0; i < state.replies!.length; i++) {
+                  Logger().f(state.replies![i].repliedTo);
+                }
                 return Column(
                   children: [
                     for (int i = 0; i < state.replies!.length; i++)
                       CommentCard(
                         comment: state.replies![i],
                         postId: postId,
-
-                        /// Error
-                        reply: () {},
+                        reply: () {
+                          context.read<ReplyCubit>().reply(
+                                user: state.replies![i].user!,
+                                commentId: comment.id!,
+                              parentId: state.replies![i].id!,
+                              );
+                        },
                         isReply: true,
                       ),
                   ],

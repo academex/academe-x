@@ -124,132 +124,139 @@ class CommentsList {
                             }
                             return true;
                           },
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children:
+                                  List.generate(state.comments.length, (index) {
+                                final comment = state.comments[index];
 
-                          child: ListView.builder(
-                            controller: context
-                                .read<PostsCubit>()
-                                .commentScrollController,
-                            physics: const BouncingScrollPhysics(
-                              parent: AlwaysScrollableScrollPhysics(), // Add this to enable refresh when at top
-                            ),
-                            shrinkWrap: true,
-                            itemCount: state.comments.length,
-                            itemBuilder: (context, index) {
-                              final comment = state.comments[index];
-
-                              if (index == state.comments.length - 1) {
-                                if (state.commentsStatus ==
-                                    CommentsStatus.loading) {
-                                  if (state.hasCommentReachedMax) {
-                                    return CommentCard(
-                                      postId: postId,
-                                      comment: comment,
-                                      reply: () {
-                                        context.read<ReplyCubit>().reply(user: comment.user!,commentId: comment.id!);
-                                      },
-                                      commentIndex: index,
-                                    );
-                                  }
-                                  return Column(
-                                    children: [
-                                      CommentCard(
-                                        postId: postId,
-                                        reply: () {
-                                          context.read<ReplyCubit>().reply(user: comment.user!,commentId: comment.id!);
-                                        },
-                                        commentIndex: index, comment: comment,
-                                      ),
-                                      CommentCardShimmer(),
-                                    ],
-                                  );
-                                } else if (state.commentsStatus ==
-                                    CommentsStatus.failure) {
-                                  return Column(
-                                    children: [
-                                      CommentCard(
+                                if (index == state.comments.length - 1) {
+                                  if (state.commentsStatus ==
+                                      CommentsStatus.loading) {
+                                    if (state.hasCommentReachedMax) {
+                                      return CommentCard(
+                                        key: ValueKey(comment.id ?? 0),
                                         postId: postId,
                                         comment: comment,
                                         reply: () {
-                                          context.read<ReplyCubit>().reply(user: comment.user!,commentId: comment.id!);
+                                          context.read<ReplyCubit>().reply(
+                                              user: comment.user!,
+                                              commentId: comment.id!);
                                         },
                                         commentIndex: index,
-                                      ),
-                                      Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(state.errorMessage ??
-                                                'Failed to fetch Comments'),
-                                            16.ph(),
-                                            ElevatedButton(
-                                              onPressed: () async {
-                                                return await context
-                                                    .read<PostsCubit>()
-                                                    .getComments(
-                                                        postId: postId,
-                                                        refresh: true);
-                                              },
-                                              child: const Text('Retry'),
-                                            ),
-                                          ],
+                                      );
+                                    }
+                                    return Column(
+                                      children: [
+                                        CommentCard(
+                                          postId: postId,
+                                          reply: () {
+                                            context.read<ReplyCubit>().reply(
+                                                user: comment.user!,
+                                                commentId: comment.id!);
+                                          },
+                                          commentIndex: index,
+                                          comment: comment,
                                         ),
-                                      ),
-                                      AppText(
+                                        CommentCardShimmer(),
+                                      ],
+                                    );
+                                  } else if (state.commentsStatus ==
+                                      CommentsStatus.failure) {
+                                    return Column(
+                                      children: [
+                                        CommentCard(
+                                          postId: postId,
+                                          comment: comment,
+                                          reply: () {
+                                            context.read<ReplyCubit>().reply(
+                                                user: comment.user!,
+                                                commentId: comment.id!);
+                                          },
+                                          commentIndex: index,
+                                        ),
+                                        Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(state.errorMessage ??
+                                                  'Failed to fetch Comments'),
+                                              16.ph(),
+                                              ElevatedButton(
+                                                onPressed: () async {
+                                                  return await context
+                                                      .read<PostsCubit>()
+                                                      .getComments(
+                                                          postId: postId,
+                                                          refresh: true);
+                                                },
+                                                child: const Text('Retry'),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        AppText(
                                           text: state.commentError ??
                                               'I Dont know what hapen!!',
-                                          fontSize: 14.sp),
-                                    ],
-                                  );
+                                          fontSize: 14.sp,
+                                        ),
+                                      ],
+                                    );
+                                  }
                                 }
-                              }
-                              return Slidable(
-                                endActionPane: ActionPane(
-                                  motion: const StretchMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      onPressed: (context) {
-                                        state.actionCommentId = comment.id!;
-                                        state.commentAction =
-                                            CommentAction.delete;
-                                        context
-                                            .read<PostsCubit>()
-                                            .actionsOnComment(postId: postId);
-                                      },
-                                      backgroundColor: const Color(0xFFFE4A49),
-                                      foregroundColor: Colors.white,
-                                      icon: Icons.delete,
-                                      label: 'حذف',
-                                    ),
-                                    SlidableAction(
-                                      onPressed: (context) {
-                                        FocusScope.of(context)
-                                            .requestFocus(_focusNode);
-                                        commentController.text =
-                                            comment.content!;
-                                        state.actionCommentId = comment.id!;
-                                        state.commentAction =
-                                            CommentAction.update;
-                                      },
-                                      backgroundColor: const Color(0xFF21B7CA),
-                                      foregroundColor: Colors.white,
-                                      icon: Icons.edit,
-                                      label: 'تعديل',
-                                    ),
-                                  ],
-                                ),
-                                child: CommentCard(
-                                  comment: comment,
-                                  postId: postId,
-                                  reply: () {
-                                    FocusScope.of(context)
-                                        .requestFocus(_focusNode);
-                                    context.read<ReplyCubit>().reply(user: comment.user!,commentId: comment.id!);
-                                  },
-                                  commentIndex: index,
-                                ),
-                              );
-                            },
+                                return Slidable(
+                                  endActionPane: ActionPane(
+                                    motion: const StretchMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (context) {
+                                          state.actionCommentId = comment.id!;
+                                          state.commentAction =
+                                              CommentAction.delete;
+                                          context
+                                              .read<PostsCubit>()
+                                              .actionsOnComment(postId: postId);
+                                        },
+                                        backgroundColor:
+                                            const Color(0xFFFE4A49),
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete,
+                                        label: 'حذف',
+                                      ),
+                                      SlidableAction(
+                                        onPressed: (context) {
+                                          FocusScope.of(context)
+                                              .requestFocus(_focusNode);
+                                          commentController.text =
+                                              comment.content!;
+                                          state.actionCommentId = comment.id!;
+                                          state.commentAction =
+                                              CommentAction.update;
+                                        },
+                                        backgroundColor:
+                                            const Color(0xFF21B7CA),
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.edit,
+                                        label: 'تعديل',
+                                      ),
+                                    ],
+                                  ),
+                                  child: CommentCard(
+                                    comment: comment,
+                                    postId: postId,
+                                    reply: () {
+                                      FocusScope.of(context)
+                                          .requestFocus(_focusNode);
+                                      context.read<ReplyCubit>().reply(
+                                          user: comment.user!,
+                                          commentId: comment.id!);
+                                    },
+                                    commentIndex: index,
+                                  ),
+                                );
+                              }),
+                            ),
                           ),
                         );
                       },
@@ -286,9 +293,18 @@ class CommentsList {
                                       if (commentController.text != '') {
                                         if(state.user != null){
                                           Logger().f(state.user!.username);
+                                          String content =
+                                              commentController.text;
                                           context
                                               .read<ShowRepliesCubit>()
-                                              .createRely(commentId: state.commentId!, content: commentController.text);
+                                              .createRely(
+                                                commentId: state.commentId!,
+                                                content: content.replaceFirst(
+                                                  '@${state.user!.username}:',
+                                                  '',
+                                                ),
+                                            parentId: state.parentId,
+                                              );
                                           context
                                               .read<ReplyCubit>()
                                               .cancelReply();
@@ -299,7 +315,8 @@ class CommentsList {
                                               .read<PostsCubit>()
                                               .actionsOnComment(
                                               postId: postId,
-                                              content: commentController.text);
+                                                content: commentController.text,
+                                              );
                                         }
                                         FocusScope.of(context).unfocus();
                                       }

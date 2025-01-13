@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ReplyCubit extends Cubit<ReplyState> {
   ReplyCubit(super.initialState);
 
-  reply({required UserResponseEntity user,required int commentId}){
-    emit(state.copyWith(user: user,commentId: commentId));
+  reply({required UserResponseEntity user,required int commentId,int? parentId}){
+    emit(state.copyWith(user: user,commentId: commentId,parentId: parentId));
   }
   cancelReply(){
-    emit(ReplyState(user: null));
+    emit(ReplyState());
     //
   }
 }

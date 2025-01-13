@@ -5,15 +5,18 @@ import 'package:academe_x/features/auth/domain/entities/response/user_response_e
 class ReplyState{
   final UserResponseEntity? user;
   final int? commentId;
+  final int? parentId;
 
-  ReplyState({this.user,this.commentId});
+  ReplyState({this.user,this.commentId,this.parentId});
   ReplyState copyWith({
     UserResponseEntity? user,
     int? commentId,
+    int? parentId,
   }){
     return ReplyState(
       user: user ?? this.user,
       commentId: commentId ?? this.commentId,
+      parentId: parentId ?? this.parentId,
     );
   }
 }
