@@ -1,3 +1,4 @@
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:flutter/gestures.dart';
@@ -22,6 +23,7 @@ class CommentsList {
       isScrollControlled: true, // This allows the modal to take more space
 
       builder: (context) {
+
         return MultiBlocProvider(
           providers: [
             BlocProvider<ReplyCubit>(
@@ -206,6 +208,7 @@ class CommentsList {
                                   }
                                 }
                                 return Slidable(
+                                  enabled: comment.user!.id == context.read<PostsCubit>().state.currentUser?.id,
                                   endActionPane: ActionPane(
                                     motion: const StretchMotion(),
                                     children: [
@@ -275,7 +278,7 @@ class CommentsList {
                             child: BlocBuilder<ReplyCubit, ReplyState>(
                               builder: (context, state) {
                                 commentController.text = state.user != null
-                                    ? '@${state.user!.username}: \n'
+                                    ? '@${state.user!.username}:\n'
                                     : '';
                                 return AppTextField(
                                   autofocus: true,
@@ -298,6 +301,7 @@ class CommentsList {
                                           context
                                               .read<ShowRepliesCubit>()
                                               .createRely(
+                                                context: context,
                                                 commentId: state.commentId!,
                                                 content: content.replaceFirst(
                                                   '@${state.user!.username}:',

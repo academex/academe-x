@@ -114,6 +114,7 @@ class PostsCubit extends Cubit<PostsState> {
           posts: postsToShow,
           errorMessage: 'Using cached data: $e',
           hasPostsReachedMax: true, // Prevent pagination in offline mode
+
         ));
       } else {
         emit(state.copyWith(
@@ -722,7 +723,17 @@ class PostsCubit extends Cubit<PostsState> {
       ));
     },);
   }
+  Future<UserResponseEntity?> getUser(BuildContext context) async {
+    UserResponseEntity user = (await context.cachedUser)!.user;
+    emit(state.copyWith(
+      currentUser: user,
+    ));
+    return user;
+  }
   createComment({required int postId,required String content,withoutAddNew = false}) async {
+    // change ShowReplies cubit
+    // context.read<ShowRepliesCubit>().change(postIndex: postId, visibility: false);
+
     UserResponseEntity user = (await NavigationService.navigatorKey.currentContext!.cachedUser)!.user;
     if(!withoutAddNew) {
       CommentEntity newComment = CommentModel(user: user,
@@ -738,6 +749,7 @@ class PostsCubit extends Cubit<PostsState> {
     Logger().d(state.createCommentStatus);
     // if(state.createCommentStatus == CreateCommentStatus.loading) return;
     CommentsStatus previusCommentStatus = state.commentsStatus;
+
     emit(state.copyWith(
       createCommentStatus: CreateCommentStatus.loading,
       comments: state.comments,
@@ -773,6 +785,13 @@ class PostsCubit extends Cubit<PostsState> {
 
   }
 
+  increaseReplyCunt(int commentId){
+    state.comments[_getCommentIndexByCommentId(commentId)].replyCount = (state.comments[_getCommentIndexByCommentId(commentId)].replyCount??0 )+ 1;
+
+    emit(state.copyWith(
+      comments: state.comments,
+    ));
+  }
   @override
   Future<void> close() {
     scrollController.dispose();

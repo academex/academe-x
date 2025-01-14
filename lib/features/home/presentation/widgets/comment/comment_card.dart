@@ -97,7 +97,7 @@ class CommentCard extends StatelessWidget {
                               current.index == commentIndex,
                           builder: (context, state) {
                             return Visibility(
-                              visible: state.show,
+                              visible: state.show && comment.replyCount != null && comment.replyCount != 0,
                               child: const Expanded(
                                   child: VerticalDivider(
                                 color: Colors.black26,
@@ -126,15 +126,15 @@ class CommentCard extends StatelessWidget {
                                 children: [
                                   TextSpan(
                                     text: '@${comment.repliedTo!.username}: ',
-                                    style: TextStyle(color: Colors.blue),
+                                    style: TextStyle(color: Colors.blue,fontFamily: 'Cairo'),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        // Handle the tap event
+
                                       },
                                   ),
                                   TextSpan(
                                     text: content.trim(),
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(color: Colors.black,fontFamily: 'Cairo'),
                                   ),
                                 ],
                               ),
@@ -313,7 +313,7 @@ class CommentCard extends StatelessWidget {
             ),
           ),
         ),
-        if (!isReply)
+        if (!isReply && comment.replyCount != null && comment.replyCount != 0)
           BlocBuilder<ShowRepliesCubit, ShowRepliesState>(
               buildWhen: (previous, current) {
             return commentIndex == current.index;
@@ -326,6 +326,8 @@ class CommentCard extends StatelessWidget {
                 return Column(
                   children: [
                     for (int i = 0; i < state.replies!.length; i++)
+                    // i need add state.replies![i].isSending = true; how?
+
                       CommentCard(
                         comment: state.replies![i],
                         postId: postId,

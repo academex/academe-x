@@ -64,7 +64,7 @@ class AcademeXMain extends StatelessWidget {
 
 
       BlocProvider<PostsCubit>(
-        create: (context) => getIt<PostsCubit>(),
+        create: (context) => getIt<PostsCubit>()..getUser(context),
       ),
 
       BlocProvider<CollegeMajorsCubit>(
