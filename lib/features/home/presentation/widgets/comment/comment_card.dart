@@ -278,10 +278,23 @@ class CommentCard extends StatelessWidget {
                       onTap: () {
                         if (!stateForFavor) {
                           comment.likes = comment.likes! + 1;
+                          comment.isLiked = true;
                         } else {
                           comment.likes = comment.likes! - 1;
+                          comment.isLiked = false;
                         }
                         context.read<FavoriteCubit>().change();
+                        if (isReply) {
+                          context.read<ShowRepliesCubit>().likeOnCommentOrReply(
+                                commentId: comment.id!,
+                                replyId: postId,
+                              );
+                        } else {
+                          context.read<ShowRepliesCubit>().likeOnCommentOrReply(
+                                commentId: comment.id!,
+                                postId: postId,
+                              );
+                        }
                       },
                       child: SizedBox(
                         height: 40,
@@ -303,6 +316,8 @@ class CommentCard extends StatelessWidget {
                               ),
                             2.pw(),
                             Text(comment.likes.toString()),
+
+
                           ],
                         ),
                       ),

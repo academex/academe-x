@@ -5,6 +5,7 @@ class ShowRepliesState{
   final bool show;
   final int? index;
   final String? error;
+  final String? errorLike;
   final ReplyStatus status;
   final List<CommentEntity>? replies;
 
@@ -14,6 +15,7 @@ class ShowRepliesState{
     this.replies,
     this.error,
     this.status = ReplyStatus.initial,
+    this.errorLike,
   });
 
   ShowRepliesState copyWith({
@@ -22,6 +24,8 @@ class ShowRepliesState{
     List<CommentEntity>? replies,
     ReplyStatus? status,
     String? error,
+    String? errorLike,
+
   }) {
     return ShowRepliesState(
       show: show ?? this.show,
@@ -29,6 +33,7 @@ class ShowRepliesState{
       replies: replies ?? this.replies,
       status: status ?? this.status,
       error: error ?? this.error,
+      errorLike: errorLike ?? this.errorLike,
     );
   }
 }

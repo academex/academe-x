@@ -47,6 +47,34 @@ class ShowRepliesCubit extends Cubit<ShowRepliesState>{
       },
     );
   }
+  likeOnCommentOrReply({required int commentId,int? postId,int? replyId}) async {
+    // emit(state.copyWith(
+    //   status: ReplyStatus.loading,
+    // ));
+    final result = await postUseCase.likeOnCommentOrReply(commentId: commentId, postId: postId, replyId: replyId);
+    result.fold(
+          (failure) async {
+            Logger().d('failure liked: ${failure.message}');
+        emit(
+          state.copyWith(
+            // status: ReplyStatus.failure,
+            errorLike: failure.message,
+          ),
+
+        );
+      },
+          (reply) {
+            Logger().d('success liked');
+          emit(
+            state.copyWith(
+                errorLike: '',
+              // status: ReplyStatus.success,
+
+            ),
+          );
+      },
+    );
+  }
 
   createRely({required int commentId, int? parentId, required String content, required BuildContext context}) async {
     UserResponseEntity user = (await NavigationService.navigatorKey.currentContext!.cachedUser)!.user;

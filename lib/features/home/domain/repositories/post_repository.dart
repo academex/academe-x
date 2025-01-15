@@ -6,6 +6,7 @@ import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/tag_entity.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/network/base_response.dart';
@@ -21,7 +22,7 @@ abstract class PostRepository {
   Future<Either<Failure, void>>reactToPost(String reactionType,int postId);
   Future<Either<Failure, BaseResponse<SaveResponseEntity>>>savePost(int postId);
   Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>>getReactions(PaginationParams paginationParams,String reactionType,int postId);
-  Future<Either<Failure, PostEntity>> createPost(PostEntity post);
+  Future<Either<Failure, PostEntity>> createPost(PostEntity post,BuildContext context,);
   Future<Either<Failure, List<MajorEntity>>> getTags();
   Future<Either<Failure, CreatePostBaseResponse>> createComment({required int postId,required String content});
   Future<Either<Failure, CreatePostBaseResponse>> updateComment({required int postId,required String content,required int commentId});
@@ -30,4 +31,5 @@ abstract class PostRepository {
 
   Future<Either<Failure, BaseResponse<CommentModel>>> createReply({required int commentId, int? parentId,required String content});
   Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies({required int commentId});
+  Future<Either<Failure, BaseResponse<void>>> likeOnCommentOrReply({required int commentId,int? postId,int? replyId});
 }

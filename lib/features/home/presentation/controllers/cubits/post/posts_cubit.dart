@@ -532,7 +532,7 @@ class PostsCubit extends Cubit<PostsState> {
   sendPost({required PostEntity post,required BuildContext context}) async {
     // Logger().d(post);
     emit(state.copyWith(creationStatus: CreationStatus.loading));
-    var createPostRes = await postUseCase.createPost(post);
+    var createPostRes = await postUseCase.createPost(post,context);
     createPostRes.fold(
       (l) {
         emit(
@@ -724,7 +724,7 @@ class PostsCubit extends Cubit<PostsState> {
     },);
   }
   Future<UserResponseEntity?> getUser(BuildContext context) async {
-    UserResponseEntity user = (await context.cachedUser)!.user;
+    UserResponseEntity? user = (await context.cachedUser)?.user;
     emit(state.copyWith(
       currentUser: user,
     ));

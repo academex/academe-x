@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:academe_x/core/utils/network/cubits/connectivity_cubit.dart';
+import 'package:academe_x/features/auth/presentation/controllers/cubits/login_cubit.dart';
 import 'package:academe_x/features/college_major/data/models/major_model.dart';
+import 'package:academe_x/features/home/data/models/post/poll/poll_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http_parser/http_parser.dart'; // Import this for MediaType
 
 import 'package:academe_x/academeX_main.dart';
@@ -76,7 +81,7 @@ class CreatePostRemoteDataSource {
 
   Future<PostModel> createPost({
     required PostModel post,
-    BuildContext? context,
+    required BuildContext? context,
   }) async {
     final List<int> _bytes = [];
 
@@ -92,6 +97,15 @@ class CreatePostRemoteDataSource {
         request.fields['content'] = post.content!;
         for (int i = 0; i < post.tags!.length; i++) {
           request.fields['tagIds[$i]'] = post.tags![i].id.toString();
+        }
+
+        if (post.poll != null) {
+          request.fields['poll'] =
+              jsonEncode({
+                "question": post.content!,
+                "endDate": "2026-02-02T00:00:00Z",
+                "options": jsonEncode(context!.read<PollCubit>().state.optionContent),
+              });
         }
 
         // Add file if available

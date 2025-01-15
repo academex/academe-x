@@ -1,5 +1,7 @@
 import 'package:academe_x/features/college_major/domain/entities/major_entity.dart';
+import 'package:academe_x/features/home/data/models/post/poll/poll_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
+import 'package:academe_x/features/home/domain/entities/post/poll/poll.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reactions_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/tag_entity.dart';
@@ -23,6 +25,7 @@ class PostEntity extends Equatable {
   final bool? isSaved;
   final bool? isReacted;
   final String? reactionType;
+  final Poll? poll;
 
    PostEntity({
     this.id,
@@ -39,6 +42,7 @@ class PostEntity extends Equatable {
     this.isSaved,
     this.isReacted,
     this.reactionType,
+    this.poll,
   });
 
   PostEntity copyWith({
@@ -55,7 +59,8 @@ class PostEntity extends Equatable {
     int? commentsCount,
     bool? isSaved,
     bool? isReacted,
-    String? reactionType
+    String? reactionType,
+    Poll? poll,
 
   }) {
     return PostEntity(
@@ -71,7 +76,8 @@ class PostEntity extends Equatable {
       reactions: reactions ?? this.reactions,
       commentsCount: commentsCount ?? this.commentsCount,
       isSaved: isSaved ?? this.isSaved,
-      isReacted: isReacted?? this.isReacted
+      isReacted: isReacted?? this.isReacted,
+      poll: poll?? this.poll,
     );
   }
 
@@ -91,5 +97,6 @@ class PostEntity extends Equatable {
     commentsCount,
     isSaved,
     isReacted,
+    poll,
   ];
 }

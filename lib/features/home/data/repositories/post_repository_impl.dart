@@ -7,6 +7,7 @@ import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/error/exception.dart';
@@ -304,9 +305,10 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, PostEntity>> createPost(PostEntity post) async {
+  Future<Either<Failure, PostEntity>> createPost(PostEntity post,BuildContext context,) async {
     return handlingException<PostEntity>(() => createPostRemoteDataSource.createPost(
       post: PostModel.fromEntity(post),
+      context: context,
     ),);
   }
 
@@ -372,6 +374,11 @@ class PostRepositoryImpl implements PostRepository {
   Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies({required int commentId}) {
     return handlingException<BaseResponse<List<CommentModel>>>(() => remoteDataSource.getReplies(commentId:commentId),);
 
+  }
+
+  @override
+  Future<Either<Failure, BaseResponse<void>>> likeOnCommentOrReply({required int commentId, int? postId, int? replyId}) {
+    return handlingException<BaseResponse<void>>(() => remoteDataSource.likeOnCommentOrReply(commentId:commentId,postId:postId,replyId:replyId),);
   }
 
 

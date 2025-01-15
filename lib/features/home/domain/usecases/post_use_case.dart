@@ -7,6 +7,7 @@ import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/save_response_entity.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../../../core/pagination/paginated_response.dart';
@@ -41,8 +42,8 @@ class PostUseCase {
   }
 
 
-  Future<Either<Failure, PostEntity>> createPost(PostEntity post) async {
-    return await postRepository.createPost(post);
+  Future<Either<Failure, PostEntity>> createPost(PostEntity post,BuildContext context,) async {
+    return await postRepository.createPost(post,context);
   }
   Future<Either<Failure, CreatePostBaseResponse>> createComment({required int postId,required String content}) async {
     return await postRepository.createComment(postId: postId,content: content);
@@ -69,5 +70,11 @@ class PostUseCase {
   Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies(
       {required int commentId}) async {
     return await postRepository.getReplies(commentId: commentId);
+  }
+
+  Future<Either<Failure, BaseResponse<void>>> likeOnCommentOrReply(
+      {required int commentId, int? postId, int? replyId}) async {
+    return await postRepository.likeOnCommentOrReply(
+        commentId: commentId, postId: postId, replyId: replyId);
   }
 }

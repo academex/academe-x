@@ -453,5 +453,43 @@ class PostRemoteDataSource {
       throw OfflineException(errorMessage: 'No Internet Connection');
     }
   }
+
+  Future<BaseResponse<void>> likeOnCommentOrReply({required int commentId,int? postId,int? replyId}) async {
+    if(postId == null && replyId == null){
+      throw Exception('Either post Id or reply Id is required');
+    }
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        Uri url;
+        if(postId != null){
+          url = Uri.parse('${ApiSetting.getComments}/$postId/comment/$commentId/like');// /post/1/comment/1/like
+          }else{
+          url = Uri.parse('${ApiSetting.getReplies}/$commentId/reply/$replyId/like');// /comment/1/reply/1/like
+        }
+
+        final response = await apiController.get(
+          url,
+          headers: {
+            'Authorization':'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}',
+          },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if(response.statusCode>=400){
+          HandleHttpError.handleHttpError(responseBody);
+        }
+        final baseResponse = BaseResponse<void>.fromJson(
+          responseBody,
+              (json) {
+
+          },
+        );
+        return baseResponse;
+      } on TimeOutExeption {
+        rethrow ;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
 }
 

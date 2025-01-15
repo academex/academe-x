@@ -29,9 +29,7 @@ class CommentsList {
             BlocProvider<ReplyCubit>(
               create: (context) => ReplyCubit(ReplyState()),
             ),
-            BlocProvider<ShowRepliesCubit>(
-              create: (context) => getIt<ShowRepliesCubit>(),
-            ),
+
           ],
           child: FractionallySizedBox(
             heightFactor: 0.9, // Modal height
@@ -272,10 +270,17 @@ class CommentsList {
                     child: Padding(
                       padding: EdgeInsets.only(
                           bottom: 5.h, left: 24.w, right: 24.w, top: 2.h),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: BlocBuilder<ReplyCubit, ReplyState>(
+                      child: Expanded(
+                        child: Column(
+                          children: [
+                            if(context.read<ShowRepliesCubit>().state.errorLike != null && context.read<ShowRepliesCubit>().state.errorLike != '')
+                            AppText(
+                              text:
+                              'أخوي اخر لايكات عملتهم ما نحفظوا :( بسبب\n${context.read<ShowRepliesCubit>().state.errorLike ??''.toString()}',
+                              fontSize: 12.sp,
+                              color: Colors.redAccent,
+                            ),
+                            BlocBuilder<ReplyCubit, ReplyState>(
                               builder: (context, state) {
                                 commentController.text = state.user != null
                                     ? '@${state.user!.username}:\n'
@@ -349,9 +354,8 @@ class CommentsList {
                                 );
                               },
                             ),
-                          ),
-
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

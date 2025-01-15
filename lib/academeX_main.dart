@@ -73,6 +73,9 @@ class AcademeXMain extends StatelessWidget {
       BlocProvider<GetTagsCubit>(
         create: (context) => getIt<GetTagsCubit>()..getTags(),
       ),
+      BlocProvider<ShowRepliesCubit>(
+        create: (context) => getIt<ShowRepliesCubit>(),
+      ),
     ];
   }
 
