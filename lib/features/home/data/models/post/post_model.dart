@@ -53,7 +53,7 @@ class PostModel extends PostEntity {
       isReacted: json['isReacted'],
       isSaved:  json['isSaved'],
       reactionType: json['reactionType'] as String?,
-      poll: PollModel.fromJson(json['poll']),
+      poll:json['poll'] != null? PollModel.fromJson(json['poll']):null,
     );
   }
 
