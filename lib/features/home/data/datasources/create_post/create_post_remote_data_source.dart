@@ -83,6 +83,8 @@ class CreatePostRemoteDataSource {
     required PostModel post,
     required BuildContext? context,
   }) async {
+    Logger().w(context!.read<PollCubit>().state.optionContent);
+
     final List<int> _bytes = [];
 
     if (post.tags!.isEmpty) {
@@ -99,12 +101,12 @@ class CreatePostRemoteDataSource {
           request.fields['tagIds[$i]'] = post.tags![i].id.toString();
         }
 
-        if (post.poll != null) {
+        if (context.read<PollCubit>().state.optionContent != null && context.read<PollCubit>().state.optionContent!.isNotEmpty) {
           request.fields['poll'] =
               jsonEncode({
                 "question": post.content!,
                 "endDate": "2026-02-02T00:00:00Z",
-                "options": jsonEncode(context!.read<PollCubit>().state.optionContent),
+                "options": jsonEncode(context.read<PollCubit>().state.optionContent),
               });
         }
 

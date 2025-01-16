@@ -72,7 +72,7 @@ class PostModel extends PostEntity {
       'isReacted': isReacted,
       'isSaved': isSaved,
       'reactionType': reactionType,
-      'poll': (poll as PollModel).toJson(),
+      'poll': poll != null?(poll as PollModel).toJson():null,
     };
   }
   factory PostModel.fromEntity(PostEntity entity) {

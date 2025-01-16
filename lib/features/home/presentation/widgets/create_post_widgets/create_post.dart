@@ -11,9 +11,11 @@ import 'package:academe_x/features/home/domain/entities/post/file_info_entity.da
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/home.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/create_post/poll_state.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/chose_tag_widget.dart';
 
@@ -461,8 +463,12 @@ class SubmitButton extends StatelessWidget {
     return BlocBuilder<PostsCubit, PostsState>(
 
       builder: (context, state) {
+        if (state.creationState == CreationStatus.failure) {
+          Logger().e(state.creationPostErrorMessage);
+        }
         return Column(
           children: [
+
             if (state.creationState == CreationStatus.failure)
               AppText(
                 text: state.creationPostErrorMessage!,
