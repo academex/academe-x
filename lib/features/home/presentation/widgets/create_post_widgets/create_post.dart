@@ -114,7 +114,7 @@ class IconChoices extends StatelessWidget {
                     state.images.isNotEmpty,
                 imagePath: 'assets/icons/image.png',
                 onPressed: () {
-                  context.read<PickerCubit>().pickImage();
+                  context.read<PickerCubit>().pickImage(context);
                 },
               ),
               IconBottomForCreatePost(
@@ -171,11 +171,19 @@ class ShowImagesAndFileAndMultiChoice extends StatelessWidget{
         images = state.images;
         file = state.file;
         if (state.status == Status.pickers) {
+          // context.read<PollCubit>().addQuestionTitle('title');
+          Logger().d(context.read<PollCubit>().state.question);
           return Column(
             children: [
-              if (images.isNotEmpty) ImageContainer(images: images),
+              if (images.isNotEmpty || context.read<PickerCubit>().state.statusResize == StatusResize.loading) ImageContainer(images: images),
               10.ph(),
               if (file.isNotEmpty) FileContainer(file: file.first),
+              10.ph(),
+              if (context.read<PollCubit>().state.question != null &&
+                  context.read<PollCubit>().state.question != '')
+                FileContainer(
+                  question: context.read<PollCubit>().state.question,
+                ),
             ],
           );
         }
@@ -201,10 +209,14 @@ class ImageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(children: [
+      child: Row(
+        children: [
+          if(context.read<PickerCubit>().state.statusResize == StatusResize.loading)
+          AppText(text: context.read<PickerCubit>().state.bytes.toString(), fontSize: 12.sp),
         for (int index = 0; index < images!.length; index++)
           Stack(
             children: [
+
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: 9.w),
@@ -240,7 +252,8 @@ class ImageContainer extends StatelessWidget {
 
             ],
           ),
-      ]),
+        ],
+      ),
     );
   }
 }
@@ -282,12 +295,14 @@ class ShowSelectedTags extends StatelessWidget {
 class TextFieldForCreatePost extends StatelessWidget {
   const TextFieldForCreatePost({
     super.key,
-    required GlobalKey<FormState> formKey,
+    GlobalKey<FormState>? formKey,
     required TextEditingController postController,
+    this.onChange,
   }) : _formKey = formKey, _postController = postController;
 
-  final GlobalKey<FormState> _formKey;
+  final GlobalKey<FormState>? _formKey;
   final TextEditingController _postController;
+  final void Function(String value)? onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -303,11 +318,17 @@ class TextFieldForCreatePost extends StatelessWidget {
         withBoarder: false,
         maxLine: 2,
         controller: _postController,
-        hintText: 'قم بكتابة ما تريد الاستفسار عنه ..',
+        hintText: onChange != null
+            ? 'قم بكتبة سؤالك...'
+            : 'قم بكتابة ما تريد الاستفسار عنه ..',
         keyboardType: TextInputType.multiline,
+        onChanged: onChange,
         suffix: GestureDetector(
           onTap: () {
             _postController.clear();
+            if (onChange != null) {
+              context.read<PollCubit>().addQuestionTitle('');
+            }
           },
           child: const Icon(Icons.clear, color: Colors.grey),
         ),
@@ -402,6 +423,7 @@ class TitleWithCancel extends StatelessWidget {
             onPressed: () {
               context.read<PostsCubit>().cancelCreationPostState();
               context.read<PickerCubit>().init();
+              context.read<PollCubit>().clear();
               Navigator.pop(context);
             },
           ),

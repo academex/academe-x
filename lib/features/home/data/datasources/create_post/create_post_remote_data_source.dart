@@ -31,6 +31,8 @@ import '../../../../../core/utils/network/api_setting.dart';
 import '../../../../../core/utils/storage/cache/hive_cache_manager.dart';
 import '../../../presentation/controllers/states/create_post/create_post_icons_state.dart';
 import '../../models/post/comment_model.dart';
+import 'package:image/image.dart' as img;
+import 'dart:typed_data';
 
 typedef PostBaseResponse = BaseResponse<PostModel>;
 typedef TagBaseResponse = BaseResponse<List<MajorModel>>;
@@ -81,15 +83,14 @@ class CreatePostRemoteDataSource {
 
   Future<PostModel> createPost({
     required PostModel post,
-    required BuildContext? context,
+    required BuildContext context,
   }) async {
-    Logger().w(context!.read<PollCubit>().state.optionContent);
 
-    final List<int> _bytes = [];
 
     if (post.tags!.isEmpty) {
       throw ValidationException(messages: ['يرجى اختيار tag']);
     }
+    context.read<PollCubit>().validate();
 
     return await _postWithExceptions(
       func: () async {
@@ -101,13 +102,16 @@ class CreatePostRemoteDataSource {
           request.fields['tagIds[$i]'] = post.tags![i].id.toString();
         }
 
-        if (context.read<PollCubit>().state.optionContent != null && context.read<PollCubit>().state.optionContent!.isNotEmpty) {
-          request.fields['poll'] =
-              jsonEncode({
-                "question": post.content!,
-                "endDate": "2026-02-02T00:00:00Z",
-                "options": jsonEncode(context.read<PollCubit>().state.optionContent),
-              });
+        if (context.read<PollCubit>().state.optionContent != null &&
+            context.read<PollCubit>().state.optionContent!.isNotEmpty) {
+          request.fields['poll[question]'] = post.content!;
+          request.fields['poll[endDate]'] = "2026-02-02T00:00:00Z";
+          for (int i = 0;
+              i < context.read<PollCubit>().state.optionContent!.length;
+              i++) {
+            request.fields['poll[options][$i]'] =
+                context.read<PollCubit>().state.optionContent![i];
+          }
         }
 
         // Add file if available

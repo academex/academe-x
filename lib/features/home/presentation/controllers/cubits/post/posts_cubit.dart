@@ -6,6 +6,7 @@ import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -547,6 +548,7 @@ class PostsCubit extends Cubit<PostsState> {
             creationStatus: CreationStatus.success,
             posts: [r, ...state.posts]));
 
+
       },
     );
   }
@@ -681,7 +683,7 @@ class PostsCubit extends Cubit<PostsState> {
       deleteComment(postId: postId,commentId: state.actionCommentId);
     }
     emit(state.copyWith(commentAction: CommentAction.create));
-    Future.delayed(Duration(milliseconds: 500),() => emit(state.copyWith(commentsStatus: CommentsStatus.success)),);
+    Future.delayed(const Duration(milliseconds: 500),() => emit(state.copyWith(commentsStatus: CommentsStatus.success)),);
   }
   deleteComment({required int postId,required int commentId}) async {
     emit(state.copyWith(

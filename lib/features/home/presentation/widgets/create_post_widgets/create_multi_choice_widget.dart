@@ -1,5 +1,6 @@
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/poll_state.dart';
+import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -17,6 +18,7 @@ class CreateMultiChoiceWidget extends StatefulWidget {
 }
 
 class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
+  TextEditingController qusController = TextEditingController();
   final List<String> _hintText = [
     'الخيار الأول هنا',
     'الخيار الثاني هنا',
@@ -38,10 +40,21 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
       TextEditingController(),
     ];
     numberOfChoices = 2;
+    qusController.text = context.read<PollCubit>().state.question??'';
   }
 
   @override
   Widget build(BuildContext context) {
+    if (context.read<PollCubit>().state.optionContent != null) {
+      numberOfChoices = context.read<PollCubit>().state.optionContent!.length;
+      for (int i = 0;
+          i < context.read<PollCubit>().state.optionContent!.length;
+          i++) {
+        _textControllers.add(TextEditingController());
+        _textControllers[i].text =
+            context.read<PollCubit>().state.optionContent![i];
+      }
+    }
     return SizedBox(
       height: 0.3.sh,
       child: RawScrollbar(
@@ -50,16 +63,19 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
         shape: const StadiumBorder(),
         thickness: 6,
         scrollbarOrientation: ScrollbarOrientation.left,
-        padding: EdgeInsets.only(left: 0),
+        padding: const EdgeInsets.only(left: 0),
         //controller: PrimaryScrollController.of(context),
         ////controller: _wScrollController,
         minThumbLength: 100,
         child: SingleChildScrollView(
           child: Column(
             children: [
+              TextFieldForCreatePost(postController: qusController,onChange: (v){
+                context.read<PollCubit>().addQuestionTitle(v);
+              }),
               for (int i = 0; i < numberOfChoices; i++)
                 Padding(
-                  padding: EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 8),
                   child: AppTextField(
                     hintText: _hintText[i > 2 ? 2 : i],
                     keyboardType: TextInputType.text,
@@ -75,6 +91,20 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
                     onChanged: (content) {
                       context.read<PollCubit>().onChanges(index: i, content: content);
                     },
+                    suffixIcon: i > 1
+                        ? IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _textControllers.removeAt(i);
+                                numberOfChoices--;
+                                context.read<PollCubit>().deleteOptionAt(i);
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.clear,
+                              color: Colors.redAccent,
+                            ))
+                        : null,
                   ),
                 ),
               GestureDetector(
@@ -82,21 +112,22 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
                   setState(() {
                     _textControllers.add(TextEditingController());
                     numberOfChoices++;
+                    context.read<PollCubit>().addChoice();
                   });
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
                   child: DottedBorder(
                     borderType: BorderType.RRect,
                     dashPattern: [10, 8],
                     strokeWidth: 1,
-                    radius: Radius.circular(12),
+                    radius: const Radius.circular(12),
                     color: const Color(0xffD9D9D9),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
                       child: AppTextField(
-                        hintStyle:
-                            TextStyle(color: Color.fromRGBO(59, 186, 166, 1)),
+                        hintStyle: const TextStyle(
+                            color: Color.fromRGBO(59, 186, 166, 1)),
                         enabled: false,
                         isDense: true,
                         contentPadding:
