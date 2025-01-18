@@ -1,5 +1,6 @@
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/poll_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
@@ -20,7 +21,23 @@ class PollCubit extends Cubit<PollState> {
     ));
   }
 
+  changeEndPoll({TimeOfDay? time, DateTime? date}) {
+    DateTime dateTime;
+    if (time == null) {
+      dateTime = DateTime.utc(date!.year, date.month, date.day,
+          state.endPoll.hour, state.endPoll.minute);
+    } else {
+      dateTime = DateTime.utc(state.endPoll.year, state.endPoll.month,
+          state.endPoll.day, time.hour, time.minute);
+    }
+    Logger().d('${dateTime.year}/${dateTime.month}/${dateTime.day}  ${dateTime.hour}:${dateTime.minute}',);
+    emit(state.copyWith(
+      endPoll: dateTime,
+    ));
+  }
+
   clear() {
+    state.deleteDateTime();
     emit(state.copyWith(
       optionContent: ['', ''],
       question: '',

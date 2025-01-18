@@ -179,11 +179,18 @@ class ShowImagesAndFileAndMultiChoice extends StatelessWidget{
               10.ph(),
               if (file.isNotEmpty) FileContainer(file: file.first),
               10.ph(),
-              if (context.read<PollCubit>().state.question != null &&
-                  context.read<PollCubit>().state.question != '')
-                FileContainer(
-                  question: context.read<PollCubit>().state.question,
-                ),
+              BlocBuilder<PollCubit, PollState>(
+                builder: (context, state) {
+                  if (state.question != null &&
+                      state.question != '') {
+                    return FileContainer(
+                      question: context.read<PollCubit>().state.question,
+                    );
+                  }else{
+                    return const SizedBox();
+                  }
+                },
+              ),
             ],
           );
         }

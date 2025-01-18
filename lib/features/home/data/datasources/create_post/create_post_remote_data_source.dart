@@ -105,7 +105,7 @@ class CreatePostRemoteDataSource {
         if (context.read<PollCubit>().state.optionContent != null &&
             context.read<PollCubit>().state.optionContent!.isNotEmpty) {
           request.fields['poll[question]'] = post.content!;
-          request.fields['poll[endDate]'] = "2026-02-02T00:00:00Z";
+          request.fields['poll[endDate]'] = context.read<PollCubit>().state.endPoll.toString();
           for (int i = 0;
               i < context.read<PollCubit>().state.optionContent!.length;
               i++) {
