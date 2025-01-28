@@ -1,5 +1,6 @@
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/file_container.dart';
+import 'package:academe_x/features/home/presentation/widgets/post/poll_post_widget.dart';
 import 'package:academe_x/features/home/presentation/widgets/post/post_media/post_image_with_file.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
 
+import '../../../domain/entities/post/poll/poll.dart';
+import '../../../domain/entities/post/poll/poll_option.dart';
 import '../../../domain/entities/post/post_entity.dart';
 
 class PostMedia extends StatelessWidget {
@@ -18,6 +21,8 @@ class PostMedia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    AppLogger.success(post.poll.toString());
 
     if (post.images?.isNotEmpty ?? false) {
       if (post.file?.url != null) {
@@ -36,6 +41,10 @@ class PostMedia extends StatelessWidget {
       );
     }
 
+    if (post.poll != null) {
+      return PollWidget(options: post.poll!.pollOptions!, title: post.poll!.question, totalVotes: 0, totalViews: 0);
+    }
+
     return const SizedBox.shrink();
 
   }
@@ -45,6 +54,7 @@ class PostMedia extends StatelessWidget {
 
     return Column(
       children: [
+        12.ph(),
         Stack(
           children: [
             ClipRRect(
@@ -60,8 +70,7 @@ class PostMedia extends StatelessWidget {
                       imageBuilder: (context, imageProvider) => PhotoView(
                         imageProvider: NetworkImage(images[index].url!),
                         filterQuality: FilterQuality.high,
-
-
+                        enableRotation: true,
                       ),
                       placeholder: (context, url) => const Center(
                         child: CircularProgressIndicator(
@@ -157,19 +166,14 @@ class PostMedia extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
-  Widget _buildPoll(Map<String, int> options) {
+  Widget _buildPoll(Poll options) {
     return Column(
-      children: options.entries.map((option) {
-        final percentage = option.value /
-            options.values.reduce((sum, value) => sum + value) *
-            100;
-
+      children: options.pollOptions!.map((option) {
         return Container(
           margin: EdgeInsets.only(bottom: 8),
           child: _PollOption(
-            text: option.key,
-            percentage: percentage,
-            votes: option.value,
+            text: option.content,
+            votes: option.count,
           ),
         );
       }).toList(),
@@ -178,10 +182,15 @@ class PostMedia extends StatelessWidget {
 
   Widget _buildPostImageWithFile({required String fileName, required String fileUrl}) {
 
-    return PostImageWithFile(
-      fileName: fileName,
-      fileUrl: fileUrl,
-      images: post.images!,
+    return Column(
+      children: [
+        12.ph(),
+        PostImageWithFile(
+          fileName: fileName,
+          fileUrl: fileUrl,
+          images: post.images!,
+        )
+      ],
     );
   }
 
@@ -189,12 +198,12 @@ class PostMedia extends StatelessWidget {
 
 class _PollOption extends StatelessWidget {
   final String text;
-  final double percentage;
+  // final double percentage;
   final int votes;
 
   const _PollOption({
     required this.text,
-    required this.percentage,
+    // required this.percentage,
     required this.votes,
     Key? key,
   }) : super(key: key);
@@ -210,7 +219,7 @@ class _PollOption extends StatelessWidget {
       child: Stack(
         children: [
           FractionallySizedBox(
-            widthFactor: percentage / 100,
+            // widthFactor: percentage / 100,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -224,7 +233,7 @@ class _PollOption extends StatelessWidget {
                 child: AppText(text: text, fontSize: 14),
               ),
               AppText(
-                text: '${percentage.toStringAsFixed(1)}% ($votes)',
+                text: '$votes',
                 fontSize: 12,
                 color: Colors.grey.shade600,
               ),

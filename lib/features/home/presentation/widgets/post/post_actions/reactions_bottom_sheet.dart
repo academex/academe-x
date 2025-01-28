@@ -25,7 +25,7 @@ class ReactionsBottomSheet extends StatelessWidget {
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         return state.reactionStatus == ReactionStatus.loading?  const ReactionShimmer(): Container(
-          height: 800,
+          // height: 800,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

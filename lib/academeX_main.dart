@@ -64,11 +64,9 @@ class AcademeXMain extends StatelessWidget {
         create: (context) => getIt<PostImageCubit>(),
       ),
 
-
       BlocProvider<PostsCubit>(
         create: (context) => getIt<PostsCubit>()..getUser(context),
       ),
-
       BlocProvider<CollegeMajorsCubit>(
         create: (context) => getIt<CollegeMajorsCubit>()..initCollegeMajorForApp(),
       ),
@@ -120,28 +118,17 @@ class AcademeXMain extends StatelessWidget {
   }
 
   Widget _buildAppWithExtra(BuildContext context, Widget? child) {
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       DeepLinkService.initialize();
     });
     SizeConfig.init(context);
-
-
-
-
     return MultiBlocListener(listeners: [
-
         BlocListener<ConnectivityCubit, ConnectivityStatus>(
           listenWhen: (previous, current) => previous!=current ,
         listener: (context, status) async{
-
-
-
           if (status == ConnectivityStatus.disconnected) {
-
             _showNoConnectionBanner(context, ConnectivityStatus.disconnected);
           }
-
           if (status == ConnectivityStatus.connected) {
             _showNoConnectionBanner(context, ConnectivityStatus.connected);
           }
@@ -212,7 +199,6 @@ class AcademeXMain extends StatelessWidget {
       BuildContext context, ConnectivityStatus disconnected) {
     switch (disconnected) {
       case ConnectivityStatus.connected:
-        AppLogger.success('connected');
         context.showSnackBar(
           message: 'تم الاتصال بالانترنت',
         );

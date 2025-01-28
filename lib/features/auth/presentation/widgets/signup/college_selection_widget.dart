@@ -84,6 +84,7 @@ Widget _buildCollegesList(CollegeMajorsState state,BuildContext context) {
     return CompactErrorWidget(
       message: state.errorMessageCollege,
       onRetry: () async{
+        AppLogger.success('message');
         await context.read<CollegeMajorsCubit>().retry();
       },
     );

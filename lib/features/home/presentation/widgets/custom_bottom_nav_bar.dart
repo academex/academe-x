@@ -59,12 +59,23 @@ class CustomBottomNavBar extends StatelessWidget {
       backgroundColor: Colors.blue,
       child: const Icon(Icons.add, size: 32.0),
     ): InkWell(
-      onTap: () async{
-        if(index == 0){
-          context.read<PostsCubit>().goToTop();
-        await  context.read<PostsCubit>().refreshPosts(context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
-        }
+      onTap: () async {
+        int previousIndex = context.read<BottomNavCubit>().state;
+        if (previousIndex == index && index == 0) {
+          final postsCubit = context.read<PostsCubit>();
 
+          // Check if already at the top
+          if (postsCubit.isAtTop()) {
+            // If at top, refresh the posts
+            await postsCubit.refreshPosts(
+                context.read<CollegeMajorsCubit>().state.selectedMajor!.id!
+            );
+          } else {
+            // If not at top, scroll to top
+            postsCubit.goToTop();
+          }
+          return;
+        }
         context.read<BottomNavCubit>().changePage(index);
       },
       child: BlocBuilder<BottomNavCubit,int>(builder: (context, currentIndex) {

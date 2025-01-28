@@ -29,8 +29,8 @@ class PostWidget extends StatelessWidget {
         children: [
           PostHeader(post: post),
           10.ph(),
-          PostContent(content: post.content!),
-          // if (post.type != PostType.textOnly) 12.ph(),
+          PostContent(post: post,),
+
           PostMedia(post: post),
           10.ph(),
           PostActions(post: post),
