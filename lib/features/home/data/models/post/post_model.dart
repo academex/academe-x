@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/features/college_major/data/models/major_model.dart';
 import 'package:academe_x/features/home/data/models/post/image_model.dart';
+import 'package:academe_x/features/home/data/models/post/poll/poll_model.dart';
 import 'package:academe_x/features/home/data/models/post/post_user_model.dart';
 import 'package:academe_x/features/home/data/models/post/reactions_model.dart';
 import 'package:academe_x/features/home/data/models/post/tag_model.dart';
@@ -13,7 +14,7 @@ import 'package:academe_x/features/home/domain/entities/post/reactions_entity.da
 import 'file_info_model.dart';
 
 class PostModel extends PostEntity {
-  const PostModel({
+   PostModel({
     required super.id,
     required super.content,
     required super.createdAt,
@@ -27,6 +28,7 @@ class PostModel extends PostEntity {
     required super.isReacted,
     required super.isSaved,
     required super.reactionType,
+    super.poll,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -50,7 +52,8 @@ class PostModel extends PostEntity {
       commentsCount: (json['comments']??0) as int,
       isReacted: json['isReacted'],
       isSaved:  json['isSaved'],
-      reactionType: json['reactionType'] as String?
+      reactionType: json['reactionType'] as String?,
+      poll:json['poll'] != null? PollModel.fromJson(json['poll']):null,
     );
   }
 
@@ -69,6 +72,7 @@ class PostModel extends PostEntity {
       'isReacted': isReacted,
       'isSaved': isSaved,
       'reactionType': reactionType,
+      'poll': poll != null?(poll as PollModel).toJson():null,
     };
   }
   factory PostModel.fromEntity(PostEntity entity) {
@@ -85,7 +89,8 @@ class PostModel extends PostEntity {
       commentsCount: entity.commentsCount,
       isSaved: entity.isSaved,
       isReacted:  entity.isReacted,
-      reactionType: entity.reactionType
+      reactionType: entity.reactionType,
+      poll: entity.poll,
     );
   }
 

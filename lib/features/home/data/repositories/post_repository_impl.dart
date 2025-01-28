@@ -7,6 +7,7 @@ import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/error/exception.dart';
@@ -304,9 +305,10 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, PostEntity>> createPost(PostEntity post) async {
+  Future<Either<Failure, PostEntity>> createPost(PostEntity post,BuildContext context,) async {
     return handlingException<PostEntity>(() => createPostRemoteDataSource.createPost(
       post: PostModel.fromEntity(post),
+      context: context,
     ),);
   }
 
@@ -329,8 +331,13 @@ class PostRepositoryImpl implements PostRepository {
 
   Future<Either<Failure, T>> handlingException<T>(Future<T> Function() implementRemoteDataSourceMethod) async{
     try {
+
       final result = await implementRemoteDataSourceMethod();
-      return Right(result);
+      if(T is Unit) {
+        return Right(Unit as T);
+      }else {
+        return Right(result);
+      }
     } on OfflineException catch (e) {
       return Left(NoInternetConnectionFailure(message: e.errorMessage));
     } on TimeOutExeption catch (e) {
@@ -346,6 +353,35 @@ class PostRepositoryImpl implements PostRepository {
       return Left(ServerFailure(message: 'Server Failure : $e'));
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> deleteComment({required int postId, required int commentId}) {
+    return handlingException<Unit>(() => remoteDataSource.deleteComment(postId:postId,commentId: commentId),);
+  }
+
+  @override
+  Future<Either<Failure, CreatePostBaseResponse>> updateComment({required int postId, required String content, required int commentId}) {
+    return handlingException<CreatePostBaseResponse>(() => remoteDataSource.updateComment(postId:postId,content:content,commentId: commentId),);
+  }
+
+  @override
+  Future<Either<Failure, BaseResponse<CommentModel>>> createReply({required int commentId, int? parentId,required String content}) {
+    return handlingException<BaseResponse<CommentModel>>(() => remoteDataSource.createReply(commentId:commentId,parentId:parentId,content:content),);
+
+  }
+
+  @override
+  Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies({required int commentId}) {
+    return handlingException<BaseResponse<List<CommentModel>>>(() => remoteDataSource.getReplies(commentId:commentId),);
+
+  }
+
+  @override
+  Future<Either<Failure, BaseResponse<void>>> likeOnCommentOrReply({required int commentId, int? postId, int? replyId}) {
+    return handlingException<BaseResponse<void>>(() => remoteDataSource.likeOnCommentOrReply(commentId:commentId,postId:postId,replyId:replyId),);
+  }
+
+
 
 
 

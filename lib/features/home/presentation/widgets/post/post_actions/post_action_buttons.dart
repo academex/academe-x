@@ -1,4 +1,5 @@
 import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/presentation/widgets/post/post_actions/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +28,9 @@ class PostActionButtons extends StatelessWidget {
             onReact: (reactType) => _handleReaction(reactType, context),
           ),
           10.pw(),
-          ActionButton(
+          BlocProvider<ShowRepliesCubit>(
+            create: (context) => getIt<ShowRepliesCubit>(),
+            child: ActionButton(
             iconPath: 'assets/icons/comment.png',
             count: post.commentsCount.toString(),
             onTap: () {
@@ -37,6 +40,8 @@ class PostActionButtons extends StatelessWidget {
               CommentsList(postId: post.id, context: context);
             },
           ),
+          ),
+
           10.pw(),
           ActionButton(
             iconPath: 'assets/icons/share.png',

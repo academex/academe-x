@@ -6,6 +6,7 @@ import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -114,6 +115,7 @@ class PostsCubit extends Cubit<PostsState> {
           posts: postsToShow,
           errorMessage: 'Using cached data: $e',
           hasPostsReachedMax: true, // Prevent pagination in offline mode
+
         ));
       } else {
         emit(state.copyWith(
@@ -528,10 +530,10 @@ class PostsCubit extends Cubit<PostsState> {
     emit(state.copyWith(creationStatus: CreationStatus.initial));
   }
 
-  sendPost({required PostEntity post}) async {
+  sendPost({required PostEntity post,required BuildContext context}) async {
     // Logger().d(post);
     emit(state.copyWith(creationStatus: CreationStatus.loading));
-    var createPostRes = await postUseCase.createPost(post);
+    var createPostRes = await postUseCase.createPost(post,context);
     createPostRes.fold(
       (l) {
         emit(
@@ -542,10 +544,11 @@ class PostsCubit extends Cubit<PostsState> {
         );
       },
       (r) {
-        // Logger().d(r.toString());
         emit(state.copyWith(
             creationStatus: CreationStatus.success,
             posts: [r, ...state.posts]));
+
+
       },
     );
   }
@@ -553,10 +556,12 @@ class PostsCubit extends Cubit<PostsState> {
   getComments({bool refresh = false,required int postId}) async {
 
 
+
+    bool noComments = state.posts[_getPostIndexByPostId(postId)].commentsCount == 0;
     if (state.latestPostIdGetHereComments != postId) {
       refresh = true;
       emit(state.copyWith(
-        commentsStatus: CommentsStatus.loading,
+        commentsStatus: noComments? CommentsStatus.success:CommentsStatus.loading,
         hasCommentReachedMax: false,
         latestPostIdGetHereComments: postId,
         commentCurrentPage: 1,
@@ -564,6 +569,7 @@ class PostsCubit extends Cubit<PostsState> {
 
       ));
     }
+    if(noComments)return;
     if ((refresh && state.commentsStatus == CommentsStatus.failure)) {
       emit(state.copyWith(
         commentsStatus: CommentsStatus.initial,
@@ -571,7 +577,6 @@ class PostsCubit extends Cubit<PostsState> {
       ));
     }
 
-    Logger().f('$_commentIsLoading ${state.hasCommentReachedMax}');
     if(_commentIsLoading) return;
     if(state.hasCommentReachedMax) return;
 
@@ -632,12 +637,127 @@ class PostsCubit extends Cubit<PostsState> {
 
   }
 
-  createComment({required int postId,required String content}) async {
+  retrySendFailureComments(){
+    List<CommentEntity> failureComments = state.failureComments;
+    // int length = failureComments.length;
+    // for(int i =0; i< failureComments.length;i++){
+    //   if(state.createCommentStatus == CreateCommentStatus.success || i == 0){
+    //     if(i!=0) state.failureComments.removeAt(i-1);
+    //     createComment(postId: failureComments[i].postId!, content: failureComments[i].content!,withoutAddNew: true);
+    //   }
+    // }
+
+  }
+  int _getPostIndexByPostId(int postId){
+    for(int i =0; i<state.posts.length;i++){
+      if(state.posts[i].id == postId) {
+        return i;
+      };
+    }
+    return -1;
+  }
+  int _getCommentIndexByCommentId(int commentId){
+    for(int i =0; i<state.comments.length;i++){
+      if(state.comments[i].id == commentId) {
+        return i;
+      };
+    }
+    return -1;
+  }
+  int _getCommentIndexByContent(String content){
+    for(int i =state.comments.length - 1; i>=0;i--){
+      if(state.comments[i].content == content) {
+        return i;
+      };
+    }
+    return -1;
+  }
+  actionsOnComment({required int postId,String? content,withoutAddNew = false}){
+    Logger().w(state.commentAction);
+    emit(state.copyWith(commentsStatus: CommentsStatus.loading));
+    if(state.commentAction == CommentAction.create){
+      createComment(postId: postId, content: content!,withoutAddNew: withoutAddNew);
+    }else if(state.commentAction == CommentAction.update){
+      updateComment(postId: postId,commentId: state.actionCommentId, content: content!);
+    }else if(state.commentAction == CommentAction.delete){
+      deleteComment(postId: postId,commentId: state.actionCommentId);
+    }
+    emit(state.copyWith(commentAction: CommentAction.create));
+    Future.delayed(const Duration(milliseconds: 500),() => emit(state.copyWith(commentsStatus: CommentsStatus.success)),);
+  }
+  deleteComment({required int postId,required int commentId}) async {
+    emit(state.copyWith(
+      updateDeleteCommentStatus: UpdateDeleteCommentStatus.loading,
+    ));
+    Either<Failure, Unit> response = await postUseCase.deleteComment(postId: postId, commentId: commentId);
+    response.fold((l) {
+      Logger().e(l.message);
+      emit(state.copyWith(
+        updateDeleteCommentStatus: UpdateDeleteCommentStatus.failure,
+        commentError: l.message,
+          commentsStatus: CommentsStatus.success,
+      ));
+    }, (r) {
+      state.comments.removeAt(_getCommentIndexByCommentId(commentId));
+      state.posts[_getPostIndexByPostId(postId)].commentsCount = state.posts[_getPostIndexByPostId(postId)].commentsCount! -1;
+
+      emit(state.copyWith(
+        updateDeleteCommentStatus: UpdateDeleteCommentStatus.success,
+          commentsStatus: CommentsStatus.success,
+
+      ));
+    },);
+  }
+  updateComment({required int postId,required String content,required int commentId}) async {
+    emit(state.copyWith(
+      updateDeleteCommentStatus: UpdateDeleteCommentStatus.loading,
+    ));
+    Either<Failure, CreatePostBaseResponse> response = await postUseCase.updateComment(postId: postId, content: content, commentId: commentId);
+    response.fold((l) {
+      emit(state.copyWith(
+        updateDeleteCommentStatus: UpdateDeleteCommentStatus.failure,
+      ));
+    }, (r) {
+      state.comments[_getCommentIndexByCommentId(commentId)] = r.data!;
+      emit(state.copyWith(
+        updateDeleteCommentStatus: UpdateDeleteCommentStatus.success,
+
+      ));
+    },);
+  }
+  Future<UserResponseEntity?> getUser(BuildContext context) async {
+    UserResponseEntity? user = (await context.cachedUser)?.user;
+    emit(state.copyWith(
+      currentUser: user,
+    ));
+    return user;
+  }
+  createComment({required int postId,required String content,withoutAddNew = false}) async {
+    // change ShowReplies cubit
+    // context.read<ShowRepliesCubit>().change(postIndex: postId, visibility: false);
+
+    UserResponseEntity user = (await NavigationService.navigatorKey.currentContext!.cachedUser)!.user;
+    if(!withoutAddNew) {
+      CommentEntity newComment = CommentModel(user: user,
+          content: content,
+          postId: postId,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          isSending: true,
+          likes: 0);
+      state.comments.add(newComment);
+      state.posts[_getPostIndexByPostId(postId)].commentsCount = state.posts[_getPostIndexByPostId(postId)].commentsCount! + 1;
+    }
     Logger().d(state.createCommentStatus);
     // if(state.createCommentStatus == CreateCommentStatus.loading) return;
+    CommentsStatus previusCommentStatus = state.commentsStatus;
+
     emit(state.copyWith(
       createCommentStatus: CreateCommentStatus.loading,
+      comments: state.comments,
+      commentsStatus: CommentsStatus.loading,
     ));
+    emit(state.copyWith(commentsStatus: previusCommentStatus));
     Either<Failure, CreatePostBaseResponse> response = await postUseCase.createComment(postId: postId, content: content);
 
     response.fold(
@@ -646,16 +766,34 @@ class PostsCubit extends Cubit<PostsState> {
       emit(state.copyWith(
         createCommentStatus: CreateCommentStatus.failure,
         createCommentError: l.message,
+        failureComments: [...state.failureComments,CommentEntity(content: content,postId: postId)]
+
       ));
     }, (r) {
-      Logger().t(r);
-      state.comments.add(r.data!);
-      emit(state.copyWith(
-        createCommentStatus: CreateCommentStatus.success,
-      ));
+
+      // state.comments[_getCommentIndexByContent(content)] = r.data!;
+      try {
+
+        emit(state.copyWith(
+          createCommentStatus: CreateCommentStatus.success,
+        ));
+        Future.delayed(const Duration(milliseconds: 500),() => state.comments[_getCommentIndexByContent(content)] = r.data!,);
+      }catch (_, e){
+        Logger().e('error$e');
+      }
+
+
     },);
+
   }
 
+  increaseReplyCunt(int commentId){
+    state.comments[_getCommentIndexByCommentId(commentId)].replyCount = (state.comments[_getCommentIndexByCommentId(commentId)].replyCount??0 )+ 1;
+
+    emit(state.copyWith(
+      comments: state.comments,
+    ));
+  }
   @override
   Future<void> close() {
     scrollController.dispose();
