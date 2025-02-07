@@ -73,6 +73,7 @@ dependencies:
   # google_sign_in: ^6.2.1
   # sign_in_with_apple: ^5.0.0
   # facebook_auth: ^6.0.3
+  flutter_slidable: ^3.1.2
 
 dev_dependencies:
   flutter_test:
@@ -124,6 +125,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/icons/reactions/
+    - assets/icons/setting/
 #    - assets/animations/  # For Lottie animations
     - assets/fonts/
 

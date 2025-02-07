@@ -1,4 +1,5 @@
 import 'package:academe_x/core/core.dart';
+import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/home/presentation/widgets/post/post_actions/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +28,9 @@ class PostActionButtons extends StatelessWidget {
             onReact: (reactType) => _handleReaction(reactType, context),
           ),
           10.pw(),
-          ActionButton(
+          BlocProvider<ShowRepliesCubit>(
+            create: (context) => getIt<ShowRepliesCubit>(),
+            child: ActionButton(
             iconPath: 'assets/icons/comment.png',
             count: post.commentsCount.toString(),
             onTap: () {
@@ -37,6 +40,8 @@ class PostActionButtons extends StatelessWidget {
               CommentsList(postId: post.id, context: context);
             },
           ),
+          ),
+
           10.pw(),
           ActionButton(
             iconPath: 'assets/icons/share.png',
@@ -101,7 +106,6 @@ void showShareOptions(BuildContext context,PostEntity post) {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 100.pw(),
-
                 AppText(
                   text: 'مشاركة بواسطة',
                   fontSize: 16,
@@ -191,19 +195,24 @@ Widget _buildShareOption(
           height: 69,
           width: 69,
           decoration: BoxDecoration(
-              color: const Color(0xF9F9F9C4),
+              color: const Color(0xffF0F0F0),
               shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage(
-                  iconPath,
-                ),
-              )),
+              // image: DecorationImage(
+              //
+              //   // fit: BoxFit.cover,
+              //   image: AssetImage(
+              //
+              //     iconPath,
+              //   ),
+              // )
+          ),
+          child: Image.asset(
+            iconPath,
+            width: 24,
+            height: 24,
+          ),
         ),
-        // CircleAvatar(
-        //   radius: 28.0,
-        //   backgroundColor: Colors.grey.shade200,
-        //   child: Image.asset(iconPath, height: 30, width: 30),
-        // ),
+
         const SizedBox(height: 8),
         AppText(
           text: label,

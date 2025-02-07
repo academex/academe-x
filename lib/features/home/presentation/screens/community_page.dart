@@ -7,6 +7,7 @@ import 'package:academe_x/features/college_major/controller/cubit/college_majors
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/post/shimmer/post_widget_shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -144,8 +145,25 @@ class _CommunityPageState extends State<CommunityPage> {
             delegate: SliverChildBuilderDelegate(
                   (context, index) {
                 if (index >= state.posts.length) {
+                  // AppLogger.success('reach the end');
                   if (state.hasPostsReachedMax) {
-                    return null;
+                  AppLogger.success('reach the end');
+                    return Column(
+                      children: [
+                        20.ph(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'You\'ve reached the end!',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
                   }
                   return const PostWidgetShimmer();
                 }
@@ -154,7 +172,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 return Column(
                   children: [
                     20.ph(),
-                    PostWidget(post: post,fromHome:true),
+                    PostWidget(post: post,),
                     if (index < state.posts.length - 1) ...[
                       16.ph(),
                       Divider(
@@ -167,7 +185,7 @@ class _CommunityPageState extends State<CommunityPage> {
                   ],
                 );},
               childCount: state.hasPostsReachedMax
-                  ? state.posts.length
+                  ? state.posts.length + 1
                   : state.posts.length + 1,
             ),
 
@@ -236,7 +254,7 @@ class _CommunityPageState extends State<CommunityPage> {
               children: [
                 Expanded(
                   child: SizedBox(
-                      width: 327,
+                      // width: 327,
                       // 327.w,
                       height: 45  ,
                       child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
@@ -296,7 +314,8 @@ class _CommunityPageState extends State<CommunityPage> {
                     bool isSelected= state.majors[index].name! == state.selectedTag;
                     String? title = state.majors[index].majorAr;
                     // String image = 'assets/images/image_test1.png';
-                    String image = state.majors[index].name!;
+                    AppLogger.success(state.majors[index].photoUrl.toString());
+                    String image = state.majors[index].photoUrl!;
                     return Column(
                       children: [
                         GestureDetector(
@@ -309,14 +328,20 @@ class _CommunityPageState extends State<CommunityPage> {
                                   borderRadius:
                                   BorderRadius.circular(10)),
                               child: Center(
-                                child: AppText(
-                                  text: image.toUpperCase(),
-                                  fontSize: 16,
-                                  fontWeight:isSelected? FontWeight.bold : FontWeight.normal,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CachedNetworkImage(
+                                    imageUrl: image,
+                                    fit: BoxFit.fill,
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  )
 
-                                ),
                               )
                           ),
+                    ),
                           onTap: ()async {
                             context
                                 .read<CollegeMajorsCubit>()

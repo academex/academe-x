@@ -22,6 +22,8 @@ class AppConfig {
   static late String authEndpoint;
   static late String tagsEndpoint;
   static late String postsEndpoint;
+  static late String userPostsEndpoint;
+  static late String commentEndpoint;
   static late String getTagsEndpoint;
 
   // Feature flags
@@ -60,6 +62,8 @@ class AppConfig {
         authEndpoint = '$apiUrl/auth';
         tagsEndpoint = '$apiUrl/tag';
         postsEndpoint = '$apiUrl/post';
+        userPostsEndpoint = '$apiUrl/post/user';
+        commentEndpoint = '$apiUrl/comment';
         getTagsEndpoint = '$apiUrl/tag/user-college-tags';
 
         enableAnalytics = false;

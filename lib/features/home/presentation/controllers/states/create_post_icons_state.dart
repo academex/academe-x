@@ -1,24 +1,46 @@
 import 'dart:io';
 
-abstract class PickState {}
+import 'package:flutter/material.dart';
+enum Status {pickers,multiChoice}
+enum StatusResize { init, loading, success }
 
-class CreatePostIconsInit extends PickState {}
+class PickState {
+  final List<File> images;
+  final List<File> file;
+  final String errorMessage;
+  final Status status;
+  final StatusResize statusResize;
+  final double bytes;
+  late final TextEditingController postController;
 
-class CreatePostIconsLoading extends PickState {}
-
-class ImagePickerLoaded extends PickState {
-  List<File>? images;
-  ImagePickerLoaded(this.images);
-}
-
-class FilePickerLoaded extends PickState {
-  File? file;
-  FilePickerLoaded(this.file);
-}
-
-class CreateMultiChoice extends PickState {}
-
-class CreatePostIconsError extends PickState {
-  final String message;
-  CreatePostIconsError(this.message);
+  PickState({
+    this.images = const [],
+    this.file = const [],
+    this.errorMessage = '',
+    this.status = Status.pickers,
+    this.statusResize = StatusResize.init,
+    this.bytes = 0,
+    TextEditingController? postController,
+  }) {
+    this.postController = postController??TextEditingController();
+  }
+  PickState copyWith({
+    List<File>? images,
+    List<File>? file,
+    String? errorMessage,
+    Status? status,
+    TextEditingController? postController,
+    StatusResize? statusResize,
+    double? bytes,
+  }){
+    return PickState(
+      images: images??this.images,
+      file: file??this.file,
+      errorMessage: errorMessage??this.errorMessage,
+      status: status??this.status,
+      postController:postController??this.postController,
+      statusResize:statusResize??this.statusResize,
+      bytes:bytes??this.bytes,
+    );
+  }
 }

@@ -8,7 +8,8 @@ class MajorEntity extends Equatable{
   String? majorAr;
   String? collegeEn;
   String? majorEn;
-  Null? description;
+  String? description;
+  String? photoUrl;
   int? yearsNum;
   bool? isActive;
   String? createdAt;
@@ -21,6 +22,7 @@ class MajorEntity extends Equatable{
     this.collegeEn,
     this.majorEn,
     this.description,
+    this.photoUrl,
     this.yearsNum,
     this.isActive,
     this.createdAt,
@@ -28,11 +30,11 @@ class MajorEntity extends Equatable{
   
   
   MajorModel entityToModel(MajorEntity entity){
-    return MajorModel(id: id, collegeAr: collegeAr, collegeEn: collegeEn, createdAt: createdAt, description: description, isActive: isActive, majorAr: majorAr, majorEn: majorEn, name: name, updatedAt: updatedAt, yearsNum: yearsNum);
+    return MajorModel(id: id, collegeAr: collegeAr, collegeEn: collegeEn,photoUrl: photoUrl, createdAt: createdAt, description: description, isActive: isActive, majorAr: majorAr, majorEn: majorEn, name: name, updatedAt: updatedAt, yearsNum: yearsNum);
   }
 
   @override
   // TODO: implement props
-  List<Object?> get props => [id,name];
+  List<Object?> get props => [id,name,photoUrl];
 
 }

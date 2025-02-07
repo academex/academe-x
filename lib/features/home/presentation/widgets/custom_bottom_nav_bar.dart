@@ -1,3 +1,5 @@
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
+import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:academe_x/lib.dart';
 
 import 'package:flutter/material.dart';
@@ -25,15 +27,12 @@ class CustomBottomNavBar extends StatelessWidget {
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 16   ,
-              vertical: 8
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(
               NavigationItems.items.length,
-                  (index) => _buildNavItem(
+              (index) => _buildNavItem(
                 context,
                 NavigationItems.items[index],
                 index,
@@ -46,46 +45,74 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 
   Widget _buildNavItem(
-      BuildContext context,
-      NavigationItem item,
-      int index,
-      // int currentIndex,
-      ) {
+    BuildContext context,
+    NavigationItem item,
+    int index,
+    // int currentIndex,
+  ) {
+    return item.label == 'create'
+        ? FloatingActionButton(
+            onPressed: () {
+              CreatePost().showCreatePostModal(context);
+            },
+            backgroundColor: Colors.blue,
+            child: const Icon(Icons.add, size: 32.0),
+          )
+        : InkWell(
+            onTap: () async {
+              int previousIndex = context.read<BottomNavCubit>().state;
+              if (previousIndex == index && index == 0) {
+                final postsCubit = context.read<PostsCubit>();
+                if (postsCubit.isAtTop()) {
+                  // If at top, refresh the posts
+                  await postsCubit.refreshPosts(context
+                      .read<CollegeMajorsCubit>()
+                      .state
+                      .selectedMajor!
+                      .id!);
+                } else {
+                  postsCubit.goToTop();
+                }
+                return;
+              }
+              else if (index == 4) {
+                print('load user profile');
+                final cachedUser = await context.cachedUser;
+                if (cachedUser != null) {
+                  // ignore: use_build_context_synchronously
+                  // context
+                  //     .read<ProfileCubit>()
+                  //     .loadUserProfile(cachedUser.user.username);
+                }
+              }
 
-    return item.label=='create' ?  FloatingActionButton(
-      onPressed: () {
-        CreatePost().showCreatePostModal(context);
-      },
-      backgroundColor: Colors.blue,
-      child: const Icon(Icons.add, size: 32.0),
-    ): InkWell(
-      onTap: () async{
-        if(index == 0){
-          context.read<PostsCubit>().goToTop();
-        await  context.read<PostsCubit>().refreshPosts(context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
-        }
-
-        context.read<BottomNavCubit>().changePage(index);
-      },
-      child: BlocBuilder<BottomNavCubit,int>(builder: (context, currentIndex) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              item.icon,
-              width: 24   ,
-              height: 24,
-              color: index== currentIndex ? AppColors.primary : Colors.grey,
+              context.read<BottomNavCubit>().changePage(index);
+            },
+            child: BlocBuilder<BottomNavCubit, int>(
+              builder: (context, currentIndex) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      item.icon,
+                      width: 24,
+                      height: 24,
+                      color: index == currentIndex
+                          ? AppColors.primary
+                          : Colors.grey,
+                    ),
+                    4.ph(),
+                    AppText(
+                      text: item.label,
+                      fontSize: 12,
+                      color: index == currentIndex
+                          ? AppColors.primary
+                          : Colors.grey,
+                    ),
+                  ],
+                );
+              },
             ),
-            4.ph(),
-            AppText(
-              text: item.label,
-              fontSize: 12  ,
-              color:  index== currentIndex ? AppColors.primary : Colors.grey,
-            ),
-          ],
-        );
-      },),
-    );
+          );
   }
 }

@@ -11,7 +11,7 @@ class AppTextField extends StatelessWidget {
     // required this.labeltext,
     required this.keyboardType,
     this.obscureText = false,
-    required this.controller,
+    this.controller,
     this.focusNode,
     this.onSubmitted,
     this.onChanged,
@@ -36,7 +36,7 @@ class AppTextField extends StatelessWidget {
   });
   final String hintText;
   final TextInputType keyboardType;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final Widget? suffixIcon;
   final bool obscureText;
   final Widget? suffix;
@@ -57,7 +57,8 @@ class AppTextField extends StatelessWidget {
   TextInputAction? textInputAction;
 
   // final bool isOTP;
-  FocusNode? focusNode = FocusNode();
+  FocusNode? focusNode;
+
 
   final Function(String)? onSubmitted;
   final Function(String)? onChanged;
@@ -68,7 +69,7 @@ class AppTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
-
+focusNode: focusNode,
           validator: validator,
           enabled: enabled,
           autofocus: autofocus,

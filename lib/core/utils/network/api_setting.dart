@@ -18,7 +18,10 @@ class ApiSetting {
   static String getTags = AppConfig.getTagsEndpoint;
 
   static String get getPosts => AppConfig.postsEndpoint;
+  static String get getUserPosts => AppConfig.userPostsEndpoint;
+
   static String get getComments => AppConfig.postsEndpoint;
+  static String get getReplies => AppConfig.commentEndpoint;
   static String get getUserReactionByType => AppConfig.postsEndpoint;
   static String get reactionToPost => AppConfig.postsEndpoint;
 }
