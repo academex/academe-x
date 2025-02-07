@@ -172,7 +172,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 return Column(
                   children: [
                     20.ph(),
-                    PostWidget(post: post,fromHome:true),
+                    PostWidget(post: post,),
                     if (index < state.posts.length - 1) ...[
                       16.ph(),
                       Divider(

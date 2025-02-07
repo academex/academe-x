@@ -3,12 +3,14 @@ import 'package:academe_x/features/auth/auth.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/statistics_entity.dart';
+import 'package:academe_x/features/profile/presentation/controllers/states/profile_state.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../domain/entities/home/post_entity_s.dart';
 import '../../../../domain/entities/post/post_entity.dart';
 
 enum PostStatus { initial, loading, success, failure }
+enum PostProfileStatus { initial, loading, success, failure }
 enum PostDetailsStatus { initial, loading, success, failure }
 enum ReactionStatus { initial, loading, success, failure }
 enum CreationStatus { initial, loading, success, failure }
@@ -19,16 +21,20 @@ enum CommentAction { create, delete, update }
 
 class PostsState extends Equatable {
   final PostStatus status;
+  final PostProfileStatus profileStatus;
   final ReactionStatus reactionStatus;
   final PostDetailsStatus postDetailsStatus;
   final CreationStatus creationState;
   final StatisticsEntity? statisticsEntity;
   final List<PostEntity> posts;
+  final List<PostEntity> profilePosts;
   final PostEntity? post;
   List<ReactionItemEntity>? reactionItems;
   final bool hasPostsReachedMax;
   int postsCurrentPage;
+  int profilePostsCurrentPage;
   final bool hasReactionsReachedMax;
+  final bool hasProfilePostsReachedMax;
   int reactionsCurrentPage;
   bool isSaved;
   final String? errorMessage;
@@ -57,16 +63,20 @@ class PostsState extends Equatable {
 
   PostsState({
     this.status = PostStatus.initial,
+    this.profileStatus = PostProfileStatus.initial,
     this.creationState = CreationStatus.initial,
     this.postDetailsStatus = PostDetailsStatus.initial,
     this.posts = const <PostEntity>[],
+    this.profilePosts = const <PostEntity>[],
     this.reactionItems = const <ReactionItemEntity>[],
     this.statisticsEntity,
     this.post,
     this.reactionStatus = ReactionStatus.initial,
     this.isSaved = false,
     this.hasPostsReachedMax = false,
+    this.hasProfilePostsReachedMax = false,
     this.postsCurrentPage = 1,
+    this.profilePostsCurrentPage = 1,
     this.hasReactionsReachedMax=false,
     this.reactionsCurrentPage= 1,
     this.errorMessage,
@@ -93,19 +103,23 @@ class PostsState extends Equatable {
 
   PostsState copyWith({
     PostStatus? status,
+    PostProfileStatus?profileStatus,
     CreationStatus? creationStatus,
     PostDetailsStatus? postDetailsStatus,
     ReactionStatus? reactionStatus,
     List<PostEntity>? posts,
+    List<PostEntity>? profilePosts,
     PostEntity? post,
      StatisticsEntity? statisticsEntity,
     List<ReactionItemEntity>? reactionItems,
     bool? hasPostsReachedMax,
     bool? hasCommentReachedMax,
      bool? hasReactionsReachedMax,
+     bool? hasProfilePostsReachedMax,
     int? reactionsCurrentPage,
     bool? isSaved,
     int? postsCurrentPage,
+    int? profilePostsCurrentPage,
     String? errorMessage,
     String? selectedType,
     String? creationPostErrorMessage,
@@ -126,10 +140,12 @@ class PostsState extends Equatable {
   }) {
     return PostsState(
       status: status ?? this.status,
+      profileStatus: profileStatus ?? this.profileStatus,
       creationState: creationStatus ?? this.creationState,
       reactionStatus: reactionStatus ?? this.reactionStatus,
       post: post ?? this.post,
       posts: posts ?? this.posts,
+      profilePosts: profilePosts ?? this.profilePosts,
       statisticsEntity: statisticsEntity ?? this.statisticsEntity,
       postDetailsStatus: postDetailsStatus ?? this.postDetailsStatus,
       // posts: posts ?? this.posts,
@@ -137,10 +153,12 @@ class PostsState extends Equatable {
       reactionsCurrentPage: reactionsCurrentPage ?? this.reactionsCurrentPage,
 
       reactionItems: reactionItems ?? this.reactionItems,
+      hasProfilePostsReachedMax: hasProfilePostsReachedMax ?? this.hasProfilePostsReachedMax,
       hasPostsReachedMax: hasPostsReachedMax ?? this.hasPostsReachedMax,
       hasCommentReachedMax: hasCommentReachedMax ?? this.hasCommentReachedMax,
       isSaved: isSaved ?? this.isSaved,
       postsCurrentPage: postsCurrentPage ?? this.postsCurrentPage,
+      profilePostsCurrentPage: profilePostsCurrentPage ?? this.profilePostsCurrentPage,
       errorMessage: errorMessage ?? this.errorMessage,
       creationPostErrorMessage: creationPostErrorMessage ?? this.creationPostErrorMessage,
       selectedType: selectedType ?? this.selectedType,
@@ -167,10 +185,14 @@ class PostsState extends Equatable {
     creationState,
     postDetailsStatus,
     status,
+    profileStatus,
     reactionStatus,
     posts,
     statisticsEntity,
+    profilePostsCurrentPage,
+    hasProfilePostsReachedMax,
     reactionItems,
+    profilePosts,
     hasPostsReachedMax,
     hasCommentReachedMax,
     hasReactionsReachedMax,

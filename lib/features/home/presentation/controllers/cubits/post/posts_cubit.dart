@@ -8,7 +8,6 @@ import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
-import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -18,7 +17,6 @@ import '../../../../../../academeX_main.dart';
 import '../../../../../../core/pagination/paginated_response.dart';
 import '../../../../../../core/pagination/pagination_params.dart';
 import '../../../../../../core/utils/storage/cache/hive_cache_manager.dart';
-import '../../../../data/models/post/post_model.dart';
 import '../../../../domain/entities/post/post_entity.dart';
 import '../../../../domain/entities/post/reactions_entity.dart';
 import '../../states/post/post_state.dart';
@@ -74,6 +72,70 @@ class PostsCubit extends Cubit<PostsState> {
     }
   }
 
+  Future<void> loadProfilePosts(BuildContext context,{
+    required
+    String? username
+  }) async {
+    final Either<Failure, PaginatedResponse<PostEntity>> result;
+    if (_isLoading) return;
+    if (state.hasProfilePostsReachedMax) return;
+
+    try {
+      _isLoading = true;
+      final page = state.profilePostsCurrentPage;
+
+      if (username == null) {
+        // Load current user from cache
+        final currentUser = await context.cachedUser;
+
+        result = await postUseCase.loadProfilePosts(
+          PaginationParams(page: page, username: currentUser!.user.username),
+        );
+
+        // emit(state.copyWith(
+        //   status: ProfileStatus.loaded,
+        //   profileType: ProfileType.currentUser,
+        //   userPosts: ,
+        //   // profileUser: currentUser,
+        //   isEditable: true,
+        // ));
+      }
+      else {
+        // Load other user's profile
+        // You would typically make an API call here to get the user data
+        // For now, we'll use cached user as placeholder
+        // emit(state.copyWith(
+        //   status: ProfileStatus.loaded,
+        //   profileType: ProfileType.otherUser,
+        //   profileUser: otherUser,
+        //   isEditable: false,
+        // ));
+
+        result = await postUseCase.loadProfilePosts(
+          PaginationParams(page: page, username: username),
+        );
+      }
+
+
+      result.fold(
+            (failure) {
+          emit(state.copyWith(
+            profileStatus: PostProfileStatus.failure,
+            errorMessage: failure.message,
+          ));
+        },
+            (paginatedData) => _handleSuccessProfilePostResponse(paginatedData),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        profileStatus: PostProfileStatus.failure,
+        errorMessage: e.toString(),
+      ));
+    } finally {
+      _isLoading = false;
+    }
+  }
+
   void _handleSuccessResponse(PaginatedResponse<PostEntity> paginatedData, bool refresh) {
     if (refresh) {
       emit(state.copyWith(
@@ -101,68 +163,26 @@ class PostsCubit extends Cubit<PostsState> {
       errorMessage: null,
     ));
   }
-  //
-  // Future<void> _handleOfflinePagination(int page, int? tagId, String errorMessage) async {
-  //   final cachedPosts = await _getCachedPosts(tagId: tagId);
-  //
-  //   if (cachedPosts == null || cachedPosts.isEmpty) {
-  //     emit(state.copyWith(
-  //       status: PostStatus.failure,
-  //       errorMessage: 'No cached data available',
-  //     ));
-  //     return;
-  //   }
-  //
-  //   final int pageSize = 10; // Your default page size
-  //   final int startIndex = (page - 1) * pageSize;
-  //   final int endIndex = min(startIndex + pageSize, cachedPosts.length);
-  //
-  //   if (startIndex >= cachedPosts.length) {
-  //     emit(state.copyWith(
-  //       status: PostStatus.success,
-  //       hasPostsReachedMax: true,
-  //     ));
-  //     return;
-  //   }
-  //
-  //   final paginatedCachedPosts = cachedPosts.sublist(startIndex, endIndex);
-  //
-  //   if (page == 1) {
-  //     emit(state.copyWith(
-  //       status: PostStatus.success,
-  //       posts: paginatedCachedPosts,
-  //       postsCurrentPage: 2,
-  //       hasPostsReachedMax: endIndex >= cachedPosts.length,
-  //       errorMessage: 'Using cached data: $errorMessage',
-  //     ));
-  //   } else {
-  //     final updatedPosts = [...state.posts, ...paginatedCachedPosts];
-  //     emit(state.copyWith(
-  //       status: PostStatus.success,
-  //       posts: updatedPosts,
-  //       postsCurrentPage: page + 1,
-  //       hasPostsReachedMax: endIndex >= cachedPosts.length,
-  //       errorMessage: 'Using cached data: $errorMessage',
-  //     ));
-  //   }
-  // }
-  // Future<void> _handleFailure(Failure failure) async {
-  //   final cachedPosts = await _getCachedPosts();
-  //
-  //   if (cachedPosts != null && cachedPosts.isNotEmpty) {
-  //     emit(state.copyWith(
-  //       status: PostStatus.success,
-  //       posts: cachedPosts,
-  //       errorMessage: 'Using cached data: ${failure.message}',
-  //     ));
-  //   } else {
-  //     emit(state.copyWith(
-  //       status: PostStatus.failure,
-  //       errorMessage: failure.message,
-  //     ));
-  //   }
-  // }
 
+
+  void _handleSuccessProfilePostResponse(
+      PaginatedResponse<PostEntity> paginatedData,
+      ) {
+    final List<PostEntity> newPosts = [...state.profilePosts];
+    for (var newPost in paginatedData.items) {
+      if (!newPosts.any((existingPost) => existingPost.id == newPost.id)) {
+        newPosts.add(newPost);
+      }
+    }
+
+    emit(state.copyWith(
+      profileStatus: PostProfileStatus.success,
+      profilePosts: newPosts,
+      hasProfilePostsReachedMax: !paginatedData.hasNextPage,
+      profilePostsCurrentPage: state.profilePostsCurrentPage + 1,
+      errorMessage: null,
+    ));
+  }
   bool isAtTop() {
     return scrollController.position.pixels <= 0;
   }
@@ -236,34 +256,20 @@ class PostsCubit extends Cubit<PostsState> {
 
 
  Future<void> reactToPost({required String reactType, required int postId,required BuildContext context}) async {
-
+   // context.
     try {
-      // If posts are empty, try to get them from cache first
-      if (state.posts.isEmpty) {
-        AppLogger.e('No posts found in state or cache');  // Debug log
-        return; // Exit if we can't find any posts
-      }
+      final mainPostIndex = state.posts.indexWhere((post) => post.id == postId);
+      final profilePostIndex = state.profilePosts.indexWhere((post) => post.id == postId);
+      final updatedMainPosts = List<PostEntity>.from(state.posts);
+      final updatedProfilePosts = List<PostEntity>.from(state.profilePosts);
 
-      // Create a copy of current posts
-      final currentPosts = List<PostEntity>.from(state.posts);
-      final postIndex = currentPosts.indexWhere((post) => post.id == postId);
-
-
-      if (postIndex == -1) {
-        return;
-      }
-
-      // Get current user
       final currentUser = await context.cachedUser;
-      if (currentUser == null) {
-        return;
-      }
+      if (currentUser == null) return;
 
-      // Get current post
-      final currentPost = currentPosts[postIndex];
+      final sourcePost = mainPostIndex != -1 ? state.posts[mainPostIndex]
+          : state.profilePosts[profilePostIndex];
+      final currentReactions = List<ReactionItemEntity>.from(sourcePost.reactions?.items ?? []);
 
-      // Create updated reactions list
-      final currentReactions = List<ReactionItemEntity>.from(currentPost.reactions?.items ?? []);
 
 
       final existingReactionIndex = currentReactions.indexWhere(
@@ -305,20 +311,21 @@ class PostsCubit extends Cubit<PostsState> {
       }
 
       // Create updated post with new reactions
-      final updatedPost = currentPost.copyWith(
+      final updatedPost = sourcePost.copyWith(
         reactions: ReactionsEntity(
-          count:currentReactions.length ,
+          count: currentReactions.length,
           items: currentReactions,
         ),
-
       );
 
       // Update posts list
-      currentPosts[postIndex] = updatedPost;
 
-      // Emit new state with updated posts
+      if (mainPostIndex != -1) updatedMainPosts[mainPostIndex] = updatedPost;
+      if (profilePostIndex != -1) updatedProfilePosts[profilePostIndex] = updatedPost;
+
       emit(state.copyWith(
-        posts: currentPosts,
+        posts: updatedMainPosts,
+        profilePosts: updatedProfilePosts,
         status: PostStatus.success,
       ));
       // AppLogger.success('reaction in updated post: ${currentPosts[postIndex].reactions!.items[0].type}');  // Debug log

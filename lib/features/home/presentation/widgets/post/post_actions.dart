@@ -12,6 +12,8 @@ import 'package:hive_flutter/adapters.dart';
 // import 'package:reaction_button/reaction_button.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 
+import '../../../../profile/presentation/controllers/cubits/profile_cubit.dart';
+import '../../../../profile/presentation/controllers/states/profile_state.dart';
 import '../../../domain/entities/home/reaction_user.dart';
 import '../../controllers/cubits/post/action_post_cubit.dart';
 import '../../controllers/cubits/post/posts_cubit.dart';
@@ -28,26 +30,16 @@ class PostActions extends StatelessWidget {
   const PostActions({required this.post, super.key});
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostsCubit,PostsState>(
-      buildWhen: (previous, current) => previous!=current,
-      builder: (context, state) {
-                final updatedPost = state.posts.firstWhere((p) => p.id == post.id);
-        return   Column(
-          children: [
-            ReactionBar(post: updatedPost, onTap: () => _showReactionsSheet(context,state)),
-            8.ph(),
-            PostActionButtons(post: post,),
-          ],
-        );
-      },
+    return   Column(
+      children: [
+        ReactionBar(post: post, onTap: () => _showReactionsSheet(context)),
+        8.ph(),
+        PostActionButtons(post: post),
+      ],
     );
   }
 
-  void _showReactionsSheet(BuildContext context,PostsState state) async {
-
-
-
-
+  void _showReactionsSheet(BuildContext context) async {
 
     if (!context.mounted) return;
      showModalBottomSheet(

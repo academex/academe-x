@@ -37,17 +37,11 @@
 // }
 
 
-import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
-import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
-import 'package:academe_x/features/home/presentation/screens/profile_page.dart';
-import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
+import 'package:academe_x/features/profile/presentation/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:academe_x/lib.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:logger/logger.dart';
-
 import '../widgets/lib/flutter_reaction_button.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -119,21 +113,10 @@ class HomeScreen extends StatelessWidget {
           ), itemSize: Size(200,200),
         )
       ),
-      const ProfilePage(),
+       const ProfilePage(),
       ],
     );
   }
-  // void showReactionPopup(BuildContext context, Offset offset) {
-  //   Reactionpopup.showReaction(
-  //
-  //     context,
-  //     offset: offset,
-  //     handlePressed: (Emotions emotion) {
-  //       print('Selected emotion: $emotion');
-  //     },
-  //   );
-  // }
-
   void _handleUploadFile() {
     // Handle file upload logic
   }

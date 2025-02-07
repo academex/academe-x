@@ -67,6 +67,37 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
+
+  @override
+  Future<Either<Failure, PaginatedResponse<PostModel>>> loadProfilePosts(
+      PaginationParams paginationParams
+      ) async {
+    try {
+      // Try to get from network
+      final result = await remoteDataSource.loadProfilePosts(paginationParams);
+      return Right(result);
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(
+        message: e.errorMessage,
+      ));
+    } on ServerException catch (e) {
+      return Left(
+        ServerFailure(
+          message: e.message,
+        ),
+      );
+    } on TimeOutExeption catch (e) {
+
+      return Left(
+        TimeOutFailure(
+          message: e.errorMessage,
+        ),
+      );
+    } catch (e, stack) {
+      return Left(ServerFailure(message: 'An unexpected error occurred: $e'));
+    }
+  }
+
   @override
   Future<Either<Failure, BaseResponse<PostModel>>> getPostDetails(PaginationParams paginationParams) async {
     try {

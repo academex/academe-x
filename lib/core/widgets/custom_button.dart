@@ -8,6 +8,7 @@ class CustomButton extends StatelessWidget {
   final Color borderColor;
   final bool wihtBorder;
   final bool disable;
+  final double? height;
 
   const CustomButton({
     super.key,
@@ -17,13 +18,13 @@ class CustomButton extends StatelessWidget {
     this.disable = false,
     required this.backgraoundColor,
     this.borderColor = const Color(0xFF6D6D6D),
+    this.height = 60,
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-
-        onPressed:disable?(){}: onPressed,
+        onPressed: disable ? () {} : onPressed,
         style: ElevatedButton.styleFrom(
           elevation: 0,
           side: wihtBorder
@@ -34,7 +35,7 @@ class CustomButton extends StatelessWidget {
                 )
               : BorderSide.none,
           backgroundColor: backgraoundColor,
-          minimumSize: const Size(double.infinity, 60),
+          minimumSize: Size(double.infinity, height ?? 60),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

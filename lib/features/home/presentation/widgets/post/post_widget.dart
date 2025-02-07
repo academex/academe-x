@@ -12,11 +12,9 @@ import 'package:go_router/go_router.dart';
 
 class PostWidget extends StatelessWidget {
   final PostEntity post;
-  final bool fromHome;
 
   const PostWidget({
     required this.post,
-     this.fromHome=false,
     super.key,
   });
 

@@ -5,6 +5,7 @@ import 'package:academe_x/features/home/presentation/controllers/cubits/post/pos
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/poll_state.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
+import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -78,6 +79,9 @@ class AcademeXMain extends StatelessWidget {
       ),
     BlocProvider<PollCubit>(
     create: (context) => PollCubit(PollState()),
+    ),
+    BlocProvider<ProfileCubit>(
+      create: (context) => getIt<ProfileCubit>(),
     ),
     ];
   }
