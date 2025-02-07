@@ -6,6 +6,7 @@ import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -114,6 +115,7 @@ class PostsCubit extends Cubit<PostsState> {
           posts: postsToShow,
           errorMessage: 'Using cached data: $e',
           hasPostsReachedMax: true, // Prevent pagination in offline mode
+
         ));
       } else {
         emit(state.copyWith(
@@ -531,7 +533,7 @@ class PostsCubit extends Cubit<PostsState> {
   sendPost({required PostEntity post,required BuildContext context}) async {
     // Logger().d(post);
     emit(state.copyWith(creationStatus: CreationStatus.loading));
-    var createPostRes = await postUseCase.createPost(post);
+    var createPostRes = await postUseCase.createPost(post,context);
     createPostRes.fold(
       (l) {
         emit(
@@ -545,6 +547,7 @@ class PostsCubit extends Cubit<PostsState> {
         emit(state.copyWith(
             creationStatus: CreationStatus.success,
             posts: [r, ...state.posts]));
+
 
       },
     );
@@ -680,7 +683,7 @@ class PostsCubit extends Cubit<PostsState> {
       deleteComment(postId: postId,commentId: state.actionCommentId);
     }
     emit(state.copyWith(commentAction: CommentAction.create));
-    Future.delayed(Duration(milliseconds: 500),() => emit(state.copyWith(commentsStatus: CommentsStatus.success)),);
+    Future.delayed(const Duration(milliseconds: 500),() => emit(state.copyWith(commentsStatus: CommentsStatus.success)),);
   }
   deleteComment({required int postId,required int commentId}) async {
     emit(state.copyWith(
@@ -722,7 +725,17 @@ class PostsCubit extends Cubit<PostsState> {
       ));
     },);
   }
+  Future<UserResponseEntity?> getUser(BuildContext context) async {
+    UserResponseEntity? user = (await context.cachedUser)?.user;
+    emit(state.copyWith(
+      currentUser: user,
+    ));
+    return user;
+  }
   createComment({required int postId,required String content,withoutAddNew = false}) async {
+    // change ShowReplies cubit
+    // context.read<ShowRepliesCubit>().change(postIndex: postId, visibility: false);
+
     UserResponseEntity user = (await NavigationService.navigatorKey.currentContext!.cachedUser)!.user;
     if(!withoutAddNew) {
       CommentEntity newComment = CommentModel(user: user,
@@ -738,6 +751,7 @@ class PostsCubit extends Cubit<PostsState> {
     Logger().d(state.createCommentStatus);
     // if(state.createCommentStatus == CreateCommentStatus.loading) return;
     CommentsStatus previusCommentStatus = state.commentsStatus;
+
     emit(state.copyWith(
       createCommentStatus: CreateCommentStatus.loading,
       comments: state.comments,
@@ -773,6 +787,13 @@ class PostsCubit extends Cubit<PostsState> {
 
   }
 
+  increaseReplyCunt(int commentId){
+    state.comments[_getCommentIndexByCommentId(commentId)].replyCount = (state.comments[_getCommentIndexByCommentId(commentId)].replyCount??0 )+ 1;
+
+    emit(state.copyWith(
+      comments: state.comments,
+    ));
+  }
   @override
   Future<void> close() {
     scrollController.dispose();

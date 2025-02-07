@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:academe_x/core/utils/network/cubits/connectivity_cubit.dart';
+import 'package:academe_x/features/auth/presentation/controllers/cubits/login_cubit.dart';
 import 'package:academe_x/features/college_major/data/models/major_model.dart';
+import 'package:academe_x/features/home/data/models/post/poll/poll_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/image_entity.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http_parser/http_parser.dart'; // Import this for MediaType
 
 import 'package:academe_x/academeX_main.dart';
@@ -26,6 +31,8 @@ import '../../../../../core/utils/network/api_setting.dart';
 import '../../../../../core/utils/storage/cache/hive_cache_manager.dart';
 import '../../../presentation/controllers/states/create_post/create_post_icons_state.dart';
 import '../../models/post/comment_model.dart';
+import 'package:image/image.dart' as img;
+import 'dart:typed_data';
 
 typedef PostBaseResponse = BaseResponse<PostModel>;
 typedef TagBaseResponse = BaseResponse<List<MajorModel>>;
@@ -76,13 +83,14 @@ class CreatePostRemoteDataSource {
 
   Future<PostModel> createPost({
     required PostModel post,
-    BuildContext? context,
+    required BuildContext context,
   }) async {
-    final List<int> _bytes = [];
+
 
     if (post.tags!.isEmpty) {
       throw ValidationException(messages: ['يرجى اختيار tag']);
     }
+    context.read<PollCubit>().validate();
 
     return await _postWithExceptions(
       func: () async {
@@ -92,6 +100,18 @@ class CreatePostRemoteDataSource {
         request.fields['content'] = post.content!;
         for (int i = 0; i < post.tags!.length; i++) {
           request.fields['tagIds[$i]'] = post.tags![i].id.toString();
+        }
+
+        if (context.read<PollCubit>().state.optionContent != null &&
+            context.read<PollCubit>().state.optionContent!.isNotEmpty) {
+          request.fields['poll[question]'] = post.content!;
+          request.fields['poll[endDate]'] = context.read<PollCubit>().state.endPoll.toString();
+          for (int i = 0;
+              i < context.read<PollCubit>().state.optionContent!.length;
+              i++) {
+            request.fields['poll[options][$i]'] =
+                context.read<PollCubit>().state.optionContent![i];
+          }
         }
 
         // Add file if available

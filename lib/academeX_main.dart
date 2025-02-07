@@ -1,6 +1,8 @@
 import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
 import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/states/create_post/poll_state.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +66,7 @@ class AcademeXMain extends StatelessWidget {
 
 
       BlocProvider<PostsCubit>(
-        create: (context) => getIt<PostsCubit>(),
+        create: (context) => getIt<PostsCubit>()..getUser(context),
       ),
 
       BlocProvider<CollegeMajorsCubit>(
@@ -73,6 +75,12 @@ class AcademeXMain extends StatelessWidget {
       BlocProvider<GetTagsCubit>(
         create: (context) => getIt<GetTagsCubit>()..getTags(),
       ),
+      BlocProvider<ShowRepliesCubit>(
+        create: (context) => getIt<ShowRepliesCubit>(),
+      ),
+    BlocProvider<PollCubit>(
+    create: (context) => PollCubit(PollState()),
+    ),
     ];
   }
 

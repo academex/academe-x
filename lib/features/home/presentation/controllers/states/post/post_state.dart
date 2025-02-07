@@ -1,4 +1,5 @@
 
+import 'package:academe_x/features/auth/auth.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/statistics_entity.dart';
@@ -47,6 +48,7 @@ class PostsState extends Equatable {
   int commentCurrentPage;
   int actionCommentId;
   CommentAction commentAction;
+  final UserResponseEntity? currentUser;
 
 
 
@@ -84,6 +86,7 @@ class PostsState extends Equatable {
     this.latestPostIdGetHereComments = -1,
     this.actionCommentId = -1,
     this.commentAction = CommentAction.create,
+    this.currentUser,
 
 
   });
@@ -117,6 +120,8 @@ class PostsState extends Equatable {
     int? actionCommentId,
     CommentAction? commentAction,
     UpdateDeleteCommentStatus? updateDeleteCommentStatus,
+    UserResponseEntity? currentUser,
+
 
   }) {
     return PostsState(
@@ -152,6 +157,7 @@ class PostsState extends Equatable {
       actionCommentId: actionCommentId ?? this.actionCommentId,
       commentAction: commentAction ?? this.commentAction,
       updateDeleteCommentStatus: updateDeleteCommentStatus ?? this.updateDeleteCommentStatus,
+      currentUser: currentUser ?? this.currentUser,
 
     );
   }
@@ -185,5 +191,6 @@ class PostsState extends Equatable {
     actionCommentId,
     commentAction,
     updateDeleteCommentStatus,
+    currentUser,
   ];
 }

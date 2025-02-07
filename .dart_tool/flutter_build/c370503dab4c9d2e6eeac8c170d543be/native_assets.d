@@ -1,0 +1,1 @@
+ C:\\Users\\amuba\\StudioProjects\\finlaProject\\academe-x\\.dart_tool\\flutter_build\\c370503dab4c9d2e6eeac8c170d543be\\native_assets.yaml: 
