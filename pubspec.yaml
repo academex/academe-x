@@ -125,6 +125,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/icons/reactions/
+    - assets/icons/setting/
 #    - assets/animations/  # For Lottie animations
     - assets/fonts/
 

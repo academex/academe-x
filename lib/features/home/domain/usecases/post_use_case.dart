@@ -31,6 +31,12 @@ class PostUseCase {
     return await postRepository.reactToPost(reactionType,postId);
   }
 
+  Future<Either<Failure, PaginatedResponse<PostEntity>>> loadProfilePosts(
+      PaginationParams params,
+      ) async {
+    return await postRepository.loadProfilePosts(params);
+  }
+
 
 
   Future<Either<Failure, BaseResponse<SaveResponseEntity>>> savePost(int postId) async {

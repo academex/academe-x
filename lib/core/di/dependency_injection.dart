@@ -3,6 +3,13 @@ import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
+import 'package:academe_x/features/profile/data/datasources/profile_remote_data_source.dart';
+import 'package:academe_x/features/profile/data/repositories/profile_repository_impl.dart';
+// import 'package:academe_x/features/profile/domain/repositories/profile_repository.dart';
+import 'package:academe_x/features/profile/domain/repositories/user_profile_repositories.dart';
+// import 'package:academe_x/features/profile/domain/usecases/profile_use_case.dart';
+import 'package:academe_x/features/profile/domain/usecases/profile_usecase.dart';
+import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../../features/college_major/controller/cubit/college_major_cubit.dart';
@@ -83,10 +90,20 @@ void _initCubits() {
       authUseCase: getIt(),
       collegeMajorsCubit: getIt()
     ),
+    
+
+
   );
 
   getIt.registerFactory<CollegeMajorsCubit>(
     () => CollegeMajorsCubit(cacheManager: getIt(), getMajorsUseCase: getIt()),
+  );
+
+  getIt.registerFactory<ProfileCubit>(
+    () => ProfileCubit(
+      postsCubit: getIt(),
+      profileUseCase: getIt(),
+    ),
   );
 
 }
@@ -116,6 +133,12 @@ void _initUseCases() {
   getIt.registerLazySingleton<CollegeMajorUseCase>(
     () => CollegeMajorUseCase(collegeMajorRepository: getIt()),
   );
+
+  getIt.registerLazySingleton<ProfileUseCase>(
+    () => ProfileUseCase(
+    getIt(),
+    ),
+  );
 }
 
 void _initRepositories() {
@@ -130,6 +153,11 @@ void _initRepositories() {
   );
   getIt.registerLazySingleton<CollegeMajorRepository>(
     () => CollegeMajorRepositoryImpl(remoteDataSource: getIt(), cacheManager: getIt(), networkInfo: getIt()),
+  );
+  getIt.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(
+      remoteDataSource: getIt(),
+    ),
   );
 }
 
@@ -162,6 +190,14 @@ void _initDataSources() {
       internetConnectionChecker: getIt(),
     ),
   );
+
+  getIt.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSource(
+      apiController: getIt(),
+      internetConnectionChecker: getIt(),
+    ),
+  );
+ 
 }
 
 Future<void> _initExternalDependencies() async {

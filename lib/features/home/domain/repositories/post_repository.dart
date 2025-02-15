@@ -32,4 +32,10 @@ abstract class PostRepository {
   Future<Either<Failure, BaseResponse<CommentModel>>> createReply({required int commentId, int? parentId,required String content});
   Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies({required int commentId});
   Future<Either<Failure, BaseResponse<void>>> likeOnCommentOrReply({required int commentId,int? postId,int? replyId});
+
+  Future<Either<Failure, PaginatedResponse<PostEntity>>> loadProfilePosts(
+      PaginationParams paginationParams,
+      );
+
+
 }

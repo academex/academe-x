@@ -20,7 +20,9 @@ class CommentsList {
   CommentsList({required postId, required BuildContext context}) {
     showModalBottomSheet(
       context: context,
+
       isScrollControlled: true, // This allows the modal to take more space
+
 
       builder: (context) {
 
@@ -32,6 +34,7 @@ class CommentsList {
 
           ],
           child: FractionallySizedBox(
+
             heightFactor: 0.9, // Modal height
             child: Padding(
               padding: EdgeInsets.only(

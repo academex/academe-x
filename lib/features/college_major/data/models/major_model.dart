@@ -9,6 +9,7 @@ class MajorModel extends MajorEntity{
     required super.collegeEn,
     required super.createdAt,
     required super.description,
+    required super.photoUrl,
     required super.isActive,
     required super.majorAr,
     required super.majorEn,
@@ -24,6 +25,7 @@ class MajorModel extends MajorEntity{
     collegeEn = json['collegeEn'];
     majorEn = json['majorEn'];
     description = json['description'];
+    photoUrl = json['photoUrl'];
     yearsNum = json['yearsNum'];
     isActive = json['isActive'];
     createdAt = json['createdAt'];
@@ -39,6 +41,7 @@ class MajorModel extends MajorEntity{
     data['collegeEn'] = this.collegeEn;
     data['majorEn'] = this.majorEn;
     data['description'] = this.description;
+    data['photoUrl'] = this.photoUrl;
     data['yearsNum'] = this.yearsNum;
     data['isActive'] = this.isActive;
     data['createdAt'] = this.createdAt;

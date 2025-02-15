@@ -1,7 +1,9 @@
 
+import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
 import 'package:flutter/material.dart';
 
 import 'package:academe_x/lib.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HeaderWidget extends StatelessWidget {
   bool inScroll;
@@ -24,7 +26,8 @@ class HeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Row(
       children: [
-        inScroll?_buildLogoContainer(logoPath): _buildLogoContainer(logoPath),
+        _buildLogoContainer(logoPath,inScroll,context) ,
+        // inScroll?: _buildLogoContainer(logoPath),
         8.pw(),
         _buildTitleAndSubtitle(inScroll,title,subTitle),
         const Spacer(),
@@ -36,19 +39,23 @@ class HeaderWidget extends StatelessWidget {
   }
 
 
-  Widget _buildLogoContainer(String image) {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: const BoxDecoration(
-        color: Color(0xff1F02E8),
-        borderRadius: BorderRadius.all(Radius.circular(8)),
+  Widget _buildLogoContainer(String image,bool inScroll,BuildContext context) {
+    return InkWell(
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: inScroll ? 20: 0),
+        width: 50,
+        height: 50,
+        decoration: const BoxDecoration(
+          color: Color(0xff1F02E8),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        child: Image.asset(
+          image, //'assets/images/Frame.png'
+          height: 28,
+          width: 28,
+        ),
       ),
-      child: Image.asset(
-       image, //'assets/images/Frame.png'
-        height: 28,
-        width: 28,
-      ),
+      onTap: () => context.read<PostsCubit>().goToTop(),
     );
   }
 

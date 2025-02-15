@@ -5,6 +5,7 @@ import 'package:academe_x/features/home/presentation/controllers/cubits/post/pos
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/poll_state.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
+import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -64,11 +65,9 @@ class AcademeXMain extends StatelessWidget {
         create: (context) => getIt<PostImageCubit>(),
       ),
 
-
       BlocProvider<PostsCubit>(
         create: (context) => getIt<PostsCubit>()..getUser(context),
       ),
-
       BlocProvider<CollegeMajorsCubit>(
         create: (context) => getIt<CollegeMajorsCubit>()..initCollegeMajorForApp(),
       ),
@@ -80,6 +79,9 @@ class AcademeXMain extends StatelessWidget {
       ),
     BlocProvider<PollCubit>(
     create: (context) => PollCubit(PollState()),
+    ),
+    BlocProvider<ProfileCubit>(
+      create: (context) => getIt<ProfileCubit>(),
     ),
     ];
   }
@@ -120,28 +122,17 @@ class AcademeXMain extends StatelessWidget {
   }
 
   Widget _buildAppWithExtra(BuildContext context, Widget? child) {
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       DeepLinkService.initialize();
     });
     SizeConfig.init(context);
-
-
-
-
     return MultiBlocListener(listeners: [
-
         BlocListener<ConnectivityCubit, ConnectivityStatus>(
           listenWhen: (previous, current) => previous!=current ,
         listener: (context, status) async{
-
-
-
           if (status == ConnectivityStatus.disconnected) {
-
             _showNoConnectionBanner(context, ConnectivityStatus.disconnected);
           }
-
           if (status == ConnectivityStatus.connected) {
             _showNoConnectionBanner(context, ConnectivityStatus.connected);
           }
@@ -212,7 +203,6 @@ class AcademeXMain extends StatelessWidget {
       BuildContext context, ConnectivityStatus disconnected) {
     switch (disconnected) {
       case ConnectivityStatus.connected:
-        AppLogger.success('connected');
         context.showSnackBar(
           message: 'تم الاتصال بالانترنت',
         );

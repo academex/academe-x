@@ -250,6 +250,7 @@ class HiveCacheManager implements BaseStorageManager {
     }
 
     try {
+      // AppLogger.success('inside getCachedResponse ${cachedData['data'] as T}');
       return fromJson(cachedData['data']);
     } catch (e,stackTrace) {
 

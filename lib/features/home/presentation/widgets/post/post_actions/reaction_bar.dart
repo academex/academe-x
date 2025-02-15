@@ -11,8 +11,8 @@ class ReactionBar extends StatelessWidget {
   const ReactionBar({
     required this.post,
     required this.onTap,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

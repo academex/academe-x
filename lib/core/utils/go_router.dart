@@ -1,4 +1,5 @@
 import 'package:academe_x/core/utils/storage/cache/hive_cache_manager.dart';
+import 'package:academe_x/features/profile/presentation/screens/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
@@ -117,6 +118,11 @@ final goRouter = GoRouter(
       path: '/app_notification',
       name: 'appNotification',
       builder: (context, state) => const AppNotification(),
+    ),
+    GoRoute(
+      path: '/setting',
+      name: 'setting',
+      builder: (context, state) => const SettingPage(),
     ),
     GoRoute(
       path: '/post/:postId',
