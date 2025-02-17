@@ -26,7 +26,8 @@ import '../../states/post/post_state.dart';
 class PostsCubit extends Cubit<PostsState> {
   final PostUseCase postUseCase;
   final HiveCacheManager _cacheManager;
-  final ScrollController scrollController = ScrollController();
+  final ScrollController homePostsScrollController = ScrollController();
+  final ScrollController profilePostsScrollController = ScrollController();
   final ScrollController commentScrollController = ScrollController();
 
 
@@ -184,11 +185,11 @@ class PostsCubit extends Cubit<PostsState> {
     ));
   }
   bool isAtTop() {
-    return scrollController.position.pixels <= 0;
+    return homePostsScrollController.position.pixels <= 0;
   }
 
   void goToTop() {
-    scrollController.animateTo(
+    homePostsScrollController.animateTo(
       0,
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
@@ -782,7 +783,7 @@ class PostsCubit extends Cubit<PostsState> {
 
   @override
   Future<void> close() {
-    scrollController.dispose();
+    homePostsScrollController.dispose();
     return super.close();
   }
 }

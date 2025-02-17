@@ -22,7 +22,6 @@ class PostMedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    AppLogger.success(post.poll.toString());
 
     if (post.images?.isNotEmpty ?? false) {
       if (post.file?.url != null) {

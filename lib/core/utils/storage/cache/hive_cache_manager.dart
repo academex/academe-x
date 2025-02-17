@@ -148,7 +148,6 @@ class HiveCacheManager implements BaseStorageManager {
       _userBox = await Hive.openBox<String>(StorageConfig.userBoxName);
       _settingsBox = await Hive.openBox<String>(StorageConfig.settingsBoxName);
 
-      AppLogger.success('Successfully recovered from cache corruption');
     } catch (e) {
       AppLogger.e('Failed to recover from cache corruption: $e');
       rethrow;

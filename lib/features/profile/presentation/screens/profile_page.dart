@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/core/utils/deep_link_service.dart';
 import 'package:flutter/material.dart';
@@ -30,24 +32,51 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  Timer? _debounce;
+  late ScrollController _scrollController;
+
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _scrollController =context.read<PostsCubit>().profilePostsScrollController;
+    _scrollController.addListener(_onScroll);
+
+
     _loadProfile();
   }
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    super.dispose();
+  }
+
+  bool get _isBottom {
+    if (!context.read<PostsCubit>().profilePostsScrollController.hasClients) return false;
+    final maxScroll = context.read<PostsCubit>().profilePostsScrollController.position.maxScrollExtent;
+    final currentScroll = context.read<PostsCubit>().profilePostsScrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  void _onScroll() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      if (_isBottom) {
+        context.read<PostsCubit>().loadProfilePosts(
+          context,
+          username: widget.userId,
+        );
+      }
+    });
+  }
+
 
   void _loadProfile() {
     context.read<ProfileCubit>().loadProfile(context, userId: widget.userId);
     context.read<PostsCubit>().loadProfilePosts(context, username: widget.userId);
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +162,8 @@ class _ProfilePageState extends State<ProfilePage>
               onPressed: () {
                 // Handle settings tap
 
-                context.go(
-                  '/setting'
+                context.pushNamed(
+                  'setting'
                 );
 
                 // Navigator.pushReplacementNamed(context, '/setting');
@@ -311,160 +340,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-// Rest of the code remains the same (TabBar and TabBarView)...
 
-
-// import 'package:academe_x/core/core.dart';
-// import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
-// import 'package:academe_x/features/auth/auth.dart';
-// import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
-// import 'package:academe_x/features/profile/presentation/controllers/states/profile_state.dart';
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-//
-// class ProfilePage extends StatefulWidget {
-//    ProfilePage({super.key });
-//
-//   @override
-//   State<ProfilePage> createState() => _ProfilePageState();
-// }
-//
-// class _ProfilePageState extends State<ProfilePage>
-//     with SingleTickerProviderStateMixin {
-//   late TabController _tabController;
-//
-//   UserResponseEntity? userResponseEntity;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _tabController = TabController(length: 4, vsync: this);
-//     if (kDebugMode) {
-//     }
-//   }
-//   //get user cached data
-//
-//
-//
-//   @override
-//   void dispose() {
-//     _tabController.dispose();
-//     super.dispose();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: SafeArea(
-//         child: Column(
-//           children: [
-//             _buildProfileHeader(),
-//             _buildBioSection(),
-//             _buildTabBar(context),
-//             _buildTabBarView(context),
-//           ],
-//         ),
-//       ),
-//     );
-//     // return BlocBuilder<ProfileCubit, ProfileState>(
-//     //   builder: (context, state) {
-//     //     return
-//     //   },
-//     // );
-//   }
-//
-//   Widget _buildProfileHeader() {
-//     // final user = state.profileUser;
-//     return Padding(
-//       padding: const EdgeInsets.all(16.0),
-//       child: Row(
-//         children: [
-//           CircleAvatar(
-//             radius: 30,
-//             // backgroundImage: user?.photoUrl!= null
-//             //   ? NetworkImage(user!.photoUrl!) as ImageProvider
-//             //   : const AssetImage('assets/images/default_avatar.png'),
-//           ),
-//           10.pw(),
-//           Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               // AppText(text: '${user?.firstName ?? ''} ${user?.lastName ?? ''}', fontSize: 16),
-//               AppText(text: 's', fontSize: 16),
-//               AppText(
-//                 // text: '@${user?.username ?? ''}',
-//                 text: '@s',
-//                 fontSize: 14,
-//                 color: const Color(0xC4767676),
-//               ),
-//             ],
-//           ),
-//           const Spacer(),
-//           IconButton(
-//             icon: const Icon(
-//               Icons.settings_outlined,
-//               color: Color(0xffCCCCCC),
-//             ),
-//             onPressed: () {
-//               // Handle settings tap
-//             },
-//           )
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildBioSection() {
-//     // final user = state.profileUser;
-//     // final hasBio = user?.bio != null && user!.bio!.isNotEmpty;
-//
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Row(
-//             children: [
-//               const Icon(Icons.person),
-//               4.pw(),
-//               AppText(
-//                 // text: hasBio ? 'السيرة الذاتية' : 'اضافة سيرة ذاتية !!',
-//                 text:  'اضافة سيرة ذاتية !!',
-//                 fontSize: 12,
-//                 color: const Color(0xE0373737),
-//               ),
-//             ],
-//           ),
-//           6.ph(),
-//           AppText(
-//             // text: hasBio
-//             //   ? user!.bio!
-//             //   : ,
-//             text: 'قم بادخال سيرتك الذاتية هنا واجعل الناس يعرفوك اكثر ',
-//             fontSize: 12,
-//             color: const Color(0xEA6A6A6A),
-//           ),
-//           8.ph(),
-//           CustomButton(
-//             height: 40,
-//             widget: AppText(
-//               // text: hasBio ? 'تعديل' : 'اضافة',
-//               text: 'تعديل',
-//               fontSize: 14,
-//               color: Colors.white,
-//             ),
-//             onPressed: () {
-//               // Handle bio add/edit button tap
-//             },
-//             backgraoundColor: const Color(0xFF2769F2),
-//           ),
-//           15.ph()
-//         ],
-//       ),
-//     );
-//   }
-//
   Widget _buildTabBar(BuildContext context) {
     return Container(
       height: 50,
@@ -539,6 +415,7 @@ class _ProfilePageState extends State<ProfilePage>
           case PostProfileStatus.initial:
           case PostProfileStatus.loading:
             return  ListView.builder(
+
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) => Column(
                 children: [
@@ -577,6 +454,7 @@ class _ProfilePageState extends State<ProfilePage>
             break;
         }
         return CustomScrollView(
+          controller: _scrollController,
           slivers: [
             SliverList(
               delegate: SliverChildBuilderDelegate(

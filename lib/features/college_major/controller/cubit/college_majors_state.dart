@@ -10,11 +10,11 @@ class CollegeMajorsState extends Equatable {
   final MajorsStatus status;
   final List<MajorEntity> majors;
   late  MajorEntity? selectedMajor;
-  final String? selectedCollege;
+  late  String? selectedCollege;
   final String? selectedTag;
   final String? errorMessage;
   final String? errorMessageCollege;
-  final String? collegeAndMajor;
+  late  String? collegeAndMajor;
   final bool isCached;
   final bool isVisibileMajors;
   final bool isLoadingForCollege;

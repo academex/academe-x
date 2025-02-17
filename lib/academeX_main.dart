@@ -209,7 +209,6 @@ class AcademeXMain extends StatelessWidget {
 
         break;
       case ConnectivityStatus.disconnected:
-        AppLogger.success('not connected');
         context.showSnackBar(message: 'لا يوجد اتصال بالإنترنت', error: true);
         break;
     }
