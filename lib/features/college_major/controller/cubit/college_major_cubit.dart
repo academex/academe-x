@@ -89,11 +89,12 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
         ));
       },
           (colleges) async {
-        emit(state.copyWith(
+
+            emit(state.copyWith(
             colleges: colleges,
             isLoadingForCollege: false,
             errorMessageCollege: null,
-          clearErrorMessageCollege: true,
+            clearErrorMessageCollege: true,
         ));
       },
     );

@@ -44,7 +44,6 @@ class PostRepositoryImpl implements PostRepository {
     try {
       // Try to get from network
       final result = await remoteDataSource.getPosts(paginationParams);
-      AppLogger.success('get posts ${paginationParams.page}');
 
       // Cache successful network response
       await _cachePostsResults(
@@ -191,7 +190,6 @@ class PostRepositoryImpl implements PostRepository {
         cacheKey,
         cachedData.toJson(),
       );
-      AppLogger.success('caching ${cachedData.posts.length}');
     } catch (e, stack) {
       AppLogger.w('Cache operation failed: $e\n$stack');
     }
@@ -200,12 +198,10 @@ class PostRepositoryImpl implements PostRepository {
 
   Future<CachedPaginatedData?> _getPostsFromCache({int? tagId}) async {
     try {
-      AppLogger.success('inside _getPostsFromCache and going to get from cache');
       final cachedData = await cacheManager.getCachedResponse<CachedPaginatedData>(
         '${CacheKeys.POSTS}/$tagId',
             (json) => CachedPaginatedData.fromJson(json as Map<String, dynamic>),
       );
-      AppLogger.success('cache ${cachedData?.posts.length}');
 
       if (cachedData == null) return null;
       final now = DateTime.now();
@@ -224,7 +220,6 @@ class PostRepositoryImpl implements PostRepository {
           .where((post) => validPostIds.contains(post.id))
           .toList();
 
-      AppLogger.success('message ${validPosts.length}');
 
       return CachedPaginatedData(
         posts: validPosts,
@@ -262,7 +257,6 @@ class PostRepositoryImpl implements PostRepository {
       PaginationParams paginationParams,
       ) async {
     try {
-      AppLogger.success('inside handle offline case and going to get posts from cache');
       final cachedData = await _getPostsFromCache(tagId: paginationParams.tagId);
 
       if (cachedData == null || cachedData.posts.isEmpty) {

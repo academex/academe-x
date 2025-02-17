@@ -68,9 +68,6 @@ class ApiController {
       };
 
       final dynamic finalBody = body is String ? body : jsonEncode(body);
-      AppLogger.success('Request URL: $url');
-      AppLogger.success('Request Headers: $finalHeaders');
-      AppLogger.success('Final request body: $finalBody');
 
       http.Response response = await http
           .post(

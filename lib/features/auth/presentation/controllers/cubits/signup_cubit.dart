@@ -12,10 +12,10 @@ class SignupCubit extends AuthCubit {
       : super(
       initialState: AuthState.initialSignup(),
       authenticationUseCase: authUseCase
-
   );
 
   void showEduInfo(bool showEducationInfo) async{
+    AppLogger.success(showEducationInfo.toString());
   emit(state.copyWith(
     showEducationInfo: !showEducationInfo,
   ));

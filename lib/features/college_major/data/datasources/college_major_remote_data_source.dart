@@ -88,7 +88,6 @@ class CollegeMajorRemoteDataSource {
         await getIt<HiveCacheManager>()
             .cacheResponse(CacheKeys.MAJORS, baseResponse.data);
 
-        AppLogger.success('Major cached successfully');
       } catch (e) {
         AppLogger.e('Failed to cache Major: $e');
         rethrow;

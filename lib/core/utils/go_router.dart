@@ -1,4 +1,5 @@
 import 'package:academe_x/core/utils/storage/cache/hive_cache_manager.dart';
+import 'package:academe_x/features/profile/presentation/screens/about_us_screen.dart';
 import 'package:academe_x/features/profile/presentation/screens/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +7,7 @@ import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
 import 'package:academe_x/lib.dart';
 
 import '../../features/home/presentation/widgets/post/post_detail_screen.dart';
+import '../../features/profile/presentation/screens/change_password.dart';
 
 
 final goRouter = GoRouter(
@@ -77,7 +79,13 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/sign_up',
       name: 'signUp',
-      builder: (context, state) => SignUpScreen(),
+      builder: (context, state) {
+        // final then = state.uri.queryParameters['then'];
+        final isEdit = state.extra != null
+            ? (state.extra as Map<String, dynamic>)['isEdit'] as bool
+            : false;
+        return SignUpScreen(isEdit: isEdit,);
+      }
     ),
     GoRoute(
       path: '/account_creation',
@@ -123,6 +131,15 @@ final goRouter = GoRouter(
       path: '/setting',
       name: 'setting',
       builder: (context, state) => const SettingPage(),
+    ),
+    GoRoute(
+      path: '/change_password',
+      name: 'changePassword',
+      builder: (context, state) => const ChangePassword(),
+    ),GoRoute(
+      path: '/about_us',
+      name: 'aboutUs',
+      builder: (context, state) => const AboutUsPage(),
     ),
     GoRoute(
       path: '/post/:postId',

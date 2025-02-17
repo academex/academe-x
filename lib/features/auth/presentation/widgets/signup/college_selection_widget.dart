@@ -17,13 +17,13 @@ class CollegeSelectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CollegeMajorsCubit,CollegeMajorsState>(
       buildWhen: (previous, current) => previous!=current,
-      builder: (context, state) {
+      builder: (ctx, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const DropdownLabel(),
             12.ph(),
-            _buildDropdown(context,state),
+            _buildDropdown(ctx,state),
           ],
         );
       },
@@ -32,6 +32,8 @@ class CollegeSelectionWidget extends StatelessWidget {
 }
 
 Widget _buildDropdown(BuildContext context,CollegeMajorsState state) {
+  AppLogger.success(state.colleges.toString());
+
   return GestureDetector(
     onTap: () => context.read<CollegeMajorsCubit>().toggleExpanded(),
     child: Container(
@@ -80,11 +82,11 @@ Widget _buildHeader(CollegeMajorsState state) {
   );
 }
 Widget _buildCollegesList(CollegeMajorsState state,BuildContext context) {
+  // AppLogger.success(state.colleges.toString());
   if(state.errorMessageCollege !=null){
     return CompactErrorWidget(
       message: state.errorMessageCollege,
       onRetry: () async{
-        AppLogger.success('message');
         await context.read<CollegeMajorsCubit>().retry();
       },
     );

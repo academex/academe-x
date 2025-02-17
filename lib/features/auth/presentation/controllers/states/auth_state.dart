@@ -20,7 +20,7 @@ class AuthState extends Equatable {
   final String? selectedCollege;
   final int? selectedMajorIndex;
   late final int? selectedTagId;
-  final int? selectedSemesterIndex;
+  late  int? selectedSemesterIndex;
   final String? collegeAndMajor;
   late Map<String, CollegeData>? collegesData;
   final SelectionType? selectionType;

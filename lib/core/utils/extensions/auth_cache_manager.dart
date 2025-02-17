@@ -16,7 +16,6 @@ extension AuthCacheManager on HiveCacheManager {
         duration: const Duration(days: 30),
         isUser: true
       );
-      AppLogger.success('User cached successfully');
     } catch (e) {
       AppLogger.e('Failed to cache user: $e');
       rethrow;
@@ -49,7 +48,6 @@ extension AuthCacheManager on HiveCacheManager {
   Future<void> clearAuthCache() async {
     try {
       await removeCacheItem(CacheKeys.USER);
-      AppLogger.success('Auth cache cleared successfully');
     } catch (e) {
       AppLogger.e('Failed to clear auth cache: $e');
       rethrow;

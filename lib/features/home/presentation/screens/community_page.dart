@@ -31,7 +31,7 @@ class _CommunityPageState extends State<CommunityPage> {
     context.read<CollegeMajorsCubit>().initCollegeMajorForHome();
     context.read<PostsCubit>().loadTagPosts();
     // Future
-    _scrollController = context.read<PostsCubit>().scrollController;
+    _scrollController = context.read<PostsCubit>().homePostsScrollController;
     _scrollController.addListener(_onScroll);
   }
   @override
@@ -52,9 +52,9 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   bool get _isBottom {
-    if (!context.read<PostsCubit>().scrollController.hasClients) return false;
-    final maxScroll = context.read<PostsCubit>().scrollController.position.maxScrollExtent;
-    final currentScroll = context.read<PostsCubit>().scrollController.offset;
+    if (!context.read<PostsCubit>().homePostsScrollController.hasClients) return false;
+    final maxScroll = context.read<PostsCubit>().homePostsScrollController.position.maxScrollExtent;
+    final currentScroll = context.read<PostsCubit>().homePostsScrollController.offset;
     return currentScroll >= (maxScroll * 0.9);
   }
 
@@ -203,7 +203,7 @@ class _CommunityPageState extends State<CommunityPage> {
         return await context.read<PostsCubit>().refreshPosts(context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
       },
       child: CustomScrollView(
-        controller: context.read<PostsCubit>().scrollController,
+        controller: _scrollController,
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(), // Add this to enable refresh when at top
         ),
@@ -314,7 +314,6 @@ class _CommunityPageState extends State<CommunityPage> {
                     bool isSelected= state.majors[index].name! == state.selectedTag;
                     String? title = state.majors[index].majorAr;
                     // String image = 'assets/images/image_test1.png';
-                    AppLogger.success(state.majors[index].photoUrl.toString());
                     String image = state.majors[index].photoUrl!;
                     return Column(
                       children: [

@@ -1,39 +1,139 @@
+import 'package:academe_x/core/core.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
-import 'package:academe_x/lib.dart';
+// import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/app_size.dart';
+import '../../../../core/di/dependency_injection.dart';
+import '../../../../core/utils/extensions/responsive_layout.dart';
+import '../../../../core/utils/logger.dart';
 import '../../../college_major/controller/cubit/college_majors_state.dart';
+import '../../../college_major/data/models/major_model.dart';
+import '../../data/models/response/auth_token_model.dart';
+import '../../domain/entities/request/signup_request_entity.dart';
+import '../controllers/cubits/signup_cubit.dart';
+import '../controllers/states/auth_state.dart';
+import '../controllers/states/college_state.dart';
+import '../widgets/create_account_header.dart';
+import '../widgets/custom_text_field.dart';
+import '../widgets/progress_bar_with_close_button.dart';
+import '../widgets/signup/college_selection_widget.dart';
+import '../widgets/signup/show_grid_view_item.dart';
 
 class SignUpScreen extends StatelessWidget {
-   const SignUpScreen({super.key});
+  final bool isEdit;
+
+
+  const SignUpScreen({super.key,required this.isEdit});
 
   @override
   Widget build(BuildContext context) {
+
     SizeConfig.init(context);
 
-    return BlocProvider(
-      create: (context) => getIt<SignupCubit>(),
-      child: BlocBuilder<SignupCubit, AuthState>(
-        builder: (ctx, state) {
-          return PopScope(
-            canPop: state.showEducationInfo! ? false : true,
-            onPopInvokedWithResult: (didPop, result) {
-              if (state.showEducationInfo!) {
-                ctx.read<SignupCubit>().showEduInfo(state.showEducationInfo!);
-              }
-            },
-            child: Scaffold(
-              body: ResponsiveLayout(
-                mobile: _buildMobileLayout(context, state, ctx),
-                tablet: _buildTabletLayout(context, state, ctx),
-              ),
+    return FutureBuilder<List<dynamic>?>(
+      future: Future.wait([
+        context.cachedUser,
+        context.cachMajor,
+      ]),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
           );
         }
-      ),
+        else{
+          AppLogger.network('Data loaded: ${snapshot.data?[0]}, Majors: ${snapshot.data?[1]?.length}');
+          if(isEdit&&snapshot.hasData){
+            final userData  = snapshot.data?[0] as AuthTokenModel?;
+            final majorsData = snapshot.data?[1] as List<MajorModel>;
+
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                create: (context) {
+              final signupCubit = getIt<SignupCubit>();
+
+              signupCubit.state.firstNameController!.text = userData ?.user.firstName ?? '';
+              signupCubit.state.lastNameController!.text = userData ?.user.lastName ?? '';
+              signupCubit.state.emailController!.text = userData ?.user.email ?? '';
+              signupCubit.state.selectedSemesterIndex = (userData !.user.currentYear!-1);
+              return signupCubit;
+            },),
+                BlocProvider(
+                  create: (context) {
+                    final collegeMajorCubit = getIt<CollegeMajorsCubit>()..getColleges();
+                    // Find and set the user's major
+                    final userMajor = majorsData.firstWhere(
+                          (major) => major.id == userData?.user.tagId,
+                      orElse: () => majorsData.first,
+                    );
+
+                  collegeMajorCubit.selectCollege(userMajor.collegeEn!);
+                  collegeMajorCubit.state.selectedCollege =userMajor.collegeEn!;
+                  collegeMajorCubit.state.collegeAndMajor ="${userMajor.collegeEn!} (${userMajor.name}) ";
+
+
+                    return collegeMajorCubit;
+                  },
+                )
+              ],
+              child: BlocBuilder<SignupCubit, AuthState>(
+                  builder: (ctx, state) {
+                    return PopScope(
+                      canPop: state.showEducationInfo! ? false : true,
+                      onPopInvokedWithResult: (didPop, result) {
+                        if (state.showEducationInfo!) {
+                          ctx.read<SignupCubit>().showEduInfo(state.showEducationInfo!);
+                        }
+                      },
+                      child: Scaffold(
+                        body: ResponsiveLayout(
+                          mobile: _buildMobileLayout(context, state, ctx),
+                          tablet: _buildTabletLayout(context, state, ctx),
+                        ),
+                      ),
+                    );
+                  }
+                ),
+            );
+          }
+          else{
+            return BlocProvider(
+              create: (context) => getIt<SignupCubit>(),
+              child: BlocBuilder<SignupCubit, AuthState>(
+                  builder: (ctx, state) {
+                    return PopScope(
+                      canPop: state.showEducationInfo! ? false : true,
+                      onPopInvokedWithResult: (didPop, result) {
+                        if (state.showEducationInfo!) {
+                          ctx.read<SignupCubit>().showEduInfo(state.showEducationInfo!);
+                        }
+                      },
+                      child: Scaffold(
+                        body: ResponsiveLayout(
+                          mobile: _buildMobileLayout(context, state, ctx),
+                          tablet: _buildTabletLayout(context, state, ctx),
+                        ),
+                      ),
+                    );
+                  }
+              ),
+            );
+          }
+        }
+
+
+      },
     );
+
+
+
   }
 
   Widget _buildMobileLayout(
@@ -62,10 +162,10 @@ class SignUpScreen extends StatelessWidget {
                 progressValue: state.showEducationInfo! ? 1.0 : 0.5,
               ),
               SizedBox(height: context.hp(3)),
-              CreateAccountHeader(step: state.showEducationInfo! ? 2 : 1),
+              CreateAccountHeader(step: state.showEducationInfo! ? 2 : 1,isEdit:isEdit),
               SizedBox(height: context.hp(4)),
               if (!state.showEducationInfo!) ...[
-                _buildPersonalInfoFields(ctx, state),
+                _buildPersonalInfoFields(ctx, state,isEdit: isEdit),
                 SizedBox(height: context.hp(2)),
                 _buildSubmitButton(
                   context,
@@ -83,7 +183,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ],
               SizedBox(height: context.hp(state.showEducationInfo! ? 6 : 2)),
-              _buildLoginOption(context),
+              isEdit? 0.ph(): _buildLoginOption(context),
             ],
           )),
     ));
@@ -114,7 +214,7 @@ class SignUpScreen extends StatelessWidget {
                   progressValue: state.showEducationInfo! ? 1.0 : 0.5,
                 ),
                 SizedBox(height: context.hp(4)),
-                CreateAccountHeader(step: state.showEducationInfo! ? 2 : 1),
+                CreateAccountHeader(step: state.showEducationInfo! ? 2 : 1,isEdit: isEdit,),
               ],
             ),
           ),)
@@ -127,7 +227,7 @@ class SignUpScreen extends StatelessWidget {
               child: Column(
                 children: [
                   if (!state.showEducationInfo!) ...[
-                    _buildPersonalInfoFields(context, state),
+                    _buildPersonalInfoFields(context, state,isEdit: isEdit),
                     SizedBox(height: context.hp(3)),
                     _buildSubmitButton(
                       context,
@@ -144,7 +244,7 @@ class SignUpScreen extends StatelessWidget {
                     ),
                   ],
                   SizedBox(height: context.hp(4)),
-                  _buildLoginOption(context),
+                  isEdit? 0.ph():_buildLoginOption(context),
                 ],
               ),
             )
@@ -154,7 +254,7 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPersonalInfoFields(BuildContext context, AuthState state) {
+  Widget _buildPersonalInfoFields(BuildContext context, AuthState state,{required bool isEdit}) {
     return Column(
       children: [
         Row(
@@ -164,7 +264,7 @@ class SignUpScreen extends StatelessWidget {
                 label: 'الاسم الأول',
                 hintText: 'أدخل اسمك الأول',
                 controller: state.firstNameController!,
-                validator: FormValidators.validateName,
+                validator: isEdit? null: FormValidators.validateName,
               ),
             ),
             17.pw(), // Horizontal spacing between fields
@@ -173,12 +273,12 @@ class SignUpScreen extends StatelessWidget {
                 label: 'الاسم الأخير',
                 hintText: 'أدخل اسمك الأخير',
                 controller:state.lastNameController!,
-                validator: FormValidators.validateName,
+                validator:isEdit? null: FormValidators.validateName,
               ),
             ),
           ],
         ),
-        CustomTextField(
+         isEdit? 0.ph(): CustomTextField(
           label: 'اسم المستخدم',
           hintText: 'اكتب اسم المستخدم',
           controller: state.userNameController!,
@@ -188,16 +288,16 @@ class SignUpScreen extends StatelessWidget {
           label: context.localizations.emailLabel,
           hintText: context.localizations.emailHint,
           controller: state.emailController!,
-          validator: FormValidators.validateEmail,
+          validator: isEdit? null:FormValidators.validateEmail,
         ),
-        CustomTextField(
+        isEdit? 0.ph(): CustomTextField(
           label: 'رقم الهاتف',
           hintText: '000000000',
           controller: state.phoneController!,
           isPhone: true,
           validator: FormValidators.validatePhone,
         ),
-        Column(
+        isEdit? 0.ph():   Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppText(text: 'الجنس', fontSize: 14),
@@ -250,7 +350,7 @@ class SignUpScreen extends StatelessWidget {
       togglePasswordVisibility: () {
       context.read<SignupCubit>().togglePasswordVisibility();
       },
-      validator: FormValidators.validatePassword,
+      validator:isEdit? null: FormValidators.validatePassword,
     ),
         CustomTextField(
           label: context.localizations.confirmPasswordLabel,
@@ -261,7 +361,7 @@ class SignUpScreen extends StatelessWidget {
           togglePasswordVisibility: () {
             context.read<SignupCubit>().togglePasswordVisibility();
           },
-          validator: (p0) =>FormValidators.validateConfirmPassword(p0,  state.passwordController!.text)
+          validator:isEdit? null: (p0) =>FormValidators.validateConfirmPassword(p0,  state.passwordController!.text)
           // ,
         ),
       ],
@@ -345,7 +445,7 @@ class SignUpScreen extends StatelessWidget {
           buttonChild = const CircularProgressIndicator(color: Colors.white);
         } else {
           buttonChild = AppText(
-            text: text,
+            text:isEdit? 'تحديث': text,
             fontSize: context.isTablet ? 18 : 16,
             color: Colors.white,
             fontWeight: FontWeight.bold,
