@@ -20,6 +20,7 @@ class AppConfig {
 
   // API endpoints
   static late String authEndpoint;
+  static late String profileEndpoint;
   static late String tagsEndpoint;
   static late String postsEndpoint;
   static late String userPostsEndpoint;
@@ -60,6 +61,7 @@ class AppConfig {
       case Environment.dev:
         apiUrl = 'https://academex-1.onrender.com';
         authEndpoint = '$apiUrl/auth';
+        profileEndpoint = '$apiUrl/user';
         tagsEndpoint = '$apiUrl/tag';
         postsEndpoint = '$apiUrl/post';
         userPostsEndpoint = '$apiUrl/post/user';

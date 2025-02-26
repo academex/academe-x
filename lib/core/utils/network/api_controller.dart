@@ -67,7 +67,7 @@ class ApiController {
         ...?headers,
       };
 
-      final dynamic finalBody = body is String ? body : jsonEncode(body);
+      // final dynamic finalBody = body is String ? body : jsonEncode(body);
 
       http.Response response = await http
           .post(
@@ -126,12 +126,11 @@ class ApiController {
       Uri url, {
         Map<String, String>? headers,
         Object? body,
-        Encoding? encoding,
       }) async {
     return await http.put(url,
         headers: headers ?? {"Content-Type": "application/json"},
         body: body,
-        encoding: encoding);
+      );
 
   }
 }

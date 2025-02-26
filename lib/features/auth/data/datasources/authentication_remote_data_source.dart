@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/core/utils/network/base_response.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -8,8 +9,12 @@ import 'package:academe_x/lib.dart';
 import '../../../../core/utils/handle_http_error.dart';
 import '../../../../core/utils/network/api_controller.dart';
 import '../../../../core/utils/network/api_setting.dart';
+import '../../domain/entities/response/updated_user_entity.dart';
+import '../models/requset/update_profile_request_model.dart';
+import '../models/response/updated_user_model.dart';
 
 typedef AuthResponse = BaseResponse<AuthTokenModel>;
+typedef UpdateResponse = BaseResponse<UpdatedUserModel>;
 typedef CollegesResponse  = BaseResponse<List<CollegeModel>>;
 typedef MajorsResponse  = BaseResponse<List<MajorModel>>;
 
@@ -124,6 +129,48 @@ class AuthenticationRemoteDataSource {
 
         return baseResponse.data!;
       } on ValidationException {
+        rethrow;
+      } on UnauthorizedException {
+        rethrow;
+      } on TimeOutExeption {
+        rethrow;
+      } catch (e) {
+        throw ServerException(message: 'An error occurred: $e');
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
+  Future<UpdatedUserEntity> updateProfile(Map<String, dynamic> user) async {
+    AppLogger.success(jsonEncode(user));
+
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        final response = await apiController.put(
+          Uri.parse(ApiSetting.updateProfile),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':
+            'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
+          },
+          body:jsonEncode(user),
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+        if (response.statusCode >= 400) {
+          HandleHttpError.handleHttpError(responseBody);
+        }
+
+
+        final UpdateResponse baseResponse = UpdateResponse.fromJson(
+          responseBody,
+              (json) => UpdatedUserModel.fromJson(json),
+        );
+
+        return baseResponse.data!;
+      } on ValidationException {
+
         rethrow;
       } on UnauthorizedException {
         rethrow;

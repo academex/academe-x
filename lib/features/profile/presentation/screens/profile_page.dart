@@ -43,7 +43,6 @@ class _ProfilePageState extends State<ProfilePage>
     _scrollController =context.read<PostsCubit>().profilePostsScrollController;
     _scrollController.addListener(_onScroll);
 
-
     _loadProfile();
   }
   @override

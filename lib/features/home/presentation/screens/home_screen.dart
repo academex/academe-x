@@ -83,37 +83,19 @@ class HomeScreen extends StatelessWidget {
   Widget _buildBody(int currentIndex,BuildContext context) {
     return IndexedStack(
       index: currentIndex,
-      children:[
-        const CommunityPage(),
-         const LibraryPage(),
-         const Row(),
-      Center(
-        child: ReactionButton<String>(
-          placeHolder: const Reaction<String>(
-      value: 'like',
-      icon: Text('like'),
-    ),
-          onReactionChanged: (Reaction<String>? reaction) {
-            debugPrint('Selected value: ${reaction?.value}');
-          },
-          reactions: const <Reaction<String>>[
-            Reaction<String>(
-              value: 'likelikelikelikelike',
-              icon: Text('likelikelikelikelike'),
-            ),
-            Reaction<String>(
-              value: 'lovelovelovelovelove',
-              icon: Text('likelikelikelikelike'),
-            ),
-          ],
-          // initialReaction: ,
-          selectedReaction: const Reaction<String>(
-            value: 'like_fill',
-            icon: Text('like_fill'),
-          ), itemSize: Size(200,200),
-        )
-      ),
-       const ProfilePage(),
+      children: [
+        CommunityPage(),
+         LibraryPage(),
+         Row(),
+        Container(
+          child: Center(
+              child: CustomButton(widget: AppText(text: 'Logout', fontSize: 16), onPressed:() async{
+                await  context.read<LoginCubit>().logout();
+
+              }, backgraoundColor: Colors.blue)
+          ),
+        ),
+        ProfilePage(),
       ],
     );
   }
@@ -121,3 +103,24 @@ class HomeScreen extends StatelessWidget {
     // Handle file upload logic
   }
 }
+
+
+// class CoffeeApp extends StatelessWidget {
+//   const CoffeeApp ({super.key});
+//   int _currentCup = 0;
+//
+//   final List<Widget> _myCoffees = [
+//     EspressoPage(),    // صفحة الفيد تبعك
+//     LattePage(),       // صفحة الإشعارات
+//     MochaPag(),        // البروفايل
+//   ];
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: IndexedStack(
+//         index: _currentCup,
+//         children: _myCoffees,    // كل صفحة محتفظة بحالتها متل ما هي!
+//       ),
+//     );
+//   }
+// }

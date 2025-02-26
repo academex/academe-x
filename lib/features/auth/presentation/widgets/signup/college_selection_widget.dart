@@ -32,7 +32,6 @@ class CollegeSelectionWidget extends StatelessWidget {
 }
 
 Widget _buildDropdown(BuildContext context,CollegeMajorsState state) {
-  AppLogger.success(state.colleges.toString());
 
   return GestureDetector(
     onTap: () => context.read<CollegeMajorsCubit>().toggleExpanded(),

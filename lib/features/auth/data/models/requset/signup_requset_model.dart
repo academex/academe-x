@@ -26,6 +26,7 @@ class SignupRequestModel extends SignupRequestEntity{
     tagId = json['tagId'];
   }
 
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['username'] = this.username;

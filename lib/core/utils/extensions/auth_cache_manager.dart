@@ -35,7 +35,7 @@ extension AuthCacheManager on HiveCacheManager {
 
       if (user != null ) {
         return user;
-      } else if (user != null) {
+      } else if (user == null) {
 
         await clearAuthCache();
       }
@@ -53,6 +53,8 @@ extension AuthCacheManager on HiveCacheManager {
       rethrow;
     }
   }
+
+
 
   Future<bool> isAuthenticated() async {
     final user = await getCachedAuthUser();

@@ -82,7 +82,8 @@ class CollegeItem extends StatelessWidget {
   }
 
   Widget _buildMajorsList(BuildContext ctx,CollegeMajorsState state) {
-    return state.status == MajorsStatus.loading || state.isLoadingForCollege?  LayoutBuilder(
+    return state.status == MajorsStatus.loading || state.isLoadingForCollege?
+    LayoutBuilder(
       builder: (context, constraints) {
         int crossAxisCount = SizeConfig().getCrossAxisCount(context);
         double itemHeight = SizeConfig().getItemHeight(context);

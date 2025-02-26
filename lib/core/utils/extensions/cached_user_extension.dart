@@ -9,13 +9,25 @@ import '../storage/cache/hive_cache_manager.dart';
 extension CachedUserExtension on BuildContext {
   Future<AuthTokenModel?> get cachedUser async {
     return await getIt<HiveCacheManager>().getCachedResponse(
-      CacheKeys.USER,
-      (json) => AuthTokenModel.fromJson(json),
-      isUser: true
+        CacheKeys.USER,
+            (json) => AuthTokenModel.fromJson(json),
+        isUser: true
     );
   }
 
-  Future<List<MajorModel>?> get cachMajor async {
+  // Future<AuthTokenModel?> get cachedUserForAuth async {
+  //   Future.delayed(
+  //     const Duration(microseconds: 200),
+  //         () => getIt<HiveCacheManager>().getCachedResponse(
+  //         CacheKeys.USER,
+  //             (json) => AuthTokenModel.fromJson(json),
+  //         isUser: true
+  //     ),
+  //   );
+  //   return null;
+  // }
+
+  Future<List<MajorModel>?> get cachedMajor async {
     return await getIt<HiveCacheManager>().getCachedResponse(CacheKeys.MAJORS,
         (json) {
       return (json as List)

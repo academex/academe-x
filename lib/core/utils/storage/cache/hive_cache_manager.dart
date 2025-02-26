@@ -292,13 +292,31 @@ class HiveCacheManager implements BaseStorageManager {
     _currentCacheSize = 0;
   }
 
-  Future<void> removeCacheItem(String key) async {
-    final value = _cacheBox.get(key);
-    if (value != null) {
-      _currentCacheSize -= value.length;
+  Future<void> removeCacheItem(String key,{bool isUser=false}) async {
+    if(isUser){
+      final value = _userBox.get(key);
+      if (value != null) {
+        _currentCacheSize -= value.length;
+      }
+      await _userBox.delete(key);
+    }else{
+      final value = _cacheBox.get(key);
+      if (value != null) {
+        _currentCacheSize -= value.length;
+      }
+      await _cacheBox.delete(key);
+
     }
-    await _cacheBox.delete(key);
+
+
   }
+
+  // Future<void> updateCacheItem<T>(String key, T value) async {
+  //   await _userBox.put(
+  //     key,
+  //     value
+  //   );
+  // }
 
   @override
   Future<void> dispose() async {

@@ -14,12 +14,15 @@ class AuthState extends Equatable {
   final List<CollegeEntity>? colleges;
   List<MajorEntity>? majors;
   final bool isAuthenticated;
+  final bool isUpdated;
+  final AuthTokenModel? user;
+
 
   // College-related fields
   final bool isExpanded;
   final String? selectedCollege;
   final int? selectedMajorIndex;
-  late final int? selectedTagId;
+  late  int? selectedTagId;
   late  int? selectedSemesterIndex;
   final String? collegeAndMajor;
   late Map<String, CollegeData>? collegesData;
@@ -27,11 +30,13 @@ class AuthState extends Equatable {
 
   // Signup fields
   final int? selectedGenderIndex;
+  late  String? photoUrl;
   final TextEditingController? firstNameController;
   final TextEditingController? lastNameController;
   final TextEditingController? userNameController;
   final TextEditingController? emailController;
   final TextEditingController? phoneController;
+  final TextEditingController? bioController;
   final TextEditingController? passwordController;
   final TextEditingController? confirmPasswordController;
   final bool? showEducationInfo;
@@ -45,9 +50,11 @@ class AuthState extends Equatable {
     this.isRememberMe = false,
     this.errorMessage,
     this.isAuthenticated = false,
+    this.isUpdated = false,
     // College fields
     this.isExpanded = false,
     this.selectedCollege,
+    this.user,
     this.selectedMajorIndex,
     this.selectedSemesterIndex,
     this.collegeAndMajor,
@@ -56,6 +63,7 @@ class AuthState extends Equatable {
 
     // Map<String, CollegeData>? collegesData,
     // Signup fields
+    this.photoUrl,
     this.selectedGenderIndex,
     this.firstNameController,
     this.lastNameController,
@@ -66,6 +74,7 @@ class AuthState extends Equatable {
 
      this.passwordController,
     this.confirmPasswordController,
+    this.bioController,
     this.showEducationInfo = false,
     this.formKey,
 
@@ -103,6 +112,7 @@ class AuthState extends Equatable {
       lastNameController: TextEditingController(),
       userNameController: TextEditingController(),
       emailController: TextEditingController(),
+      bioController: TextEditingController(),
       phoneController: TextEditingController(),
       passwordController: TextEditingController(),
       confirmPasswordController: TextEditingController(),
@@ -120,9 +130,13 @@ class AuthState extends Equatable {
     List<CollegeEntity>? colleges,
     List<MajorEntity>? majors,
     bool? isAuthenticated,
+    bool? isUpdated,
+    AuthTokenModel? user,
+
     // College fields
     bool? isExpanded,
     String? selectedCollege,
+    String? photoUrl,
     int? selectedMajorIndex,
     int? selectedSemesterIndex,
     int? selectedTagId,
@@ -138,6 +152,7 @@ class AuthState extends Equatable {
     TextEditingController? phoneController,
     TextEditingController? passwordController,
     TextEditingController? confirmPasswordController,
+    TextEditingController? bioController,
     bool? showEducationInfo,
     GlobalKey<FormState>? formKey,
     bool? isPasswordVisible,
@@ -148,10 +163,13 @@ class AuthState extends Equatable {
       isLoadingForMajors: isLoadingForMajors ?? this.isLoadingForMajors,
       isRememberMe: isRememberMe ?? this.isRememberMe,
       errorMessage: errorMessage,
+      photoUrl: photoUrl,
       colleges: colleges ?? this.colleges,
+      user: user ?? this.user,
       selectedTagId: selectedTagId ?? this.selectedTagId,
       majors: majors ?? this.majors,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      isUpdated: isUpdated ?? this.isUpdated,
       // College fields
       isExpanded: isExpanded ?? this.isExpanded,
       selectedCollege: selectedCollege ?? this.selectedCollege,
@@ -167,6 +185,7 @@ class AuthState extends Equatable {
       userNameController: userNameController ?? this.userNameController,
       emailController: emailController ?? this.emailController,
       phoneController: phoneController ?? this.phoneController,
+      bioController: bioController ?? this.bioController,
       passwordController: passwordController ?? this.passwordController,
       confirmPasswordController: confirmPasswordController ?? this.confirmPasswordController,
       showEducationInfo: showEducationInfo ?? this.showEducationInfo,
@@ -181,8 +200,11 @@ class AuthState extends Equatable {
     isLoadingForCollege,
     isLoadingForMajors,
     isRememberMe,
+    photoUrl,
     errorMessage,
+    user,
     isAuthenticated,
+    isUpdated,
     // College props
     isExpanded,
     selectedCollege,
@@ -198,6 +220,7 @@ class AuthState extends Equatable {
     firstNameController?.text,
     lastNameController?.text,
     userNameController?.text,
+    bioController?.text,
     emailController?.text,
     phoneController?.text,
     passwordController?.text,
