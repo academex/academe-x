@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/pagination/paginated_response.dart';
 import '../../../../../core/pagination/pagination_params.dart';
+import '../../../../auth/presentation/controllers/states/auth_state.dart';
 import '../../../../home/domain/entities/post/post_entity.dart';
 import '../../../../home/presentation/controllers/cubits/post/posts_cubit.dart';
 import '../states/profile_state.dart';
@@ -15,12 +16,16 @@ import '../states/profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileUseCase profileUseCase;
   final PostsCubit postsCubit;  // Inject PostsCubit
+  // final AuthState authState ;  // Inject PostsCubit
+
   final ScrollController scrollController = ScrollController();
   bool _isLoading = false;
 
   ProfileCubit({
     required this.postsCubit,
     required this.profileUseCase,
+    // required this.authState,
+
   }) : super(const ProfileState()) {
     // Listen to posts state changes
     postsCubit.stream.listen((PostsState postsState) {
@@ -40,9 +45,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       emit(state.copyWith(status: ProfileStatus.loading));
 
+
       if (userId == null) {
         // Load current user from cache
         final currentUser = await context.cachedUser;
+        // currentUser
         emit(state.copyWith(
           status: ProfileStatus.loaded,
           profileType: ProfileType.currentUser,

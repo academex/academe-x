@@ -14,6 +14,7 @@ import '../../../college_major/controller/cubit/college_majors_state.dart';
 import '../../../college_major/data/models/major_model.dart';
 import '../../data/models/response/auth_token_model.dart';
 import '../../domain/entities/request/signup_request_entity.dart';
+import '../../domain/entities/request/update_profile_request_entity.dart';
 import '../controllers/cubits/signup_cubit.dart';
 import '../controllers/states/auth_state.dart';
 import '../controllers/states/college_state.dart';
@@ -25,9 +26,9 @@ import '../widgets/signup/show_grid_view_item.dart';
 
 class SignUpScreen extends StatelessWidget {
   final bool isEdit;
+  late UpdateProfileRequestEntity user;
 
-
-  const SignUpScreen({super.key,required this.isEdit});
+   SignUpScreen({super.key,required this.isEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class SignUpScreen extends StatelessWidget {
     return FutureBuilder<List<dynamic>?>(
       future: Future.wait([
         context.cachedUser,
-        context.cachMajor,
+        context.cachedMajor,
       ]),
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting){
@@ -48,7 +49,6 @@ class SignUpScreen extends StatelessWidget {
           );
         }
         else{
-          AppLogger.network('Data loaded: ${snapshot.data?[0]}, Majors: ${snapshot.data?[1]?.length}');
           if(isEdit&&snapshot.hasData){
             final userData  = snapshot.data?[0] as AuthTokenModel?;
             final majorsData = snapshot.data?[1] as List<MajorModel>;
@@ -61,8 +61,21 @@ class SignUpScreen extends StatelessWidget {
 
               signupCubit.state.firstNameController!.text = userData ?.user.firstName ?? '';
               signupCubit.state.lastNameController!.text = userData ?.user.lastName ?? '';
+              signupCubit.state.userNameController!.text = userData ?.user.username ?? '';
+              signupCubit.state.photoUrl= userData ?.user.photoUrl ?? '';
               signupCubit.state.emailController!.text = userData ?.user.email ?? '';
+              signupCubit.state.bioController!.text = userData ?.user.bio ?? '';
               signupCubit.state.selectedSemesterIndex = (userData !.user.currentYear!-1);
+              signupCubit.state.selectedTagId =userData.user.tagId;
+             user = UpdateProfileRequestEntity(
+                firstName: userData.user.firstName ?? '',
+                lastName:  userData.user.lastName ?? '',
+                username:  userData.user.username ?? '',
+               email:  userData.user.email ?? '',
+               bio:  userData.user.bio ?? '',
+               currentYear:  userData.user.currentYear ?? 0,
+                tagId: userData.user.tagId ?? 0,
+              );
               return signupCubit;
             },),
                 BlocProvider(
@@ -74,9 +87,18 @@ class SignUpScreen extends StatelessWidget {
                       orElse: () => majorsData.first,
                     );
 
+
+
+                    // AppLogger.success(
+                    //
+                    // );
+
+
+
                   collegeMajorCubit.selectCollege(userMajor.collegeEn!);
                   collegeMajorCubit.state.selectedCollege =userMajor.collegeEn!;
                   collegeMajorCubit.state.collegeAndMajor ="${userMajor.collegeEn!} (${userMajor.name}) ";
+                  collegeMajorCubit.state.selectedMajorIndex = majorsData.indexOf(userMajor);
 
 
                     return collegeMajorCubit;
@@ -278,10 +300,11 @@ class SignUpScreen extends StatelessWidget {
             ),
           ],
         ),
-         isEdit? 0.ph(): CustomTextField(
+         CustomTextField(
           label: 'اسم المستخدم',
           hintText: 'اكتب اسم المستخدم',
           controller: state.userNameController!,
+
           validator: FormValidators.validateUsername,
         ),
         CustomTextField(
@@ -333,7 +356,7 @@ class SignUpScreen extends StatelessWidget {
           ],
         ),
         16.ph(),
-        _buildPasswordFields(state,context),
+        isEdit? 0.ph():  _buildPasswordFields(state,context),
       ],
     );
   }
@@ -436,6 +459,11 @@ class SignUpScreen extends StatelessWidget {
           context.showSnackBar(message: state.errorMessage![0], error: true,);
         }else if(state.isAuthenticated){
           context.go('/account_creation');
+        }else if(state.isUpdated){
+          context.showSnackBar(
+            message: 'تم تحديث البيانات بنجاح',
+          );
+          context.go('/home_screen');
         }
       },
       // listenWhen: (previous, current) => current.errorMessage !=previous.errorMessage,
@@ -525,7 +553,7 @@ class SignUpScreen extends StatelessWidget {
       );
       return;
     }
-    SignupRequestEntity user = SignupRequestEntity(
+    SignupRequestEntity newUser = SignupRequestEntity(
       firstName: state.firstNameController!.text.trim(),
       lastName: state.lastNameController!.text.trim(),
       username: state.userNameController!.text.trim(),
@@ -537,8 +565,21 @@ class SignUpScreen extends StatelessWidget {
       tagId: state.selectedTagId!,
     );
 
-    await context.read<SignupCubit>().signup(user);
-    // Navigator.pushNamed(context, '/account_creation');
+    if(isEdit){
+
+      if(user.toChangedFieldsMap(state).isEmpty){
+        context.showSnackBar(
+          message: 'لا يوجد تغييرات',
+          error: true,
+        );
+        return;
+      }
+     await context.read<SignupCubit>().updateProfile(user.toChangedFieldsMap(state),context);
+
+    }else{
+     await context.read<SignupCubit>().signup(newUser);
+    }
+
   }
 }
 

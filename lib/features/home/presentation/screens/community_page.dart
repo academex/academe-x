@@ -91,7 +91,9 @@ class _CommunityPageState extends State<CommunityPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       sliver: BlocBuilder<PostsCubit, PostsState>(
         builder: (context, state) {
+          // state.
           switch (state.status) {
+
             case PostStatus.initial:
             case PostStatus.loading:
             return  SliverFillRemaining(

@@ -11,7 +11,7 @@ class CollegeMajorsState extends Equatable {
   final List<MajorEntity> majors;
   late  MajorEntity? selectedMajor;
   late  String? selectedCollege;
-  final String? selectedTag;
+  late  String? selectedTag;
   final String? errorMessage;
   final String? errorMessageCollege;
   late  String? collegeAndMajor;
@@ -20,7 +20,7 @@ class CollegeMajorsState extends Equatable {
   final bool isLoadingForCollege;
   final bool isLoadingMajorSetting;
   final bool isExpanded;
-  final int? selectedMajorIndex;
+  late  int? selectedMajorIndex;
   final List<CollegeEntity>? colleges;
 
 

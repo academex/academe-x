@@ -179,7 +179,7 @@ class CreatePostRemoteDataSource {
 
   Future<List<MajorModel>> getTags() async {
     List<MajorModel>? majorCached =
-        await (NavigationService.navigatorKey.currentContext!.cachMajor);
+        await (NavigationService.navigatorKey.currentContext!.cachedMajor);
     if (majorCached == null) {
       final response =
           await apiController.get(Uri.parse(ApiSetting.getTags), headers: {

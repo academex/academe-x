@@ -93,6 +93,7 @@ class CustomTextField extends StatelessWidget {
   final bool isPhone;
   final bool isGender;
   final VoidCallback? togglePasswordVisibility;
+  // final onChanged? togglePasswordVisibility;
   final bool isPasswordVisible;
   final String? Function(String?)? validator;
 
@@ -148,6 +149,9 @@ class CustomTextField extends StatelessWidget {
             FilteringTextInputFormatter.digitsOnly,
             LengthLimitingTextInputFormatter(9),
           ] : null,
+          //in edition profile, I want to now which field edited and which not, via onChanged
+
+
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: const TextStyle(

@@ -11,6 +11,10 @@ class AuthTokenEntity {
   });
 
   AuthTokenModel fromEntity() {
-    return AuthTokenModel(user: user, accessToken:accessToken);
+    return AuthTokenModel(user: user.fromEntity(), accessToken:accessToken);
+  }
+
+  AuthTokenEntity copyWith({UserResponseEntity? user,String? accessToken}){
+    return AuthTokenEntity(user: user ?? this.user, accessToken: accessToken ?? this.accessToken);
   }
 }

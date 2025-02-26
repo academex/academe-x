@@ -6,6 +6,7 @@ class ApiSetting {
   // Auth endpoints
   static String get login => '${AppConfig.authEndpoint}/signin';
   static String get signup => '${AppConfig.authEndpoint}/signup';
+  static String get updateProfile => '${AppConfig.profileEndpoint}/update';
 
   // tags endpoints
   static String get colleges => '${AppConfig.tagsEndpoint}/colleges';
