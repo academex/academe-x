@@ -84,9 +84,9 @@ class HomeScreen extends StatelessWidget {
     return IndexedStack(
       index: currentIndex,
       children: [
-        CommunityPage(),
-         LibraryPage(),
-         Row(),
+        const CommunityPage(),
+        const LibraryPage(),
+        const Row(),
         Container(
           child: Center(
               child: CustomButton(widget: AppText(text: 'Logout', fontSize: 16), onPressed:() async{
@@ -95,7 +95,7 @@ class HomeScreen extends StatelessWidget {
               }, backgraoundColor: Colors.blue)
           ),
         ),
-        ProfilePage(),
+        const ProfilePage(),
       ],
     );
   }

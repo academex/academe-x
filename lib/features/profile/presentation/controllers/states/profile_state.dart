@@ -9,9 +9,11 @@ class ProfileState extends Equatable {
   // Profile data
   final ProfileStatus status;
   final ProfileType profileType;
-  final AuthTokenModel? user;
+  final UserResponseEntity? user;
+  final UserResponseEntity? otherUser;
   final String? errorMessage;
   final bool isEditable;
+  final bool isLoading;
 
   // User posts
   final List<PostEntity> posts;
@@ -22,8 +24,10 @@ class ProfileState extends Equatable {
     this.status = ProfileStatus.initial,
     this.profileType = ProfileType.currentUser,
     this.user,
+    this.otherUser,
     this.errorMessage,
     this.isEditable = false,
+    this.isLoading = false,
     this.posts = const <PostEntity>[],
     this.hasPostsReachedMax = false,
     this.currentPage = 1,
@@ -32,9 +36,11 @@ class ProfileState extends Equatable {
   ProfileState copyWith({
     ProfileStatus? status,
     ProfileType? profileType,
-    AuthTokenModel? user,
+    UserResponseEntity? user,
+    UserResponseEntity? otherUser,
     String? errorMessage,
     bool? isEditable,
+    bool? isLoading,
     List<PostEntity>? posts,
     bool? hasPostsReachedMax,
     int? currentPage,
@@ -42,9 +48,11 @@ class ProfileState extends Equatable {
     return ProfileState(
       status: status ?? this.status,
       profileType: profileType ?? this.profileType,
-      user: user ?? this.user,
+      user: user,
+      otherUser: otherUser ?? this.otherUser,
       errorMessage: errorMessage ?? this.errorMessage,
       isEditable: isEditable ?? this.isEditable,
+      isLoading: isLoading ?? this.isLoading,
       posts: posts ?? this.posts,
       hasPostsReachedMax: hasPostsReachedMax ?? this.hasPostsReachedMax,
       currentPage: currentPage ?? this.currentPage,
@@ -56,8 +64,10 @@ class ProfileState extends Equatable {
     status,
     profileType,
     user,
+    otherUser,
     errorMessage,
     isEditable,
+    isLoading,
     posts,
     hasPostsReachedMax,
     currentPage,

@@ -27,14 +27,17 @@ class PostsState extends Equatable {
   final CreationStatus creationState;
   final StatisticsEntity? statisticsEntity;
   final List<PostEntity> posts;
-  final List<PostEntity> profilePosts;
+  final List<PostEntity> currentProfilePosts;
+  final List<PostEntity> otherProfilePosts;
   final PostEntity? post;
   List<ReactionItemEntity>? reactionItems;
   final bool hasPostsReachedMax;
   int postsCurrentPage;
-  int profilePostsCurrentPage;
+  int currentProfilePostsCurrentPage;
+  int otherProfilePostsCurrentPage;
   final bool hasReactionsReachedMax;
-  final bool hasProfilePostsReachedMax;
+  final bool hasCurrentUserProfilePostsReachedMax;
+  final bool hasOtherUserProfilePostsReachedMax;
   int reactionsCurrentPage;
   bool isSaved;
   final String? errorMessage;
@@ -67,16 +70,19 @@ class PostsState extends Equatable {
     this.creationState = CreationStatus.initial,
     this.postDetailsStatus = PostDetailsStatus.initial,
     this.posts = const <PostEntity>[],
-    this.profilePosts = const <PostEntity>[],
+    this.currentProfilePosts = const <PostEntity>[],
+    this.otherProfilePosts = const <PostEntity>[],
     this.reactionItems = const <ReactionItemEntity>[],
     this.statisticsEntity,
     this.post,
     this.reactionStatus = ReactionStatus.initial,
     this.isSaved = false,
     this.hasPostsReachedMax = false,
-    this.hasProfilePostsReachedMax = false,
+    this.hasCurrentUserProfilePostsReachedMax = false,
+    this.hasOtherUserProfilePostsReachedMax = false,
     this.postsCurrentPage = 1,
-    this.profilePostsCurrentPage = 1,
+    this.currentProfilePostsCurrentPage = 1,
+    this.otherProfilePostsCurrentPage = 1,
     this.hasReactionsReachedMax=false,
     this.reactionsCurrentPage= 1,
     this.errorMessage,
@@ -108,18 +114,21 @@ class PostsState extends Equatable {
     PostDetailsStatus? postDetailsStatus,
     ReactionStatus? reactionStatus,
     List<PostEntity>? posts,
-    List<PostEntity>? profilePosts,
+    List<PostEntity>? currentProfilePosts,
+    List<PostEntity>? otherProfilePosts,
     PostEntity? post,
      StatisticsEntity? statisticsEntity,
     List<ReactionItemEntity>? reactionItems,
     bool? hasPostsReachedMax,
     bool? hasCommentReachedMax,
      bool? hasReactionsReachedMax,
-     bool? hasProfilePostsReachedMax,
+     bool? hasCurrentUserProfilePostsReachedMax,
+     bool? hasOtherUserProfilePostsReachedMax,
     int? reactionsCurrentPage,
     bool? isSaved,
     int? postsCurrentPage,
-    int? profilePostsCurrentPage,
+    int? currentProfilePostsCurrentPage,
+    int? otherProfilePostsCurrentPage,
     String? errorMessage,
     String? selectedType,
     String? creationPostErrorMessage,
@@ -145,7 +154,8 @@ class PostsState extends Equatable {
       reactionStatus: reactionStatus ?? this.reactionStatus,
       post: post ?? this.post,
       posts: posts ?? this.posts,
-      profilePosts: profilePosts ?? this.profilePosts,
+      currentProfilePosts: currentProfilePosts ?? this.currentProfilePosts,
+      otherProfilePosts: otherProfilePosts ?? this.otherProfilePosts,
       statisticsEntity: statisticsEntity ?? this.statisticsEntity,
       postDetailsStatus: postDetailsStatus ?? this.postDetailsStatus,
       // posts: posts ?? this.posts,
@@ -153,12 +163,14 @@ class PostsState extends Equatable {
       reactionsCurrentPage: reactionsCurrentPage ?? this.reactionsCurrentPage,
 
       reactionItems: reactionItems ?? this.reactionItems,
-      hasProfilePostsReachedMax: hasProfilePostsReachedMax ?? this.hasProfilePostsReachedMax,
+      hasCurrentUserProfilePostsReachedMax: hasCurrentUserProfilePostsReachedMax ?? this.hasCurrentUserProfilePostsReachedMax,
+      hasOtherUserProfilePostsReachedMax: hasOtherUserProfilePostsReachedMax ?? this.hasOtherUserProfilePostsReachedMax,
       hasPostsReachedMax: hasPostsReachedMax ?? this.hasPostsReachedMax,
       hasCommentReachedMax: hasCommentReachedMax ?? this.hasCommentReachedMax,
       isSaved: isSaved ?? this.isSaved,
       postsCurrentPage: postsCurrentPage ?? this.postsCurrentPage,
-      profilePostsCurrentPage: profilePostsCurrentPage ?? this.profilePostsCurrentPage,
+      currentProfilePostsCurrentPage: currentProfilePostsCurrentPage ?? this.currentProfilePostsCurrentPage,
+      otherProfilePostsCurrentPage: otherProfilePostsCurrentPage ?? this.otherProfilePostsCurrentPage,
       errorMessage: errorMessage ?? this.errorMessage,
       creationPostErrorMessage: creationPostErrorMessage ?? this.creationPostErrorMessage,
       selectedType: selectedType ?? this.selectedType,
@@ -189,10 +201,12 @@ class PostsState extends Equatable {
     reactionStatus,
     posts,
     statisticsEntity,
-    profilePostsCurrentPage,
-    hasProfilePostsReachedMax,
+    currentProfilePostsCurrentPage,
+    otherProfilePostsCurrentPage,
+    hasCurrentUserProfilePostsReachedMax,
+    hasOtherUserProfilePostsReachedMax,
     reactionItems,
-    profilePosts,
+    currentProfilePosts,
     hasPostsReachedMax,
     hasCommentReachedMax,
     hasReactionsReachedMax,
