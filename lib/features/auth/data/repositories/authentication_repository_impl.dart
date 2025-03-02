@@ -81,6 +81,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return Left(ServerFailure(message: 'An error occurred: $e'));
     }
   }
+
 }
 
 

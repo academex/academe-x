@@ -5,6 +5,8 @@ import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/auth/auth.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../auth/domain/entities/response/updated_user_entity.dart';
+
 abstract class ProfileRepository {
   ProfileRepository();
 
@@ -15,4 +17,6 @@ abstract class ProfileRepository {
   Future<Either<Failure, UserResponseEntity>> getUserProfile(
     String userId,
   );
+  Future<Either<Failure, UpdatedUserEntity>>updateProfile(Map<String, dynamic> user);
+
 }

@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/pagination/paginated_response.dart';
 import '../../../../core/pagination/pagination_params.dart';
+import '../../../../core/utils/logger.dart';
 import '../entities/post/reaction_item_entity.dart';
 
 class PostUseCase {
@@ -34,6 +35,7 @@ class PostUseCase {
   Future<Either<Failure, PaginatedResponse<PostEntity>>> loadProfilePosts(
       PaginationParams params,
       ) async {
+    AppLogger.wtf('params.toString() ${params.toString()}');
     return await postRepository.loadProfilePosts(params);
   }
 

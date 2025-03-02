@@ -1,5 +1,6 @@
 import 'package:academe_x/core/utils/storage/cache/hive_cache_manager.dart';
 import 'package:academe_x/features/profile/presentation/screens/about_us_screen.dart';
+import 'package:academe_x/features/profile/presentation/screens/profile_page.dart';
 import 'package:academe_x/features/profile/presentation/screens/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -43,10 +44,13 @@ final goRouter = GoRouter(
       print('Redirecting to home from login');
       return '/home_screen';
     }
-
-    // No redirect needed
+    AppLogger.wtf('hussen ${location.toString()}');
+    if (location.startsWith('/profile')) {
+      return location;
+    }
     return null;
   },
+    // No redirect needed
   routes: [
     GoRoute(
       path: '/',
@@ -133,6 +137,16 @@ final goRouter = GoRouter(
       builder: (context, state) => const SettingPage(),
     ),
     GoRoute(
+      path: '/profile',
+      name: 'profile',
+      builder: (context, state) {
+        final username = state.extra != null
+            ? (state.extra as Map<String, dynamic>)['username'] as String
+            : '';
+        return ProfilePage(username: username,);
+      },
+    ),
+    GoRoute(
       path: '/change_password',
       name: 'changePassword',
       builder: (context, state) => const ChangePassword(),
@@ -150,6 +164,7 @@ final goRouter = GoRouter(
       },
     ),
   ],
+
   errorBuilder: (context, state) => Scaffold(
     body: Center(
       child: Text('Page not found: ${state.matchedLocation}'),

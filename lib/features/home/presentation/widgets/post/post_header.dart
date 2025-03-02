@@ -1,8 +1,14 @@
 // import 'package:academe_x/lib.dart';
 import 'package:academe_x/core/core.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../controllers/cubits/home/bottom_nav_cubit.dart';
+import '../../controllers/cubits/post/posts_cubit.dart';
 
 
 class PostHeader extends StatelessWidget {
@@ -14,18 +20,30 @@ class PostHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        post.user!.photoUrl != null?  CircleAvatar(
-          backgroundImage: NetworkImage(post.user!.photoUrl ?? ''),
-          radius: 20   ,
-        ) :Container(
-          height: 50,
-          width: 50,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey.shade200
+        GestureDetector(
+          child: CircleAvatar(
+            backgroundColor: Colors.grey.shade200 ,
+            backgroundImage: post.user!.photoUrl != null? NetworkImage(post.user!.photoUrl ?? '') :null,
+            radius: 20   ,
+            child: const Icon(Icons.person_outline,color: Colors.blue,),
+
           ),
-          child: const Icon(Icons.person_outline),
+          onTap: () async{
+            final currentUser = await context.cachedUser ;
+            final postUser = post.user;
+            if(postUser!.username == currentUser!.user.username){
+              context.read<BottomNavCubit>().changePage(NavigationIndex.profile);
+            }else{
+            await  context.pushNamed(
+                  'profile',
+                  extra: {'username': post.user!.username}
+              );
+
+            }
+
+          },
         ),
+
         10.pw(),
         Expanded(
           child: Column(

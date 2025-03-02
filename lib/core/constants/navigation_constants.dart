@@ -3,8 +3,8 @@ import 'app_assets.dart';
 abstract class NavigationIndex {
   static const int community = 0;
   static const int library = 1;
-  static const int chat = 2;
-  static const int profile = 3;
+  static const int chat = 3;
+  static const int profile = 4;
 }
 
 class NavigationItem {

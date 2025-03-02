@@ -6,6 +6,8 @@ import 'package:academe_x/core/pagination/pagination_params.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_entity.dart';
 import 'package:academe_x/features/auth/auth.dart';
 
+import '../../../auth/domain/entities/response/updated_user_entity.dart';
+
 class ProfileUseCase {
   final ProfileRepository repository;
 
@@ -21,5 +23,9 @@ class ProfileUseCase {
     String userId,
   ) async {
     return await repository.getUserProfile(userId);
+  }
+
+  Future<Either<Failure, UpdatedUserEntity>> updateProfile(Map<String, dynamic> user) async {
+    return await repository.updateProfile(user);
   }
 }

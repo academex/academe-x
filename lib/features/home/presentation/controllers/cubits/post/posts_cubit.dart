@@ -27,12 +27,13 @@ class PostsCubit extends Cubit<PostsState> {
   final PostUseCase postUseCase;
   final HiveCacheManager _cacheManager;
   final ScrollController homePostsScrollController = ScrollController();
-  final ScrollController profilePostsScrollController = ScrollController();
+  // final ScrollController profilePostsScrollController = ScrollController();
   final ScrollController commentScrollController = ScrollController();
 
 
 
   bool _isLoading = false; // Add loading flag to prevent multiple simultaneous calls
+  bool _postsOtherUserisLoading = false; // Add loading flag to prevent multiple simultaneous calls
   bool _commentIsLoading = false; // Add loading flag to prevent multiple simultaneous calls
 
   PostsCubit({
@@ -74,18 +75,26 @@ class PostsCubit extends Cubit<PostsState> {
   }
 
   Future<void> loadProfilePosts(BuildContext context,{
-    required
-    String? username
+    required String? username,
+    bool fromProfile = false,
+
   }) async {
     final Either<Failure, PaginatedResponse<PostEntity>> result;
-    if (_isLoading) return;
-    if (state.hasProfilePostsReachedMax) return;
+    // if (_postsOtherUserisLoading) return;
+    // if (state.hasProfilePostsReachedMax) return;
+    if(!fromProfile){
+      emit(state.copyWith(
+        profileStatus: PostProfileStatus.loading,
+      ));
+    }
+
 
     try {
-      _isLoading = true;
-      final page = state.profilePostsCurrentPage;
+      // _postsOtherUserisLoading = true;
 
       if (username == null) {
+      final page = state.currentProfilePostsCurrentPage;
+
         // Load current user from cache
         final currentUser = await context.cachedUser;
 
@@ -93,47 +102,47 @@ class PostsCubit extends Cubit<PostsState> {
           PaginationParams(page: page, username: currentUser!.user.username),
         );
 
-        // emit(state.copyWith(
-        //   status: ProfileStatus.loaded,
-        //   profileType: ProfileType.currentUser,
-        //   userPosts: ,
-        //   // profileUser: currentUser,
-        //   isEditable: true,
-        // ));
+        result.fold(
+          (l) => emit(state.copyWith(
+            profileStatus: PostProfileStatus.failure,
+            errorMessage: l.message,
+          )),
+          (r) => _handleSuccessCurrentProfilePostResponse(r),
+        );
       }
       else {
-        // Load other user's profile
-        // You would typically make an API call here to get the user data
-        // For now, we'll use cached user as placeholder
-        // emit(state.copyWith(
-        //   status: ProfileStatus.loaded,
-        //   profileType: ProfileType.otherUser,
-        //   profileUser: otherUser,
-        //   isEditable: false,
-        // ));
-
+        final page = state.otherProfilePostsCurrentPage;
         result = await postUseCase.loadProfilePosts(
           PaginationParams(page: page, username: username),
+        );
+
+
+        result.fold(
+              (l) => emit(state.copyWith(
+            profileStatus: PostProfileStatus.failure,
+            errorMessage: l.message,
+          )),
+              (r) => _handleSuccessOtherProfilePostResponse(r),
         );
       }
 
 
-      result.fold(
-            (failure) {
-          emit(state.copyWith(
-            profileStatus: PostProfileStatus.failure,
-            errorMessage: failure.message,
-          ));
-        },
-            (paginatedData) => _handleSuccessProfilePostResponse(paginatedData),
-      );
+      // result.fold(
+      //       (failure) {
+      //     emit(state.copyWith(
+      //       profileStatus: PostProfileStatus.failure,
+      //       errorMessage: failure.message,
+      //     ));
+      //   },
+      //       (paginatedData) => _handleSuccessProfilePostResponse(paginatedData),
+      // );
     } catch (e) {
       emit(state.copyWith(
         profileStatus: PostProfileStatus.failure,
         errorMessage: e.toString(),
       ));
     } finally {
-      _isLoading = false;
+      _postsOtherUserisLoading = false;
     }
   }
 
@@ -166,10 +175,10 @@ class PostsCubit extends Cubit<PostsState> {
   }
 
 
-  void _handleSuccessProfilePostResponse(
+  void _handleSuccessCurrentProfilePostResponse(
       PaginatedResponse<PostEntity> paginatedData,
       ) {
-    final List<PostEntity> newPosts = [...state.profilePosts];
+    final List<PostEntity> newPosts = [...state.currentProfilePosts];
     for (var newPost in paginatedData.items) {
       if (!newPosts.any((existingPost) => existingPost.id == newPost.id)) {
         newPosts.add(newPost);
@@ -178,9 +187,28 @@ class PostsCubit extends Cubit<PostsState> {
 
     emit(state.copyWith(
       profileStatus: PostProfileStatus.success,
-      profilePosts: newPosts,
-      hasProfilePostsReachedMax: !paginatedData.hasNextPage,
-      profilePostsCurrentPage: state.profilePostsCurrentPage + 1,
+      currentProfilePosts: newPosts,
+      hasCurrentUserProfilePostsReachedMax: !paginatedData.hasNextPage,
+      currentProfilePostsCurrentPage: state.currentProfilePostsCurrentPage + 1,
+      errorMessage: null,
+    ));
+  }
+
+  void _handleSuccessOtherProfilePostResponse(
+      PaginatedResponse<PostEntity> paginatedData,
+      ) {
+    final List<PostEntity> newPosts = [...state.otherProfilePosts];
+    for (var newPost in paginatedData.items) {
+      if (!newPosts.any((existingPost) => existingPost.id == newPost.id)) {
+        newPosts.add(newPost);
+      }
+    }
+
+    emit(state.copyWith(
+      profileStatus: PostProfileStatus.success,
+      otherProfilePosts: newPosts,
+      hasOtherUserProfilePostsReachedMax: !paginatedData.hasNextPage,
+      otherProfilePostsCurrentPage: state.otherProfilePostsCurrentPage + 1,
       errorMessage: null,
     ));
   }
@@ -260,15 +288,15 @@ class PostsCubit extends Cubit<PostsState> {
    // context.
     try {
       final mainPostIndex = state.posts.indexWhere((post) => post.id == postId);
-      final profilePostIndex = state.profilePosts.indexWhere((post) => post.id == postId);
+      final profilePostIndex = state.currentProfilePosts.indexWhere((post) => post.id == postId);
       final updatedMainPosts = List<PostEntity>.from(state.posts);
-      final updatedProfilePosts = List<PostEntity>.from(state.profilePosts);
+      final updatedProfilePosts = List<PostEntity>.from(state.currentProfilePosts);
 
       final currentUser = await context.cachedUser;
       if (currentUser == null) return;
 
       final sourcePost = mainPostIndex != -1 ? state.posts[mainPostIndex]
-          : state.profilePosts[profilePostIndex];
+          : state.currentProfilePosts[profilePostIndex];
       final currentReactions = List<ReactionItemEntity>.from(sourcePost.reactions?.items ?? []);
 
 
@@ -326,7 +354,7 @@ class PostsCubit extends Cubit<PostsState> {
 
       emit(state.copyWith(
         posts: updatedMainPosts,
-        profilePosts: updatedProfilePosts,
+        currentProfilePosts: updatedProfilePosts,
         status: PostStatus.success,
       ));
       // AppLogger.success('reaction in updated post: ${currentPosts[postIndex].reactions!.items[0].type}');  // Debug log
