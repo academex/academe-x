@@ -70,6 +70,48 @@ class ProfileRemoteDataSource {
     }
   }
 
+  Future<PaginatedResponse<PostModel>> loadSavedPosts(
+      PaginationParams paginationParams) async {
+    String url =
+        '${ApiSetting.getPosts}/saved?page=${paginationParams.page}';
+
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        AppLogger.network(url);
+        final response = await apiController.get(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':
+            'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
+          },
+        );
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if (response.statusCode >= 400) {
+          HandleHttpError.handleHttpError(responseBody);
+        }
+
+        final baseResponse =
+        BaseResponse<PaginatedResponse<PostModel>>.fromJson(
+          responseBody,
+              (json) {
+            return PaginatedResponse<PostModel>.fromJson(
+              json,
+                  (p0) {
+                return PostModel.fromJson(p0);
+              },
+            );
+          },
+        );
+        return baseResponse.data!;
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
   Future<UpdatedUserModel> updateProfile(Map<String, dynamic> user) async {
     AppLogger.success(jsonEncode(user));
 
@@ -149,6 +191,8 @@ class ProfileRemoteDataSource {
       throw OfflineException(errorMessage: 'No Internet Connection');
     }
   }
+
+
   // Future<ProfileModel> updateProfile(ProfileModel profile) async {
   //   if (await internetConnectionChecker.hasConnection) {
   //     final response = await apiController.put(
