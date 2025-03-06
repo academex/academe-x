@@ -52,11 +52,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> loadProfile(BuildContext context, {String? username}) async {
     try {
       emit(state.copyWith(status: ProfileStatus.loading));
-
-
-
       if (username == null) {
-
         // Load current user from cache
         final currentUser = await context.cachedUser;
         // currentUser
@@ -99,6 +95,46 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  void whenCloseOtherUserProfile(){
+    AppLogger.w('Im here');
+    emit(state.copyWith(
+      isEditable: true
+    ));
+  }
+
+  Future<void> loadSavedPosts(BuildContext context, {required String username}) async {
+    if (state.hasSavedPostsReachedMax) return;
+    final page = state.currentSavedPostsPage;
+    try {
+      emit(state.copyWith(profileSavedPostsStatus: ProfileSavedPostsStatus.loading));
+      final savedPosts = await profileUseCase.loadSavedPosts(
+        PaginationParams(page: page, username: username),
+      );
+      savedPosts.fold(
+        (l) => emit(state.copyWith(
+          profileSavedPostsStatus: ProfileSavedPostsStatus.error,
+          errorMessage: l.message,
+        )),
+        (r) {
+          AppLogger.success(r.items.length.toString());
+          return emit(state.copyWith(
+            profileSavedPostsStatus: ProfileSavedPostsStatus.loaded,
+            savedPosts: r.items,
+            hasSavedPostsReachedMax: !r.hasNextPage,
+          ));
+        }
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading profile: $e');
+      }
+      emit(state.copyWith(
+        profileSavedPostsStatus: ProfileSavedPostsStatus.error,
+        errorMessage: 'Failed to load saved Posts',
+      ));
+    }
+  }
+
   Future<void> loadPosts(BuildContext context,{
     required
   String? username
@@ -118,32 +154,12 @@ class ProfileCubit extends Cubit<ProfileState> {
          result = await profileUseCase.loadPosts(
           PaginationParams(page: page, username: currentUser!.user.username),
         );
-
-        // emit(state.copyWith(
-        //   status: ProfileStatus.loaded,
-        //   profileType: ProfileType.currentUser,
-        //   userPosts: ,
-        //   // profileUser: currentUser,
-        //   isEditable: true,
-        // ));
       }
       else {
-        // Load other user's profile
-        // You would typically make an API call here to get the user data
-        // For now, we'll use cached user as placeholder
-        // emit(state.copyWith(
-        //   status: ProfileStatus.loaded,
-        //   profileType: ProfileType.otherUser,
-        //   profileUser: otherUser,
-        //   isEditable: false,
-        // ));
-
          result = await profileUseCase.loadPosts(
           PaginationParams(page: page, username: username),
         );
       }
-
-
       result.fold(
         (failure) {
           emit(state.copyWith(

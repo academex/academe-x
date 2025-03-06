@@ -138,4 +138,32 @@ class ProfileRepositoryImpl implements ProfileRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, PaginatedResponse<PostEntity>>> loadSavedPosts(PaginationParams paginationParams) async{
+    try {
+      // Try to get from network
+      final result = await remoteDataSource.loadSavedPosts(paginationParams);
+      return Right(result);
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(
+        message: e.errorMessage,
+      ));
+    } on ServerException catch (e) {
+      return Left(
+        ServerFailure(
+          message: e.message,
+        ),
+      );
+    } on TimeOutExeption catch (e) {
+
+      return Left(
+        TimeOutFailure(
+          message: e.errorMessage,
+        ),
+      );
+    } catch (e, stack) {
+      return Left(ServerFailure(message: 'An unexpected error occurred: $e'));
+    }
+  }
+
 }

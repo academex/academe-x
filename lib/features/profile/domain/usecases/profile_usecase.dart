@@ -28,4 +28,8 @@ class ProfileUseCase {
   Future<Either<Failure, UpdatedUserEntity>> updateProfile(Map<String, dynamic> user) async {
     return await repository.updateProfile(user);
   }
+
+  Future<Either<Failure, PaginatedResponse<PostEntity>>> loadSavedPosts(PaginationParams paginationParams) async {
+    return await repository.loadSavedPosts(paginationParams);
+  }
 }

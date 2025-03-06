@@ -87,8 +87,6 @@ class PostsCubit extends Cubit<PostsState> {
         profileStatus: PostProfileStatus.loading,
       ));
     }
-
-
     try {
       // _postsOtherUserisLoading = true;
 
@@ -126,16 +124,6 @@ class PostsCubit extends Cubit<PostsState> {
         );
       }
 
-
-      // result.fold(
-      //       (failure) {
-      //     emit(state.copyWith(
-      //       profileStatus: PostProfileStatus.failure,
-      //       errorMessage: failure.message,
-      //     ));
-      //   },
-      //       (paginatedData) => _handleSuccessProfilePostResponse(paginatedData),
-      // );
     } catch (e) {
       emit(state.copyWith(
         profileStatus: PostProfileStatus.failure,
@@ -471,11 +459,13 @@ class PostsCubit extends Cubit<PostsState> {
             isSaved: !isSaved
         );
       }
+      List<PostEntity> savedPostsList= updatedPosts.where((element) => element.isSaved!,).toList();
 
 
       // Emit optimistic update immediately
       emit(state.copyWith(
         posts: updatedPosts,
+        postsSavedList: savedPostsList,
         status: PostStatus.success,
       ));
       final result = await postUseCase.savePost(postId);

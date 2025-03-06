@@ -6,6 +6,7 @@ import 'package:academe_x/features/auth/auth.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../auth/domain/entities/response/updated_user_entity.dart';
+import '../../../home/data/models/post/post_model.dart';
 
 abstract class ProfileRepository {
   ProfileRepository();
@@ -18,5 +19,6 @@ abstract class ProfileRepository {
     String userId,
   );
   Future<Either<Failure, UpdatedUserEntity>>updateProfile(Map<String, dynamic> user);
+  Future<Either<Failure, PaginatedResponse<PostEntity>>>loadSavedPosts(PaginationParams paginationParams);
 
 }

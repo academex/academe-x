@@ -27,6 +27,7 @@ class PostsState extends Equatable {
   final CreationStatus creationState;
   final StatisticsEntity? statisticsEntity;
   final List<PostEntity> posts;
+  final List<PostEntity> postsSavedList;
   final List<PostEntity> currentProfilePosts;
   final List<PostEntity> otherProfilePosts;
   final PostEntity? post;
@@ -70,6 +71,7 @@ class PostsState extends Equatable {
     this.creationState = CreationStatus.initial,
     this.postDetailsStatus = PostDetailsStatus.initial,
     this.posts = const <PostEntity>[],
+    this.postsSavedList = const <PostEntity>[],
     this.currentProfilePosts = const <PostEntity>[],
     this.otherProfilePosts = const <PostEntity>[],
     this.reactionItems = const <ReactionItemEntity>[],
@@ -114,6 +116,7 @@ class PostsState extends Equatable {
     PostDetailsStatus? postDetailsStatus,
     ReactionStatus? reactionStatus,
     List<PostEntity>? posts,
+    List<PostEntity>? postsSavedList,
     List<PostEntity>? currentProfilePosts,
     List<PostEntity>? otherProfilePosts,
     PostEntity? post,
@@ -154,6 +157,7 @@ class PostsState extends Equatable {
       reactionStatus: reactionStatus ?? this.reactionStatus,
       post: post ?? this.post,
       posts: posts ?? this.posts,
+      postsSavedList: postsSavedList ?? this.postsSavedList,
       currentProfilePosts: currentProfilePosts ?? this.currentProfilePosts,
       otherProfilePosts: otherProfilePosts ?? this.otherProfilePosts,
       statisticsEntity: statisticsEntity ?? this.statisticsEntity,
@@ -200,6 +204,7 @@ class PostsState extends Equatable {
     profileStatus,
     reactionStatus,
     posts,
+    postsSavedList,
     statisticsEntity,
     currentProfilePostsCurrentPage,
     otherProfilePostsCurrentPage,
