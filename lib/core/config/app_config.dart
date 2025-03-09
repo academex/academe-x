@@ -1,5 +1,5 @@
 import 'package:academe_x/core/utils/storage/storage.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -114,17 +114,17 @@ class AppConfig {
 
   static Future<void> _initializeAnalytics() async {
     try {
-      final analytics = FirebaseAnalytics.instance;
-      await analytics.setAnalyticsCollectionEnabled(true);
-      await analytics.logAppOpen();
-      await analytics.setUserProperty(
-        name: 'app_version',
-        value: packageInfo.version,
-      );
-      await analytics.setUserProperty(
-        name: 'environment',
-        value: environment.name,
-      );
+      // final analytics = FirebaseAnalytics.instance;
+      // await analytics.setAnalyticsCollectionEnabled(true);
+      // await analytics.logAppOpen();
+      // await analytics.setUserProperty(
+      //   name: 'app_version',
+      //   value: packageInfo.version,
+      // );
+      // await analytics.setUserProperty(
+      //   name: 'environment',
+      //   value: environment.name,
+      // );
     } catch (e) {
       debugPrint('Failed to initialize analytics: $e');
     }

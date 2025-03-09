@@ -122,7 +122,7 @@ class IconChoices extends StatelessWidget {
                     state.file.isNotEmpty,
                 imagePath: 'assets/icons/document.png',
                 onPressed: () {
-                  context.read<PickerCubit>().pickFile();
+                  // context.read<PickerCubit>().pickFile();
                 },
               ),
               IconBottomForCreatePost(
