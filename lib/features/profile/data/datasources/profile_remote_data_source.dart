@@ -35,7 +35,6 @@ class ProfileRemoteDataSource {
     // }
     if (await internetConnectionChecker.hasConnection) {
       try {
-        AppLogger.network(url);
         final response = await apiController.get(
           Uri.parse(url),
           headers: {
@@ -77,7 +76,6 @@ class ProfileRemoteDataSource {
 
     if (await internetConnectionChecker.hasConnection) {
       try {
-        AppLogger.network(url);
         final response = await apiController.get(
           Uri.parse(url),
           headers: {
@@ -113,7 +111,6 @@ class ProfileRemoteDataSource {
   }
 
   Future<UpdatedUserModel> updateProfile(Map<String, dynamic> user) async {
-    AppLogger.success(jsonEncode(user));
 
     if (await internetConnectionChecker.hasConnection) {
       try {

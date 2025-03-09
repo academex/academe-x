@@ -79,7 +79,6 @@ class SignupCubit extends AuthCubit {
           List<String>? errorMessage = [];
           if (failure is ValidationFailure) {
             errorMessage = failure.messages;
-            AppLogger.e(errorMessage.toString());
           } else if (failure is UnauthorizedFailure) {
             errorMessage.add(failure.message);
           } else {

@@ -96,7 +96,6 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void whenCloseOtherUserProfile(){
-    AppLogger.w('Im here');
     emit(state.copyWith(
       isEditable: true
     ));
@@ -116,7 +115,6 @@ class ProfileCubit extends Cubit<ProfileState> {
           errorMessage: l.message,
         )),
         (r) {
-          AppLogger.success(r.items.length.toString());
           return emit(state.copyWith(
             profileSavedPostsStatus: ProfileSavedPostsStatus.loaded,
             savedPosts: r.items,
@@ -135,6 +133,28 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future<void> addPostOrDeleteToSavedPosts(BuildContext context,PostEntity post) async{
+    emit(state.copyWith(profileSavedPostsStatus: ProfileSavedPostsStatus.loading));
+    List<PostEntity> postsFromServer=state.savedPosts;
+    List<PostEntity> postsSavedLocally= List.from(context.read<PostsCubit>().state.postsSavedList);
+    final postsById ={
+      for (var post in [...postsFromServer,...postsSavedLocally ])
+        post.id: post
+    };
+
+    AppLogger.auth('test test ${postsById.keys.toString()}');
+    AppLogger.auth('test test ${post.id.toString()}');
+    if(postsById.containsKey(post.id)){
+      postsById.remove(post.id);
+    }else{
+      postsById[post.id]=post;
+    }
+
+
+
+
+    emit(state.copyWith(profileSavedPostsStatus: ProfileSavedPostsStatus.loaded,savedPosts: postsById.values.toList()));
+  }
   Future<void> loadPosts(BuildContext context,{
     required
   String? username

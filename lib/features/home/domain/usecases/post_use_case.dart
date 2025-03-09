@@ -35,7 +35,6 @@ class PostUseCase {
   Future<Either<Failure, PaginatedResponse<PostEntity>>> loadProfilePosts(
       PaginationParams params,
       ) async {
-    AppLogger.wtf('params.toString() ${params.toString()}');
     return await postRepository.loadProfilePosts(params);
   }
 

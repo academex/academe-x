@@ -143,7 +143,6 @@ class AuthenticationRemoteDataSource {
   }
 
   Future<UpdatedUserEntity> updateProfile(Map<String, dynamic> user) async {
-    AppLogger.success(jsonEncode(user));
 
     if (await internetConnectionChecker.hasConnection) {
       try {
