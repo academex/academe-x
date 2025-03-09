@@ -128,7 +128,6 @@ class _ProfilePageState extends State<ProfilePage>
         late UserResponseEntity? user;
 
         if(widget.username == null){
-          AppLogger.w(cachedUser!.username.toString());
           user = state.user;
         }else{
           user = state.otherUser;
@@ -207,10 +206,8 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget _buildBioSection(ProfileState state,BuildContext ctx) {
     late UserResponseEntity? user;
-    AppLogger.w(widget.username.toString());
 
     if(widget.username == null){
-      AppLogger.w(cachedUser!.username.toString());
       user = state.user;
     }else{
       user = state.otherUser;
@@ -517,7 +514,6 @@ class _ProfilePageState extends State<ProfilePage>
                       (context, index) {
                     if (index >= state.currentProfilePosts.length) {
                       if (state.hasCurrentUserProfilePostsReachedMax) {
-                        AppLogger.success('reach the end');
                         return Column(
                           children: [
                             20.ph(),

@@ -8,6 +8,7 @@ import 'package:academe_x/features/home/data/models/post/comment_model.dart';
 import 'package:academe_x/features/home/domain/entities/post/comment_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/post_user_entity.dart';
 import 'package:academe_x/features/home/domain/entities/post/reaction_item_entity.dart';
+import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -26,6 +27,7 @@ import '../../states/post/post_state.dart';
 class PostsCubit extends Cubit<PostsState> {
   final PostUseCase postUseCase;
   final HiveCacheManager _cacheManager;
+  // final ProfileCubit profileCubit;
   final ScrollController homePostsScrollController = ScrollController();
   // final ScrollController profilePostsScrollController = ScrollController();
   final ScrollController commentScrollController = ScrollController();
@@ -38,6 +40,7 @@ class PostsCubit extends Cubit<PostsState> {
 
   PostsCubit({
     required this.postUseCase,
+    // required this.profileCubit,
   }) : _cacheManager = getIt<HiveCacheManager>(),
         super(PostsState());
 
@@ -435,7 +438,6 @@ class PostsCubit extends Cubit<PostsState> {
         },
       );
     } catch (e) {
-      AppLogger.e('Error in reactToPost: $e');  // Debug log
       // final cachedPosts = await _getCachedPosts();
       emit(state.copyWith(
         status: PostStatus.failure,
@@ -446,7 +448,7 @@ class PostsCubit extends Cubit<PostsState> {
       _isLoading = false;
     }
   }
-  Future<void> savePost({required int postId,required bool isSaved}) async {
+  Future<void> savePost({required int postId,required BuildContext context,required bool isSaved}) async {
     try {
 
       // Create a deep copy of current posts
@@ -458,16 +460,19 @@ class PostsCubit extends Cubit<PostsState> {
         updatedPosts[postIndex] = updatedPosts[postIndex].copyWith(
             isSaved: !isSaved
         );
+
       }
       List<PostEntity> savedPostsList= updatedPosts.where((element) => element.isSaved!,).toList();
 
+      context.read<ProfileCubit>().addPostOrDeleteToSavedPosts(context,updatedPosts[postIndex]);
 
-      // Emit optimistic update immediately
       emit(state.copyWith(
         posts: updatedPosts,
         postsSavedList: savedPostsList,
         status: PostStatus.success,
       ));
+
+
       final result = await postUseCase.savePost(postId);
 
       result.fold(

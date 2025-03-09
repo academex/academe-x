@@ -55,6 +55,7 @@ class PostActionButtons extends StatelessWidget {
             postId: post.id!,
             isSaved: post.isSaved??false,
             onSave: () => context.read<PostsCubit>().savePost(
+              context: context,
               postId: post.id!,
               isSaved: post.isSaved!,
             ),

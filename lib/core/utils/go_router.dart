@@ -44,7 +44,6 @@ final goRouter = GoRouter(
       print('Redirecting to home from login');
       return '/home_screen';
     }
-    AppLogger.wtf('hussen ${location.toString()}');
     if (location.startsWith('/profile')) {
       return location;
     }

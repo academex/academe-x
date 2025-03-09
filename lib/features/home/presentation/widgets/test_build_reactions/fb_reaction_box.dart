@@ -179,7 +179,6 @@ class FbReactionBoxState extends State<FbReactionBox> with TickerProviderStateMi
         _isLiked = true;
       });
 
-      AppLogger.success(_emojiUserChoose.toString());
 
       _hideBox();
     }

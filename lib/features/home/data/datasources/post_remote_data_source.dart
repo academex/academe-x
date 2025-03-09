@@ -84,7 +84,6 @@ class PostRemoteDataSource {
     // }
     if (await internetConnectionChecker.hasConnection) {
       try {
-        AppLogger.network(url);
         final response = await apiController.get(
           Uri.parse(url),
           headers: {

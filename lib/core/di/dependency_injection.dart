@@ -11,6 +11,7 @@ import 'package:academe_x/features/profile/domain/repositories/user_profile_repo
 import 'package:academe_x/features/profile/domain/usecases/profile_usecase.dart';
 import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../../features/college_major/controller/cubit/college_major_cubit.dart';
 import '../../features/college_major/domain/repositories/college_major_repository.dart';
