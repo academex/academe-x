@@ -3,6 +3,11 @@ import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
+import 'package:academe_x/features/library/data/datasources/library_remote_data_source.dart';
+import 'package:academe_x/features/library/data/repositories/library_repository_impl.dart';
+import 'package:academe_x/features/library/domain/repositories/user_library_repositories.dart';
+import 'package:academe_x/features/library/domain/usecases/library_usecase.dart';
+import 'package:academe_x/features/library/presentation/controllers/cubits/library_cubit.dart';
 import 'package:academe_x/features/profile/data/datasources/profile_remote_data_source.dart';
 import 'package:academe_x/features/profile/data/repositories/profile_repository_impl.dart';
 // import 'package:academe_x/features/profile/domain/repositories/profile_repository.dart';
@@ -91,9 +96,12 @@ void _initCubits() {
       authUseCase: getIt(),
       collegeMajorsCubit: getIt()
     ),
-    
+  );
+  getIt.registerFactory<LibraryCubit>(
+          () => LibraryCubit(
+          libraryUseCase: getIt()
 
-
+      ),
   );
 
   getIt.registerFactory<CollegeMajorsCubit>(
@@ -140,6 +148,11 @@ void _initUseCases() {
     getIt(),
     ),
   );
+  getIt.registerLazySingleton<LibraryUseCase>(
+        () => LibraryUseCase(
+      getIt(),
+    ),
+  );
 }
 
 void _initRepositories() {
@@ -160,6 +173,12 @@ void _initRepositories() {
       remoteDataSource: getIt(),
     ),
   );
+
+  getIt.registerLazySingleton<LibraryRepository>(
+        () => LibraryRepositoryImpl(
+      remoteDataSource: getIt(),
+    ),
+  );
 }
 
 void _initDataSources() {
@@ -168,6 +187,13 @@ void _initDataSources() {
       apiController: getIt(),
       internetConnectionChecker: getIt(),
       // cacheManager: getIt(),
+    ),
+  );
+
+  getIt.registerLazySingleton<LibraryRemoteDataSource>(
+        () => LibraryRemoteDataSource(
+      apiController: getIt(),
+      internetConnectionChecker: getIt(),
     ),
   );
 

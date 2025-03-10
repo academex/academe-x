@@ -5,7 +5,7 @@ class MajorEntity {
   String? majorAr;
   String? collegeEn;
   String? majorEn;
-  Null? description;
+  String? description;
   int? yearsNum;
   bool? isActive;
   String? createdAt;

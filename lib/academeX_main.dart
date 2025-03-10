@@ -5,6 +5,7 @@ import 'package:academe_x/features/home/presentation/controllers/cubits/post/pos
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/poll_state.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
+import 'package:academe_x/features/library/presentation/controllers/cubits/library_cubit.dart';
 import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +47,9 @@ class AcademeXMain extends StatelessWidget {
       BlocProvider<LoginCubit>(
         create: (context) => getIt<LoginCubit>(),
       ),
+      BlocProvider<SignupCubit>(
+        create: (context) => getIt<SignupCubit>(),
+      ),
       BlocProvider<BottomNavCubit>(
         create: (context) => getIt<BottomNavCubit>(),
       ),
@@ -83,6 +87,9 @@ class AcademeXMain extends StatelessWidget {
     BlocProvider<ProfileCubit>(
       create: (context) => getIt<ProfileCubit>(),
     ),
+      BlocProvider<LibraryCubit>(
+        create: (context) => getIt<LibraryCubit>()..loadLibrary(),
+      ),
     ];
   }
 

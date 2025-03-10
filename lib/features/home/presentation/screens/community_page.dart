@@ -24,7 +24,6 @@ class _CommunityPageState extends State<CommunityPage> {
   Timer? _debounce;
   late ScrollController _scrollController;
 
-
   @override
   void initState() {
     super.initState();
@@ -34,43 +33,48 @@ class _CommunityPageState extends State<CommunityPage> {
     _scrollController = context.read<PostsCubit>().homePostsScrollController;
     _scrollController.addListener(_onScroll);
   }
+
   @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
     super.dispose();
   }
 
-
-
   void _onScroll() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       if (_isBottom) {
-        context.read<PostsCubit>().loadPosts(tagId: context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
+        context.read<PostsCubit>().loadPosts(
+            tagId: context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
       }
     });
   }
 
   bool get _isBottom {
-    if (!context.read<PostsCubit>().homePostsScrollController.hasClients) return false;
-    final maxScroll = context.read<PostsCubit>().homePostsScrollController.position.maxScrollExtent;
-    final currentScroll = context.read<PostsCubit>().homePostsScrollController.offset;
+    if (!context.read<PostsCubit>().homePostsScrollController.hasClients)
+      return false;
+    final maxScroll = context
+        .read<PostsCubit>()
+        .homePostsScrollController
+        .position
+        .maxScrollExtent;
+    final currentScroll =
+        context.read<PostsCubit>().homePostsScrollController.offset;
     return currentScroll >= (maxScroll * 0.9);
   }
 
-
   Widget _buildSliverAppBar() {
-    return BlocBuilder<CollegeMajorsCubit,CollegeMajorsState>(
+    return BlocBuilder<CollegeMajorsCubit, CollegeMajorsState>(
       // buildWhen: (previous, current) => previous!=current,
       builder: (context, state) => SliverAppBar(
         automaticallyImplyLeading: true,
-        expandedHeight:state.isVisibileMajors? 250: 150,
+        expandedHeight: state.isVisibileMajors ? 250 : 150,
         pinned: true,
         leading: 0.pw(),
         flexibleSpace: LayoutBuilder(
           builder: (context, constraints) {
             final percent = (constraints.maxHeight - kToolbarHeight) /
-                ((state.isVisibileMajors? 250: 150) - kToolbarHeight);
+                ((state.isVisibileMajors ? 250 : 150) - kToolbarHeight);
             return FlexibleSpaceBar(
               centerTitle: true,
               title: AnimatedOpacity(
@@ -78,7 +82,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 duration: const Duration(milliseconds: 100),
                 child: _buildHeaderContent(true, state),
               ),
-              background: _buildHeaderBackground(false,state),
+              background: _buildHeaderBackground(false, state),
             );
           },
         ),
@@ -93,25 +97,24 @@ class _CommunityPageState extends State<CommunityPage> {
         builder: (context, state) {
           // state.
           switch (state.status) {
-
             case PostStatus.initial:
             case PostStatus.loading:
-            return  SliverFillRemaining(
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) => Column(
-                    children: [
-                      const PostWidgetShimmer(),
-                      Divider(
-                        color: Colors.grey.shade300,
-                        endIndent: 25,
-                        indent: 25,
-                      ),
-                    ],
-                  ),
-                )
-              //
-            );
+              return SliverFillRemaining(
+                  child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => Column(
+                  children: [
+                    const PostWidgetShimmer(),
+                    Divider(
+                      color: Colors.grey.shade300,
+                      endIndent: 25,
+                      indent: 25,
+                    ),
+                  ],
+                ),
+              )
+                  //
+                  );
             case PostStatus.failure:
               if (state.posts.isEmpty) {
                 return SliverFillRemaining(
@@ -122,8 +125,8 @@ class _CommunityPageState extends State<CommunityPage> {
                         Text(state.errorMessage ?? 'Failed to fetch posts'),
                         16.ph(),
                         ElevatedButton(
-                          onPressed: () async{
-                            return  await context.read<PostsCubit>().loadPosts();
+                          onPressed: () async {
+                            return await context.read<PostsCubit>().loadPosts();
                           },
                           child: const Text('Retry'),
                         ),
@@ -136,7 +139,6 @@ class _CommunityPageState extends State<CommunityPage> {
             case PostStatus.success:
               if (state.posts.isEmpty) {
                 return const SliverFillRemaining(
-
                   child: Center(child: Text('No posts found')),
                 );
               }
@@ -145,11 +147,11 @@ class _CommunityPageState extends State<CommunityPage> {
 
           return SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (context, index) {
+              (context, index) {
                 if (index >= state.posts.length) {
                   // AppLogger.success('reach the end');
                   if (state.hasPostsReachedMax) {
-                  AppLogger.success('reach the end');
+                    AppLogger.success('reach the end');
                     return Column(
                       children: [
                         20.ph(),
@@ -174,7 +176,9 @@ class _CommunityPageState extends State<CommunityPage> {
                 return Column(
                   children: [
                     20.ph(),
-                    PostWidget(post: post,),
+                    PostWidget(
+                      post: post,
+                    ),
                     if (index < state.posts.length - 1) ...[
                       16.ph(),
                       Divider(
@@ -185,15 +189,14 @@ class _CommunityPageState extends State<CommunityPage> {
                       16.ph(),
                     ],
                   ],
-                );},
+                );
+              },
               childCount: state.hasPostsReachedMax
-                  ? state.posts.length + 1
-                  : state.posts.length + 1,
+                  ? state.posts.length
+                  : state.posts.length,
             ),
-
           );
         },
-
       ),
     );
   }
@@ -202,12 +205,14 @@ class _CommunityPageState extends State<CommunityPage> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        return await context.read<PostsCubit>().refreshPosts(context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
+        return await context.read<PostsCubit>().refreshPosts(
+            context.read<CollegeMajorsCubit>().state.selectedMajor!.id!);
       },
       child: CustomScrollView(
         controller: _scrollController,
         physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(), // Add this to enable refresh when at top
+          parent:
+              AlwaysScrollableScrollPhysics(), // Add this to enable refresh when at top
         ),
         shrinkWrap: true,
         slivers: [
@@ -218,20 +223,19 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
-  Widget _buildHeaderBackground(bool inScroll,CollegeMajorsState state) {
+  Widget _buildHeaderBackground(bool inScroll, CollegeMajorsState state) {
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF2200F2),
       ),
-      child: _buildHeaderContent(inScroll,state),
+      child: _buildHeaderContent(inScroll, state),
     );
   }
 
-  Widget _buildHeaderContent(bool inScroll,CollegeMajorsState state) {
-      if (
-        (state.status == MajorsStatus.loading)) {
+  Widget _buildHeaderContent(bool inScroll, CollegeMajorsState state) {
+    if ((state.status == MajorsStatus.loading)) {
       return const Center(child: CircularProgressIndicator());
-    }else if(state.status == MajorsStatus.failure && state.majors.isEmpty) {
+    } else if (state.status == MajorsStatus.failure && state.majors.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -245,149 +249,168 @@ class _CommunityPageState extends State<CommunityPage> {
           ],
         ),
       );
-    }
-    else if(state.status== MajorsStatus.success){
-        final title = state.selectedMajor != null
-            ? '${state.selectedMajor!.majorAr!} | ${state.selectedMajor!.name!.toUpperCase()}'
-            : 'Loading...';
-        return inScroll
-            ? SafeArea(
-            child: Column(
+    } else if (state.status == MajorsStatus.success) {
+      final title = state.selectedMajor != null
+          ? '${state.selectedMajor!.majorAr!} | ${state.selectedMajor!.name!.toUpperCase()}'
+          : 'Loading...';
+      return inScroll
+          ? SafeArea(
+              child: Column(
               children: [
                 Expanded(
                   child: SizedBox(
                       // width: 327,
                       // 327.w,
-                      height: 45  ,
-                      child:HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title: 'تطوير البرمجيات'  , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-                  ),
+                      height: 45,
+                      child: HeaderWidget(
+                        inScroll: inScroll,
+                        logoPath: 'assets/images/Frame.png',
+                        title: 'تطوير البرمجيات',
+                        subTitle: 'مجتمع مخصص لكل تساؤلاتك',
+                        firstIconPath: 'assets/icons/search.png',
+                        secondIconPath: 'assets/icons/notification.png',
+                        onTap: () {},
+                      )),
                 ),
                 inScroll ? 0.ph() : 15.ph(),
                 inScroll ? 0.ph() : _buildCategoryTabs(),
               ],
             ))
-            :  Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  inScroll ? 0.ph() : 60.ph(),
-                  HeaderWidget(inScroll: inScroll, logoPath: 'assets/images/Frame.png', title:title , subTitle:  'مجتمع مخصص لكل تساؤلاتك', firstIconPath: 'assets/icons/search.png', secondIconPath: 'assets/icons/notification.png')
-                  ,18.ph(),
-                  Row(
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppText(
-                        text: 'التخصصات',
-                        fontSize: 16  ,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                      inScroll ? 0.ph() : 60.ph(),
+                      HeaderWidget(
+                        inScroll: inScroll,
+                        logoPath: 'assets/images/Frame.png',
+                        title: title,
+                        subTitle: 'مجتمع مخصص لكل تساؤلاتك',
+                        firstIconPath: 'assets/icons/search.png',
+                        secondIconPath: 'assets/icons/notification.png',
+                        onTap: () {},
                       ),
-                      const Spacer(),
-                      AppText(
-                        text:context.read<CollegeMajorsCubit>().state.isVisibileMajors? 'عرض اقل' : 'عرض المزيد',
-                        fontWeight: FontWeight.w500,
-                        onPressed: () {
-                          context.read<CollegeMajorsCubit>().toggleVisibleMajors();
-
-
-                        },
-                        fontSize: 12  ,
-                        color: Colors.white.withOpacity(0.66),
+                      18.ph(),
+                      Row(
+                        children: [
+                          AppText(
+                            text: 'التخصصات',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                          const Spacer(),
+                          AppText(
+                            text: context
+                                    .read<CollegeMajorsCubit>()
+                                    .state
+                                    .isVisibileMajors
+                                ? 'عرض اقل'
+                                : 'عرض المزيد',
+                            fontWeight: FontWeight.w500,
+                            onPressed: () {
+                              context
+                                  .read<CollegeMajorsCubit>()
+                                  .toggleVisibleMajors();
+                            },
+                            fontSize: 12,
+                            color: Colors.white.withOpacity(0.66),
+                          ),
+                        ],
                       ),
+                      12.ph(),
                     ],
                   ),
-                  12.ph(),
-                ],
-              ),
-            ),
-            state.isVisibileMajors?
-            Container(
-              padding: const EdgeInsets.only(right: 24),
-              height: 100,
-              // width: 327.w,
-              child: ListView.separated(
-                  reverse: true,
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    bool isSelected= state.majors[index].name! == state.selectedTag;
-                    String? title = state.majors[index].majorAr;
-                    // String image = 'assets/images/image_test1.png';
-                    String image = state.majors[index].photoUrl!;
-                    return Column(
-                      children: [
-                        GestureDetector(
-                          child: Container(
-                              width: 56,
-                              height: 56,
-                              decoration: BoxDecoration(
-                                  color:isSelected?Colors.white: Color(0x0F000000),
-                                  // : const,
-                                  borderRadius:
-                                  BorderRadius.circular(10)),
-                              child: Center(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl: image,
-                                    fit: BoxFit.fill,
-                                    placeholder: (context, url) =>
-                                        const CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
+                ),
+                state.isVisibileMajors
+                    ? Container(
+                        padding: const EdgeInsets.only(right: 24),
+                        height: 100,
+                        // width: 327.w,
+                        child: ListView.separated(
+                            reverse: true,
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              bool isSelected = state.majors[index].name! ==
+                                  state.selectedTag;
+                              String? title = state.majors[index].majorAr;
+                              // String image = 'assets/images/image_test1.png';
+                              String image = state.majors[index].photoUrl!;
+                              return Column(
+                                children: [
+                                  GestureDetector(
+                                    child: Container(
+                                      width: 56,
+                                      height: 56,
+                                      decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Color(0x0F000000),
+                                          // : const,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: CachedNetworkImage(
+                                                imageUrl: image,
+                                                fit: BoxFit.fill,
+                                                placeholder: (context, url) =>
+                                                    const CircularProgressIndicator(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
+                                              ))),
+                                    ),
+                                    onTap: () async {
+                                      context
+                                          .read<CollegeMajorsCubit>()
+                                          .selectTag(state.majors[index]);
+                                      //
+
+                                      await context
+                                          .read<PostsCubit>()
+                                          .loadTagPosts(
+                                              tagId: state.majors[index].id!);
+                                    },
+                                  ),
+                                  12.ph(),
+                                  AppText(
+                                    text: title!,
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    // fontWeight:FontWeight.bold ,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    // fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
                                   )
-
-                              )
-                          ),
-                    ),
-                          onTap: ()async {
-                            context
-                                .read<CollegeMajorsCubit>()
-                                .selectTag(state.majors[index]);
-                            //
-
-                            await   context
-                                .read<PostsCubit>()
-                                .loadTagPosts(tagId: state.majors[index].id!);
-                          },
-                        ),
-                        12.ph(),
-                        AppText(
-                          text: title!,
-                          fontSize: 14,
-                          color: Colors.white,
-                          // fontWeight:FontWeight.bold ,
-                          fontWeight:isSelected? FontWeight.bold : FontWeight.normal,
-                          // fontWeight:selectedIndex == index? FontWeight.bold : FontWeight.normal,
-
-                        )
-                      ],
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return 10.pw();
-                  },
-                  itemCount: state.majors.length),
-            )
-                :0.ph(),
-          ],
-        );
-      }  else{
+                                ],
+                              );
+                            },
+                            separatorBuilder: (context, index) {
+                              return 10.pw();
+                            },
+                            itemCount: state.majors.length),
+                      )
+                    : 0.ph(),
+              ],
+            );
+    } else {
       return Text('data');
-      }
-
-
+    }
   }
-
-
 
   Widget _buildCategoryTabs() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5  , horizontal: 8),
-      height: 55  ,
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      height: 55,
       width: 327,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -407,7 +430,7 @@ class _CommunityPageState extends State<CommunityPage> {
     return Expanded(
       child: Container(
         alignment: AlignmentDirectional.center,
-        height: 43  ,
+        height: 43,
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xff2769F2) : Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -421,5 +444,3 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 }
-
-

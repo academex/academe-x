@@ -26,6 +26,7 @@ class AppConfig {
   static late String userPostsEndpoint;
   static late String commentEndpoint;
   static late String getTagsEndpoint;
+  static late String libraryEndpoint;
 
   // Feature flags
   static late bool enablePushNotifications;
@@ -67,6 +68,7 @@ class AppConfig {
         userPostsEndpoint = '$apiUrl/post/user';
         commentEndpoint = '$apiUrl/comment';
         getTagsEndpoint = '$apiUrl/tag/user-college-tags';
+        libraryEndpoint = '$apiUrl/library';
 
         enableAnalytics = false;
         enableCrashlytics = false;
@@ -79,6 +81,7 @@ class AppConfig {
         apiUrl = 'https://staging-api.academx.com';
         authEndpoint = '$apiUrl/auth';
         tagsEndpoint = '$apiUrl/colleges';
+        libraryEndpoint = '$apiUrl/library';
         enableAnalytics = true;
         enableCrashlytics = true;
         enablePushNotifications = true;
@@ -90,6 +93,8 @@ class AppConfig {
         apiUrl = 'https://api.academx.com';
         authEndpoint = '$apiUrl/auth';
         tagsEndpoint = '$apiUrl/colleges';
+        libraryEndpoint = '$apiUrl/library';
+
         enableAnalytics = true;
         enableCrashlytics = true;
         enablePushNotifications = true;
