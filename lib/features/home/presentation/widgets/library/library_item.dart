@@ -1,14 +1,14 @@
+import 'package:academe_x/features/library/domain/entities/library_entity.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LibraryItem extends StatelessWidget {
-  final String title;
-  final String description;
+  final LibraryEntity file;
+
 
   const LibraryItem({
-    required this.title,
-    required this.description,
+    required this.file,
     super.key,
   });
 
@@ -30,13 +30,13 @@ class LibraryItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText(
-                    text: title,
+                    text: file.name!,
                     fontSize: 14.01,
                     color: Color(0xff0F172A),
                     fontWeight: FontWeight.w500,
                   ),
                   AppText(
-                    text: description,
+                    text:  file.description! ?? '',
                     fontSize: 12.01,
                     color: Color(0xff64748B),
                     fontWeight: FontWeight.w500,

@@ -3,7 +3,7 @@ import 'package:academe_x/core/utils/deep_link_service.dart';
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/core/utils/go_router.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
-import 'package:academe_x/features/profile/domain/usecases/profile_usecase.dart';
+import 'package:academe_x/features/library/domain/usecases/library_usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,9 +16,10 @@ import '../../../../../core/utils/logger.dart';
 import '../../../../../core/utils/storage/cache/hive_cache_manager.dart';
 import '../../../../auth/domain/entities/response/auth_token_entity.dart';
 import '../../../../auth/domain/entities/response/updated_user_entity.dart';
-import '../../../../auth/presentation/controllers/states/auth_state.dart';
 import '../../../../home/domain/entities/post/post_entity.dart';
 import '../../../../home/presentation/controllers/cubits/post/posts_cubit.dart';
+import '../../../domain/repositories/user_profile_repositories.dart';
+import '../../../domain/usecases/profile_usecase.dart';
 import '../states/profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
@@ -142,8 +143,6 @@ class ProfileCubit extends Cubit<ProfileState> {
         post.id: post
     };
 
-    AppLogger.auth('test test ${postsById.keys.toString()}');
-    AppLogger.auth('test test ${post.id.toString()}');
     if(postsById.containsKey(post.id)){
       postsById.remove(post.id);
     }else{

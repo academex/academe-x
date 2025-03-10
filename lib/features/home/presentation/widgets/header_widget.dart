@@ -12,12 +12,14 @@ class HeaderWidget extends StatelessWidget {
   String subTitle;
   String? firstIconPath;
    String? secondIconPath;
+   VoidCallback onTap;
    HeaderWidget({
      super.key,
      required this.inScroll,
      required this.logoPath,
      required this.title,
      required this.subTitle,
+     required this.onTap,
       this.firstIconPath,
       this.secondIconPath,
    });
@@ -31,9 +33,9 @@ class HeaderWidget extends StatelessWidget {
         8.pw(),
         _buildTitleAndSubtitle(inScroll,title,subTitle),
         const Spacer(),
-        firstIconPath != null ? _buildIconButton(firstIconPath!, inScroll) : 20.pw(), //'assets/icons/search.png'
+        firstIconPath != null ? _buildIconButton(firstIconPath!, inScroll,onTap) : 20.pw(), //'assets/icons/search.png'
         secondIconPath != null ?   _buildIconButton(
-            secondIconPath!, inScroll) : 20.pw(),// 'assets/icons/notification.png'
+            secondIconPath!, inScroll,onTap) : 20.pw(),// 'assets/icons/notification.png'
       ],
     );
   }
@@ -83,9 +85,9 @@ class HeaderWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildIconButton(String iconPath, bool inScroll) {
+  Widget _buildIconButton(String iconPath, bool inScroll,   VoidCallback onTap) {
     return IconButton(
-      onPressed: () {},
+      onPressed:onTap,
       icon: Image.asset(
         iconPath,
         height: 20,
