@@ -1,5 +1,5 @@
 class PaginationParams {
-  final int page;
+  final int? page;
   final int limit;
   final String? postId;
   final int? tagId;
@@ -7,7 +7,7 @@ class PaginationParams {
   final String? username;
 
   const PaginationParams(
-      {required this.page,
+      { this.page,
       this.limit = 10,
       this.postId = '',
       this.tagId,

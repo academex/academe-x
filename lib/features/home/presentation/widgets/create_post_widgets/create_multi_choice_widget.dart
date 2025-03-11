@@ -165,17 +165,17 @@ class _CreateMultiChoiceWidgetState extends State<CreateMultiChoiceWidget> {
             children: [
               AppText(text: 'سيكون هذا التصويت متاح حتى:', fontSize: 14.sp),
               TextButton(onPressed: () {
-                // showDialog(
-                //   context: context, // Prevent dismissing by tapping outside
-                //   barrierDismissible: false,
-                //   builder: (BuildContext context) {
-                //     return DatePickerDialog(
-                //       firstDate: DateTime.now(),
-                //       lastDate: DateTime.utc(DateTime.now().year + 2),
-                //       initialCalendarMode: DatePickerMode.day,
-                //     );
-                //   },
-                // );
+                showDialog(
+                  context: context, // Prevent dismissing by tapping outside
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return DatePickerDialog(
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.utc(DateTime.now().year + 2),
+                      initialCalendarMode: DatePickerMode.day,
+                    );
+                  },
+                );
                 showDialog(
                   context: context, // Prevent dismissing by tapping outside
                   barrierDismissible: false,

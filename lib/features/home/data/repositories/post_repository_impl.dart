@@ -48,7 +48,7 @@ class PostRepositoryImpl implements PostRepository {
       // Cache successful network response
       await _cachePostsResults(
         result.items,
-        paginationParams.page,
+        paginationParams.page!,
         tagId: paginationParams.tagId,
       );
 
@@ -333,7 +333,7 @@ class PostRepositoryImpl implements PostRepository {
     return PaginatedResponse(
       paginatedMeta: PaginatedMeta(
         limit: params.limit,
-        page: params.page,
+        page: params.page!,
         pagesCount: totalPages,
         totalPosts: totalPosts,
       ),

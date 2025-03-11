@@ -25,13 +25,15 @@ class LibraryRemoteDataSource {
     required this.internetConnectionChecker,
   });
 
-  Future<PaginatedResponse<LibraryModel>> loadLibrary(
+  Future<List<LibraryModel>> loadLibrary(
       PaginationParams paginationParams) async {
     String url =
-        '${ApiSetting.getLibrary}?page=${paginationParams.page}&yearNum=2'; // ${paginationParams.yearNum}';
+        '${ApiSetting.getLibrary}?tagId=${paginationParams.tagId}&yearNum=${paginationParams.yearNum}'; // ${paginationParams.yearNum}';
     // if(paginationParams.userName != null){
     //   url = ApiSetting.getUserPosts+paginationParams.userName!;
     // }
+
+    AppLogger.success(url);
     if (await internetConnectionChecker.hasConnection) {
       try {
         final response = await apiController.get(
@@ -48,14 +50,13 @@ class LibraryRemoteDataSource {
         }
 
         final baseResponse =
-        BaseResponse<PaginatedResponse<LibraryModel>>.fromJson(
+        BaseResponse<List<LibraryModel>>.fromJson(
           responseBody,
               (json) {
-            return PaginatedResponse<LibraryModel>.fromJson(
-              json,
-                  (p0) {
-                return LibraryModel.fromJson(p0);
-              },
+            return List<LibraryModel>.from(
+              json.map(
+                    (p0) => LibraryModel.fromJson(p0),
+              ),
             );
           },
         );

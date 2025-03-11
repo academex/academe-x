@@ -1,4 +1,5 @@
 import 'package:academe_x/core/utils/extensions/auth_cache_manager.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/college_major/controller/cubit/college_major_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/poll_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/post/posts_cubit.dart';
@@ -88,7 +89,7 @@ class AcademeXMain extends StatelessWidget {
       create: (context) => getIt<ProfileCubit>(),
     ),
       BlocProvider<LibraryCubit>(
-        create: (context) => getIt<LibraryCubit>()..loadLibrary(),
+        create: (context) => getIt<LibraryCubit>()..loadLibrary(context: context),
       ),
     ];
   }

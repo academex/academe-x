@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:academe_x/features/library/domain/entities/library_entity.dart';
 import 'package:academe_x/features/library/presentation/controllers/cubits/library_cubit.dart';
 import 'package:academe_x/features/library/presentation/controllers/states/library_state.dart';
+import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:academe_x/lib.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../../home/presentation/widgets/post/shimmer/post_widget_shimmer.dart';
+import '../widgets/shimmer/library_widget_shimmer.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({super.key});
@@ -35,11 +37,11 @@ class _LibraryPageState extends State<LibraryPage> {
     super.dispose();
   }
 
-  void _onScroll() {
+  void _onScroll() async{
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       if (_isBottom) {
-        context.read<LibraryCubit>().loadLibrary();
+         context.read<LibraryCubit>().loadLibrary(context: context);
       }
     });
   }
@@ -94,14 +96,9 @@ class _LibraryPageState extends State<LibraryPage> {
                         return SliverFillRemaining(
                             child: ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) => Column(
+                              itemBuilder: (context, index) => const Column(
                                 children: [
-                                  const PostWidgetShimmer(),
-                                  Divider(
-                                    color: Colors.grey.shade300,
-                                    endIndent: 25,
-                                    indent: 25,
-                                  ),
+                                  LibraryWidgetShimmer(),
                                 ],
                               ),
                             )
@@ -118,7 +115,7 @@ class _LibraryPageState extends State<LibraryPage> {
                                   16.ph(),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      return await context.read<LibraryCubit>().loadLibrary();
+                                      // return await context.read<LibraryCubit>().loadLibrary();
                                     },
                                     child: const Text('Retry'),
                                   ),
@@ -131,7 +128,7 @@ class _LibraryPageState extends State<LibraryPage> {
                       case LibraryStatus.loaded:
                         if (state.libraryFiles.isEmpty) {
                           return const SliverFillRemaining(
-                            child: Center(child: Text('No posts found')),
+                            child: Center(child: Text('No Files found')),
                           );
                         }
                         break;
@@ -148,42 +145,35 @@ class _LibraryPageState extends State<LibraryPage> {
 
                               if (index >= state.libraryFiles.length) {
                             // AppLogger.success('reach the end');
-                            if (state.hasLibraryReachedMax) {
-                              AppLogger.success('reach the end');
-                              return Column(
-                                children: [
-                                  20.ph(),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'You\'ve reached the end!',
-                                      style: TextStyle(
-                                        color: Colors.grey.shade600,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                            return const PostWidgetShimmer();
+                            // if (state.hasLibraryReachedMax) {
+                            //   AppLogger.success('reach the end');
+                            //   return Column(
+                            //     children: [
+                            //       20.ph(),
+                            //       Container(
+                            //         padding: const EdgeInsets.symmetric(vertical: 16),
+                            //         alignment: Alignment.center,
+                            //         child: Text(
+                            //           'You\'ve reached the end!',
+                            //           style: TextStyle(
+                            //             color: Colors.grey.shade600,
+                            //             fontSize: 14,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   );
+                            // }
+                            return const LibraryWidgetShimmer();
                           }
                           return Column(
                             children: [
                               20.ph(),
                                LibrarySection(icon:'assets/icons/book_icon.png', title: type!, items: libraryItems),
-                              if (index < state.libraryFiles.length - 1) ...[
-                                Divider(
-                                  color: Colors.grey.shade300,
-                                  endIndent: 25,
-                                  indent: 25,
-                                ),
-                              ],
                             ],
                           );
                         },
-                        childCount: state.libraryFiles.length,
+                        childCount: state.libraryFiles.length ,
                       ),
                     );
                   },
@@ -192,7 +182,9 @@ class _LibraryPageState extends State<LibraryPage> {
           ],
 
         ),
-        onRefresh: () async {});
+        onRefresh: () async {
+          await context.read<LibraryCubit>().loadLibrary(context: context);
+        });
   }
 
   Widget _buildHeaderBackground(bool inScroll, BuildContext context) {
@@ -228,14 +220,17 @@ class _LibraryPageState extends State<LibraryPage> {
 
   Future showFilteringOptions(BuildContext context) {
     return showModalBottomSheet(
+        constraints: const BoxConstraints(
+          maxHeight: 700,
+        ),
+        isScrollControlled: true,
         context: context,
         builder: (ctx) {
           return Container(
-              height: 482,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(15)),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
                     10.ph(),
@@ -334,7 +329,14 @@ class _LibraryPageState extends State<LibraryPage> {
                         fontSize: 16,
                         color: Colors.white,
                       ),
-                      onPressed: () {},
+                      onPressed: () async{
+                        // AppLogger.success('${context.read<SignupCubit>().state.selectedSemesterIndex!+1}'.toString());
+                        int? tagId= context.read<SignupCubit>().state.selectedTagId;
+                        int? yearNum= context.read<SignupCubit>().state.selectedSemesterIndex!+1;
+                        Navigator.pop(context);
+                      await  context.read<LibraryCubit>().loadLibrary(context: context,yearNum: yearNum,tagId: tagId);
+
+                      },
                       backgraoundColor: const Color(0xFF0077FF),
                     )
                   ],

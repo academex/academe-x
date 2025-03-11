@@ -15,7 +15,7 @@ class LibraryUseCase {
 
   LibraryUseCase(this.repository);
 
-  Future<Either<Failure, PaginatedResponse<LibraryEntity>>> loadLibrary(
+  Future<Either<Failure, List<LibraryEntity>>> loadLibrary(
     PaginationParams params,
   ) async {
     return await repository.loadLibrary(params);

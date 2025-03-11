@@ -1,5 +1,6 @@
 import 'package:academe_x/core/core.dart';
 import 'package:academe_x/core/error/failure.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/profile/domain/usecases/profile_usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,18 +24,26 @@ class LibraryCubit extends Cubit<LibraryState> {
 
 
 
-  Future<void> loadLibrary() async {
-    final Either<Failure, PaginatedResponse<LibraryEntity>> result;
+  Future<void> loadLibrary({required BuildContext context,int? yearNum,int? tagId}) async {
+    final Either<Failure, List<LibraryEntity>> result;
     if (_isLoading) return;
-    // if (state.hasPostsReachedMax) return;
-
     try {
       emit(state.copyWith(status: LibraryStatus.loading));
+
+      if(yearNum==null && tagId==null){
+        final userCached= await context.cachedUser;
+        int tagId= userCached!.user.tagId!;
+        int currentYearNum= userCached.user.currentYear!;
+        result = await libraryUseCase.loadLibrary(
+          PaginationParams(tagId: tagId,yearNum: currentYearNum),
+        );
+      }else{
+        result = await libraryUseCase.loadLibrary(
+          PaginationParams(tagId: tagId,yearNum: yearNum),
+        );
+      }
+
       _isLoading = true;
-      // final page = state.currentPage;
-      result = await libraryUseCase.loadLibrary(
-  const PaginationParams(page: 1,),
-  );
       result.fold(
         (failure) {
           emit(state.copyWith(
@@ -42,7 +51,7 @@ class LibraryCubit extends Cubit<LibraryState> {
             errorMessage: failure.message,
           ));
         },
-        (paginatedData) => _handleSuccessResponse(paginatedData),
+        (files) => _handleSuccessResponse(files),
       );
     } catch (e) {
       emit(state.copyWith(
@@ -55,28 +64,24 @@ class LibraryCubit extends Cubit<LibraryState> {
   }
 
   void _handleSuccessResponse(
-    PaginatedResponse<LibraryEntity> paginatedData,
+      List<LibraryEntity> newData,
   ) {
-    final List<LibraryEntity> newFiles = [...state.files];
-    for (var newFile in paginatedData.items) {
-      if (!newFiles.any((existingFile) => existingFile.id == newFile.id)) {
-        newFiles.add(newFile);
-      }
-    }
+    // final List<LibraryEntity> newFiles = [...state.files];
+    // for (var newFile in newData) {
+    //   if (!newFiles.any((existingFile) => existingFile.id == newFile.id)) {
+    //     newFiles.add(newFile);
+    //   }
+    // }
 
     final groupFilesByType={
-      for(var file in newFiles)
-        file.type: newFiles.where((element) => element.type == file.type).toList()
+      for(var file in newData)
+        file.type: newData.where((element) => element.type == file.type).toList()
     };
-
-
 
     emit(state.copyWith(
       status: LibraryStatus.loaded,
       libraryFiles: groupFilesByType,
-      files: newFiles,
-      hasLibraryReachedMax:  !paginatedData.hasNextPage,
-      currentPage: state.currentPage + 1,
+      files: newData,
       errorMessage: null,
     ));
   }

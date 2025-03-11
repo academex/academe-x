@@ -202,6 +202,10 @@ file
 3.0
 file:///Users/majdahmed/.pub-cache/hosted/pub.dev/file-7.0.1/
 file:///Users/majdahmed/.pub-cache/hosted/pub.dev/file-7.0.1/lib/
+file_picker
+3.4
+file:///Users/majdahmed/.pub-cache/hosted/pub.dev/file_picker-9.0.2/
+file:///Users/majdahmed/.pub-cache/hosted/pub.dev/file_picker-9.0.2/lib/
 file_selector_linux
 3.3
 file:///Users/majdahmed/.pub-cache/hosted/pub.dev/file_selector_linux-0.9.3/
@@ -787,9 +791,9 @@ webkit_inspection_protocol
 file:///Users/majdahmed/.pub-cache/hosted/pub.dev/webkit_inspection_protocol-1.2.1/
 file:///Users/majdahmed/.pub-cache/hosted/pub.dev/webkit_inspection_protocol-1.2.1/lib/
 win32
-3.5
-file:///Users/majdahmed/.pub-cache/hosted/pub.dev/win32-5.8.0/
-file:///Users/majdahmed/.pub-cache/hosted/pub.dev/win32-5.8.0/lib/
+3.7
+file:///Users/majdahmed/.pub-cache/hosted/pub.dev/win32-5.11.0/
+file:///Users/majdahmed/.pub-cache/hosted/pub.dev/win32-5.11.0/lib/
 xdg_directories
 3.3
 file:///Users/majdahmed/.pub-cache/hosted/pub.dev/xdg_directories-1.1.0/

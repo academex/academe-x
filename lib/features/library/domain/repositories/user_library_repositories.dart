@@ -12,7 +12,7 @@ import '../../../home/data/models/post/post_model.dart';
 abstract class LibraryRepository {
   LibraryRepository();
 
-  Future<Either<Failure, PaginatedResponse<LibraryEntity>>> loadLibrary(
+  Future<Either<Failure, List<LibraryEntity>>> loadLibrary(
     PaginationParams paginationParams,
   );
 }
