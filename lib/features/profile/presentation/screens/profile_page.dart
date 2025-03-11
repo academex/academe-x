@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length:widget.username !=null ?2:3, vsync: this);
+    _tabController = TabController(length:3, vsync: this);
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
     context.cachedUser.then((value) {
@@ -132,15 +132,15 @@ class _ProfilePageState extends State<ProfilePage>
         }else{
           user = state.otherUser;
         }
-        return PopScope(
-          onPopInvokedWithResult: (didPop, result) {
-            if (didPop) {
-              context.read<ProfileCubit>().whenCloseOtherUserProfile();
-            }
+        return Scaffold(
+          body: PopScope(
+            onPopInvokedWithResult: (didPop, result) {
+              if (didPop) {
+                context.read<ProfileCubit>().whenCloseOtherUserProfile();
+              }
 
-          },
-          child: Scaffold(
-            body: SafeArea(
+            },
+            child: SafeArea(
               child: Column(
                 children: [
                   _buildProfileHeader(state,user),
@@ -150,8 +150,8 @@ class _ProfilePageState extends State<ProfilePage>
                 ],
               ),
             ),
+            // onPopInvoked: (didPop) => context.read<ProfileCubit>().whenCloseOtherUserProfile,
           ),
-          // onPopInvoked: (didPop) => context.read<ProfileCubit>().whenCloseOtherUserProfile,
         );
       },
     );
@@ -362,26 +362,6 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildFollowButton(ProfileState state) {
-    // Add follow/unfollow button implementation
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: CustomButton(
-        height: 40,
-        widget: AppText(
-          text: 'Follow', // Or 'Unfollow' based on state
-          fontSize: 14,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          // Handle follow/unfollow
-          // context.read<ProfileCubit>().followUser();
-        },
-        backgraoundColor: const Color(0xFF2769F2),
-      ),
-    );
-  }
-
   Widget _buildTabBar(BuildContext context) {
     return Container(
       height: 50,
@@ -443,7 +423,8 @@ class _ProfilePageState extends State<ProfilePage>
         children: [
           _buildPostsList(state,user),
           _buildTabContent('الملفات'),
-          widget.username !=null ?0.ph(): _buildSavedPostsList(state,user),
+          // widget.username !=null ?0.ph():
+          _buildSavedPostsList(state,user),
         ],
       ),
     );

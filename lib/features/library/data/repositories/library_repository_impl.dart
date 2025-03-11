@@ -22,7 +22,7 @@ class LibraryRepositoryImpl implements LibraryRepository {
 
 
   @override
-  Future<Either<Failure, PaginatedResponse<LibraryModel>>> loadLibrary(
+  Future<Either<Failure, List<LibraryModel>>> loadLibrary(
       PaginationParams paginationParams
       ) async {
     try {

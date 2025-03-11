@@ -3,7 +3,8 @@ import 'dart:typed_data';
 
 import 'package:academe_x/academeX_main.dart';
 import 'package:academe_x/lib.dart';
-// import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -100,24 +101,24 @@ class PickerCubit extends Cubit<PickState> {
     emit(PickState());
   }
 
-  // pickFile() async {
-  //   if (state.file.isNotEmpty) {
-  //     emit(state.copyWith(file: []));
-  //     return;
-  //   }
-  //
-  //   // FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //   //   type: FileType.custom,
-  //   //   allowedExtensions: ['pdf'],
-  //   //   allowCompression: true,
-  //   // );
-  //
-  //   if (result != null) {
-  //     emit(state.copyWith(file: [File(result.files.single.path!)]));
-  //   } else {
-  //     // no file selected
-  //   }
-  // }
+  pickFile() async {
+    if (state.file.isNotEmpty) {
+      emit(state.copyWith(file: []));
+      return;
+    }
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      allowCompression: true,
+    );
+
+    if (result != null) {
+      emit(state.copyWith(file: [File(result.files.single.path!)]));
+    } else {
+      // no file selected
+    }
+  }
   removeImageAt(int index){
     state.images.removeAt(index);
     emit(state.copyWith(images: state.images));
