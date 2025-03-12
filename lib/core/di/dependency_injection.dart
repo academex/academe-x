@@ -22,6 +22,7 @@ import '../../features/college_major/controller/cubit/college_major_cubit.dart';
 import '../../features/college_major/domain/repositories/college_major_repository.dart';
 import '../../features/college_major/domain/usecases/college_major_use_case.dart';
 import '../../features/home/presentation/controllers/cubits/post/posts_cubit.dart';
+import '../../features/library/presentation/controllers/cubits/file_upload_cubit.dart';
 import '../core.dart';
 import '../utils/network/api_controller.dart';
 import '../utils/network/cubits/connectivity_cubit.dart';
@@ -112,6 +113,11 @@ void _initCubits() {
     () => ProfileCubit(
       postsCubit: getIt(),
       profileUseCase: getIt(),
+    ),
+  );
+  getIt.registerFactory<FileUploadCubit>(
+    () => FileUploadCubit(
+      pickFileUseCase: getIt(),
     ),
   );
 

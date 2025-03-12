@@ -483,8 +483,7 @@ class PostsCubit extends Cubit<PostsState> {
             errorMessage: failure.message,
           ));
         },
-            (paginatedData) {
-        },
+            (paginatedData) {},
       );
     } catch (e) {
       emit(state.copyWith(

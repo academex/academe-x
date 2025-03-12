@@ -19,6 +19,16 @@ class ValidationFailure extends Failure {
   @override
   String get message => messages.join('\n');
 }
+class FilePickingFailure extends Failure {
+
+  FilePickingFailure({required super.message});
+
+}
+class FileUploadFailure extends Failure {
+
+  FileUploadFailure({required super.message});
+
+}
 
 class UnauthorizedFailure extends Failure {
   UnauthorizedFailure({required String message}) : super(message: message);

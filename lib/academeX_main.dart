@@ -7,6 +7,7 @@ import 'package:academe_x/features/home/presentation/controllers/states/create_p
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
 import 'package:academe_x/features/library/presentation/controllers/cubits/library_cubit.dart';
+import 'package:academe_x/features/library/presentation/controllers/states/file_upload_state.dart';
 import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,7 @@ import 'core/utils/network/cubits/connectivity_cubit.dart';
 import 'features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
+import 'features/library/presentation/controllers/cubits/file_upload_cubit.dart';
 import 'lib.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -90,6 +92,9 @@ class AcademeXMain extends StatelessWidget {
     ),
       BlocProvider<LibraryCubit>(
         create: (context) => getIt<LibraryCubit>()..loadLibrary(context: context),
+      ),
+      BlocProvider<FileUploadCubit>(
+        create: (context) => getIt<FileUploadCubit>(),
       ),
     ];
   }
@@ -168,7 +173,6 @@ class AcademeXMain extends StatelessWidget {
           if(isLoading || isFailure || isSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-
                 content: GestureDetector(
                   onTap: () => CreatePost().showCreatePostModal(NavigationService.navigatorKey.currentContext!),
                   child: Column(
@@ -204,7 +208,63 @@ class AcademeXMain extends StatelessWidget {
 
         },),
 
-        ], child: child!);
+      BlocListener<FileUploadCubit, FileUploadState>(
+        listenWhen: (previous, current) {
+          return previous.status != current.status;
+        },
+        listener: (context, state) {
+          if(state.status == FileUploadStatus.initial) return;
+          bool isLoading = state.status == FileUploadStatus.uploading;
+          bool isSuccess = state.status == FileUploadStatus.success;
+          bool isFailure = state.status == FileUploadStatus.failure;
+          // Logger().f(NavigationService.navigatorKey.currentContext);
+          // if(state.creationState == CreationStatus.loading) Navigator.pop(context);
+          // if(isSuccess){
+          //   context.read<PickerCubit>().init();
+          // }
+
+          ScaffoldMessenger.of(context).clearSnackBars();
+          // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          if(isLoading || isFailure || isSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: GestureDetector(
+                  // onTap: () => CreatePost().showCreatePostModal(NavigationService.navigatorKey.currentContext!),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if(!isLoading)
+                        AppText(
+                          fontSize: 12.sp,
+                          text: isLoading?'جار رفع الملف':isFailure?state.errorMessage!:'تم نشر الملف بنجاح',
+                          color: Colors.white,
+                        ),
+                      if(isLoading)
+                        2.ph(),
+                      if(isLoading)
+                        const LinearProgressIndicator(
+                          backgroundColor: Colors.white,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                        ),
+                    ],
+                  ),
+                ),
+                backgroundColor: isLoading?Colors.transparent:isFailure?Colors.red:Colors.green,
+                duration:  Duration(seconds: isLoading?500:2),
+                dismissDirection: DismissDirection.horizontal,
+                behavior:SnackBarBehavior.fixed,
+                padding:EdgeInsets.symmetric(vertical: isLoading?0:10.h,horizontal: isLoading?0:15.w),
+
+
+              ),
+            );
+          }
+
+
+        },),
+
+
+    ], child: child!);
   }
 
   void _showNoConnectionBanner(

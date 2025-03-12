@@ -266,7 +266,6 @@ class _LibraryPageState extends State<LibraryPage> {
                     ),
 
                     20.ph(),
-                    // AppTextField(hintText: 'الكلية', keyboardType: )
                     SizedBox(
                       height: 98,
                       // width: 326,

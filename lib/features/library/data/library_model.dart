@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:academe_x/features/auth/auth.dart';
 import 'package:academe_x/features/library/domain/entities/library_entity.dart';
 
 class LibraryModel extends LibraryEntity {
+  LibraryModel({
+    required String path,
+    required String name,
+    required int size,
+  }) : super(url: path, name: name, size: size);
 
   LibraryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -19,19 +26,39 @@ class LibraryModel extends LibraryEntity {
     if (json['tags'] != null) {
       tags = <MajorModel>[];
       json['tags'].forEach((v) {
-        tags!.add(new MajorModel.fromJson(v));
+        tags!.add( MajorModel.fromJson(v));
       });
     }
-    user = json['user'] != null ? new UserResponseModel.fromJson(json['user']) : null;
-    if (json['star'] != null) {
-      star = <int>[];
-      json['star'].forEach((v) {
-        star!.add(
-            v is int ? v : int.parse(v.toString())
-        );
-      });
-    }
+    user = json['user'] != null ?  UserResponseModel.fromJson(json['user']) : null;
+    // if (json['star'] != null) {
+    //   star = <int>[];
+    //   json['star'].forEach((v) {
+    //     star!.add(
+    //         v is int ? v : int.parse(v.toString())
+    //     );
+    //   });
+    // }
     isStared = json['isStared'];
+  }
+
+  factory LibraryModel.fromFile(File file) {
+    return LibraryModel(
+      path: file.path,
+      name: file.path.split('/').last,
+      size: file.lengthSync(),
+    );
+  }
+
+  factory LibraryModel.fromEntity(LibraryEntity entity) {
+    return LibraryModel(
+      path: entity.url!,
+      name: entity.name!,
+      size: entity.size!,
+    );
+  }
+
+  File toFile() {
+    return File(url!);
   }
   //
   // Map<String, dynamic> toJson() {

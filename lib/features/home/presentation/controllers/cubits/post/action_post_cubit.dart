@@ -21,10 +21,10 @@ class ActionPostCubit extends Cubit<ActionPostState> {
     ));
   }
 
-  void performSaveAction(bool isSaved) {
-    emit(state.copyWith(
-      isSaved: isSaved,
-      selectedReaction: state.selectedReaction, // Preserve the reaction state
-    ));
-  }
+  // void performSaveAction(bool isSaved) {
+  //   emit(state.copyWith(
+  //     isSaved: isSaved,
+  //     selectedReaction: state.selectedReaction, // Preserve the reaction state
+  //   ));
+  // }
 }
