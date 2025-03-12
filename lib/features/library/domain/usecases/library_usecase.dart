@@ -1,4 +1,5 @@
 import 'package:academe_x/core/error/failure.dart';
+import 'package:academe_x/features/library/domain/entities/file_entity.dart';
 import 'package:academe_x/features/profile/domain/repositories/user_profile_repositories.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academe_x/core/pagination/paginated_response.dart';
@@ -21,4 +22,23 @@ class LibraryUseCase {
     return await repository.loadLibrary(params);
   }
 
+
+  Future<Either<Failure, void>> starFile(
+
+  {
+    required int fileId,
+
+  }
+      ) async {
+    return await repository.starFile(fileId);
+  }
+
+
+  Future<Either<Failure, LibraryEntity>> pickFile() async {
+    return await repository.pickFile();
+  }
+
+  Future<Either<Failure, String>> uploadFile(FileEntity fileInfo,LibraryEntity file, void Function(double) progressCallback) async {
+    return await repository.uploadFile(fileInfo,file, progressCallback);
+  }
 }

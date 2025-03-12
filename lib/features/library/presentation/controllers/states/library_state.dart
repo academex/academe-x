@@ -14,7 +14,7 @@ class LibraryState extends Equatable {
   // User posts
   final Map<String?, List<LibraryEntity>> libraryFiles;
   final List<LibraryEntity> files;
-  final bool hasLibraryReachedMax;
+  final bool isStared;
   final int currentPage;
 
   const LibraryState({
@@ -22,7 +22,7 @@ class LibraryState extends Equatable {
     this.errorMessage,
     this.libraryFiles = const {},
     this.files = const [],
-    this.hasLibraryReachedMax = false,
+    this.isStared = false,
     this.currentPage = 1,
   });
 
@@ -33,7 +33,7 @@ class LibraryState extends Equatable {
     Map<String?, List<LibraryEntity>>? libraryFiles,
      List<LibraryEntity>? files,
 
-    bool? hasLibraryReachedMax,
+    bool? isStared,
     int? currentPage,
   }) {
     return LibraryState(
@@ -41,7 +41,7 @@ class LibraryState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       libraryFiles: libraryFiles ?? this.libraryFiles,
       files: files ?? this.files,
-      hasLibraryReachedMax: hasLibraryReachedMax ?? this.hasLibraryReachedMax,
+      isStared: isStared ?? this.isStared,
       currentPage: currentPage ?? this.currentPage,
     );
   }
@@ -52,7 +52,7 @@ class LibraryState extends Equatable {
     errorMessage,
     libraryFiles,
     files,
-    hasLibraryReachedMax,
+    isStared,
     currentPage,
   ];
 }

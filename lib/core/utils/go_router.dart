@@ -54,12 +54,12 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/',
       name: 'root',
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) =>  HomeScreen(),
     ),
     GoRoute(
       path: '/home_screen',
       name: 'home',
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) =>  HomeScreen(),
     ),
     GoRoute(
       path: '/login',
