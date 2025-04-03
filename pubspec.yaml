@@ -1,0 +1,148 @@
+name: academe_x
+description: A comprehensive university student support application.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # UI Components
+#  flutter_screenutil: ^5.9.3
+  cupertino_icons: ^1.0.8
+  flutter_svg: ^2.0.10+1
+  dotted_border: ^2.1.0
+  pinput: ^5.0.0
+  shimmer: ^3.0.0  # For loading effects
+  cached_network_image: ^3.3.1  # For efficient image loading
+  photo_view: ^0.14.0  # For image viewing
+#  flutter_reaction_button: ^3.0.0+3
+  reaction_button: ^0.0.7
+#  whatsapp_reactions: ^0.0.4
+  flutter_reaction_button: ^3.0.0+3
+
+  # State Management
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  get_it: ^8.0.1
+
+
+  collection: ^1.17.0
+
+
+  # Network
+  dio: ^5.4.0  # HTTP client
+  connectivity_plus: ^5.0.2
+  internet_connection_checker: ^1.0.0+1
+
+  # Storage
+  shared_preferences: ^2.2.2
+  hive_flutter: ^1.1.0  # Local database
+
+  # Utils
+  dartz: ^0.10.1  # Functional programming
+  logger: ^2.4.0
+#  flutter_screenutil: ^5.9.3
+  intl: ^0.19.0
+  path_provider: ^2.1.2
+  url_launcher: ^6.2.4  # For launching URLs
+  share_plus: ^10.1.4  # For sharing content
+  flutter_screenutil: ^5.9.3
+  go_router: ^14.6.2
+  app_links: ^6.3.2
+
+  # Media
+  image_picker: ^1.0.7
+  file_picker: ^9.0.2
+#  video_player: ^2.8.2
+
+#  sqflite: ^2.4.2
+#  chewie: ^1.7.4  # Video player UI
+
+  # Firebase (Uncomment as needed)
+  firebase_core: ^3.8.0
+#  firebase_analytics: ^11.3.5
+#  firebase_messaging: ^15.1.5
+#  firebase_crashlytics: ^4.1.5
+  http: ^1.2.2
+
+  # Social (Uncomment as needed)
+  # google_sign_in: ^6.2.1
+  # sign_in_with_apple: ^5.0.0
+  # facebook_auth: ^6.0.3
+
+
+  flutter_slidable: ^3.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Development Tools
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.13
+  flutter_gen_runner: ^5.8.0
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.4
+  mockito: ^5.4.4  # For testing
+  bloc_test: ^9.1.5  # For testing BLoCs
+  package_info_plus: ^8.3.0
+
+
+  flutter_plugin_android_lifecycle: ^2.0.23
+
+# App Icon Configuration
+flutter_icons:
+  android: true
+  ios: true
+  image_path_android: "assets/icons/logo.png"
+  image_path_ios: "assets/icons/logo.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/icons/logo.png"
+
+# Splash Screen Configuration
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/splash.png
+  branding: assets/images/branding.png
+  color_dark: "#000000"
+  image_dark: assets/images/splash_dark.png
+  branding_dark: assets/images/branding_dark.png
+
+  android_12:
+    image: assets/images/splash_android12.png
+    icon_background_color: "#FFFFFF"
+    image_dark: assets/images/splash_android12_dark.png
+    icon_background_color_dark: "#000000"
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/icons/reactions/
+    - assets/icons/setting/
+#    - assets/animations/  # For Lottie animations
+    - assets/fonts/
+
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-Regular.ttf
+        - asset: assets/fonts/Cairo-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Cairo-Light.ttf
+          weight: 300
+#        - asset: assets/fonts/Cairo-Medium.ttf
+#          weight: 500
+        - asset: assets/fonts/Cairo-SemiBold.ttf
+          weight: 600
