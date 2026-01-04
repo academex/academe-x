@@ -21,6 +21,8 @@ class ApiSetting {
   static String get getPosts => AppConfig.postsEndpoint;
   static String get getUserPosts => AppConfig.userPostsEndpoint;
   static String get getUser => AppConfig.profileEndpoint;
+  static String get voteOnPoll => '${AppConfig.postsEndpoint}/vote';
+
 
 
   static String get getLibrary => AppConfig.libraryEndpoint;

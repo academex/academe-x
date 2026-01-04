@@ -36,11 +36,11 @@ class NavigationItems {
       icon: AppAssets.libraryInactive,
       // activeIcon: AppAssets.libraryActive,
     ),
-    const NavigationItem(
-      label: 'شات بوت',
-      icon: AppAssets.chatInactive,
-      // activeIcon: AppAssets.chatActive,
-    ),
+    // const NavigationItem(
+    //   label: 'شات بوت',
+    //   icon: AppAssets.chatInactive,
+    //   // activeIcon: AppAssets.chatActive,
+    // ),
     const NavigationItem(
       label: 'الاعدادات',
       icon: AppAssets.settingsInactive,

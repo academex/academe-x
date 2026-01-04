@@ -1,5 +1,7 @@
 import 'package:academe_x/core/core.dart';
+import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
 import 'package:academe_x/features/features.dart';
+import 'package:academe_x/features/home/presentation/widgets/comments/comments_bottom_sheet.dart';
 import 'package:academe_x/features/home/presentation/widgets/post/post_actions/save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +11,7 @@ import '../../../../../../core/utils/services/share_service.dart';
 import '../../../../domain/entities/post/post_entity.dart';
 import '../../../controllers/cubits/post/posts_cubit.dart';
 import '../../action_button.dart';
-import '../../comment/comments_list.dart';
+import '../../comments/comments_list.dart';
 import '../../test_build_reactions/fb_reaction_box.dart';
 
 class PostActionButtons extends StatelessWidget {
@@ -28,62 +30,63 @@ class PostActionButtons extends StatelessWidget {
             onReact: (reactType) => _handleReaction(reactType, context),
           ),
           10.pw(),
-          BlocProvider<ShowRepliesCubit>(
-            create: (context) => getIt<ShowRepliesCubit>(),
-            child: ActionButton(
+          ActionButton(
             iconPath: 'assets/icons/comment.png',
             count: post.commentsCount.toString(),
-            onTap: () {
-              context
-                  .read<PostsCubit>()
-                  .getComments(postId: post.id!);
-              CommentsList(postId: post.id, context: context);
+            onTap: () async {
+              final currentUser = await context.cachedUser;
+              CommentsBottomSheet.show(context, post.id!, currentUser!.user.id);
             },
           ),
-          ),
-
           10.pw(),
           ActionButton(
             iconPath: 'assets/icons/share.png',
             count: '0',
             onTap: () {
-              showShareOptions(context,post);
+              showShareOptions(context, post);
             },
           ),
           const Spacer(),
           SaveButton(
             postId: post.id!,
-            isSaved: post.isSaved??false,
+            isSaved: post.isSaved ?? false,
             onSave: () => context.read<PostsCubit>().savePost(
-              context: context,
-              postId: post.id!,
-              isSaved: post.isSaved!,
-            ),
+                  context: context,
+                  postId: post.id!,
+                  isSaved: post.isSaved ?? false,
+                ),
           ),
         ],
       ),
     );
   }
+
   void _handleReaction(String reactType, BuildContext context) async {
     try {
-      await context.read<PostsCubit>().reactToPost(
-        context: context,
-        reactType: reactType.toUpperCase() == "NOTHING" ? "HEART": reactType.toUpperCase() ,
-        postId: post.id!,
-      );
-    } catch (e) {
-      // Show error message
-      context.showSnackBar(
-        message: 'Failed to update reaction',
-        error: true
+      // Map reaction type to API format
+      String apiReactType = reactType.toUpperCase();
+      if (apiReactType == "NOTHING") {
+        apiReactType = "HEART";
+      }
 
-      );
+      await context.read<PostsCubit>().reactToPost(
+            context: context,
+            reactType: apiReactType,
+            postId: post.id!,
+          );
+    } catch (e) {
+      // Show error message only if context is still mounted
+      if (context.mounted) {
+        context.showSnackBar(
+          message: 'Failed to update reaction',
+          error: true,
+        );
+      }
     }
   }
 }
 
-
-void showShareOptions(BuildContext context,PostEntity post) {
+void showShareOptions(BuildContext context, PostEntity post) {
   showModalBottomSheet(
     context: context,
     shape: const RoundedRectangleBorder(
@@ -117,7 +120,6 @@ void showShareOptions(BuildContext context,PostEntity post) {
                   onTap: () => Navigator.pop(context),
                   child: const Icon(Icons.close, color: Colors.grey),
                 ),
-                // To balance the close icon space
               ],
             ),
             // Sharing options
@@ -125,56 +127,57 @@ void showShareOptions(BuildContext context,PostEntity post) {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              _buildShareOption(
-              iconPath: 'assets/icons/copy_link.png',
-              label: 'نسخ الرابط',
-              onTap: () async {
-                await ShareService.copyLink(post.id.toString(), context);
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
-              },
+                _buildShareOption(
+                  iconPath: 'assets/icons/copy_link.png',
+                  label: 'نسخ الرابط',
+                  onTap: () async {
+                    await ShareService.copyLink(post.id.toString(), context);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                _buildShareOption(
+                  iconPath: 'assets/icons/telegram.png',
+                  label: 'تلجرام',
+                  onTap: () async {
+                    await ShareService.shareViaTelegram(
+                      post.id.toString(),
+                      post.content ?? 'منشور مشترك',
+                    );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                _buildShareOption(
+                  iconPath: 'assets/icons/X.png',
+                  label: 'تويتر',
+                  onTap: () async {
+                    await ShareService.shareViaX(
+                      post.id.toString(),
+                      post.content ?? 'منشور مشترك',
+                    );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                _buildShareOption(
+                  iconPath: 'assets/icons/whatsapp.png',
+                  label: 'واتساب',
+                  onTap: () async {
+                    await ShareService.shareViaWhatsApp(
+                      post.id.toString(),
+                      post.content ?? 'منشور مشترك',
+                    );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ],
             ),
-        _buildShareOption(
-          iconPath: 'assets/icons/telegram.png',
-          label: 'تلجرام',
-          onTap: () async {
-            await ShareService.shareViaTelegram(
-              post.id.toString(),
-              post.content ?? 'منشور مشترك', // Provide a default title if null
-            );
-            if (context.mounted) {
-              Navigator.pop(context);
-            }
-          },
-        ),
-        _buildShareOption(
-          iconPath: 'assets/icons/X.png',
-          label: 'تويتر',
-          onTap: () async {
-            await ShareService.shareViaX(
-              post.id.toString(),
-              post.content ?? 'منشور مشترك', // Provide a default title if null
-            );
-            if (context.mounted) {
-              Navigator.pop(context);
-            }
-          },
-        ),
-        _buildShareOption(
-          iconPath: 'assets/icons/whatsapp.png',
-          label: 'واتساب',
-          onTap: () async {
-            await ShareService.shareViaWhatsApp(
-              post.id.toString(),
-              post.content ?? 'منشور مشترك', // Provide a default title if null
-            );
-            if (context.mounted) {
-              Navigator.pop(context);
-            }
-          },
-        ),
-                ]),
             const SizedBox(height: 16),
           ],
         ),
@@ -183,10 +186,11 @@ void showShareOptions(BuildContext context,PostEntity post) {
   );
 }
 
-Widget _buildShareOption(
-    {required String iconPath,
-      required String label,
-      required VoidCallback onTap}) {
+Widget _buildShareOption({
+  required String iconPath,
+  required String label,
+  required VoidCallback onTap,
+}) {
   return GestureDetector(
     onTap: onTap,
     child: Column(
@@ -196,16 +200,8 @@ Widget _buildShareOption(
           height: 69,
           width: 69,
           decoration: BoxDecoration(
-              color: const Color(0xffF0F0F0),
-              shape: BoxShape.circle,
-              // image: DecorationImage(
-              //
-              //   // fit: BoxFit.cover,
-              //   image: AssetImage(
-              //
-              //     iconPath,
-              //   ),
-              // )
+            color: const Color(0xffF0F0F0),
+            shape: BoxShape.circle,
           ),
           child: Image.asset(
             iconPath,
@@ -213,7 +209,6 @@ Widget _buildShareOption(
             height: 24,
           ),
         ),
-
         const SizedBox(height: 8),
         AppText(
           text: label,

@@ -20,7 +20,7 @@ import '../../controllers/cubits/post/posts_cubit.dart';
 import '../../controllers/states/action_post_states.dart';
 import '../../controllers/states/post/post_state.dart';
 import '../action_button.dart';
-import '../comment/comments_list.dart';
+import '../comments/comments_list.dart';
 import '../lib/flutter_reaction_button.dart';
 import '../test_build_reactions/fb_reaction_box.dart';
 

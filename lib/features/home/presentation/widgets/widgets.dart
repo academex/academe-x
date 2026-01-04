@@ -1,4 +1,4 @@
-export 'comment/comment.dart';
+export 'comments/comment.dart';
 export 'library/library.dart';
 export 'post/post.dart';
 export 'action_button.dart';

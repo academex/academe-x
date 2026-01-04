@@ -58,15 +58,15 @@ class HomeScreen extends StatelessWidget {
         const CommunityPage(),
         const LibraryPage(),
         const Row(),
-        Container(
-          child: Center(
-              child: CustomButton(
-                  widget: AppText(text: 'Logout', fontSize: 16),
-                  onPressed: () async {
-                    await context.read<LoginCubit>().logout();
-                  },
-                  backgraoundColor: Colors.blue)),
-        ),
+        // Container(
+        //   child: Center(
+        //       child: CustomButton(
+        //           widget: AppText(text: 'Logout', fontSize: 16),
+        //           onPressed: () async {
+        //             await context.read<LoginCubit>().logout();
+        //           },
+        //           backgraoundColor: Colors.blue)),
+        // ),
         const ProfilePage(),
       ],
     );

@@ -21,36 +21,33 @@ class PostMedia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     if (post.images?.isNotEmpty ?? false) {
       if (post.file?.url != null) {
         return _buildPostImageWithFile(
-            fileName: post.file!.name!,
-            fileUrl: post.file!.url!
-        );
+            fileName: post.file!.name!, fileUrl: post.file!.url!);
       }
       return _buildPostImage(context, post.images!);
     }
 
     if (post.file?.url != null) {
-      return FileContainer(
-          fileName: post.file!.name,
-          fileUrl: post.file!.url
-      );
+      return FileContainer(fileName: post.file!.name, fileUrl: post.file!.url);
     }
 
     if (post.poll != null) {
-      return PollWidget(options: post.poll!.pollOptions!, title: post.poll!.question, totalVotes: 0, totalViews: 0);
+      return PollWidget(
+        pollId: post.poll!.id,
+        postId: post.id!,
+        options: post.poll!.pollOptions!,
+        title: post.poll!.question,
+        totalVotes: post.poll!.totalVotes,
+        totalViews: 0, // Update if you have views data
+      );
     }
 
     return const SizedBox.shrink();
-
   }
 
-
   Widget _buildPostImage(BuildContext ctx, List<ImageEntity> images) {
-
     return Column(
       children: [
         12.ph(),
@@ -179,8 +176,8 @@ class PostMedia extends StatelessWidget {
     );
   }
 
-  Widget _buildPostImageWithFile({required String fileName, required String fileUrl}) {
-
+  Widget _buildPostImageWithFile(
+      {required String fileName, required String fileUrl}) {
     return Column(
       children: [
         12.ph(),
@@ -192,7 +189,6 @@ class PostMedia extends StatelessWidget {
       ],
     );
   }
-
 }
 
 class _PollOption extends StatelessWidget {

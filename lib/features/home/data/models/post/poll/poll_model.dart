@@ -8,7 +8,7 @@ class PollModel extends Poll{
     required super.id,
     required super.pollOptions,
     required super.question,
-    required super.votedOptionId,
+    required super.totalVotes,
   });
 
   // Factory method to create a Poll object from a JSON map
@@ -21,7 +21,7 @@ class PollModel extends Poll{
           .map((option) => PollOptionModel.fromJson(option))
           .toList()
           : null, // Handle null case
-      votedOptionId: json['votedOptionId'],
+      totalVotes: json['totalVotes'],
     );
   }
 
@@ -31,7 +31,7 @@ class PollModel extends Poll{
       'id': id,
       'question': question,
       'pollOptions': (pollOptions as List<PollOptionModel>?)?.map((option) => option.toJson()).toList(),
-      'votedOptionId': votedOptionId,
+      'totalVotes': totalVotes,
     };
   }
 }

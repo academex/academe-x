@@ -10,7 +10,6 @@ import 'package:go_router/go_router.dart';
 import '../../controllers/cubits/home/bottom_nav_cubit.dart';
 import '../../controllers/cubits/post/posts_cubit.dart';
 
-
 class PostHeader extends StatelessWidget {
   final PostEntity post;
 
@@ -22,35 +21,36 @@ class PostHeader extends StatelessWidget {
       children: [
         GestureDetector(
           child: CircleAvatar(
-            backgroundColor: Colors.grey.shade200 ,
-            backgroundImage: post.user!.photoUrl != null? NetworkImage(post.user!.photoUrl ?? '') :null,
-            radius: 20   ,
-            child: const Icon(Icons.person_outline,color: Colors.blue,),
-
+            backgroundColor: Colors.grey.shade200,
+            backgroundImage: post.user!.photoUrl != null
+                ? NetworkImage(post.user!.photoUrl ?? '')
+                : null,
+            radius: 20,
+            child: const Icon(
+              Icons.person_outline,
+              color: Colors.blue,
+            ),
           ),
-          onTap: () async{
-            final currentUser = await context.cachedUser ;
+          onTap: () async {
+            final currentUser = await context.cachedUser;
             final postUser = post.user;
-            if(postUser!.username == currentUser!.user.username){
-              context.read<BottomNavCubit>().changePage(NavigationIndex.profile);
-            }else{
-            await  context.pushNamed(
-                  'profile',
-                  extra: {'username': post.user!.username}
-              );
-
+            if (postUser!.username == currentUser!.user.username) {
+              context
+                  .read<BottomNavCubit>()
+                  .changePage(NavigationIndex.profile);
+            } else {
+              await context.pushNamed('profile',
+                  extra: {'username': post.user!.username});
             }
-
           },
         ),
-
         10.pw(),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                text: '${post.user!.firstName}  ${post.user!.lastName}' ,
+                text: '${post.user!.firstName}  ${post.user!.lastName}',
                 color: Color(0xFF0F172A),
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -59,32 +59,31 @@ class PostHeader extends StatelessWidget {
                 children: [
                   AppText(
                     text: '@${post.user!.username}',
-                    fontSize: 12  ,
+                    fontSize: 12,
                     color: Color(0xFF64748B),
                     fontWeight: FontWeight.w400,
                   ),
                   AppText(
                     text: ' | ',
-                    fontSize: 16  ,
+                    fontSize: 16,
                     color: Color(0xFF64748B),
                     fontWeight: FontWeight.w400,
                   ),
                   AppText(
                     text: getTimeAgo(post.createdAt!),
-                    fontSize: 12  ,
+                    fontSize: 12,
                     color: Color(0xFF64748B),
                     fontWeight: FontWeight.w400,
                   )
                 ],
               )
-
             ],
           ),
         ),
         IconButton(
           onPressed: () {
-    //         => _showPostOptions(context),
-    },
+            //         => _showPostOptions(context),
+          },
           icon: const Icon(Icons.more_horiz),
         )
       ],

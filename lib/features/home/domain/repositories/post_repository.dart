@@ -17,25 +17,42 @@ import '../entities/post/save_response_entity.dart';
 
 abstract class PostRepository {
   PostRepository();
-  Future<Either<Failure, PaginatedResponse<PostModel>>>getPosts(PaginationParams paginationParams);
-  Future<Either<Failure, BaseResponse<PostModel>>>getPostDetails(PaginationParams paginationParams);
-  Future<Either<Failure, void>>reactToPost(String reactionType,int postId);
-  Future<Either<Failure, BaseResponse<SaveResponseEntity>>>savePost(int postId);
-  Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>>getReactions(PaginationParams paginationParams,String reactionType,int postId);
-  Future<Either<Failure, PostEntity>> createPost(PostEntity post,BuildContext context,);
+  Future<Either<Failure, PaginatedResponse<PostModel>>> getPosts(
+      PaginationParams paginationParams);
+  Future<Either<Failure, BaseResponse<PostModel>>> getPostDetails(
+      PaginationParams paginationParams);
+  Future<Either<Failure, void>> reactToPost(String reactionType, int postId);
+  Future<Either<Failure, BaseResponse<SaveResponseEntity>>> savePost(
+      int postId);
+  Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>> getReactions(
+      PaginationParams paginationParams, String reactionType, int postId);
+  Future<Either<Failure, PostEntity>> createPost(
+    PostEntity post,
+    BuildContext context,
+  );
   Future<Either<Failure, List<MajorEntity>>> getTags();
-  Future<Either<Failure, CreatePostBaseResponse>> createComment({required int postId,required String content});
-  Future<Either<Failure, CreatePostBaseResponse>> updateComment({required int postId,required String content,required int commentId});
-  Future<Either<Failure, Unit>> deleteComment({required int postId,required int commentId});
-  Future<Either<Failure, PaginatedResponse<CommentModel>>>  getComments(PaginationParams paginationParams,int postId);
+  Future<Either<Failure, CreatePostBaseResponse>> createComment(
+      {required int postId, required String content});
+  Future<Either<Failure, CreatePostBaseResponse>> updateComment(
+      {required int postId, required String content, required int commentId});
+  Future<Either<Failure, Unit>> deleteComment(
+      {required int postId, required int commentId});
+  Future<Either<Failure, PaginatedResponse<CommentModel>>> getComments(
+      PaginationParams paginationParams, int postId);
 
-  Future<Either<Failure, BaseResponse<CommentModel>>> createReply({required int commentId, int? parentId,required String content});
-  Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies({required int commentId});
-  Future<Either<Failure, BaseResponse<void>>> likeOnCommentOrReply({required int commentId,int? postId,int? replyId});
+  Future<Either<Failure, BaseResponse<CommentModel>>> createReply(
+      {required int commentId, int? parentId, required String content});
+  Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies(
+      {required int commentId});
+  Future<Either<Failure, BaseResponse<void>>> likeOnCommentOrReply(
+      {required int commentId, int? postId, int? replyId});
 
   Future<Either<Failure, PaginatedResponse<PostEntity>>> loadProfilePosts(
-      PaginationParams paginationParams,
-      );
+    PaginationParams paginationParams,
+  );
 
-
+  Future<Either<Failure, BaseResponse<void>>> voteOnPoll({
+    required int pollId,
+    required int optionId,
+  });
 }

@@ -9,32 +9,29 @@ import '../../../../academeX_main.dart';
 import '../../../../core/utils/storage/cache/hive_cache_manager.dart';
 import '../../../auth/domain/entities/response/auth_token_entity.dart';
 
-
 class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
   final CollegeMajorUseCase _collegeMajorsUseCase;
-  late  AuthTokenEntity? _authTokenEntity;
-  late  MajorEntity? _majorEntity;
+  late AuthTokenEntity? _authTokenEntity;
+  late MajorEntity? _majorEntity;
 
   CollegeMajorsCubit({
     required HiveCacheManager cacheManager,
     required CollegeMajorUseCase getMajorsUseCase,
-  }) :
-        _collegeMajorsUseCase = getMajorsUseCase,
-        super( CollegeMajorsState());
+  })  : _collegeMajorsUseCase = getMajorsUseCase,
+        super(CollegeMajorsState());
 
-  void toggleVisibleMajors(){
-    // AppLogger.success('message');
+  void toggleVisibleMajors() {
+    AppLogger.success(state.isVisibileMajors.toString());
     emit(state.copyWith(isVisibileMajors: !state.isVisibileMajors));
-
   }
 
-  Future<void> initCollegeMajorForHome({bool forApp=false})async{
+  Future<void> initCollegeMajorForHome({bool forApp = false}) async {
     await getTags();
     await getCachedUser();
     await getMajorSetting();
   }
 
-  Future<void> initCollegeMajorForApp({bool forApp=false})async{
+  Future<void> initCollegeMajorForApp({bool forApp = false}) async {
     // forApp? : null;
     await getColleges();
     await getTags();
@@ -42,15 +39,16 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
     await getMajorSetting();
   }
 
-  Future<void> getCachedUser()async{
-    _authTokenEntity= (await NavigationService.navigatorKey.currentContext!.cachedUser);
+  Future<void> getCachedUser() async {
+    _authTokenEntity =
+        (await NavigationService.navigatorKey.currentContext!.cachedUser);
   }
 
   Future<void> getMajorSetting() async {
     try {
       if (_authTokenEntity != null && state.majors.isNotEmpty) {
         _majorEntity = state.majors.firstWhere(
-              (element) => _authTokenEntity!.user.tagId == element.id,
+          (element) => _authTokenEntity!.user.tagId == element.id,
         );
         selectTag(_majorEntity!);
       }
@@ -65,42 +63,40 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
 
   void toggleExpanded() {
     emit(state.copyWith(isExpanded: !state.isExpanded));
-
   }
 
   void appendMajorToBaseVar(String major) {
-    emit(state.copyWith(
-        collegeAndMajor: "${state.selectedCollege!} ($major) "
-    ));
+    emit(
+        state.copyWith(collegeAndMajor: "${state.selectedCollege!} ($major) "));
   }
-
 
   Future<void> getColleges() async {
     if (state.isLoadingForCollege) return;
     emit(state.copyWith(isLoadingForCollege: true));
     final result = await _collegeMajorsUseCase.getColleges();
     result.fold(
-          (failure) {
-        List<String>? errorMessage=[];
+      (failure) {
+        List<String>? errorMessage = [];
         errorMessage.add(failure.message);
         emit(state.copyWith(
           errorMessageCollege: errorMessage.first,
           isLoadingForCollege: false,
         ));
       },
-          (colleges) async {
-
-            emit(state.copyWith(
-            colleges: colleges,
-            isLoadingForCollege: false,
-            errorMessageCollege: null,
-            clearErrorMessageCollege: true,
+      (colleges) async {
+        emit(state.copyWith(
+          colleges: colleges,
+          isLoadingForCollege: false,
+          errorMessageCollege: null,
+          clearErrorMessageCollege: true,
         ));
       },
     );
   }
 
-  void selectIndex({required int? index, }) {
+  void selectIndex({
+    required int? index,
+  }) {
     emit(state.copyWith(selectedMajorIndex: index));
   }
 
@@ -113,12 +109,12 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
     try {
       emit(state.copyWith(status: MajorsStatus.loading));
 
-
       // Then fetch fresh data
-      final result = await _collegeMajorsUseCase.getMajorsByCollege(collegeName!);
+      final result =
+          await _collegeMajorsUseCase.getMajorsByCollege(collegeName!);
 
       result.fold(
-            (failure) {
+        (failure) {
           // If we have cached data, keep showing it with a warning
           if (state.majors.isNotEmpty) {
             emit(state.copyWith(
@@ -132,7 +128,7 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
             ));
           }
         },
-            (majors) async {
+        (majors) async {
           // Cache the new data
           // await _cacheMajors(majors);
 
@@ -160,7 +156,6 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
     }
   }
 
-
   Future<void> refreshMajors() async {
     final currentCollegeName = state.selectedCollege;
     await loadMajors(collegeName: currentCollegeName);
@@ -170,29 +165,25 @@ class CollegeMajorsCubit extends Cubit<CollegeMajorsState> {
     emit(state.copyWith(selectedCollege: college));
   }
 
-  Future<void> retry()async{
-     await getColleges();
+  Future<void> retry() async {
+    await getColleges();
   }
 
   getTags() async {
-    emit(state.copyWith(
-        status: MajorsStatus.loading
-    ));
+    emit(state.copyWith(status: MajorsStatus.loading));
     var createPostRes = await _collegeMajorsUseCase.getTags();
     createPostRes.fold(
-          (l) {
-        emit(state.copyWith(status: MajorsStatus.failure,
-            errorMessage: l.message));
+      (l) {
+        emit(state.copyWith(
+            status: MajorsStatus.failure, errorMessage: l.message));
       },
-          (r) {
-        emit(state.copyWith(status: MajorsStatus.success,
-            majors: r));
+      (r) {
+        emit(state.copyWith(status: MajorsStatus.success, majors: r));
       },
     );
   }
 
-  Future<void> selectTag(MajorEntity major) async{
-
-    emit(state.copyWith(selectedTag: major.name,selectedMajor: major));
+  Future<void> selectTag(MajorEntity major) async {
+    emit(state.copyWith(selectedTag: major.name, selectedMajor: major));
   }
 }

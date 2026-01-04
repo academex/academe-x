@@ -89,7 +89,7 @@ class PostRemoteDataSource {
           headers: {
             'Content-Type': 'application/json',
             'Authorization':
-            'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
+                'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
           },
         );
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
@@ -98,12 +98,12 @@ class PostRemoteDataSource {
         }
 
         final baseResponse =
-        BaseResponse<PaginatedResponse<PostModel>>.fromJson(
+            BaseResponse<PaginatedResponse<PostModel>>.fromJson(
           responseBody,
-              (json) {
+          (json) {
             return PaginatedResponse<PostModel>.fromJson(
               json,
-                  (p0) {
+              (p0) {
                 return PostModel.fromJson(p0);
               },
             );
@@ -545,6 +545,44 @@ class PostRemoteDataSource {
           responseBody,
           (json) {},
         );
+        return baseResponse;
+      } on TimeOutExeption {
+        rethrow;
+      }
+    } else {
+      throw OfflineException(errorMessage: 'No Internet Connection');
+    }
+  }
+
+  Future<BaseResponse<void>> voteOnPoll({
+    required int pollId,
+    required int optionId,
+  }) async {
+    if (await internetConnectionChecker.hasConnection) {
+      try {
+        final response = await apiController.post(
+          Uri.parse(ApiSetting.voteOnPoll), 
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':
+                'Bearer ${(await NavigationService.navigatorKey.currentContext!.cachedUser)!.accessToken}'
+          },
+          body: {
+            "pollId": pollId,
+            "optionId": optionId,
+          },
+        );
+
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if (response.statusCode >= 400) {
+          HandleHttpError.handleHttpError(responseBody);
+        }
+
+        final baseResponse = BaseResponse<void>.fromJson(
+          responseBody,
+          (json) {},
+        );
+
         return baseResponse;
       } on TimeOutExeption {
         rethrow;

@@ -1,6 +1,7 @@
 import 'package:academe_x/features/college_major/data/data.dart';
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/comment/comments_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:academe_x/features/library/data/datasources/library_remote_data_source.dart';
@@ -51,10 +52,9 @@ Future<void> init() async {
 }
 
 void _initCubits() {
-
   getIt.registerFactory<LoginCubit>(() => LoginCubit(authUseCase: getIt()));
-  getIt.registerFactory<ShowRepliesCubit>(() => ShowRepliesCubit(ShowRepliesState(),postUseCase: getIt()));
-
+  getIt.registerFactory<ShowRepliesCubit>(
+      () => ShowRepliesCubit(ShowRepliesState(), postUseCase: getIt()));
 
   getIt.registerFactory<GetTagsCubit>(
     () => GetTagsCubit(getTagsUseCase: getIt()),
@@ -93,16 +93,10 @@ void _initCubits() {
     () => PostImageCubit(),
   );
   getIt.registerFactory<SignupCubit>(
-    () => SignupCubit(
-      authUseCase: getIt(),
-      collegeMajorsCubit: getIt()
-    ),
+    () => SignupCubit(authUseCase: getIt(), collegeMajorsCubit: getIt()),
   );
   getIt.registerFactory<LibraryCubit>(
-          () => LibraryCubit(
-          libraryUseCase: getIt()
-
-      ),
+    () => LibraryCubit(libraryUseCase: getIt()),
   );
 
   getIt.registerFactory<CollegeMajorsCubit>(
@@ -121,6 +115,11 @@ void _initCubits() {
     ),
   );
 
+  getIt.registerFactory<CommentsCubit>(
+    () => CommentsCubit(
+      postUseCase: getIt<PostUseCase>(),
+    ),
+  );
 }
 
 void _initState() {
@@ -131,7 +130,7 @@ void _initState() {
   //       ()=>ImagePickerLoaded(null),
   // );
   getIt.registerLazySingleton<SuccessTagState>(
-      ()=>SuccessTagState(selectedTags: []),
+    () => SuccessTagState(selectedTags: []),
   );
 }
 
@@ -144,18 +143,17 @@ void _initUseCases() {
     () => PostUseCase(postRepository: getIt()),
   );
 
-
   getIt.registerLazySingleton<CollegeMajorUseCase>(
     () => CollegeMajorUseCase(collegeMajorRepository: getIt()),
   );
 
   getIt.registerLazySingleton<ProfileUseCase>(
     () => ProfileUseCase(
-    getIt(),
+      getIt(),
     ),
   );
   getIt.registerLazySingleton<LibraryUseCase>(
-        () => LibraryUseCase(
+    () => LibraryUseCase(
       getIt(),
     ),
   );
@@ -169,10 +167,14 @@ void _initRepositories() {
         networkInfo: InternetConnectionChecker()),
   );
   getIt.registerLazySingleton<PostRepository>(
-    () => PostRepositoryImpl(remoteDataSource: getIt(), cacheManager: getIt(),createPostRemoteDataSource: getIt()),
+    () => PostRepositoryImpl(
+        remoteDataSource: getIt(),
+        cacheManager: getIt(),
+        createPostRemoteDataSource: getIt()),
   );
   getIt.registerLazySingleton<CollegeMajorRepository>(
-    () => CollegeMajorRepositoryImpl(remoteDataSource: getIt(), cacheManager: getIt(), networkInfo: getIt()),
+    () => CollegeMajorRepositoryImpl(
+        remoteDataSource: getIt(), cacheManager: getIt(), networkInfo: getIt()),
   );
   getIt.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(
@@ -181,7 +183,7 @@ void _initRepositories() {
   );
 
   getIt.registerLazySingleton<LibraryRepository>(
-        () => LibraryRepositoryImpl(
+    () => LibraryRepositoryImpl(
       remoteDataSource: getIt(),
     ),
   );
@@ -197,7 +199,7 @@ void _initDataSources() {
   );
 
   getIt.registerLazySingleton<LibraryRemoteDataSource>(
-        () => LibraryRemoteDataSource(
+    () => LibraryRemoteDataSource(
       apiController: getIt(),
       internetConnectionChecker: getIt(),
     ),
@@ -230,7 +232,6 @@ void _initDataSources() {
       internetConnectionChecker: getIt(),
     ),
   );
- 
 }
 
 Future<void> _initExternalDependencies() async {

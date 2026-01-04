@@ -25,7 +25,6 @@ import '../../domain/repositories/post_repository.dart';
 import '../datasources/create_post/create_post_remote_data_source.dart';
 import '../datasources/post_remote_data_source.dart';
 
-
 class PostRepositoryImpl implements PostRepository {
   final PostRemoteDataSource remoteDataSource;
   final CreatePostRemoteDataSource createPostRemoteDataSource;
@@ -39,8 +38,7 @@ class PostRepositoryImpl implements PostRepository {
 
   @override
   Future<Either<Failure, PaginatedResponse<PostModel>>> getPosts(
-      PaginationParams paginationParams
-      ) async {
+      PaginationParams paginationParams) async {
     try {
       // Try to get from network
       final result = await remoteDataSource.getPosts(paginationParams);
@@ -66,11 +64,9 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-
   @override
   Future<Either<Failure, PaginatedResponse<PostModel>>> loadProfilePosts(
-      PaginationParams paginationParams
-      ) async {
+      PaginationParams paginationParams) async {
     try {
       // Try to get from network
       final result = await remoteDataSource.loadProfilePosts(paginationParams);
@@ -86,7 +82,6 @@ class PostRepositoryImpl implements PostRepository {
         ),
       );
     } on TimeOutExeption catch (e) {
-
       return Left(
         TimeOutFailure(
           message: e.errorMessage,
@@ -98,7 +93,8 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, BaseResponse<PostModel>>> getPostDetails(PaginationParams paginationParams) async {
+  Future<Either<Failure, BaseResponse<PostModel>>> getPostDetails(
+      PaginationParams paginationParams) async {
     try {
       // First try to get from network
       final result = await remoteDataSource.getPostDetails(paginationParams);
@@ -108,11 +104,11 @@ class PostRepositoryImpl implements PostRepository {
       return Right(result);
     } on OfflineException catch (e) {
       // Handle offline case by trying cache
-      return Left(NoInternetConnectionFailure(message:e.errorMessage));
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
       // return _handleOfflineCase(e, paginationParams);
     } on ServerException catch (e) {
       // On server error, try cache first
-      return Left(ServerFailure(message:e.message));
+      return Left(ServerFailure(message: e.message));
       // return _handleServerError(e, paginationParams);
     } on ValidationException catch (e) {
       return Left(ValidationFailure(messages: e.messages, message: ''));
@@ -128,19 +124,20 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, BaseResponse<void>>> reactToPost(String reactionType,int postId) async {
+  Future<Either<Failure, BaseResponse<void>>> reactToPost(
+      String reactionType, int postId) async {
     try {
       // First try to get from network
-      final result = await remoteDataSource.reactToPost(reactionType,postId);
+      final result = await remoteDataSource.reactToPost(reactionType, postId);
       // result
 
-      return  Right(result);
+      return Right(result);
     } on OfflineException catch (e) {
-      return Left(NoInternetConnectionFailure(message:  e.errorMessage));
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
       // Handle offline case by trying cache
       // return _handleOfflineCase(e);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message:  e.message));
+      return Left(ServerFailure(message: e.message));
       // On server error, try cache first
       // return _handleServerError(e, paginationParams);
     } on ValidationException catch (e) {
@@ -157,11 +154,8 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-  Future<void> _cachePostsResults(
-      List<PostModel> posts,
-      int page,
-      {int? tagId}
-      ) async {
+  Future<void> _cachePostsResults(List<PostModel> posts, int page,
+      {int? tagId}) async {
     try {
       final cacheKey = '${CacheKeys.POSTS}/$tagId';
 
@@ -195,23 +189,22 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-
   Future<CachedPaginatedData?> _getPostsFromCache({int? tagId}) async {
     try {
-      final cachedData = await cacheManager.getCachedResponse<CachedPaginatedData>(
+      final cachedData =
+          await cacheManager.getCachedResponse<CachedPaginatedData>(
         '${CacheKeys.POSTS}/$tagId',
-            (json) => CachedPaginatedData.fromJson(json as Map<String, dynamic>),
+        (json) => CachedPaginatedData.fromJson(json as Map<String, dynamic>),
       );
 
       if (cachedData == null) return null;
       final now = DateTime.now();
       final validPages = Map<int, List<int>>.fromEntries(
           cachedData.pageToPostIds.entries.where((entry) {
-            final pageTimestamp = cachedData.pageTimestamps[entry.key];
-            return pageTimestamp != null &&
-                now.difference(pageTimestamp) <= AppConfig.cacheMaxAge;
-          })
-      );
+        final pageTimestamp = cachedData.pageTimestamps[entry.key];
+        return pageTimestamp != null &&
+            now.difference(pageTimestamp) <= AppConfig.cacheMaxAge;
+      }));
 
       if (validPages.isEmpty) return null;
 
@@ -220,15 +213,12 @@ class PostRepositoryImpl implements PostRepository {
           .where((post) => validPostIds.contains(post.id))
           .toList();
 
-
       return CachedPaginatedData(
         posts: validPosts,
         pageToPostIds: validPages,
-        pageTimestamps: Map<int, DateTime>.fromEntries(
-            cachedData.pageTimestamps.entries.where(
-                    (entry) => validPages.containsKey(entry.key)
-            )
-        ),
+        pageTimestamps: Map<int, DateTime>.fromEntries(cachedData
+            .pageTimestamps.entries
+            .where((entry) => validPages.containsKey(entry.key))),
       );
     } catch (e) {
       AppLogger.w('Failed to get from cache: $e');
@@ -253,15 +243,17 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   Future<Either<Failure, PaginatedResponse<PostModel>>> _handleOfflineCase(
-      OfflineException e,
-      PaginationParams paginationParams,
-      ) async {
+    OfflineException e,
+    PaginationParams paginationParams,
+  ) async {
     try {
-      final cachedData = await _getPostsFromCache(tagId: paginationParams.tagId);
+      final cachedData =
+          await _getPostsFromCache(tagId: paginationParams.tagId);
 
       if (cachedData == null || cachedData.posts.isEmpty) {
         return Left(NoInternetConnectionFailure(
-          message: 'No cached data available. Please check your internet connection.',
+          message:
+              'No cached data available. Please check your internet connection.',
         ));
       }
 
@@ -286,9 +278,9 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   Future<Either<Failure, PaginatedResponse<PostModel>>> _handleServerError(
-      ServerException e,
-      PaginationParams params,
-      ) async {
+    ServerException e,
+    PaginationParams params,
+  ) async {
     // Try to get from cache
     final cachedData = await _getPostsFromCache(tagId: params.tagId);
     if (cachedData != null &&
@@ -299,9 +291,9 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   Future<Either<Failure, PaginatedResponse<PostModel>>> _handleTimeoutError(
-      TimeOutExeption e,
-      PaginationParams params,
-      ) async {
+    TimeOutExeption e,
+    PaginationParams params,
+  ) async {
     // Try to get from cache
     final cachedData = await _getPostsFromCache(tagId: params.tagId);
     if (cachedData != null &&
@@ -312,18 +304,18 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   PaginatedResponse<PostModel> _createPaginatedResponse(
-      CachedPaginatedData cachedData,
-      PaginationParams params,
-      ) {
+    CachedPaginatedData cachedData,
+    PaginationParams params,
+  ) {
     // Get post IDs for the requested page
     final pagePostIds = cachedData.pageToPostIds[params.page] ?? [];
 
     // Get the actual posts for this page
     final paginatedPosts = pagePostIds
         .map((id) => cachedData.posts.firstWhere(
-          (post) => post.id == id,
-      orElse: () => throw Exception('Post not found in cache'),
-    ))
+              (post) => post.id == id,
+              orElse: () => throw Exception('Post not found in cache'),
+            ))
         .toList();
 
     // Calculate pagination metadata
@@ -343,19 +335,20 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, BaseResponse<SaveResponseModel>>> savePost(int postId) async{
+  Future<Either<Failure, BaseResponse<SaveResponseModel>>> savePost(
+      int postId) async {
     try {
       // First try to get from network
       final result = await remoteDataSource.savePost(postId);
       // result
 
-      return  Right(result);
+      return Right(result);
     } on OfflineException catch (e) {
-      return Left(NoInternetConnectionFailure(message:  e.errorMessage));
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
       // Handle offline case by trying cache
       // return _handleOfflineCase(e);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message:  e.message));
+      return Left(ServerFailure(message: e.message));
       // On server error, try cache first
       // return _handleServerError(e, paginationParams);
     } on ValidationException catch (e) {
@@ -373,10 +366,14 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>> getReactions(PaginationParams paginationParams,String reactionType,int postId) async{
+  Future<Either<Failure, PaginatedResponse<ReactionItemEntity>>> getReactions(
+      PaginationParams paginationParams,
+      String reactionType,
+      int postId) async {
     try {
       // First try to get from network
-      final result = await remoteDataSource.getReactions(paginationParams,reactionType,postId);
+      final result = await remoteDataSource.getReactions(
+          paginationParams, reactionType, postId);
 
       // Cache successful network response
       // _cacheResults(result.items, paginationParams.page);
@@ -388,7 +385,7 @@ class PostRepositoryImpl implements PostRepository {
       return Left(NoInternetConnectionFailure(message: e.errorMessage));
     } on ServerException catch (e) {
       // On server error, try cache first
-      return Left(ServerFailure( message:e.message));
+      return Left(ServerFailure(message: e.message));
       // return _handleServerError(e, paginationParams);
     } on ValidationException catch (e) {
       return Left(ValidationFailure(messages: e.messages, message: ''));
@@ -405,37 +402,50 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, PostEntity>> createPost(PostEntity post,BuildContext context,) async {
-    return handlingException<PostEntity>(() => createPostRemoteDataSource.createPost(
-      post: PostModel.fromEntity(post),
-      context: context,
-    ),);
+  Future<Either<Failure, PostEntity>> createPost(
+    PostEntity post,
+    BuildContext context,
+  ) async {
+    return handlingException<PostEntity>(
+      () => createPostRemoteDataSource.createPost(
+        post: PostModel.fromEntity(post),
+        context: context,
+      ),
+    );
   }
 
   @override
   Future<Either<Failure, List<MajorModel>>> getTags() async {
-    return handlingException<List<MajorModel>>(() => createPostRemoteDataSource.getTags(),);
+    return handlingException<List<MajorModel>>(
+      () => createPostRemoteDataSource.getTags(),
+    );
   }
   //Future<PaginatedResponse<CommentModel>>
 
   @override
-  Future<Either<Failure, PaginatedResponse<CommentModel>>> getComments(PaginationParams paginationParams,int postId) {
-    return handlingException<PaginatedResponse<CommentModel>>(() => remoteDataSource.getComments(paginationParams: paginationParams,postId: postId),);
+  Future<Either<Failure, PaginatedResponse<CommentModel>>> getComments(
+      PaginationParams paginationParams, int postId) {
+    return handlingException<PaginatedResponse<CommentModel>>(
+      () => remoteDataSource.getComments(
+          paginationParams: paginationParams, postId: postId),
+    );
   }
 
   @override
-  Future<Either<Failure, CreatePostBaseResponse>> createComment({required int postId, required String content}) {
-    return handlingException<CreatePostBaseResponse>(() => remoteDataSource.createComment(postId:postId,content:content),);
+  Future<Either<Failure, CreatePostBaseResponse>> createComment(
+      {required int postId, required String content}) {
+    return handlingException<CreatePostBaseResponse>(
+      () => remoteDataSource.createComment(postId: postId, content: content),
+    );
   }
 
-
-  Future<Either<Failure, T>> handlingException<T>(Future<T> Function() implementRemoteDataSourceMethod) async{
+  Future<Either<Failure, T>> handlingException<T>(
+      Future<T> Function() implementRemoteDataSourceMethod) async {
     try {
-
       final result = await implementRemoteDataSourceMethod();
-      if(T is Unit) {
+      if (T is Unit) {
         return Right(Unit as T);
-      }else {
+      } else {
         return Right(result);
       }
     } on OfflineException catch (e) {
@@ -455,38 +465,73 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> deleteComment({required int postId, required int commentId}) {
-    return handlingException<Unit>(() => remoteDataSource.deleteComment(postId:postId,commentId: commentId),);
+  Future<Either<Failure, Unit>> deleteComment(
+      {required int postId, required int commentId}) {
+    return handlingException<Unit>(
+      () =>
+          remoteDataSource.deleteComment(postId: postId, commentId: commentId),
+    );
   }
 
   @override
-  Future<Either<Failure, CreatePostBaseResponse>> updateComment({required int postId, required String content, required int commentId}) {
-    return handlingException<CreatePostBaseResponse>(() => remoteDataSource.updateComment(postId:postId,content:content,commentId: commentId),);
+  Future<Either<Failure, CreatePostBaseResponse>> updateComment(
+      {required int postId, required String content, required int commentId}) {
+    return handlingException<CreatePostBaseResponse>(
+      () => remoteDataSource.updateComment(
+          postId: postId, content: content, commentId: commentId),
+    );
   }
 
   @override
-  Future<Either<Failure, BaseResponse<CommentModel>>> createReply({required int commentId, int? parentId,required String content}) {
-    return handlingException<BaseResponse<CommentModel>>(() => remoteDataSource.createReply(commentId:commentId,parentId:parentId,content:content),);
-
+  Future<Either<Failure, BaseResponse<CommentModel>>> createReply(
+      {required int commentId, int? parentId, required String content}) {
+    return handlingException<BaseResponse<CommentModel>>(
+      () => remoteDataSource.createReply(
+          commentId: commentId, parentId: parentId, content: content),
+    );
   }
 
   @override
-  Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies({required int commentId}) {
-    return handlingException<BaseResponse<List<CommentModel>>>(() => remoteDataSource.getReplies(commentId:commentId),);
-
+  Future<Either<Failure, BaseResponse<List<CommentModel>>>> getReplies(
+      {required int commentId}) {
+    return handlingException<BaseResponse<List<CommentModel>>>(
+      () => remoteDataSource.getReplies(commentId: commentId),
+    );
   }
 
   @override
-  Future<Either<Failure, BaseResponse<void>>> likeOnCommentOrReply({required int commentId, int? postId, int? replyId}) {
-    return handlingException<BaseResponse<void>>(() => remoteDataSource.likeOnCommentOrReply(commentId:commentId,postId:postId,replyId:replyId),);
+  Future<Either<Failure, BaseResponse<void>>> likeOnCommentOrReply(
+      {required int commentId, int? postId, int? replyId}) {
+    return handlingException<BaseResponse<void>>(
+      () => remoteDataSource.likeOnCommentOrReply(
+          commentId: commentId, postId: postId, replyId: replyId),
+    );
   }
 
-
-
-
-
-
-
-
-
+  @override
+  Future<Either<Failure, BaseResponse<void>>> voteOnPoll({
+    required int pollId,
+    required int optionId,
+  }) async {
+    try {
+      final result = await remoteDataSource.voteOnPoll(
+        pollId: pollId,
+        optionId: optionId,
+      );
+      return Right(result);
+    } on OfflineException catch (e) {
+      return Left(NoInternetConnectionFailure(message: e.errorMessage));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(messages: e.messages, message: ''));
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(message: e.message));
+    } on TimeOutExeption catch (e) {
+      return Left(TimeOutFailure(message: e.errorMessage));
+    } catch (e, stack) {
+      AppLogger.e('Unexpected error: $e\n$stack');
+      return Left(ServerFailure(message: 'An unexpected error occurred: $e'));
+    }
+  }
 }
