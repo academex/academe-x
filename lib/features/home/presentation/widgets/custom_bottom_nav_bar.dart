@@ -1,4 +1,5 @@
 import 'package:academe_x/core/utils/extensions/cached_user_extension.dart';
+import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post_bottom_sheet.dart';
 import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
 import 'package:academe_x/lib.dart';
 
@@ -54,6 +55,8 @@ class CustomBottomNavBar extends StatelessWidget {
         ? FloatingActionButton(
             onPressed: () {
               CreatePost().showCreatePostModal(context);
+              CreatePostBottomSheet.show(context);
+
             },
             backgroundColor: Colors.blue,
             child: const Icon(Icons.add, size: 32.0),

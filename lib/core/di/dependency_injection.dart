@@ -2,6 +2,7 @@ import 'package:academe_x/features/college_major/data/data.dart';
 import 'package:academe_x/features/features.dart';
 import 'package:academe_x/features/college_major/controller/cubit/get_tags_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/comment/comments_cubit.dart';
+import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/create_post_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/show_tag_cubit.dart';
 import 'package:academe_x/features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'package:academe_x/features/library/data/datasources/library_remote_data_source.dart';
@@ -53,8 +54,6 @@ Future<void> init() async {
 
 void _initCubits() {
   getIt.registerFactory<LoginCubit>(() => LoginCubit(authUseCase: getIt()));
-  getIt.registerFactory<ShowRepliesCubit>(
-      () => ShowRepliesCubit(ShowRepliesState(), postUseCase: getIt()));
 
   getIt.registerFactory<GetTagsCubit>(
     () => GetTagsCubit(getTagsUseCase: getIt()),
@@ -117,6 +116,12 @@ void _initCubits() {
 
   getIt.registerFactory<CommentsCubit>(
     () => CommentsCubit(
+      postUseCase: getIt<PostUseCase>(),
+    ),
+  );
+
+  getIt.registerFactory<CreatePostCubit>(
+    () => CreatePostCubit(
       postUseCase: getIt<PostUseCase>(),
     ),
   );

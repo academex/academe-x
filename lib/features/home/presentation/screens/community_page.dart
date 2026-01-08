@@ -10,14 +10,6 @@ import 'package:academe_x/features/home/presentation/widgets/community/community
 import 'package:academe_x/lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-/// Displays the community page with major selection and posts feed.
-///
-/// Features:
-/// - Collapsible header with major categories
-/// - Horizontal scrolling major selection
-/// - Infinite scrolling posts feed
-/// - Pull-to-refresh support
 class CommunityPage extends StatefulWidget {
   const CommunityPage({super.key});
 

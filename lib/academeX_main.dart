@@ -6,6 +6,7 @@ import 'package:academe_x/features/home/presentation/controllers/cubits/post/pos
 import 'package:academe_x/features/home/presentation/controllers/states/create_post/poll_state.dart';
 import 'package:academe_x/features/home/presentation/controllers/states/post/post_state.dart';
 import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post.dart';
+import 'package:academe_x/features/home/presentation/widgets/create_post_widgets/create_post_bottom_sheet.dart';
 import 'package:academe_x/features/library/presentation/controllers/cubits/library_cubit.dart';
 import 'package:academe_x/features/library/presentation/controllers/states/file_upload_state.dart';
 import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
@@ -80,9 +81,6 @@ class AcademeXMain extends StatelessWidget {
       ),
       BlocProvider<GetTagsCubit>(
         create: (context) => getIt<GetTagsCubit>()..getTags(),
-      ),
-      BlocProvider<ShowRepliesCubit>(
-        create: (context) => getIt<ShowRepliesCubit>(),
       ),
     BlocProvider<PollCubit>(
     create: (context) => PollCubit(PollState()),
@@ -174,7 +172,7 @@ class AcademeXMain extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: GestureDetector(
-                  onTap: () => CreatePost().showCreatePostModal(NavigationService.navigatorKey.currentContext!),
+                  onTap: () =>  CreatePostBottomSheet.show(context),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [

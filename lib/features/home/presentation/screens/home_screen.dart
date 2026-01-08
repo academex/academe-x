@@ -54,20 +54,11 @@ class HomeScreen extends StatelessWidget {
   Widget _buildBody(int currentIndex, BuildContext context) {
     return IndexedStack(
       index: currentIndex,
-      children: [
-        const CommunityPage(),
-        const LibraryPage(),
-        const Row(),
-        // Container(
-        //   child: Center(
-        //       child: CustomButton(
-        //           widget: AppText(text: 'Logout', fontSize: 16),
-        //           onPressed: () async {
-        //             await context.read<LoginCubit>().logout();
-        //           },
-        //           backgraoundColor: Colors.blue)),
-        // ),
-        const ProfilePage(),
+      children: const [
+        CommunityPage(),
+        LibraryPage(),
+        Row(),
+        ProfilePage(),
       ],
     );
   }
