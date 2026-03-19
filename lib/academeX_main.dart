@@ -10,6 +10,7 @@ import 'package:academe_x/features/home/presentation/widgets/create_post_widgets
 import 'package:academe_x/features/library/presentation/controllers/cubits/library_cubit.dart';
 import 'package:academe_x/features/library/presentation/controllers/states/file_upload_state.dart';
 import 'package:academe_x/features/profile/presentation/controllers/cubits/profile_cubit.dart';
+import 'package:academe_x/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,7 +24,6 @@ import 'features/home/presentation/controllers/cubits/create_post/show_tag_cubit
 import 'features/home/presentation/controllers/cubits/create_post/tag_cubit.dart';
 import 'features/library/presentation/controllers/cubits/file_upload_cubit.dart';
 import 'lib.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class AcademeXMain extends StatelessWidget {
